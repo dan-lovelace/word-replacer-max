@@ -13,7 +13,7 @@
   ],
   "private": true,
   "scripts": {
-    "build": "yarn clean && tsc && node scripts/build.mjs",
+    "build": "yarn clean && node scripts/build.mjs",
     "clean": "rm -rf dist",
     "start:2": "yarn clean && node scripts/build.mjs 2 && lerna run start",
     "start:3": "yarn clean && node scripts/build.mjs 3 && lerna run start",
@@ -46,9 +46,6 @@
       },
       "content_scripts": [
         {
-          "css": [
-            "popup.css"
-          ],
           "matches": [
             "<all_urls>"
           ],
@@ -92,9 +89,6 @@
       },
       "content_scripts": [
         {
-          "css": [
-            "popup.css"
-          ],
           "matches": [
             "<all_urls>"
           ],
