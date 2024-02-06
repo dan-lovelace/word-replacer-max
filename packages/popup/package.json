@@ -1,0 +1,27 @@
+{
+  "name": "@worm/popup",
+  "version": "1.0.0",
+  "author": "dan-lovelace",
+  "license": "MIT",
+  "main": "src/main.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc && vite build",
+    "start": "yarn build --watch --mode development",
+    "test": "echo \"Error: no test specified\" && exit 0"
+  },
+  "dependencies": {
+    "@popperjs/core": "^2.11.8",
+    "@worm/shared": "*",
+    "bootstrap": "5.3.2",
+    "material-icons": "^1.13.12",
+    "preact": "^10.13.1",
+    "preact-iso": "^2.3.2",
+    "preact-render-to-string": "^6.3.1"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "^2.5.0",
+    "@worm/types": "*",
+    "sass": "^1.70.0"
+  }
+}

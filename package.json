@@ -1,0 +1,112 @@
+{
+  "name": "word-replacer-max",
+  "author": {
+    "name": "dan-lovelace",
+    "url": "https://github.com/dan-lovelace/word-replacer-max"
+  },
+  "version": "0.0.1",
+  "license": "MIT",
+  "description": "A browser extension for replacing text on web pages",
+  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
+  "private": true,
+  "scripts": {
+    "build": "yarn clean && tsc && node scripts/build.mjs",
+    "clean": "rm -rf dist",
+    "start:2": "yarn clean && node scripts/build.mjs 2 && lerna run start",
+    "start:3": "yarn clean && node scripts/build.mjs 3 && lerna run start",
+    "test": "jest"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "manifestJSON": {
+    "v2": {
+      "name": "Word Replacer Max",
+      "version": "0.0.0",
+      "description": "Replaces text and words on any web page using simple rule sets",
+      "homepage_url": "https://github.com/dan-lovelace/word-replacer-max",
+      "manifest_version": 2,
+      "icons": {
+        "16": "assets/img/logo_16.png",
+        "48": "assets/img/logo_48.png",
+        "128": "assets/img/logo_128.png",
+        "256": "assets/img/logo_256.png",
+        "512": "assets/img/logo_512.png"
+      },
+      "browser_action": {
+        "default_popup": "popup.html"
+      },
+      "background": {
+        "scripts": [
+          "background.js"
+        ]
+      },
+      "content_scripts": [
+        {
+          "css": [
+            "popup.css"
+          ],
+          "matches": [
+            "<all_urls>"
+          ],
+          "js": [
+            "content.js"
+          ],
+          "run_at": "document_start"
+        }
+      ],
+      "permissions": [
+        "storage"
+      ],
+      "web_accessible_resources": [
+        "assets/*"
+      ],
+      "browser_specific_settings": {
+        "gecko": {
+          "id": "addon@example.com",
+          "strict_min_version": "42.0"
+        }
+      }
+    },
+    "v3": {
+      "name": "Word Replacer Max",
+      "version": "0.0.0",
+      "description": "Replaces text and words on any web page using simple rule sets",
+      "homepage_url": "https://github.com/dan-lovelace/word-replacer-max",
+      "manifest_version": 3,
+      "icons": {
+        "16": "assets/img/logo_16.png",
+        "48": "assets/img/logo_48.png",
+        "128": "assets/img/logo_128.png",
+        "256": "assets/img/logo_256.png",
+        "512": "assets/img/logo_512.png"
+      },
+      "action": {
+        "default_popup": "popup.html"
+      },
+      "background": {
+        "service_worker": "background.js"
+      },
+      "content_scripts": [
+        {
+          "css": [
+            "popup.css"
+          ],
+          "matches": [
+            "<all_urls>"
+          ],
+          "js": [
+            "content.js"
+          ],
+          "run_at": "document_start"
+        }
+      ],
+      "permissions": [
+        "storage"
+      ]
+    }
+  }
+}

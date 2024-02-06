@@ -1,0 +1,12 @@
+{
+  "name": "@worm/types",
+  "version": "1.0.0",
+  "author": "dan-lovelace",
+  "license": "MIT",
+  "main": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "build": "echo \"Info: no build specified\"",
+    "test": "echo \"Error: no test specified\" && exit 0"
+  }
+}
