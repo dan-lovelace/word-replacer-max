@@ -93,6 +93,7 @@ export default function RuleRow({
           className="form-check-input m-0"
           id={`active-check-${identifier}`}
           role="switch"
+          title={active ? "Disable Rule" : "Enable Rule"}
           type="checkbox"
           onChange={handleActiveChange(identifier)}
         />
@@ -124,7 +125,8 @@ export default function RuleRow({
       <div className="col-auto ps-0 rule-row-actions">
         <button
           data-dismiss="delete"
-          className={cx("btn btn-light", isConfirmingDelete && "btn-danger")}
+          className={cx("btn", isConfirmingDelete ? "btn-danger" : "btn-light")}
+          title={isConfirmingDelete ? "Confirm" : "Delete Rule"}
           onClick={handleDeleteClick}
         >
           <span data-dismiss="delete" className="d-flex align-items-center">

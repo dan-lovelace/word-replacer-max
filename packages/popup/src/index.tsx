@@ -2,8 +2,9 @@ import { render } from "preact";
 import { LocationProvider, Router, Route } from "preact-iso";
 
 import Layout from "./components/Layout";
-import Home from "./pages/Home";
-import NotFound from "./pages/404";
+import { ROUTES } from "./lib/routes";
+import HomePage from "./pages/Home";
+import NotFoundPage from "./pages/NotFound";
 import { ConfigProvider } from "./store/Config";
 
 import "./style/index.scss";
@@ -15,8 +16,8 @@ export function App() {
       <LocationProvider>
         <Layout>
           <Router>
-            <Route path="/popup.html" component={Home} />
-            <Route default component={NotFound} />
+            <Route path={ROUTES.HOME} component={HomePage} />
+            <Route default component={NotFoundPage} />
           </Router>
         </Layout>
       </LocationProvider>

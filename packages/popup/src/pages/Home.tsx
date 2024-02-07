@@ -3,9 +3,9 @@ import { useContext } from "preact/hooks";
 import { storageSetByKeys } from "@worm/shared";
 import { PopupTab } from "@worm/types";
 
-import Debug from "../components/Debug";
 import DomainInput from "../components/DomainInput";
 import RuleRow from "../components/RuleRow";
+import Support from "../components/Support";
 import cx from "../lib/classnames";
 import { Config } from "../store/Config";
 
@@ -18,9 +18,13 @@ const tabs: { identifier: PopupTab; label: string }[] = [
     identifier: "domains",
     label: "Domains",
   },
+  {
+    identifier: "support",
+    label: "Help",
+  },
 ];
 
-export default function Home() {
+export default function HomePage() {
   const {
     storage: { matchers, preferences },
   } = useContext(Config);
@@ -28,6 +32,7 @@ export default function Home() {
   const handleNewRuleClick = () => {
     storageSetByKeys({
       matchers: [
+        ...(matchers ?? []),
         {
           active: true,
           identifier: new Date().getTime().toString(),
@@ -35,7 +40,6 @@ export default function Home() {
           queryPatterns: [],
           replacement: "",
         },
-        ...(matchers ?? []),
       ],
     });
   };
@@ -51,7 +55,13 @@ export default function Home() {
     <div>
       <ul className="nav nav-tabs">
         {tabs.map(({ identifier, label }) => (
-          <li key={identifier} className="nav-item">
+          <li
+            key={identifier}
+            className={cx(
+              "nav-item",
+              identifier === "support" && "flex-fill d-flex justify-content-end"
+            )}
+          >
             <button
               className={cx(
                 "nav-link",
@@ -68,16 +78,6 @@ export default function Home() {
         {preferences?.activeTab === "domains" && <DomainInput />}
         {preferences?.activeTab === "rules" && (
           <div className="d-flex flex-column gap-2">
-            <div className="ps-5">
-              <button
-                className="btn btn-secondary btn-sm"
-                onClick={handleNewRuleClick}
-              >
-                <span className="d-flex align-items-center">
-                  <i className="material-icons-sharp me-1">add</i> New
-                </span>
-              </button>
-            </div>
             {Boolean(matchers?.length) &&
               matchers?.map((matcher) => (
                 <RuleRow
@@ -86,10 +86,20 @@ export default function Home() {
                   matchers={matchers}
                 />
               ))}
+            <div className="ps-5">
+              <button
+                className="btn btn-secondary btn-sm"
+                onClick={handleNewRuleClick}
+              >
+                <span className="d-flex align-items-center">
+                  <i className="material-icons-sharp me-1 fs-6">add</i> New rule
+                </span>
+              </button>
+            </div>
           </div>
         )}
+        {preferences?.activeTab === "support" && <Support />}
       </div>
-      {/* <Debug /> */}
     </div>
   );
 }

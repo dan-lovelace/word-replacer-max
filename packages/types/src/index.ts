@@ -27,4 +27,4 @@ export type StorageKeyMap = {
   };
 };
 
-export type PopupTab = "domains" | "rules";
+export type PopupTab = "domains" | "rules" | "support";

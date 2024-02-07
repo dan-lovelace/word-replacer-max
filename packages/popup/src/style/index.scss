@@ -2,8 +2,20 @@
 
 $inputHeight: 38px;
 
+input[role="switch"]:hover {
+  cursor: pointer;
+}
+
 input[type="text"] {
   min-height: $inputHeight;
+}
+
+.form-switch {
+  margin-top: 0.25rem;
+}
+
+.fs-sm {
+  font-size: 0.8rem;
 }
 
 .layout {
