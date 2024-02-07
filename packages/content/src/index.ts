@@ -10,15 +10,36 @@ const render = debounce(renderContent, 20);
 
 async function renderContent(msg = "") {
   logDebug("rendering", msg);
-  const { domainBlocklist = [], matchers = [] } = await storageGetByKeys([
-    "domainBlocklist",
-    "matchers",
-  ]);
+  const {
+    domainList = [],
+    matchers = [],
+    preferences,
+  } = await storageGetByKeys(["domainList", "matchers", "preferences"]);
 
-  if (
-    domainBlocklist.some((domain) => window.location.hostname.includes(domain))
-  ) {
-    return logDebug("Domain blocked");
+  if (preferences) {
+    const {
+      location: { hostname },
+    } = window;
+    const locationMatch = domainList.some((domain) =>
+      hostname.includes(domain)
+    );
+    let isAllowed = false;
+
+    switch (preferences.domainListEffect) {
+      case "allow": {
+        isAllowed = locationMatch;
+        break;
+      }
+
+      case "deny": {
+        isAllowed = !locationMatch;
+        break;
+      }
+    }
+
+    if (!isAllowed) {
+      return logDebug("Domain blocked");
+    }
   }
 
   replaceAll(matchers);

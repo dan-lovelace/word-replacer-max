@@ -4,6 +4,7 @@ import { storageSetByKeys } from "@worm/shared";
 import { PopupTab } from "@worm/types";
 
 import Debug from "../components/Debug";
+import DomainInput from "../components/DomainInput";
 import RuleRow from "../components/RuleRow";
 import cx from "../lib/classnames";
 import { Config } from "../store/Config";
@@ -24,17 +25,17 @@ export default function Home() {
     storage: { matchers, preferences },
   } = useContext(Config);
 
-  const handleClick = () => {
+  const handleNewRuleClick = () => {
     storageSetByKeys({
       matchers: [
-        ...(matchers ?? []),
         {
           active: true,
           identifier: new Date().getTime().toString(),
-          queries: ["lorem"],
-          queryPatterns: ["case"],
-          replacement: "ipsum",
+          queries: [],
+          queryPatterns: [],
+          replacement: "",
         },
+        ...(matchers ?? []),
       ],
     });
   };
@@ -63,24 +64,31 @@ export default function Home() {
           </li>
         ))}
       </ul>
-      <div className="container-fluid">
-        {Boolean(matchers?.length) && (
-          <div className="d-flex flex-column gap-2 py-2">
-            {matchers?.map((matcher) => (
-              <RuleRow
-                key={matcher.identifier}
-                matcher={matcher}
-                matchers={matchers}
-              />
-            ))}
+      <div className="container-fluid py-2">
+        {preferences?.activeTab === "domains" && <DomainInput />}
+        {preferences?.activeTab === "rules" && (
+          <div className="d-flex flex-column gap-2">
+            <div className="ps-5">
+              <button
+                className="btn btn-secondary"
+                onClick={handleNewRuleClick}
+              >
+                <span className="d-flex align-items-center">
+                  <i className="material-icons-sharp me-1">add</i> New
+                </span>
+              </button>
+            </div>
+            {Boolean(matchers?.length) &&
+              matchers?.map((matcher) => (
+                <RuleRow
+                  key={matcher.identifier}
+                  matcher={matcher}
+                  matchers={matchers}
+                />
+              ))}
           </div>
         )}
       </div>
-      <button className="btn btn-secondary" onClick={handleClick}>
-        <span className="d-flex align-items-center">
-          <i className="material-icons-sharp me-1">add</i> New
-        </span>
-      </button>
       <Debug />
     </div>
   );

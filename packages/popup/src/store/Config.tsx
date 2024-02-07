@@ -11,7 +11,7 @@ type ConfigType = {
 
 const defaultConfig = {
   storage: {
-    domainBlocklist: [],
+    domainList: [],
     matchers: [],
   },
 };

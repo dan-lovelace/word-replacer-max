@@ -86,8 +86,8 @@ export default function RuleRow({
   };
 
   return (
-    <div key={identifier} className="row d-flex">
-      <div className="col-auto form-check form-switch ps-3 pt-2">
+    <div className="row d-flex">
+      <div className="col-auto form-check form-switch ps-3 pe-0 pt-2">
         <input
           checked={active}
           className="form-check-input m-0"
@@ -121,7 +121,7 @@ export default function RuleRow({
           onChange={handleMatcherInputChange}
         />
       </div>
-      <div className="col-auto">
+      <div className="col-auto ps-0">
         <button
           data-dismiss="delete"
           className={cx(

@@ -1,5 +1,7 @@
 const allQueryPatterns = ["case", "default", "regex", "wholeWord"] as const;
 
+export type DomainEffect = "allow" | "deny";
+
 export type Matcher = {
   active: boolean;
   identifier: string;
@@ -17,10 +19,11 @@ export type Storage = Partial<{
 export type StorageKey = keyof StorageKeyMap;
 
 export type StorageKeyMap = {
-  domainBlocklist: string[];
+  domainList: string[];
   matchers: Matcher[];
   preferences: {
     activeTab: PopupTab;
+    domainListEffect: DomainEffect;
   };
 };
 

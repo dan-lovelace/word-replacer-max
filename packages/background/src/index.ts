@@ -1,14 +1,15 @@
 import { browser, storageGetByKeys, storageSetByKeys } from "@worm/shared";
 
 browser.runtime.onInstalled.addListener(async () => {
-  const { domainBlocklist, matchers, preferences } = await storageGetByKeys([
-    "domainBlocklist",
+  const { domainList, matchers, preferences } = await storageGetByKeys([
+    "domainList",
     "matchers",
+    "preferences",
   ]);
 
-  if (domainBlocklist === undefined) {
+  if (domainList === undefined) {
     await storageSetByKeys({
-      domainBlocklist: ["docs.google.com"],
+      domainList: ["docs.google.com"],
     });
   }
 
@@ -30,6 +31,7 @@ browser.runtime.onInstalled.addListener(async () => {
     await storageSetByKeys({
       preferences: {
         activeTab: "rules",
+        domainListEffect: "deny",
       },
     });
   }
