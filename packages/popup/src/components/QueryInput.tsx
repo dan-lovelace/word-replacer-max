@@ -95,31 +95,51 @@ export default function QueryInput({
   return (
     <div>
       <form className="d-flex flex-fill" onSubmit={handleFormSubmit}>
-        <input
-          className="form-control border-end-0 rounded-end-0 w-100"
-          enterkeyhint="enter"
-          placeholder={Boolean(queries.length) ? "" : "Find..."}
-          size={12}
-          type="text"
-          value={value}
-          onBlur={handleFormSubmit}
-          onInput={handleTextChange}
-        />
-        <button className="visually-hidden" type="submit">
-          Add
-        </button>
+        <div className="flex-fill border rounded rounded-end-0">
+          <input
+            className="form-control border-0 rounded-end-0"
+            enterkeyhint="enter"
+            placeholder="Search for..."
+            type="text"
+            value={value}
+            onBlur={handleFormSubmit}
+            onInput={handleTextChange}
+          />
+          <button className="visually-hidden" type="submit">
+            Add
+          </button>
+          {Boolean(queries.length) && (
+            <div className="d-flex align-items-start flex-wrap gap-1 p-1">
+              {queries.map((query, idx) => (
+                <span
+                  key={idx}
+                  className="d-flex align-items-center badge fs-6 rounded-pill text-bg-light flex-fill-0 pe-0"
+                >
+                  {query}
+                  <button
+                    className="bg-transparent border-0"
+                    onClick={handleRemoveClick(query)}
+                  >
+                    <span className="d-flex align-items-center">
+                      <i className="material-icons-sharp fs-6">close</i>
+                    </span>
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
         <div
           aria-label="Query Patterns"
-          className="query-patterns btn-group"
+          className="query-patterns btn-group align-self-start"
           role="group"
         >
           {queryPatternMetadata.map(({ icon, title, value }, idx) => (
             <Fragment key={value}>
               <input
-                key={value}
                 checked={queryPatterns.includes(value)}
                 className={cx("btn-check px-0 py-2")}
-                id={value}
+                id={identifier + value}
                 type="checkbox"
                 onClick={handlePatternChange(value)}
               />
@@ -128,7 +148,7 @@ export default function QueryInput({
                   "btn btn-outline-primary d-flex align-items-center",
                   idx === 0 && "rounded-start-0"
                 )}
-                for={value}
+                for={identifier + value}
                 title={title}
               >
                 {icon}
@@ -137,23 +157,6 @@ export default function QueryInput({
           ))}
         </div>
       </form>
-      <div className="d-flex align-items-start flex-wrap gap-1">
-        {Boolean(queries.length) &&
-          queries.map((query, idx) => (
-            <span
-              key={idx}
-              className="d-flex align-items-center badge rounded-pill text-bg-light flex-fill-0 pe-0 py-0"
-            >
-              {query}
-              <button
-                className="bg-transparent border-0"
-                onClick={handleRemoveClick(query)}
-              >
-                <i className="material-icons-sharp fs-6">close</i>
-              </button>
-            </span>
-          ))}
-      </div>
     </div>
   );
 }

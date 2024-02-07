@@ -1,7 +1,7 @@
 import { browser, storageGetByKeys, storageSetByKeys } from "@worm/shared";
 
 browser.runtime.onInstalled.addListener(async () => {
-  const { domainBlocklist, matchers } = await storageGetByKeys([
+  const { domainBlocklist, matchers, preferences } = await storageGetByKeys([
     "domainBlocklist",
     "matchers",
   ]);
@@ -23,6 +23,14 @@ browser.runtime.onInstalled.addListener(async () => {
           replacement: "doogle",
         },
       ],
+    });
+  }
+
+  if (preferences === undefined) {
+    await storageSetByKeys({
+      preferences: {
+        activeTab: "rules",
+      },
     });
   }
 });

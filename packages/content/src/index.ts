@@ -8,7 +8,8 @@ import {
 
 const render = debounce(renderContent, 20);
 
-async function renderContent() {
+async function renderContent(msg = "") {
+  logDebug("rendering", msg);
   const { domainBlocklist = [], matchers = [] } = await storageGetByKeys([
     "domainBlocklist",
     "matchers",
@@ -35,7 +36,7 @@ function startContentListeners() {
   const observer = new MutationObserver((mutationList) => {
     for (const mutation of mutationList) {
       if (mutation.type === "childList") {
-        render(undefined, "mutation");
+        render("mutation");
       }
     }
   });
@@ -45,5 +46,8 @@ function startContentListeners() {
   });
 }
 
+document.addEventListener("readystatechange", () => {
+  renderContent("init");
+});
+
 startContentListeners();
-renderContent();

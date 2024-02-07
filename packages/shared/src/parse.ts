@@ -1,6 +1,8 @@
 import { Matcher, QueryPattern } from "@worm/types";
 import { logDebug } from "./logging";
 
+const parentNodeBlocklist: Node["nodeName"][] = ["i", "svg"];
+
 const patternRegex: {
   [key in QueryPattern]: (query: string, flags?: string) => RegExp;
 } = {
@@ -28,7 +30,6 @@ export function searchNode(
   found: HTMLElement[] = []
 ) {
   const textContent = String(element.textContent);
-
   let containsText = false;
 
   if (!queryPatterns || queryPatterns.length < 1) {
@@ -67,7 +68,12 @@ export function searchNode(
     }
   }
 
-  if (element.nodeType === Node.TEXT_NODE) {
+  if (
+    element.nodeType === Node.TEXT_NODE &&
+    !parentNodeBlocklist.includes(
+      String(element.parentNode?.nodeName.toLowerCase())
+    )
+  ) {
     found.push(element);
   }
 
@@ -120,6 +126,8 @@ export function replaceAll(matchers: Matcher[]) {
   }
 
   for (const matcher of matchers) {
+    if (matcher.active !== true) continue;
+
     const { queries } = matcher;
 
     for (const query of queries) {

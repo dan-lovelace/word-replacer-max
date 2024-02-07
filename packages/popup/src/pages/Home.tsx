@@ -1,17 +1,32 @@
 import { useContext } from "preact/hooks";
 
 import { storageSetByKeys } from "@worm/shared";
-import { Matcher } from "@worm/types";
+import { Matcher, PopupTab } from "@worm/types";
 
+import Debug from "../components/Debug";
 import ReplacementInput from "../components/ReplacementInput";
 import QueryInput from "../components/QueryInput";
+import cx from "../lib/classnames";
 import { Config } from "../store/Config";
 
+const tabs: { identifier: PopupTab; label: string }[] = [
+  {
+    identifier: "rules",
+    label: "Rules",
+  },
+  {
+    identifier: "domains",
+    label: "Domains",
+  },
+];
+
 export default function Home() {
-  const config = useContext(Config);
+  const {
+    storage: { matchers, preferences },
+  } = useContext(Config);
 
   const handleActiveChange = (identifier: string) => () => {
-    const newMatchers = [...(config.storage.matchers || [])];
+    const newMatchers = [...(matchers || [])];
     const matcherIdx = newMatchers.findIndex(
       (matcher) => matcher.identifier === identifier
     );
@@ -28,7 +43,7 @@ export default function Home() {
   const handleClick = () => {
     storageSetByKeys({
       matchers: [
-        ...(config.storage.matchers ?? []),
+        ...(matchers ?? []),
         {
           active: true,
           identifier: new Date().getTime().toString(),
@@ -45,7 +60,7 @@ export default function Home() {
     key: K,
     newValue: Matcher[K]
   ) => {
-    const newMatchers = [...(config.storage.matchers || [])];
+    const newMatchers = [...(matchers || [])];
     const matcherIdx = newMatchers.findIndex(
       (matcher) => matcher.identifier === identifier
     );
@@ -59,18 +74,37 @@ export default function Home() {
     });
   };
 
+  const handleTabChange = (newTab: PopupTab) => () => {
+    const newPreferences = Object.assign({}, preferences);
+    newPreferences.activeTab = newTab;
+
+    storageSetByKeys({ preferences: newPreferences });
+  };
+
   return (
     <div>
+      <ul className="nav nav-tabs">
+        {tabs.map(({ identifier, label }) => (
+          <li key={identifier} className="nav-item">
+            <button
+              className={cx(
+                "nav-link",
+                preferences?.activeTab === identifier && "active"
+              )}
+              onClick={handleTabChange(identifier)}
+            >
+              {label}
+            </button>
+          </li>
+        ))}
+      </ul>
       <div className="container-fluid">
-        {Boolean(config.storage.matchers?.length) && (
-          <div className="list-group list-group-flush">
-            {config.storage.matchers?.map(
-              (
-                { active, identifier, queries, queryPatterns, replacement },
-                idx
-              ) => (
-                <div key={idx} className="list-group-item row d-flex">
-                  <div className="col-auto d-flex align-items-center form-check form-switch ps-2">
+        {Boolean(matchers?.length) && (
+          <div className="d-flex flex-column gap-2 py-2">
+            {matchers?.map(
+              ({ active, identifier, queries, queryPatterns, replacement }) => (
+                <div key={identifier} className="row d-flex">
+                  <div className="col-auto form-check form-switch ps-3 pt-2">
                     <input
                       checked={active}
                       className="form-check-input m-0"
@@ -94,7 +128,7 @@ export default function Home() {
                       onChange={handleMatcherInputChange}
                     />
                   </div>
-                  <div className="col-auto">
+                  <div className="col-auto pt-2 px-0">
                     <i className="material-icons-sharp">swap_horiz</i>
                   </div>
                   <div className="col-auto">
@@ -115,14 +149,12 @@ export default function Home() {
           </div>
         )}
       </div>
-      <p>
-        <button className="btn btn-primary" onClick={handleClick}>
-          Add one
-        </button>
-      </p>
-      <p>
-        <div>{JSON.stringify(config, null, 2)}</div>
-      </p>
+      <button className="btn btn-secondary" onClick={handleClick}>
+        <span className="d-flex align-items-center">
+          <i className="material-icons-sharp me-1">add</i> New
+        </span>
+      </button>
+      <Debug />
     </div>
   );
 }

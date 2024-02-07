@@ -19,4 +19,9 @@ export type StorageKey = keyof StorageKeyMap;
 export type StorageKeyMap = {
   domainBlocklist: string[];
   matchers: Matcher[];
+  preferences: {
+    activeTab: PopupTab;
+  };
 };
+
+export type PopupTab = "domains" | "rules";

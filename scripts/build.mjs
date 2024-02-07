@@ -11,8 +11,8 @@ function writeManifest() {
   const [, , manifestVersion = "3"] = process.argv;
 
   if (!["2", "3"].includes(manifestVersion)) {
-    console.log("Invalid manifest version");
-    console.log("Usage: node build.mjs (2|3)");
+    console.log("Invalid manifest version. Available options: 2, 3");
+    console.log("Usage: node build.mjs 3");
     process.exit(1);
   }
 

@@ -1,7 +1,10 @@
 @import "bootstrap/scss/bootstrap";
 
 .query-patterns {
+  margin-left: -1px; // make it look more concretely-attached
+
   .btn {
+    min-height: 40px;
     width: 2.5rem;
   }
 }
