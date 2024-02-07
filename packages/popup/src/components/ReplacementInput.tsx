@@ -34,9 +34,9 @@ export default function ReplacementInput({
   };
 
   return (
-    <form className="position-relative flex-fill" onSubmit={handleFormSubmit}>
+    <form className="flex-fill border rounded" onSubmit={handleFormSubmit}>
       <input
-        className="form-control w-100"
+        className="form-control border-0"
         enterkeyhint="enter"
         size={12}
         type="text"

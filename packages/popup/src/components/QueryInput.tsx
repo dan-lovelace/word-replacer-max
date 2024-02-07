@@ -4,6 +4,7 @@ import { JSXInternal } from "preact/src/jsx";
 
 import { Matcher, QueryPattern } from "@worm/types";
 
+import Chip from "./Chip";
 import caseIcon from "../icons/case";
 import regexIcon from "../icons/regex";
 import wholeWordIcon from "../icons/whole-word";
@@ -111,20 +112,11 @@ export default function QueryInput({
           {Boolean(queries.length) && (
             <div className="d-flex align-items-start flex-wrap gap-1 p-1">
               {queries.map((query, idx) => (
-                <span
+                <Chip
                   key={idx}
-                  className="d-flex align-items-center badge fs-6 rounded-pill text-bg-light flex-fill-0 pe-0"
-                >
-                  {query}
-                  <button
-                    className="bg-transparent border-0"
-                    onClick={handleRemoveClick(query)}
-                  >
-                    <span className="d-flex align-items-center">
-                      <i className="material-icons-sharp fs-6">close</i>
-                    </span>
-                  </button>
-                </span>
+                  identifier={query}
+                  onRemove={handleRemoveClick}
+                />
               ))}
             </div>
           )}

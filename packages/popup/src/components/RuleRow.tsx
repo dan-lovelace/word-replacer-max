@@ -121,13 +121,10 @@ export default function RuleRow({
           onChange={handleMatcherInputChange}
         />
       </div>
-      <div className="col-auto ps-0">
+      <div className="col-auto ps-0 rule-row-actions">
         <button
           data-dismiss="delete"
-          className={cx(
-            "btn delete-button",
-            isConfirmingDelete && "btn-danger"
-          )}
+          className={cx("btn btn-light", isConfirmingDelete && "btn-danger")}
           onClick={handleDeleteClick}
         >
           <span data-dismiss="delete" className="d-flex align-items-center">

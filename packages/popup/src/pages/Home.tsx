@@ -70,7 +70,7 @@ export default function Home() {
           <div className="d-flex flex-column gap-2">
             <div className="ps-5">
               <button
-                className="btn btn-secondary"
+                className="btn btn-secondary btn-sm"
                 onClick={handleNewRuleClick}
               >
                 <span className="d-flex align-items-center">
@@ -89,7 +89,7 @@ export default function Home() {
           </div>
         )}
       </div>
-      <Debug />
+      {/* <Debug /> */}
     </div>
   );
 }

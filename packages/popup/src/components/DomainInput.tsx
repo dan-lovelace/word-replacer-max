@@ -4,6 +4,7 @@ import { JSXInternal } from "preact/src/jsx";
 import { storageSetByKeys } from "@worm/shared";
 import { DomainEffect } from "@worm/types";
 
+import Chip from "./Chip";
 import { Config } from "../store/Config";
 
 export default function DomainInput() {
@@ -82,6 +83,17 @@ export default function DomainInput() {
         </div>
       </div>
       <form className="position-relative flex-fill" onSubmit={handleFormSubmit}>
+        {Boolean(domainList?.length) && (
+          <div className="d-flex align-items-start flex-wrap gap-1 pb-2">
+            {domainList?.map((domain, idx) => (
+              <Chip
+                key={idx}
+                identifier={domain}
+                onRemove={handleRemoveClick}
+              />
+            ))}
+          </div>
+        )}
         <input
           className="form-control w-100"
           enterkeyhint="enter"
@@ -94,26 +106,6 @@ export default function DomainInput() {
         <button className="visually-hidden" type="submit">
           Add
         </button>
-        {Boolean(domainList?.length) && (
-          <div className="d-flex align-items-start flex-wrap gap-1 p-1">
-            {domainList?.map((domain, idx) => (
-              <span
-                key={idx}
-                className="d-flex align-items-center badge fs-6 rounded-pill text-bg-light flex-fill-0 pe-0"
-              >
-                {domain}
-                <button
-                  className="bg-transparent border-0"
-                  onClick={handleRemoveClick(domain)}
-                >
-                  <span className="d-flex align-items-center">
-                    <i className="material-icons-sharp fs-6">close</i>
-                  </span>
-                </button>
-              </span>
-            ))}
-          </div>
-        )}
       </form>
     </div>
   );

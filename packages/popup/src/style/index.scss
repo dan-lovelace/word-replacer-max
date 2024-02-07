@@ -1,5 +1,11 @@
 @import "bootstrap/scss/bootstrap";
 
+$inputHeight: 38px;
+
+input[type="text"] {
+  min-height: $inputHeight;
+}
+
 .layout {
   min-width: 796px;
 }
@@ -8,7 +14,14 @@
   margin-left: -1px; // make it look more concretely-attached
 
   .btn {
-    min-height: 40px;
+    min-height: calc($inputHeight + 2px);
+    width: 2.5rem;
+  }
+}
+
+.rule-row-actions {
+  .btn {
+    min-height: calc($inputHeight + 2px);
     width: 2.5rem;
   }
 }
