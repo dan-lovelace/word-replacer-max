@@ -30,11 +30,9 @@
       "homepage_url": "https://github.com/dan-lovelace/word-replacer-max",
       "manifest_version": 2,
       "icons": {
-        "16": "assets/img/logo_16.png",
-        "48": "assets/img/logo_48.png",
-        "128": "assets/img/logo_128.png",
-        "256": "assets/img/logo_256.png",
-        "512": "assets/img/logo_512.png"
+        "48": "assets/img/word-replacer-max-logo_64.png",
+        "128": "assets/img/word-replacer-max-logo_128.png",
+        "256": "assets/img/word-replacer-max-logo_256.png"
       },
       "browser_action": {
         "default_popup": "popup.html"
@@ -75,11 +73,9 @@
       "homepage_url": "https://github.com/dan-lovelace/word-replacer-max",
       "manifest_version": 3,
       "icons": {
-        "16": "assets/img/logo_16.png",
-        "48": "assets/img/logo_48.png",
-        "128": "assets/img/logo_128.png",
-        "256": "assets/img/logo_256.png",
-        "512": "assets/img/logo_512.png"
+        "48": "assets/img/word-replacer-max-logo_64.png",
+        "128": "assets/img/word-replacer-max-logo_128.png",
+        "256": "assets/img/word-replacer-max-logo_256.png"
       },
       "action": {
         "default_popup": "popup.html"
