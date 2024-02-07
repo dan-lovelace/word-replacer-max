@@ -18,7 +18,7 @@ export default function Support() {
           </a>
         </div>
       </div>
-      <div>
+      <div className="row">
         <div className="col-8 col-lg-6">
           <div className="fw-bold">GitHub</div>
           <a href="https://github.com/dan-lovelace/word-replacer-max/issues/new">

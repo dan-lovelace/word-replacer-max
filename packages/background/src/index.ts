@@ -1,4 +1,5 @@
 import { browser, storageGetByKeys, storageSetByKeys } from "@worm/shared";
+import { Matcher } from "@worm/types";
 
 browser.runtime.onInstalled.addListener(async () => {
   const { domainList, matchers, preferences } = await storageGetByKeys([
@@ -14,16 +15,28 @@ browser.runtime.onInstalled.addListener(async () => {
   }
 
   if (matchers === undefined) {
+    const defaultMatchers: Matcher[] = [
+      {
+        active: true,
+        identifier: "",
+        queries: ["my jaw dropped", "I was shocked"],
+        queryPatterns: [],
+        replacement: "I was surprised",
+      },
+      {
+        active: true,
+        identifier: "",
+        queries: ["This."],
+        queryPatterns: ["case", "wholeWord"],
+        replacement: "",
+      },
+    ];
+
     await storageSetByKeys({
-      matchers: [
-        {
-          active: true,
-          identifier: new Date().getTime().toString(),
-          queries: ["google"],
-          queryPatterns: [],
-          replacement: "doogle",
-        },
-      ],
+      matchers: defaultMatchers.map((matcher, idx) => ({
+        ...matcher,
+        identifier: `${matcher.identifier}-${idx}`,
+      })),
     });
   }
 
