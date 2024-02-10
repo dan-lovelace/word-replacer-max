@@ -13,10 +13,11 @@
   ],
   "private": true,
   "scripts": {
-    "build": "yarn clean && node scripts/build.mjs",
+    "build": "yarn clean && ts-node --esm scripts/build.ts",
     "clean": "rm -rf dist",
-    "start:2": "yarn clean && node scripts/build.mjs 2 && lerna run start",
-    "start:3": "yarn clean && node scripts/build.mjs 3 && lerna run start",
+    "package": "ts-node --esm scripts/package.ts",
+    "start:2": "yarn clean && ts-node --esm scripts/build.ts 2 && lerna run start",
+    "start:3": "yarn clean && ts-node --esm scripts/build.ts 3 && lerna run start",
     "test": "jest"
   },
   "engines": {

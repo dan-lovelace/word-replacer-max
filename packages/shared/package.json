@@ -13,9 +13,11 @@
     "webextension-polyfill": "^0.10.0"
   },
   "devDependencies": {
-    "@worm/types": "*",
+    "@types/archiver": "^6.0.2",
     "@types/jest": "^29.5.12",
     "@types/webextension-polyfill": "^0.10.7",
+    "@worm/types": "*",
+    "archiver": "^6.0.1",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "lerna": "^8.0.2",

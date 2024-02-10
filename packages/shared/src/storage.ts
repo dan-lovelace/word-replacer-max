@@ -1,10 +1,10 @@
-import Browser from "webextension-polyfill";
-
 import { Storage, StorageKey } from "@worm/types";
+
+import { browser } from "./browser";
 
 const {
   storage: { sync },
-} = Browser;
+} = browser;
 
 export const storageGet = sync.get;
 export const storageRemove = sync.remove;

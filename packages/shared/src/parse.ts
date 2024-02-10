@@ -1,4 +1,5 @@
 import { Matcher, QueryPattern } from "@worm/types";
+
 import { logDebug } from "./logging";
 
 const parentNodeBlocklist: Node["nodeName"][] = ["i", "svg"];
@@ -132,7 +133,6 @@ export function replaceAll(matchers: Matcher[]) {
 
     for (const query of queries) {
       const results = searchNode(body, query, matcher.queryPatterns) || [];
-      logDebug("replaceAll search results", results);
 
       for (const result of results) {
         replace(result, query, matcher.queryPatterns, matcher.replacement);
