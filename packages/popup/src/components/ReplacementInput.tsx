@@ -3,7 +3,13 @@ import { JSXInternal } from "preact/src/jsx";
 
 import { Matcher } from "@worm/types";
 
-type ReplacementInputProps = Pick<Matcher, "identifier" | "replacement"> & {
+import { RefreshRequiredToast } from "./RefreshRequiredToast";
+import { useToast } from "../store/Toast";
+
+type ReplacementInputProps = Pick<
+  Matcher,
+  "active" | "identifier" | "queries" | "replacement"
+> & {
   onChange: (
     identifier: string,
     key: keyof Matcher,
@@ -12,11 +18,14 @@ type ReplacementInputProps = Pick<Matcher, "identifier" | "replacement"> & {
 };
 
 export default function ReplacementInput({
+  active,
   identifier,
+  queries,
   replacement,
   onChange,
 }: ReplacementInputProps) {
   const [value, setValue] = useState(replacement);
+  const { hideToast, showToast } = useToast();
 
   const handleFormSubmit = (
     event:
@@ -24,6 +33,12 @@ export default function ReplacementInput({
       | JSXInternal.TargetedFocusEvent<HTMLInputElement>
   ) => {
     event.preventDefault();
+    if (value === replacement) return;
+
+    if (active && Boolean(queries.length)) {
+      showToast({ children: <RefreshRequiredToast onClose={hideToast} /> });
+    }
+
     onChange(identifier, "replacement", value);
   };
 
@@ -38,7 +53,7 @@ export default function ReplacementInput({
       <input
         className="form-control border-0"
         enterkeyhint="enter"
-        size={12}
+        size={15}
         type="text"
         value={value}
         onBlur={handleFormSubmit}

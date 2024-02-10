@@ -58,26 +58,26 @@ export default function DomainInput() {
         <div className="form-check m-0">
           <input
             checked={preferences?.domainListEffect === "allow"}
-            class="form-check-input"
+            className="form-check-input"
             id="allowRadio"
             name="allow"
             type="radio"
             onChange={handleEffectChange("allow")}
           />
-          <label class="form-check-label" for="allowRadio">
+          <label className="form-check-label" for="allowRadio">
             Allow
           </label>
         </div>
-        <div class="form-check m-0">
+        <div className="form-check m-0">
           <input
             checked={preferences?.domainListEffect === "deny"}
-            class="form-check-input"
+            className="form-check-input"
             id="denyRadio"
             name="deny"
             type="radio"
             onChange={handleEffectChange("deny")}
           />
-          <label class="form-check-label" for="denyRadio">
+          <label className="form-check-label" for="denyRadio">
             Deny
           </label>
         </div>

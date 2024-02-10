@@ -5,14 +5,16 @@ import { JSXInternal } from "preact/src/jsx";
 import { Matcher, QueryPattern } from "@worm/types";
 
 import Chip from "./Chip";
+import { RefreshRequiredToast } from "./RefreshRequiredToast";
 import caseIcon from "../icons/case";
 import regexIcon from "../icons/regex";
 import wholeWordIcon from "../icons/whole-word";
 import cx from "../lib/classnames";
+import { useToast } from "../store/Toast";
 
 type QueryInputProps = Pick<
   Matcher,
-  "identifier" | "queries" | "queryPatterns"
+  "active" | "identifier" | "queries" | "queryPatterns"
 > & {
   onChange: (
     identifier: string,
@@ -44,12 +46,14 @@ const queryPatternMetadata: {
 ];
 
 export default function QueryInput({
+  active,
   identifier,
   queries,
   queryPatterns,
   onChange,
 }: QueryInputProps) {
   const [value, setValue] = useState("");
+  const { hideToast, showToast } = useToast();
 
   const handleFormSubmit = (
     event:
@@ -80,6 +84,10 @@ export default function QueryInput({
   };
 
   const handleRemoveClick = (query: string) => () => {
+    if (active) {
+      showToast({ children: <RefreshRequiredToast onClose={hideToast} /> });
+    }
+
     onChange(
       identifier,
       "queries",
@@ -94,61 +102,60 @@ export default function QueryInput({
   };
 
   return (
-    <div>
-      <form className="d-flex flex-fill" onSubmit={handleFormSubmit}>
-        <div className="flex-fill border rounded rounded-end-0">
-          <input
-            className="form-control border-0 rounded-end-0"
-            enterkeyhint="enter"
-            placeholder="Search for..."
-            type="text"
-            value={value}
-            onBlur={handleFormSubmit}
-            onInput={handleTextChange}
-          />
-          <button className="visually-hidden" type="submit">
-            Add
-          </button>
-          {Boolean(queries.length) && (
-            <div className="d-flex align-items-start flex-wrap gap-1 p-1">
-              {queries.map((query, idx) => (
-                <Chip
-                  key={idx}
-                  identifier={query}
-                  onRemove={handleRemoveClick}
-                />
-              ))}
-            </div>
-          )}
-        </div>
-        <div
-          aria-label="Query Patterns"
-          className="query-patterns btn-group align-self-start"
-          role="group"
-        >
-          {queryPatternMetadata.map(({ icon, title, value }, idx) => (
-            <Fragment key={value}>
-              <input
-                checked={queryPatterns.includes(value)}
-                className={cx("btn-check px-0 py-2")}
-                id={identifier + value}
-                type="checkbox"
-                onClick={handlePatternChange(value)}
-              />
-              <label
-                className={cx(
-                  "btn btn-outline-primary d-flex align-items-center",
-                  idx === 0 && "rounded-start-0"
-                )}
-                for={identifier + value}
-                title={title}
-              >
-                {icon}
-              </label>
-            </Fragment>
-          ))}
-        </div>
-      </form>
-    </div>
+    <form className="d-flex flex-fill" onSubmit={handleFormSubmit}>
+      <div
+        className="flex-fill border rounded rounded-end-0"
+        style={`border-bottom-right-radius: ${
+          Boolean(queries.length) ? "6px !important" : "0"
+        };`}
+      >
+        <input
+          className="form-control border-0 rounded-end-0"
+          enterkeyhint="enter"
+          placeholder="Search for..."
+          type="text"
+          value={value}
+          onBlur={handleFormSubmit}
+          onInput={handleTextChange}
+        />
+        <button className="visually-hidden" type="submit">
+          Add
+        </button>
+        {Boolean(queries.length) && (
+          <div className="d-flex align-items-start flex-wrap gap-1 p-1">
+            {queries.map((query, idx) => (
+              <Chip key={idx} identifier={query} onRemove={handleRemoveClick} />
+            ))}
+          </div>
+        )}
+      </div>
+      <div
+        aria-label="Query Patterns"
+        className="query-patterns btn-group align-self-start"
+        role="group"
+      >
+        {queryPatternMetadata.map(({ icon, title, value }, idx) => (
+          <Fragment key={value}>
+            <input
+              checked={queryPatterns.includes(value)}
+              className={cx("btn-check px-0 py-2")}
+              id={identifier + value}
+              type="checkbox"
+              onClick={handlePatternChange(value)}
+            />
+            <label
+              className={cx(
+                "btn btn-outline-primary d-flex align-items-center",
+                idx === 0 && "rounded-start-0"
+              )}
+              for={identifier + value}
+              title={title}
+            >
+              {icon}
+            </label>
+          </Fragment>
+        ))}
+      </div>
+    </form>
   );
 }

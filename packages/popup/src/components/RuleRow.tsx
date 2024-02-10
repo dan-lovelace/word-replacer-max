@@ -4,8 +4,10 @@ import { storageSetByKeys } from "@worm/shared";
 import { Matcher } from "@worm/types";
 
 import QueryInput from "./QueryInput";
+import { RefreshRequiredToast } from "./RefreshRequiredToast";
 import ReplacementInput from "./ReplacementInput";
 import cx from "../lib/classnames";
+import { useToast } from "../store/Toast";
 
 type RuleRowProps = {
   matcher: Matcher;
@@ -18,6 +20,7 @@ export default function RuleRow({
 }: RuleRowProps) {
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
   const confirmingDeleteRef = useRef<boolean>();
+  const { hideToast, showToast } = useToast();
   confirmingDeleteRef.current = isConfirmingDelete;
 
   const clickawayListener = useCallback((event: MouseEvent) => {
@@ -47,6 +50,10 @@ export default function RuleRow({
 
     newMatchers[matcherIdx].active = !newMatchers[matcherIdx].active;
 
+    if (!newMatchers[matcherIdx].active) {
+      showToast({ children: <RefreshRequiredToast onClose={hideToast} /> });
+    }
+
     storageSetByKeys({
       matchers: newMatchers,
     });
@@ -72,8 +79,14 @@ export default function RuleRow({
   };
 
   const handleDeleteClick = () => {
-    if (isConfirmingDelete) {
+    const queriesExist = Boolean(queries.length);
+
+    if (!queriesExist || isConfirmingDelete) {
       document.documentElement.removeEventListener("click", clickawayListener);
+
+      if (active && queriesExist) {
+        showToast({ children: <RefreshRequiredToast onClose={hideToast} /> });
+      }
 
       storageSetByKeys({
         matchers: matchers.filter(
@@ -106,6 +119,7 @@ export default function RuleRow({
       </div>
       <div className="col">
         <QueryInput
+          active={active}
           identifier={identifier}
           queries={queries}
           queryPatterns={queryPatterns}
@@ -117,7 +131,9 @@ export default function RuleRow({
       </div>
       <div className="col-auto">
         <ReplacementInput
+          active={active}
           identifier={identifier}
+          queries={queries}
           replacement={replacement}
           onChange={handleMatcherInputChange}
         />

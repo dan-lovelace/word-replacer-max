@@ -2,6 +2,17 @@
 
 $inputHeight: 38px;
 
+body {
+  min-width: 800px; // this is not an arbitrary number; test changes on all browsers
+
+  #app {
+    .layout {
+      height: 600px; // also not arbitrary; test everything
+      overflow: hidden;
+    }
+  }
+}
+
 input[role="switch"]:hover {
   cursor: pointer;
 }
@@ -16,10 +27,6 @@ input[type="text"] {
 
 .fs-sm {
   font-size: 0.8rem;
-}
-
-.layout {
-  min-width: 796px;
 }
 
 .query-patterns {

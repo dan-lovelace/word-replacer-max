@@ -1,9 +1,8 @@
 import { VNode, createContext } from "preact";
-import { StateUpdater, useEffect, useState } from "preact/hooks";
-import Browser from "webextension-polyfill";
+import { useEffect, useState } from "preact/hooks";
 
-import { storageGetByKeys } from "@worm/shared";
-import { Matcher, Storage } from "@worm/types";
+import { browser, storageGetByKeys } from "@worm/shared";
+import { Storage } from "@worm/types";
 
 type ConfigType = {
   storage: Storage;
@@ -31,10 +30,10 @@ export function ConfigProvider({ children }: { children: VNode }) {
       setInitialized(true);
     });
 
-    Browser.storage.onChanged.addListener(updateStorage);
+    browser.storage.onChanged.addListener(updateStorage);
 
     return () => {
-      Browser.storage.onChanged.removeListener(updateStorage);
+      browser.storage.onChanged.removeListener(updateStorage);
     };
   }, []);
 

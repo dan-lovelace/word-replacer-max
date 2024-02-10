@@ -9,6 +9,7 @@ export default function Chip({ identifier, onRemove }: ChipProps) {
       {identifier}
       <button
         className="bg-transparent border-0"
+        type="button"
         onClick={onRemove(identifier)}
       >
         <span className="d-flex align-items-center">

@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.5.0",
+    "@types/bootstrap": "^5.2.10",
     "@worm/types": "*",
     "sass": "^1.70.0"
   }

@@ -52,7 +52,7 @@ export default function HomePage() {
   };
 
   return (
-    <div>
+    <div className="d-flex flex-column h-100">
       <ul className="nav nav-tabs">
         {tabs.map(({ identifier, label }) => (
           <li
@@ -74,7 +74,7 @@ export default function HomePage() {
           </li>
         ))}
       </ul>
-      <div className="container-fluid py-2">
+      <div className="container-fluid py-2 flex-fill overflow-y-auto">
         {preferences?.activeTab === "domains" && <DomainInput />}
         {preferences?.activeTab === "rules" && (
           <div className="d-flex flex-column gap-2">

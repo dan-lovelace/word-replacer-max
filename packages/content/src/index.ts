@@ -9,7 +9,6 @@ import {
 const render = debounce(renderContent, 20);
 
 async function renderContent(msg = "") {
-  logDebug("rendering", msg);
   const {
     domainList = [],
     matchers = [],
