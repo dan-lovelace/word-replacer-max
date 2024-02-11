@@ -67,7 +67,7 @@ function startContentListeners() {
 }
 
 document.addEventListener("readystatechange", () => {
-  renderContent("init");
+  renderContent("document readystatechange");
 });
 
 startContentListeners();

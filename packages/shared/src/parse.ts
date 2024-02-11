@@ -2,6 +2,9 @@ import { Matcher, QueryPattern } from "@worm/types";
 
 import { logDebug } from "./logging";
 
+const escapeRegex = (str: string) =>
+  str.replace(/[/\-\\^$*+?.()|[\]{}]/g, "\\$&");
+
 const parentNodeBlocklist: Node["nodeName"][] = ["i", "svg"];
 
 const patternRegex: {
@@ -11,7 +14,7 @@ const patternRegex: {
   default: (query) => new RegExp(query, "gi"),
   regex: (query, flags) => new RegExp(query, flags),
   wholeWord: (query, flags) =>
-    new RegExp(`(^|\\s|[.\\-'])${query}($|\\s|[.\\-'])`, flags),
+    new RegExp(`(^|\\s)${escapeRegex(query)}($|\\s)`, flags),
 };
 
 function getFlags(queryPatterns: QueryPattern[]) {
@@ -107,12 +110,22 @@ export function replace(
           break;
         }
 
-        case "regex":
-        case "wholeWord": {
+        case "regex": {
           element.textContent = textContent.replace(
             patternRegex[pattern](query, getFlags(queryPatterns)),
             replacement
           );
+          break;
+        }
+
+        case "wholeWord": {
+          element.textContent = textContent
+            .replace(
+              patternRegex[pattern](query, getFlags(queryPatterns)),
+              ` ${replacement} `
+            )
+            .replace(/\s\s+/g, "")
+            .trim();
           break;
         }
       }
@@ -129,9 +142,7 @@ export function replaceAll(matchers: Matcher[]) {
   for (const matcher of matchers) {
     if (matcher.active !== true) continue;
 
-    const { queries } = matcher;
-
-    for (const query of queries) {
+    for (const query of matcher.queries) {
       const results = searchNode(body, query, matcher.queryPatterns) || [];
 
       for (const result of results) {
