@@ -26,8 +26,7 @@
   "manifestJSON": {
     "v2": {
       "name": "Word Replacer Max",
-      "version": "0.0.0",
-      "description": "Replaces text and words on any web page using simple rule sets",
+      "description": "Seamlessly replace text on any web page.",
       "homepage_url": "https://github.com/dan-lovelace/word-replacer-max",
       "manifest_version": 2,
       "icons": {
@@ -69,8 +68,7 @@
     },
     "v3": {
       "name": "Word Replacer Max",
-      "version": "0.0.0",
-      "description": "Replaces text and words on any web page using simple rule sets",
+      "description": "Seamlessly replace text on any web page.",
       "homepage_url": "https://github.com/dan-lovelace/word-replacer-max",
       "manifest_version": 3,
       "icons": {
