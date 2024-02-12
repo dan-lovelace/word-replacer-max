@@ -1,6 +1,6 @@
 {
   "name": "@worm/content",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "author": "dan-lovelace",
   "license": "MIT",
   "main": "src/index.ts",
@@ -12,8 +12,5 @@
   },
   "dependencies": {
     "@worm/shared": "*"
-  },
-  "devDependencies": {
-    "@worm/types": "*"
   }
 }

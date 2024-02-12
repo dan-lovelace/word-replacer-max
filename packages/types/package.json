@@ -1,6 +1,6 @@
 {
   "name": "@worm/types",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "author": "dan-lovelace",
   "license": "MIT",
   "main": "src/index.ts",
