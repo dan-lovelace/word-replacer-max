@@ -24,6 +24,7 @@ export type StorageKeyMap = {
   preferences: {
     activeTab: PopupTab;
     domainListEffect: DomainEffect;
+    extensionEnabled: boolean;
   };
 };
 

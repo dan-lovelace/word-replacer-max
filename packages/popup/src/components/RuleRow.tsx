@@ -138,11 +138,17 @@ export default function RuleRow({
           onChange={handleMatcherInputChange}
         />
       </div>
-      <div className="col-auto ps-0 rule-row-actions">
+      <div className="rule-row-actions col-auto ps-0">
         <button
           data-dismiss="delete"
-          className={cx("btn", isConfirmingDelete ? "btn-danger" : "btn-light")}
+          className={cx(
+            "btn",
+            isConfirmingDelete
+              ? "btn-danger"
+              : "btn-light bg-transparent border-0"
+          )}
           title={isConfirmingDelete ? "Confirm" : "Delete Rule"}
+          onBlur={() => clickawayListener(new MouseEvent(""))}
           onClick={handleDeleteClick}
         >
           <span data-dismiss="delete" className="d-flex align-items-center">

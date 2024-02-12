@@ -1,9 +1,105 @@
 import { VNode } from "preact";
+import { useContext } from "preact/hooks";
+
+import { storageSetByKeys } from "@worm/shared";
+import { PopupTab } from "@worm/types";
+
+import { RefreshRequiredToast } from "./RefreshRequiredToast";
+import cx from "../lib/classnames";
+import { Config } from "../store/Config";
+import { useToast } from "../store/Toast";
 
 type LayoutProps = {
   children: VNode;
 };
 
+const tabs: { identifier: PopupTab; label: string }[] = [
+  {
+    identifier: "rules",
+    label: "Rules",
+  },
+  {
+    identifier: "domains",
+    label: "Domains",
+  },
+  {
+    identifier: "support",
+    label: "Help",
+  },
+];
+
 export default function Layout({ children }: LayoutProps) {
-  return <div className="layout">{children}</div>;
+  const {
+    storage: { preferences },
+  } = useContext(Config);
+  const { hideToast, showToast } = useToast();
+
+  const handleExtensionEnabledClick = () => {
+    const newPreferences = Object.assign({}, preferences);
+    const newEnabled = !Boolean(newPreferences?.extensionEnabled);
+    newPreferences.extensionEnabled = newEnabled;
+
+    if (!newEnabled) {
+      showToast({
+        children: <RefreshRequiredToast onClose={hideToast} />,
+      });
+    }
+
+    storageSetByKeys({
+      preferences: newPreferences,
+    });
+  };
+
+  const handleTabChange = (newTab: PopupTab) => () => {
+    const newPreferences = Object.assign({}, preferences);
+    newPreferences.activeTab = newTab;
+
+    storageSetByKeys({ preferences: newPreferences });
+  };
+
+  return (
+    <div className="layout">
+      <div className="d-flex flex-column h-100">
+        <div className="d-flex w-100">
+          <div className="d-flex align-items-center justify-content-center">
+            <button
+              className={cx(
+                "material-icons-sharp",
+                "btn btn-light bg-transparent border-0",
+                "mx-1",
+                preferences?.extensionEnabled ? "text-success" : "text-danger"
+              )}
+              title="Toggle Extension"
+              onClick={handleExtensionEnabledClick}
+            >
+              power_settings_new
+            </button>
+          </div>
+          <ul className="nav nav-tabs flex-fill">
+            {tabs.map(({ identifier, label }) => (
+              <li
+                key={identifier}
+                className={cx(
+                  "nav-item",
+                  identifier === "support" &&
+                    "flex-fill d-flex justify-content-end"
+                )}
+              >
+                <button
+                  className={cx(
+                    "nav-link",
+                    preferences?.activeTab === identifier && "active"
+                  )}
+                  onClick={handleTabChange(identifier)}
+                >
+                  {label}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+        {children}
+      </div>
+    </div>
+  );
 }

@@ -45,6 +45,7 @@ browser.runtime.onInstalled.addListener(async () => {
       preferences: {
         activeTab: "rules",
         domainListEffect: "deny",
+        extensionEnabled: true,
       },
     });
   }
