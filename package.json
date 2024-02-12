@@ -58,13 +58,7 @@
       ],
       "web_accessible_resources": [
         "assets/*"
-      ],
-      "browser_specific_settings": {
-        "gecko": {
-          "id": "addon@logicnow.io",
-          "strict_min_version": "1.0"
-        }
-      }
+      ]
     },
     "v3": {
       "name": "Word Replacer Max",
