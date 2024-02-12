@@ -5,7 +5,15 @@ import { logDebug } from "./logging";
 const escapeRegex = (str: string) =>
   str.replace(/[/\-\\^$*+?.()|[\]{}]/g, "\\$&");
 
-const parentNodeBlocklist: Node["nodeName"][] = ["i", "svg"];
+const parentNodeBlocklist: Node["nodeName"][] = [
+  "head",
+  "i",
+  "img",
+  "script",
+  "style",
+  "svg",
+  "video",
+];
 
 const patternRegex: {
   [key in QueryPattern]: (query: string, flags?: string) => RegExp;

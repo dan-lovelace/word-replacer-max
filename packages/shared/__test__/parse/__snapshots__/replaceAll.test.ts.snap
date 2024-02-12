@@ -1,0 +1,122 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`replaceAll document cases does not match across element boundaries 1`] = `
+<html>
+  <head />
+  <body>
+    
+            
+    <p>
+      
+              Lorem 
+      <u>
+        ipsum
+      </u>
+       dolor
+            
+    </p>
+    
+          
+        
+      
+  </body>
+</html>
+`;
+
+exports[`replaceAll document cases does not overwrite 'script' elements 1`] = `
+<html>
+  <head>
+    
+            
+    <title>
+      Lorem ipsum dolor
+    </title>
+    
+            
+    <script>
+      
+              function ipsum() {
+                
+              }
+            
+    </script>
+    
+          
+  </head>
+  
+          
+  <body>
+    
+            
+    <p>
+      
+              Lorem sit dolor
+            
+    </p>
+    
+            
+    <script>
+      
+              const html = document.createElement("html");
+              html.innerHTML = "&lt;body&gt;Lorem ipsum dolor sit&lt;/body&gt;";
+            
+    </script>
+    
+          
+        
+      
+  </body>
+</html>
+`;
+
+exports[`replaceAll document cases does not overwrite the 'head' element 1`] = `
+<html>
+  <head>
+    
+            
+    <title>
+      Lorem ipsum dolor
+    </title>
+    
+          
+  </head>
+  
+          
+  <body>
+    
+            
+    <p>
+      
+              Lorem sit dolor
+            
+    </p>
+    
+          
+        
+      
+  </body>
+</html>
+`;
+
+exports[`replaceAll document cases maintains text enhancement elements 1`] = `
+<html>
+  <head />
+  <body>
+    
+            
+    <p>
+      
+              Lorem 
+      <u>
+        sit
+      </u>
+       dolor
+            
+    </p>
+    
+          
+        
+      
+  </body>
+</html>
+`;
