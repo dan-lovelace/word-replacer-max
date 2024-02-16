@@ -30,7 +30,7 @@ To get started, you'll need:
 # Developing
 
 After following the dependency installation instructions above, use the
-`start:*` commad to start a development server using a given manifest version.
+`start:*` command to start a development server using a given manifest version.
 For version 2:
 
 ```
