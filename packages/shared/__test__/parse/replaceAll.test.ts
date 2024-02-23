@@ -1,4 +1,6 @@
-import { replaceAll } from "../../src/parse";
+import { replaceAll } from "@worm/shared/src/replace";
+
+jest.useFakeTimers().setSystemTime(new Date("2024-01-01"));
 
 describe("replaceAll", () => {
   describe("document cases", () => {

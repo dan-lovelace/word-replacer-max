@@ -1,4 +1,4 @@
-import { searchNode } from "../../src/parse";
+import { searchNode } from "@worm/shared/src/replace";
 
 const DEFAULT_TEST_STRING = "Lorem ipsum dolor sit amet";
 

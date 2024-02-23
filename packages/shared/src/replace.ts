@@ -93,11 +93,20 @@ export function searchNode(
 }
 
 export function replace(
-  element: HTMLElement,
+  element: HTMLElement | ChildNode | null,
   query: string,
   queryPatterns: QueryPattern[],
   replacement: string
 ) {
+  if (element === null) return;
+
+  const { parentElement } = element;
+
+  if (parentElement?.dataset["isReplaced"]) {
+    // already replaced
+    return;
+  }
+
   const textContent = String(element.textContent);
 
   if (!queryPatterns || queryPatterns.length < 1) {
@@ -138,6 +147,10 @@ export function replace(
         }
       }
     }
+  }
+
+  if (parentElement) {
+    parentElement.dataset["isReplaced"] = new Date().getTime().toString();
   }
 }
 

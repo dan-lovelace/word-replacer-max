@@ -1,7 +1,8 @@
-import { replace } from "../../src/parse";
+import { replace } from "@worm/shared/src/replace";
 
 function assertDefined<T>(obj: T | null | undefined): T {
   expect(obj).toBeDefined();
+
   return obj as T;
 }
 
@@ -15,7 +16,7 @@ describe("replace", () => {
       `;
 
       const target = assertDefined(document.getElementById("target"));
-      replace(target, "ipsum", [], "sit");
+      replace(target.firstChild, "ipsum", [], "sit");
       expect(target.textContent).toBe("Lorem sit dolor");
     });
 
@@ -27,7 +28,7 @@ describe("replace", () => {
       `;
 
       const target = assertDefined(document.getElementById("target"));
-      replace(target, "lorem ipsum", [], "sit");
+      replace(target.firstChild, "lorem ipsum", [], "sit");
       expect(target.textContent).toBe("sit dolor");
     });
 
@@ -39,8 +40,23 @@ describe("replace", () => {
       `;
 
       const target = assertDefined(document.getElementById("target"));
-      replace(target, "ipsum", [], "sit");
+      replace(target.firstChild, "ipsum", [], "sit");
       expect(target.textContent).toBe("Lorem sit dolor");
+    });
+
+    it("does not recursively replace", () => {
+      document.body.innerHTML = `
+        <div>
+          <p id="target" class="ipsum">Lorem Ipsum</p>
+        </div>
+      `;
+
+      const target = assertDefined(document.getElementById("target"));
+      replace(target.firstChild, "Lo", [], "Losit");
+      replace(target.firstChild, "Lo", [], "Losit");
+      replace(target.firstChild, "Lo", [], "Losit");
+
+      expect(target.textContent).toBe("Lositrem Ipsum");
     });
   });
 
@@ -53,7 +69,7 @@ describe("replace", () => {
       `;
 
       const target = assertDefined(document.getElementById("target"));
-      replace(target, "ipsum", ["case"], "sit");
+      replace(target.firstChild, "ipsum", ["case"], "sit");
       expect(target.textContent).toBe("Lorem sit dolor");
     });
 
@@ -65,7 +81,7 @@ describe("replace", () => {
       `;
 
       const target = assertDefined(document.getElementById("target"));
-      replace(target, "ipsum", ["case"], "sit");
+      replace(target.firstChild, "ipsum", ["case"], "sit");
       expect(target.textContent).toBe("Lorem sit dolor Ipsum sit sit");
     });
   });
@@ -81,15 +97,20 @@ describe("replace", () => {
       `;
 
       const target1 = assertDefined(document.getElementById("target1"));
-      replace(target1, "ipsum", ["regex"], "sit");
+      replace(target1.firstChild, "ipsum", ["regex"], "sit");
       expect(target1.textContent).toBe("Lorem sit dolor");
 
       const target2 = assertDefined(document.getElementById("target2"));
-      replace(target2, "ipsum.*", ["regex"], "sit");
+      replace(target2.firstChild as HTMLElement, "ipsum.*", ["regex"], "sit");
       expect(target2.textContent).toBe("Lorem sit");
 
       const target3 = assertDefined(document.getElementById("target3"));
-      replace(target3, "^(Lo)+rem[\\s]+i{1}", ["regex"], "sit");
+      replace(
+        target3.firstChild as HTMLElement,
+        "^(Lo)+rem[\\s]+i{1}",
+        ["regex"],
+        "sit"
+      );
       expect(target3.textContent).toBe("sitpsum dolor");
     });
   });
@@ -103,7 +124,7 @@ describe("replace", () => {
       `;
 
       const target = assertDefined(document.getElementById("target"));
-      replace(target, "ipsum.", ["wholeWord"], "sit");
+      replace(target.firstChild, "ipsum.", ["wholeWord"], "sit");
       expect(target.textContent).toBe("Lorem ipsum dolor sit");
     });
 
@@ -115,7 +136,7 @@ describe("replace", () => {
       `;
 
       const target = assertDefined(document.getElementById("target"));
-      replace(target, "ipsum.", ["wholeWord"], "sit");
+      replace(target.firstChild, "ipsum.", ["wholeWord"], "sit");
       expect(target.textContent).toBe("Lorem ipsum dolor sit sit sit");
     });
 
@@ -127,7 +148,7 @@ describe("replace", () => {
       `;
 
       const target1 = assertDefined(document.getElementById("target1"));
-      replace(target1, "'Ipsum'", ["wholeWord"], "sit");
+      replace(target1.firstChild, "'Ipsum'", ["wholeWord"], "sit");
       expect(target1.textContent).toBe("Lorem sit dolor");
 
       document.body.innerHTML = `
@@ -137,7 +158,7 @@ describe("replace", () => {
       `;
 
       const target2 = assertDefined(document.getElementById("target2"));
-      replace(target2, "Ipsum", ["wholeWord"], "sit");
+      replace(target2.firstChild, "Ipsum", ["wholeWord"], "sit");
       expect(target2.textContent).toBe("Lorem 'Ipsum' dolor");
     });
   });
@@ -151,7 +172,7 @@ describe("replace", () => {
       `;
 
       const target = assertDefined(document.getElementById("target"));
-      replace(target, "Ipsum", ["case", "wholeWord"], "sit");
+      replace(target.firstChild, "Ipsum", ["case", "wholeWord"], "sit");
       expect(target.textContent).toBe("Lorem sit dolor sIpsum ipsum");
     });
 
@@ -163,7 +184,7 @@ describe("replace", () => {
       `;
 
       const target = assertDefined(document.getElementById("target"));
-      replace(target, "Ipsum", ["case", "wholeWord"], "sit");
+      replace(target.firstChild, "Ipsum", ["case", "wholeWord"], "sit");
       expect(target.textContent).toBe("Lorem sit dolor sIpsum sit");
     });
   });

@@ -48,7 +48,9 @@ exports[`replaceAll document cases does not overwrite 'script' elements 1`] = `
   <body>
     
             
-    <p>
+    <p
+      data-is-replaced="1704067200000"
+    >
       
               Lorem sit dolor
             
@@ -85,7 +87,9 @@ exports[`replaceAll document cases does not overwrite the 'head' element 1`] = `
   <body>
     
             
-    <p>
+    <p
+      data-is-replaced="1704067200000"
+    >
       
               Lorem sit dolor
             
@@ -107,7 +111,9 @@ exports[`replaceAll document cases maintains text enhancement elements 1`] = `
     <p>
       
               Lorem 
-      <u>
+      <u
+        data-is-replaced="1704067200000"
+      >
         sit
       </u>
        dolor
