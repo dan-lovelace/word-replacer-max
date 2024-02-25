@@ -4,7 +4,7 @@
     "name": "dan-lovelace",
     "url": "https://github.com/dan-lovelace/word-replacer-max"
   },
-  "version": "0.0.1",
+  "version": "0.0.2",
   "license": "MIT",
   "description": "A browser extension for replacing text on web pages",
   "type": "module",
@@ -58,7 +58,13 @@
       ],
       "web_accessible_resources": [
         "assets/*"
-      ]
+      ],
+      "browser_specific_settings": {
+        "gecko": {
+          "id": "addon@logicnow.io",
+          "strict_min_version": "1.0"
+        }
+      }
     },
     "v3": {
       "name": "Word Replacer Max",
