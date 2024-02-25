@@ -6,6 +6,7 @@ import path from "path";
 import archiver from "archiver";
 
 const __dirname = process.cwd();
+const DIST_DIR = "dist";
 const VERSIONS_DIR = "versions";
 
 function main() {
@@ -32,6 +33,17 @@ function main() {
       fs.mkdirSync(VERSIONS_DIR);
     }
 
+    if (manifestVersion === "2") {
+      // remove development settings from manifest
+      const manifestLocation = path.join(__dirname, DIST_DIR, "manifest.json");
+      const versionJSON = JSON.parse(
+        fs.readFileSync(manifestLocation, "utf-8")
+      );
+
+      delete versionJSON["browser_specific_settings"];
+      fs.writeFileSync(manifestLocation, JSON.stringify(versionJSON), "utf-8");
+    }
+
     const output = fs.createWriteStream(outputFile);
     const archive = archiver("zip", {
       zlib: {
@@ -45,7 +57,7 @@ function main() {
 
     archive.pipe(output);
     archive.glob("**/*", {
-      cwd: "dist",
+      cwd: DIST_DIR,
       ignore: [".DS_Store"],
     });
     archive.finalize();
