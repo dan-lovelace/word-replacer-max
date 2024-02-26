@@ -7,7 +7,10 @@ export default function Support() {
           possible experience and want to help with any problems you run into.
           Support tickets opened in the extension store do not always reach our
           engineers in a timely manner
-          <a href="https://groups.google.com/a/chromium.org/g/chromium-extensions/c/V5As4co1mmI">
+          <a
+            href="https://groups.google.com/a/chromium.org/g/chromium-extensions/c/V5As4co1mmI"
+            target="_blank"
+          >
             [1]
           </a>
           , so reaching out via email or GitHub is the best way to get things
@@ -17,7 +20,10 @@ export default function Support() {
       <div className="row">
         <div className="col col-lg-6">
           <div className="fw-bold">Email</div>
-          <a href="mailto:contact@logicnow.io?subject='Help with Word Replacer Max'">
+          <a
+            href="mailto:contact@logicnow.io?subject=Help%20with%20Word%20Replacer%20Max"
+            target="_blank"
+          >
             contact@logicnow.io
           </a>
         </div>
@@ -25,7 +31,10 @@ export default function Support() {
       <div className="row">
         <div className="col col-lg-6">
           <div className="fw-bold">GitHub</div>
-          <a href="https://github.com/dan-lovelace/word-replacer-max/issues/new">
+          <a
+            href="https://github.com/dan-lovelace/word-replacer-max/issues/new"
+            target="_blank"
+          >
             Create new issue
           </a>
         </div>
