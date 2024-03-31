@@ -4,6 +4,6 @@ export default {
   },
   options: {
     DIRECT_UPLOAD_DISALLOWED:
-      "This tab was opened automatically because your browser does not support uploading files into the extension's Popup Window. You may now proceed with your import and close this window any time.",
+      "We opened this tab for you because Firefox can't upload files directly into the extension's popup window. Feel free to import your files here and close this window when you're done.",
   },
 };

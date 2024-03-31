@@ -13,7 +13,16 @@ type FileUploadProps = {
   onChange: (event: JSXInternal.TargetedInputEvent<HTMLInputElement>) => void;
 };
 
-const WRAPPER_CLASSNAME = "btn btn-secondary btn-sm";
+const WRAPPER_CLASSNAME = "btn btn-secondary";
+
+function Content() {
+  return (
+    <span className="d-flex align-items-center gap-1">
+      <i className="material-icons-sharp fs-sm">download</i>
+      Import
+    </span>
+  );
+}
 
 export default function FileUpload({ onChange }: FileUploadProps) {
   const _canUploadDirect = useMemo(canUploadDirect, []);
@@ -22,7 +31,7 @@ export default function FileUpload({ onChange }: FileUploadProps) {
 
   return _canUploadDirect ? (
     <label className={WRAPPER_CLASSNAME}>
-      Import
+      <Content />
       <input accept=".json" hidden type="file" onChange={onChange} />
     </label>
   ) : (
@@ -31,7 +40,7 @@ export default function FileUpload({ onChange }: FileUploadProps) {
       href={`${ROUTES.HOME}?${CAN_UPLOAD_PARAMETER}=true&${NOTIFY_PARAMETER}=${message}`}
       target="_blank"
     >
-      Import
+      <Content />
     </a>
   );
 }

@@ -109,15 +109,16 @@ export default function Options() {
           return;
         }
 
-        const rulesToAdd: Matcher[] = importedMatchers.map(
+        const enrichedMatchers: Matcher[] = importedMatchers.map(
           (matcher: Matcher) => ({
             ...matcher,
             identifier: uuidv4(),
+            active: true,
           })
         );
 
         storageSetByKeys({
-          matchers: [...(matchers ?? []), ...rulesToAdd],
+          matchers: [...(matchers ?? []), ...enrichedMatchers],
         });
 
         showToast({
@@ -125,8 +126,8 @@ export default function Options() {
             <div className="d-flex align-items-center gap-2">
               <i className="material-icons-sharp fs-6 text-success">check</i>
               <div>
-                {rulesToAdd.length} rule{rulesToAdd.length > 1 ? "s" : ""}{" "}
-                imported successfully.
+                {enrichedMatchers.length} rule
+                {enrichedMatchers.length > 1 ? "s" : ""} imported successfully.
               </div>
             </div>
           ),
@@ -183,25 +184,40 @@ export default function Options() {
     };
 
   return (
-    <div className="container-fluid gx-0 d-flex flex-column gap-2">
-      <div className="row">
-        <div className="col col-sm-8">
-          <div className="fw-bold">Import/Export</div>
-          <p className="fs-sm">
-            Importing rules <i>adds</i> them to your existing list so nothing is
-            lost. When exporting, you may choose to include all rules or only a
-            select few.
-          </p>
-          <div className="d-flex gap-2">
-            <FileUpload onChange={handleImport} />
+    <>
+      <div className="container-fluid gx-0 d-flex flex-column gap-4">
+        <div className="row">
+          <div className="col col-sm-8">
+            <div className="fw-bold">Export</div>
+            <div className="fs-sm mb-2">
+              Export your rules to a local file, enabling you to transfer and
+              share them anywhere. You have the option to export all your rules
+              or only a selected subset.
+            </div>
             <button
-              className="btn btn-secondary btn-sm"
+              className="btn btn-secondary"
               data-bs-toggle="modal"
               data-bs-target="#export-modal"
               type="button"
             >
-              Export
+              <span className="d-flex align-items-center gap-1">
+                <i className="material-icons-sharp fs-sm">upload</i>
+                Export
+              </span>
             </button>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col col-sm-8">
+            <div className="fw-bold">Import</div>
+            <div className="fs-sm mb-2">
+              Easily add to your existing settings by importing new rules. This
+              process is safe &ndash; it won't overwrite your current data, but
+              simply adds the new rules to what you already have.
+            </div>
+            <div className="d-flex gap-2">
+              <FileUpload onChange={handleImport} />
+            </div>
           </div>
         </div>
       </div>
@@ -306,6 +322,6 @@ export default function Options() {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
