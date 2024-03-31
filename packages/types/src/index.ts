@@ -1,4 +1,7 @@
+import { z } from "zod";
+
 const allQueryPatterns = ["case", "default", "regex", "wholeWord"] as const;
+export const schemaVersions = [1, 2] as const;
 
 export type DomainEffect = "allow" | "deny";
 
@@ -9,6 +12,8 @@ export type Matcher = {
   queryPatterns: QueryPattern[];
   replacement: string;
 };
+
+export type PopupTab = "domains" | "options" | "rules" | "support";
 
 export type QueryPattern = (typeof allQueryPatterns)[number];
 
@@ -28,4 +33,21 @@ export type StorageKeyMap = {
   };
 };
 
-export type PopupTab = "domains" | "rules" | "support";
+export type SchemaExport = SchemaVersion & {
+  version: SchemaVersionType;
+};
+
+export type SchemaVersion = SchemaVersion1; // | SchemaVersion2 | SchemaVersion3...
+
+export type SchemaVersionMapper = {
+  1: z.ZodType<SchemaVersion1>;
+};
+
+export type SchemaVersion1 = {
+  version: 1;
+  data?: {
+    matchers?: Matcher[];
+  };
+};
+
+export type SchemaVersionType = (typeof schemaVersions)[number];

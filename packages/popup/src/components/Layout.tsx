@@ -23,6 +23,10 @@ const tabs: { identifier: PopupTab; label: string }[] = [
     label: "Domains",
   },
   {
+    identifier: "options",
+    label: "Options",
+  },
+  {
     identifier: "support",
     label: "Help",
   },

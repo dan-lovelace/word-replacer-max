@@ -16,6 +16,7 @@ type QueryInputProps = Pick<
   Matcher,
   "active" | "identifier" | "queries" | "queryPatterns"
 > & {
+  disabled: boolean;
   onChange: (
     identifier: string,
     key: keyof Matcher,
@@ -47,6 +48,7 @@ const queryPatternMetadata: {
 
 export default function QueryInput({
   active,
+  disabled,
   identifier,
   queries,
   queryPatterns,
@@ -111,6 +113,7 @@ export default function QueryInput({
       >
         <input
           className="form-control border-0 rounded-end-0"
+          disabled={disabled}
           enterkeyhint="enter"
           placeholder="Search for..."
           type="text"
@@ -139,6 +142,7 @@ export default function QueryInput({
             <input
               checked={queryPatterns.includes(value)}
               className={cx("btn-check px-0 py-2")}
+              disabled={disabled}
               id={identifier + value}
               type="checkbox"
               onClick={handlePatternChange(value)}

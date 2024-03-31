@@ -89,7 +89,8 @@ export function ToastProvider({ children }: { children: VNode }) {
           "position-fixed end-0 bottom-0",
           "w-auto",
           "me-1 mb-1",
-          `text-bg-${messages?.[0].color}`
+          `text-bg-${messages?.[0].color}`,
+          "z-1"
         )}
         role="alert"
       >

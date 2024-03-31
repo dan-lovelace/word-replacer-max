@@ -10,7 +10,8 @@
     "test": "echo \"Error: no test specified\" && exit 0"
   },
   "dependencies": {
-    "webextension-polyfill": "^0.10.0"
+    "webextension-polyfill": "^0.10.0",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/archiver": "^6.0.2",

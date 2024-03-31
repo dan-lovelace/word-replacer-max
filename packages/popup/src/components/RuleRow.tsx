@@ -12,11 +12,13 @@ import { useToast } from "../store/Toast";
 type RuleRowProps = {
   matcher: Matcher;
   matchers: Matcher[];
+  isSelecting?: boolean;
 };
 
 export default function RuleRow({
   matcher: { active, identifier, queries, queryPatterns, replacement },
   matchers,
+  isSelecting = false,
 }: RuleRowProps) {
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
   const confirmingDeleteRef = useRef<boolean>();
@@ -99,27 +101,30 @@ export default function RuleRow({
   };
 
   return (
-    <div className="row d-flex">
-      <div className="col-auto form-check form-switch ps-3 pe-0 pt-2">
-        <input
-          checked={active}
-          className="form-check-input m-0"
-          id={`active-check-${identifier}`}
-          role="switch"
-          title={active ? "Disable Rule" : "Enable Rule"}
-          type="checkbox"
-          onChange={handleActiveChange(identifier)}
-        />
-        <label
-          className="form-check-label visually-hidden"
-          for={`active-check-${identifier}`}
-        >
-          Active
-        </label>
-      </div>
+    <div className={cx("row d-flex", isSelecting && "pe-none flex-fill")}>
+      {!isSelecting && (
+        <div className="col-auto form-check form-switch ps-3 pe-0 pt-2">
+          <input
+            checked={active}
+            className="form-check-input m-0"
+            id={`active-check-${identifier}`}
+            role="switch"
+            title={active ? "Disable Rule" : "Enable Rule"}
+            type="checkbox"
+            onChange={handleActiveChange(identifier)}
+          />
+          <label
+            className="form-check-label visually-hidden"
+            for={`active-check-${identifier}`}
+          >
+            Active
+          </label>
+        </div>
+      )}
       <div className="col">
         <QueryInput
           active={active}
+          disabled={isSelecting}
           identifier={identifier}
           queries={queries}
           queryPatterns={queryPatterns}
@@ -132,32 +137,35 @@ export default function RuleRow({
       <div className="col-auto">
         <ReplacementInput
           active={active}
+          disabled={isSelecting}
           identifier={identifier}
           queries={queries}
           replacement={replacement}
           onChange={handleMatcherInputChange}
         />
       </div>
-      <div className="rule-row-actions col-auto ps-0">
-        <button
-          data-dismiss="delete"
-          className={cx(
-            "btn",
-            isConfirmingDelete
-              ? "btn-danger"
-              : "btn-light bg-transparent border-0"
-          )}
-          title={isConfirmingDelete ? "Confirm" : "Delete Rule"}
-          onBlur={() => clickawayListener(new MouseEvent(""))}
-          onClick={handleDeleteClick}
-        >
-          <span data-dismiss="delete" className="d-flex align-items-center">
-            <i data-dismiss="delete" className="material-icons-sharp fs-6">
-              {isConfirmingDelete ? "delete" : "close"}
-            </i>
-          </span>
-        </button>
-      </div>
+      {!isSelecting && (
+        <div className="rule-row-actions col-auto ps-0">
+          <button
+            data-dismiss="delete"
+            className={cx(
+              "btn",
+              isConfirmingDelete
+                ? "btn-danger"
+                : "btn-light bg-transparent border-0"
+            )}
+            title={isConfirmingDelete ? "Confirm" : "Delete Rule"}
+            onBlur={() => clickawayListener(new MouseEvent(""))}
+            onClick={handleDeleteClick}
+          >
+            <span data-dismiss="delete" className="d-flex align-items-center">
+              <i data-dismiss="delete" className="material-icons-sharp fs-6">
+                {isConfirmingDelete ? "delete" : "close"}
+              </i>
+            </span>
+          </button>
+        </div>
+      )}
     </div>
   );
 }

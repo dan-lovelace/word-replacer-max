@@ -1,8 +1,10 @@
 import { useContext } from "preact/hooks";
+import { v4 as uuidv4 } from "uuid";
 
 import { storageSetByKeys } from "@worm/shared";
 
 import DomainInput from "../components/DomainInput";
+import Options from "../components/Options";
 import RuleRow from "../components/RuleRow";
 import Support from "../components/Support";
 import { Config } from "../store/Config";
@@ -18,7 +20,7 @@ export default function HomePage() {
         ...(matchers ?? []),
         {
           active: true,
-          identifier: new Date().getTime().toString(),
+          identifier: uuidv4(),
           queries: [],
           queryPatterns: [],
           replacement: "",
@@ -30,6 +32,7 @@ export default function HomePage() {
   return (
     <div className="container-fluid py-2 flex-fill overflow-y-auto">
       {preferences?.activeTab === "domains" && <DomainInput />}
+      {preferences?.activeTab === "options" && <Options />}
       {preferences?.activeTab === "rules" && (
         <div className="d-flex flex-column gap-2">
           {Boolean(matchers?.length) &&
