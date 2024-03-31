@@ -26,16 +26,15 @@ export const validatedQueryPattern: z.ZodType<QueryPattern> = z.lazy(() =>
   ])
 );
 
-export const validatedSchemaVersion1Export: z.ZodType<SchemaVersion1> = z.lazy(
-  () =>
-    z.object({
-      version: z.literal(1),
-      data: z.object({ matchers: z.array(validatedMatcher) }),
-    })
+const validatedSchemaVersion1: z.ZodType<SchemaVersion1> = z.lazy(() =>
+  z.object({
+    version: z.literal(1),
+    data: z.object({ matchers: z.array(validatedMatcher) }),
+  })
 );
 
 const schemaVersionMapper: SchemaVersionMapper = {
-  1: validatedSchemaVersion1Export,
+  1: validatedSchemaVersion1,
 };
 
 export function getSchemaByVersion<V extends keyof SchemaVersionMapper>(

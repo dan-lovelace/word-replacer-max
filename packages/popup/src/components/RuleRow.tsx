@@ -12,13 +12,13 @@ import { useToast } from "../store/Toast";
 type RuleRowProps = {
   matcher: Matcher;
   matchers: Matcher[];
-  isSelecting?: boolean;
+  disabled?: boolean;
 };
 
 export default function RuleRow({
   matcher: { active, identifier, queries, queryPatterns, replacement },
   matchers,
-  isSelecting = false,
+  disabled = false,
 }: RuleRowProps) {
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
   const confirmingDeleteRef = useRef<boolean>();
@@ -101,8 +101,8 @@ export default function RuleRow({
   };
 
   return (
-    <div className={cx("row d-flex", isSelecting && "pe-none flex-fill")}>
-      {!isSelecting && (
+    <div className={cx("row d-flex", disabled && "pe-none flex-fill")}>
+      {!disabled && (
         <div className="col-auto form-check form-switch ps-3 pe-0 pt-2">
           <input
             checked={active}
@@ -124,7 +124,7 @@ export default function RuleRow({
       <div className="col">
         <QueryInput
           active={active}
-          disabled={isSelecting}
+          disabled={disabled}
           identifier={identifier}
           queries={queries}
           queryPatterns={queryPatterns}
@@ -137,14 +137,14 @@ export default function RuleRow({
       <div className="col-auto">
         <ReplacementInput
           active={active}
-          disabled={isSelecting}
+          disabled={disabled}
           identifier={identifier}
           queries={queries}
           replacement={replacement}
           onChange={handleMatcherInputChange}
         />
       </div>
-      {!isSelecting && (
+      {!disabled && (
         <div className="rule-row-actions col-auto ps-0">
           <button
             data-dismiss="delete"

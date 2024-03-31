@@ -6,39 +6,39 @@ import { v4 as uuidv4 } from "uuid";
 import { getSchemaByVersion, logDebug, storageSetByKeys } from "@worm/shared";
 import type { Matcher, SchemaExport } from "@worm/types";
 
-import FileUpload from "./FileUpload";
+import FileInput from "./FileInput";
 import HelpRedirect from "./HelpRedirect";
 import RuleRow from "./RuleRow";
 import { Config } from "../store/Config";
 import { useToast } from "../store/Toast";
 
-type Selection = Matcher & {
+type SelectedRule = Matcher & {
   isSelected: boolean;
 };
 
 export default function Options() {
-  const [selected, setSelected] = useState<Selection[]>();
+  const [selectedRules, setSelectedRules] = useState<SelectedRule[]>();
   const {
     storage: { matchers },
   } = useContext(Config);
   const selectedCount = useMemo(
-    () => selected?.filter((s) => s.isSelected).length ?? 0,
-    [selected]
+    () => selectedRules?.filter((s) => s.isSelected).length ?? 0,
+    [selectedRules]
   );
   const { showToast } = useToast();
   const hideModalButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    setSelected(
+    setSelectedRules(
       matchers?.map((matcher) => {
         let isSelected = false;
         const selectedIdx =
-          selected?.findIndex(
+          selectedRules?.findIndex(
             (selected) => selected.identifier === matcher.identifier
           ) ?? -1;
 
-        if (selected && selectedIdx > -1) {
-          isSelected = selected[selectedIdx].isSelected;
+        if (selectedRules && selectedIdx > -1) {
+          isSelected = selectedRules[selectedIdx].isSelected;
         }
 
         return {
@@ -55,7 +55,7 @@ export default function Options() {
       data: {
         matchers: matchers?.filter(
           (matcher) =>
-            selected?.find(
+            selectedRules?.find(
               (selection) => selection.identifier === matcher.identifier
             )?.isSelected
         ),
@@ -77,7 +77,7 @@ export default function Options() {
 
     if (hideModalButtonRef.current) {
       hideModalButtonRef.current.click();
-      setSelected(undefined);
+      setSelectedRules(undefined);
     }
   };
 
@@ -156,14 +156,14 @@ export default function Options() {
     const input = event.target as HTMLInputElement;
     const { checked } = input;
 
-    if (!selected) return;
+    if (!selectedRules) return;
 
-    const newSelected = [...selected].map((s) => ({
-      ...s,
+    const newSelected = [...selectedRules].map((rule) => ({
+      ...rule,
       isSelected: checked,
     }));
 
-    setSelected(newSelected);
+    setSelectedRules(newSelected);
   };
 
   const handleSelectionChange =
@@ -172,15 +172,16 @@ export default function Options() {
       const input = event.target as HTMLInputElement;
       const { checked } = input;
       const selectedIdx =
-        selected?.findIndex((matcher) => matcher.identifier === identifier) ??
-        -1;
+        selectedRules?.findIndex(
+          (matcher) => matcher.identifier === identifier
+        ) ?? -1;
 
-      if (!selected || selectedIdx < 0) return;
+      if (!selectedRules || selectedIdx < 0) return;
 
-      const newSelected = [...selected];
+      const newSelected = [...selectedRules];
       newSelected[selectedIdx].isSelected = checked;
 
-      setSelected(newSelected);
+      setSelectedRules(newSelected);
     };
 
   return (
@@ -216,28 +217,28 @@ export default function Options() {
               simply adds the new rules to what you already have.
             </div>
             <div className="d-flex gap-2">
-              <FileUpload onChange={handleImport} />
+              <FileInput onChange={handleImport} />
             </div>
           </div>
         </div>
       </div>
       <div
         aria-hidden="true"
-        aria-labelledby="export-modalLabel"
+        aria-labelledby="export-modal-label"
         className="modal fade"
         id="export-modal"
       >
         <div className="modal-dialog modal-fullscreen">
           <div className="modal-content">
             <div className="modal-header">
-              <h1 className="modal-title fs-5" id="export-modalLabel">
+              <h1 className="modal-title fs-5" id="export-modal-label">
                 Choose rules to export
               </h1>
               <button
-                type="button"
+                aria-label="Close"
                 className="btn-close"
                 data-bs-dismiss="modal"
-                aria-label="Close"
+                type="button"
               ></button>
             </div>
             <div className="modal-body">
@@ -246,12 +247,13 @@ export default function Options() {
                   <>
                     <div className="form-check">
                       <input
+                        checked={selectedRules?.every(
+                          (rule) => rule.isSelected
+                        )}
                         className="form-check-input"
-                        type="checkbox"
-                        value=""
                         id="select-all-checkbox"
+                        type="checkbox"
                         onChange={handleSelectAllChange}
-                        checked={selected?.every((s) => s.isSelected)}
                       />
                       <label
                         className="form-check-label ms-2"
@@ -264,16 +266,15 @@ export default function Options() {
                       <div key={matcher.identifier} className="d-flex gap-2">
                         <div className="form-check mt-1">
                           <input
-                            className="form-check-input"
-                            type="checkbox"
-                            value=""
-                            id={`matcher-${matcher.identifier}`}
-                            onChange={handleSelectionChange(matcher.identifier)}
                             checked={
-                              selected?.find(
-                                (s) => s.identifier === matcher.identifier
+                              selectedRules?.find(
+                                (rule) => rule.identifier === matcher.identifier
                               )?.isSelected
                             }
+                            className="form-check-input"
+                            id={`matcher-${matcher.identifier}`}
+                            type="checkbox"
+                            onChange={handleSelectionChange(matcher.identifier)}
                           />
                           <label
                             className="form-check-label ms-2 visually-hidden"
@@ -283,10 +284,9 @@ export default function Options() {
                           </label>
                         </div>
                         <RuleRow
-                          key={matcher.identifier}
+                          disabled
                           matcher={matcher}
                           matchers={matchers}
-                          isSelecting
                         />
                       </div>
                     ))}
@@ -308,9 +308,9 @@ export default function Options() {
                 Cancel
               </button>
               <button
-                type="button"
                 className="btn btn-primary"
                 disabled={selectedCount === 0}
+                type="button"
                 onClick={handleExport}
               >
                 Export{" "}

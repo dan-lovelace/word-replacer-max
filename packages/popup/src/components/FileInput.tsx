@@ -24,7 +24,7 @@ function Content() {
   );
 }
 
-export default function FileUpload({ onChange }: FileUploadProps) {
+export default function FileInput({ onChange }: FileUploadProps) {
   const _canUploadDirect = useMemo(canUploadDirect, []);
   const language = useLanguage();
   const message = encodeURIComponent(language.options.DIRECT_UPLOAD_DISALLOWED);

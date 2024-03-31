@@ -67,7 +67,7 @@ export default function Layout({ children }: LayoutProps) {
     <div className="layout">
       <div className="d-flex flex-column h-100">
         {notificationMessage && (
-          <div className="alert alert-info d-flex gap-2 rounded-0">
+          <div className="alert alert-info d-flex gap-2 rounded-0" role="alert">
             <div>
               <img src={getAssetURL("img/firefox-logo.svg")} />
             </div>

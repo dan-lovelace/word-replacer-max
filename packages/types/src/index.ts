@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 const allQueryPatterns = ["case", "default", "regex", "wholeWord"] as const;
-export const schemaVersions = [1, 2] as const;
+export const schemaVersions = [1] as const;
 
 export type DomainEffect = "allow" | "deny";
 
