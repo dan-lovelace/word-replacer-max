@@ -16,6 +16,28 @@ type SelectedRule = Matcher & {
   isSelected: boolean;
 };
 
+function refineMatchers(
+  matchers?: Matcher[],
+  selectedRules?: SelectedRule[]
+): SelectedRule[] | undefined {
+  return matchers?.map((matcher) => {
+    let isSelected = false;
+    const selectedIdx =
+      selectedRules?.findIndex(
+        (selected) => selected.identifier === matcher.identifier
+      ) ?? -1;
+
+    if (selectedRules && selectedIdx > -1) {
+      isSelected = selectedRules[selectedIdx].isSelected;
+    }
+
+    return {
+      ...matcher,
+      isSelected,
+    };
+  });
+}
+
 export default function Options() {
   const [selectedRules, setSelectedRules] = useState<SelectedRule[]>();
   const {
@@ -29,56 +51,49 @@ export default function Options() {
   const hideModalButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    setSelectedRules(
-      matchers?.map((matcher) => {
-        let isSelected = false;
-        const selectedIdx =
-          selectedRules?.findIndex(
-            (selected) => selected.identifier === matcher.identifier
-          ) ?? -1;
-
-        if (selectedRules && selectedIdx > -1) {
-          isSelected = selectedRules[selectedIdx].isSelected;
-        }
-
-        return {
-          ...matcher,
-          isSelected,
-        };
-      })
-    );
-  }, matchers);
+    setSelectedRules(refineMatchers(matchers, selectedRules));
+  }, [matchers]);
 
   const handleExport = () => {
+    if (!selectedRules) return;
+
+    const selectedMatchers = matchers?.filter(
+      (matcher) =>
+        selectedRules.find(
+          (selection) => selection.identifier === matcher.identifier
+        )?.isSelected
+    );
     const schemaExport: SchemaExport = {
       version: 1,
       data: {
-        matchers: matchers?.filter(
-          (matcher) =>
-            selectedRules?.find(
-              (selection) => selection.identifier === matcher.identifier
-            )?.isSelected
-        ),
+        matchers: selectedMatchers,
       },
     };
     const href = `data:text/json;charset=utf-8,${encodeURIComponent(
       JSON.stringify(schemaExport, null, 2)
     )}`;
     const anchor = document.createElement("a");
+    const filename = `WordReplacerMax_Rules_${new Date().getTime()}.json`;
 
     anchor.setAttribute("href", href);
-    anchor.setAttribute(
-      "download",
-      `WordReplacerMax_Rules_${new Date().getTime()}.json`
-    );
+    anchor.setAttribute("download", filename);
     document.body.appendChild(anchor);
     anchor.click();
     anchor.remove();
 
-    if (hideModalButtonRef.current) {
-      hideModalButtonRef.current.click();
-      setSelectedRules(undefined);
-    }
+    stopExporting();
+    showToast({
+      children: (
+        <div className="d-flex align-items-center gap-2">
+          <i className="material-icons-sharp fs-6 text-success">check</i>
+          <div>
+            Your{" "}
+            {(selectedMatchers?.length ?? 0) > 1 ? "rules were" : "rule was"}{" "}
+            exported successfully as {filename}
+          </div>
+        </div>
+      ),
+    });
   };
 
   const handleImport = (
@@ -183,6 +198,14 @@ export default function Options() {
 
       setSelectedRules(newSelected);
     };
+
+  const stopExporting = () => {
+    setSelectedRules(refineMatchers(matchers));
+
+    if (hideModalButtonRef.current) {
+      hideModalButtonRef.current.click();
+    }
+  };
 
   return (
     <>
