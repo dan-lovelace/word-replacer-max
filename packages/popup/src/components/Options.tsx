@@ -4,8 +4,9 @@ import type { JSXInternal } from "preact/src/jsx";
 import { v4 as uuidv4 } from "uuid";
 
 import { getSchemaByVersion, logDebug, storageSetByKeys } from "@worm/shared";
-import { schemaVersions, type Matcher, type SchemaExport } from "@worm/types";
+import type { Matcher, SchemaExport } from "@worm/types";
 
+import FileUpload from "./FileUpload";
 import HelpRedirect from "./HelpRedirect";
 import RuleRow from "./RuleRow";
 import { Config } from "../store/Config";
@@ -192,15 +193,7 @@ export default function Options() {
             select few.
           </p>
           <div className="d-flex gap-2">
-            <label className="btn btn-secondary btn-sm">
-              Import
-              <input
-                accept=".json"
-                hidden
-                type="file"
-                onChange={handleImport}
-              />
-            </label>
+            <FileUpload onChange={handleImport} />
             <button
               className="btn btn-secondary btn-sm"
               data-bs-toggle="modal"

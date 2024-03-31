@@ -1,11 +1,12 @@
 import { VNode } from "preact";
-import { useContext } from "preact/hooks";
+import { useContext, useMemo } from "preact/hooks";
 
-import { storageSetByKeys } from "@worm/shared";
+import { getAssetURL, storageSetByKeys } from "@worm/shared";
 import { PopupTab } from "@worm/types";
 
 import { RefreshRequiredToast } from "./RefreshRequiredToast";
 import cx from "../lib/classnames";
+import { getNotificationMessage } from "../lib/routes";
 import { Config } from "../store/Config";
 import { useToast } from "../store/Toast";
 
@@ -37,6 +38,7 @@ export default function Layout({ children }: LayoutProps) {
     storage: { preferences },
   } = useContext(Config);
   const { hideToast, showToast } = useToast();
+  const notificationMessage = useMemo(getNotificationMessage, []);
 
   const handleExtensionEnabledClick = () => {
     const newPreferences = Object.assign({}, preferences);
@@ -64,6 +66,17 @@ export default function Layout({ children }: LayoutProps) {
   return (
     <div className="layout">
       <div className="d-flex flex-column h-100">
+        {notificationMessage && (
+          <div className="alert alert-info d-flex gap-2 rounded-0">
+            <div>
+              <img src={getAssetURL("img/firefox-logo.svg")} />
+            </div>
+            <div>
+              <div className="fw-bold">Firefox detected</div>
+              <div className="fs-sm">{notificationMessage}</div>
+            </div>
+          </div>
+        )}
         <div className="d-flex w-100">
           <div className="d-flex align-items-center justify-content-center">
             <button
