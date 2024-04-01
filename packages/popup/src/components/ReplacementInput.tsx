@@ -10,6 +10,7 @@ type ReplacementInputProps = Pick<
   Matcher,
   "active" | "identifier" | "queries" | "replacement"
 > & {
+  disabled: boolean;
   onChange: (
     identifier: string,
     key: keyof Matcher,
@@ -19,6 +20,7 @@ type ReplacementInputProps = Pick<
 
 export default function ReplacementInput({
   active,
+  disabled,
   identifier,
   queries,
   replacement,
@@ -52,6 +54,7 @@ export default function ReplacementInput({
     <form className="flex-fill border rounded" onSubmit={handleFormSubmit}>
       <input
         className="form-control border-0"
+        disabled={disabled}
         enterkeyhint="enter"
         size={15}
         type="text"
