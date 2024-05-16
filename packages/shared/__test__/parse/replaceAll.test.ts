@@ -4,7 +4,7 @@ jest.useFakeTimers().setSystemTime(new Date("2024-01-01"));
 
 describe("replaceAll", () => {
   describe("document cases", () => {
-    it("does not overwrite the 'head' element", () => {
+    it("includes 'title' elements in the head", () => {
       document.documentElement.innerHTML = `
         <html>
           <head>

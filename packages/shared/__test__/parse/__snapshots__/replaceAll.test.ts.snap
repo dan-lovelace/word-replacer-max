@@ -28,8 +28,10 @@ exports[`replaceAll document cases does not overwrite 'script' elements 1`] = `
   <head>
     
             
-    <title>
-      Lorem ipsum dolor
+    <title
+      data-is-replaced="1704067200000"
+    >
+      Lorem sit dolor
     </title>
     
             
@@ -71,13 +73,15 @@ exports[`replaceAll document cases does not overwrite 'script' elements 1`] = `
 </html>
 `;
 
-exports[`replaceAll document cases does not overwrite the 'head' element 1`] = `
+exports[`replaceAll document cases includes 'title' elements in the head 1`] = `
 <html>
   <head>
     
             
-    <title>
-      Lorem ipsum dolor
+    <title
+      data-is-replaced="1704067200000"
+    >
+      Lorem sit dolor
     </title>
     
           
