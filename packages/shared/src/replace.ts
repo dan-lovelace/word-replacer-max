@@ -6,9 +6,10 @@ const escapeRegex = (str: string) =>
   str.replace(/[/\-\\^$*+?.()|[\]{}]/g, "\\$&");
 
 const parentNodeBlocklist: Node["nodeName"][] = [
-  "head",
   "i",
   "img",
+  "link",
+  "meta",
   "script",
   "style",
   "svg",
@@ -33,6 +34,18 @@ function getFlags(queryPatterns: QueryPattern[]) {
   }
 
   return flags;
+}
+
+export function searchAndReplace(
+  element: HTMLElement,
+  query: string,
+  { queryPatterns, replacement }: Matcher
+) {
+  const searchResults = searchNode(element, query, queryPatterns) || [];
+
+  for (const result of searchResults) {
+    replace(result, query, queryPatterns, replacement);
+  }
 }
 
 export function searchNode(
@@ -157,17 +170,26 @@ export function replace(
 export function replaceAll(matchers: Matcher[]) {
   const body = document.querySelector("body");
   if (!body) {
-    return logDebug("No body element found");
+    logDebug("No `body` element found");
+  }
+
+  const head = document.querySelector("head");
+  if (!head) {
+    logDebug("No `head` element found");
   }
 
   for (const matcher of matchers) {
     if (matcher.active !== true) continue;
 
     for (const query of matcher.queries) {
-      const results = searchNode(body, query, matcher.queryPatterns) || [];
+      if (body) {
+        searchAndReplace(body, query, matcher);
+      }
 
-      for (const result of results) {
-        replace(result, query, matcher.queryPatterns, matcher.replacement);
+      if (head) {
+        for (const title of Array.from(head.querySelectorAll("title"))) {
+          searchAndReplace(title, query, matcher);
+        }
       }
     }
   }
