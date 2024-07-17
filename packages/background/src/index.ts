@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from "uuid";
+
 import { browser, storageGetByKeys, storageSetByKeys } from "@worm/shared";
 import { Matcher } from "@worm/types";
 
@@ -18,14 +20,14 @@ browser.runtime.onInstalled.addListener(async () => {
     const defaultMatchers: Matcher[] = [
       {
         active: true,
-        identifier: "b7fce47e-58e8-4409-adf4-08da053e713d",
+        identifier: uuidv4(),
         queries: ["my jaw dropped", "I was shocked"],
         queryPatterns: [],
         replacement: "I was surprised",
       },
       {
         active: true,
-        identifier: "34eb8c78-402e-4006-b5a9-b1b15af7a037",
+        identifier: uuidv4(),
         queries: ["This."],
         queryPatterns: ["case", "wholeWord"],
         replacement: "",

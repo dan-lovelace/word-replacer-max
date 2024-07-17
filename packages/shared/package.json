@@ -10,12 +10,14 @@
     "test": "echo \"Error: no test specified\" && exit 0"
   },
   "dependencies": {
+    "uuid": "^9.0.1",
     "webextension-polyfill": "^0.10.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/archiver": "^6.0.2",
     "@types/jest": "^29.5.12",
+    "@types/uuid": "^9.0.8",
     "@types/webextension-polyfill": "^0.10.7",
     "@worm/types": "*",
     "archiver": "^6.0.1",
