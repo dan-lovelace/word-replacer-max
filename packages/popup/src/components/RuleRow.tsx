@@ -1,6 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from "preact/hooks";
 
-import { storageSetByKeys } from "@worm/shared";
+import {
+  STORAGE_MATCHER_PREFIX,
+  storageRemoveByKeys,
+  storageSetByKeys,
+} from "@worm/shared";
 import { Matcher } from "@worm/types";
 
 import QueryInput from "./QueryInput";
@@ -95,6 +99,7 @@ export default function RuleRow({
           (matcher) => matcher.identifier !== identifier
         ),
       });
+      storageRemoveByKeys([`${STORAGE_MATCHER_PREFIX}${identifier}`]);
     } else {
       setIsConfirmingDelete(true);
     }

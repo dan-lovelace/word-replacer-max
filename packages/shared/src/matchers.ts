@@ -10,6 +10,8 @@ type StorageMatcher = Matcher & {
   sortIndex: number;
 };
 
+export const STORAGE_MATCHER_PREFIX = "matcher__";
+
 export function matchersFromStorage(
   allStorage: Record<string, any>
 ): Matcher[] | undefined {
@@ -28,7 +30,7 @@ export function matchersFromStorage(
       ).reduce(
         (acc, val, idx) => ({
           ...acc,
-          [`matcher__${val.identifier}`]: {
+          [`${STORAGE_MATCHER_PREFIX}${val.identifier}`]: {
             ...validatedMatcher.parse(val),
             sortIndex: idx,
           },
@@ -53,7 +55,7 @@ export function matchersFromStorage(
   // convert stored matchers to an array and sort
   const matchers = Object.keys(allStorage).reduce(
     (acc, val) =>
-      val.startsWith("matcher__") ? [...acc, allStorage[val]] : acc,
+      val.startsWith(STORAGE_MATCHER_PREFIX) ? [...acc, allStorage[val]] : acc,
     [] as StorageMatcher[]
   );
   const sorted = matchers.sort((a, b) => a.sortIndex - b.sortIndex);
@@ -73,7 +75,10 @@ export function matchersToStorage(
   return matchers.reduce(
     (acc, val, idx) => ({
       ...acc,
-      [`matcher__${val.identifier}`]: { ...val, sortIndex: idx },
+      [`${STORAGE_MATCHER_PREFIX}${val.identifier}`]: {
+        ...val,
+        sortIndex: idx,
+      },
     }),
     {} as Record<string, StorageMatcher>
   );

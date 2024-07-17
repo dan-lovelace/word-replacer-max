@@ -37,7 +37,9 @@ export async function storageGetByKeys<Key extends StorageKey>(keys?: Key[]) {
   return results;
 }
 
-export function storageRemoveByKeys<Key extends StorageKey>(keys: Key[]) {
+export function storageRemoveByKeys<Key extends StorageKey | string>(
+  keys: Key[]
+) {
   return storageRemove(keys);
 }
 
