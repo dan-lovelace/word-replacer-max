@@ -1,0 +1,68 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`translateMatchersForStorage converts an array of matchers to a shape acceptable for storage 1`] = `
+{
+  "matcher__34eb8c78-402e-4006-b5a9-b1b15af7a037": {
+    "active": true,
+    "identifier": "34eb8c78-402e-4006-b5a9-b1b15af7a037",
+    "queries": [
+      "This.",
+    ],
+    "queryPatterns": [
+      "case",
+      "wholeWord",
+    ],
+    "replacement": "",
+  },
+  "matcher__b7fce47e-58e8-4409-adf4-08da053e713d": {
+    "active": true,
+    "identifier": "b7fce47e-58e8-4409-adf4-08da053e713d",
+    "queries": [
+      "my jaw dropped",
+      "I was shocked",
+    ],
+    "queryPatterns": [],
+    "replacement": "I was surprised",
+  },
+}
+`;
+
+exports[`translateStoredMatchers converts a raw storage object's matchers to a shape expected by the rest of the system 1`] = `
+[
+  {
+    "active": true,
+    "identifier": "34eb8c78-402e-4006-b5a9-b1b15af7a037",
+    "queries": [],
+    "queryPatterns": [
+      "case",
+      "wholeWord",
+    ],
+    "replacement": "",
+  },
+  {
+    "active": true,
+    "identifier": "b7fce47e-58e8-4409-adf4-08da053e713d",
+    "queries": [
+      "my jaw dropped",
+      "I was shocked",
+    ],
+    "queryPatterns": [],
+    "replacement": "I was surprised",
+  },
+]
+`;
+
+exports[`translateStoredMatchers gracefully handles misconfigured stored legacy matchers 1`] = `
+[
+  {
+    "active": true,
+    "identifier": "1234",
+    "queries": [],
+    "queryPatterns": [
+      "case",
+      "wholeWord",
+    ],
+    "replacement": "",
+  },
+]
+`;

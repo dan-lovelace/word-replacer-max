@@ -15,29 +15,24 @@ browser.runtime.onInstalled.addListener(async () => {
   }
 
   if (matchers === undefined) {
-    const defaultMatchers: Matcher[] = [
-      {
+    const defaultMatchers: Record<string, Matcher> = {
+      [`matcher__b7fce47e-58e8-4409-adf4-08da053e713d`]: {
         active: true,
-        identifier: "",
+        identifier: "b7fce47e-58e8-4409-adf4-08da053e713d",
         queries: ["my jaw dropped", "I was shocked"],
         queryPatterns: [],
         replacement: "I was surprised",
       },
-      {
+      [`matcher__34eb8c78-402e-4006-b5a9-b1b15af7a037`]: {
         active: true,
-        identifier: "",
+        identifier: "34eb8c78-402e-4006-b5a9-b1b15af7a037",
         queries: ["This."],
         queryPatterns: ["case", "wholeWord"],
         replacement: "",
       },
-    ];
+    };
 
-    await storageSetByKeys({
-      matchers: defaultMatchers.map((matcher, idx) => ({
-        ...matcher,
-        identifier: `${matcher.identifier}-${idx}`,
-      })),
-    });
+    await storageSetByKeys(defaultMatchers);
   }
 
   if (preferences === undefined) {
