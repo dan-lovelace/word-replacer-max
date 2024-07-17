@@ -12,7 +12,7 @@ browser.runtime.onInstalled.addListener(async () => {
 
   if (domainList === undefined) {
     await storageSetByKeys({
-      domainList: ["docs.google.com"],
+      domainList: ["docs.google.com", "github.com"],
     });
   }
 
