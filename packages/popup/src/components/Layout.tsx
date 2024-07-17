@@ -1,20 +1,23 @@
 import { VNode } from "preact";
-import { useContext, useMemo } from "preact/hooks";
+import { useContext, useEffect, useMemo, useRef } from "preact/hooks";
 
 import { getAssetURL, storageSetByKeys } from "@worm/shared";
 import { PopupTab } from "@worm/types";
 
 import { RefreshRequiredToast } from "./RefreshRequiredToast";
 import cx from "../lib/classnames";
-import { getNotificationMessage } from "../lib/routes";
+import { POPPED_OUT_PARAMETER_KEY } from "../lib/config";
+import { useLanguage } from "../lib/language";
+import { getNotificationMessage, ROUTES } from "../lib/routes";
 import { Config } from "../store/Config";
 import { useToast } from "../store/Toast";
+import IconButton from "./IconButton";
 
 type LayoutProps = {
   children: VNode;
 };
 
-const tabs: { identifier: PopupTab; label: string }[] = [
+const tabs: { identifier: PopupTab; isHidden?: boolean; label: string }[] = [
   {
     identifier: "rules",
     label: "Rules",
@@ -29,16 +32,27 @@ const tabs: { identifier: PopupTab; label: string }[] = [
   },
   {
     identifier: "support",
+    isHidden: true,
     label: "Help",
   },
 ];
 
 export default function Layout({ children }: LayoutProps) {
   const {
+    isPoppedOut,
     storage: { preferences },
   } = useContext(Config);
-  const { hideToast, showToast } = useToast();
+  const language = useLanguage();
   const notificationMessage = useMemo(getNotificationMessage, []);
+
+  const layoutRef = useRef<HTMLDivElement>(null);
+  const { hideToast, showToast } = useToast();
+
+  useEffect(() => {
+    layoutRef.current?.classList[isPoppedOut ? "add" : "remove"](
+      "layout__expanded"
+    );
+  }, [isPoppedOut]);
 
   const handleExtensionEnabledClick = () => {
     const newPreferences = Object.assign({}, preferences);
@@ -56,6 +70,27 @@ export default function Layout({ children }: LayoutProps) {
     });
   };
 
+  const handlePopoutClick = () => {
+    const open = window.open(
+      `${ROUTES.HOME}?${POPPED_OUT_PARAMETER_KEY}=true`,
+      "popup",
+      "popup=true,width=900,height=700"
+    );
+
+    if (!open) {
+      return showToast({
+        children: (
+          <div className="d-flex align-items-center gap-2">
+            <span className="material-icons-sharp fs-6">warning</span>
+            {language.options.POPUP_BLOCKED}
+          </div>
+        ),
+      });
+    }
+
+    window.close();
+  };
+
   const handleTabChange = (newTab: PopupTab) => () => {
     const newPreferences = Object.assign({}, preferences);
     newPreferences.activeTab = newTab;
@@ -64,7 +99,7 @@ export default function Layout({ children }: LayoutProps) {
   };
 
   return (
-    <div className="layout">
+    <div className="layout" ref={layoutRef}>
       <div className="d-flex flex-column h-100">
         {notificationMessage && (
           <div className="alert alert-info d-flex gap-2 rounded-0" role="alert">
@@ -79,41 +114,84 @@ export default function Layout({ children }: LayoutProps) {
         )}
         <div className="d-flex w-100">
           <div className="d-flex align-items-center justify-content-center">
-            <button
-              className={cx(
-                "material-icons-sharp",
-                "btn btn-light bg-transparent border-0",
-                "mx-1",
+            <IconButton
+              className={
                 preferences?.extensionEnabled ? "text-success" : "text-danger"
-              )}
+              }
+              icon="power_settings_new"
               title="Toggle Extension"
               onClick={handleExtensionEnabledClick}
-            >
-              power_settings_new
-            </button>
+            />
           </div>
           <ul className="nav nav-tabs flex-fill">
-            {tabs.map(({ identifier, label }) => (
-              <li
-                key={identifier}
-                className={cx(
-                  "nav-item",
-                  identifier === "support" &&
-                    "flex-fill d-flex justify-content-end"
-                )}
-              >
-                <button
-                  className={cx(
-                    "nav-link",
-                    preferences?.activeTab === identifier && "active"
-                  )}
-                  onClick={handleTabChange(identifier)}
-                >
-                  {label}
-                </button>
-              </li>
-            ))}
+            {tabs.map(
+              ({ identifier, isHidden, label }) =>
+                !isHidden && (
+                  <li
+                    key={identifier}
+                    className={cx(
+                      "nav-item",
+                      identifier === "support" &&
+                        "flex-fill d-flex justify-content-end"
+                    )}
+                  >
+                    <button
+                      className={cx(
+                        "nav-link",
+                        preferences?.activeTab === identifier && "active"
+                      )}
+                      onClick={handleTabChange(identifier)}
+                    >
+                      {label}
+                    </button>
+                  </li>
+                )
+            )}
           </ul>
+          <div className="d-flex align-items-center justify-content-center">
+            <div className="dropdown">
+              <IconButton
+                aria-expanded={false}
+                icon="more_vert"
+                data-bs-toggle="dropdown"
+              />
+              <ul className="dropdown-menu shadow">
+                {!isPoppedOut && (
+                  <>
+                    <li>
+                      <button
+                        className="dropdown-item"
+                        type="button"
+                        onClick={handlePopoutClick}
+                      >
+                        <span className="d-flex align-items-center gap-3">
+                          <span className="material-icons-sharp">
+                            open_in_new
+                          </span>{" "}
+                          Pop extension out
+                        </span>
+                      </button>
+                    </li>
+                    <li>
+                      <hr class="dropdown-divider" />
+                    </li>
+                  </>
+                )}
+                <li>
+                  <button
+                    className="dropdown-item"
+                    type="button"
+                    onClick={handleTabChange("support")}
+                  >
+                    <span className="d-flex align-items-center gap-3">
+                      <span className="material-icons-sharp">support</span> Get
+                      help
+                    </span>
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
         {children}
       </div>

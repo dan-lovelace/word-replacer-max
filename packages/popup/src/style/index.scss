@@ -11,6 +11,10 @@ body {
     .layout {
       height: 600px; // also not arbitrary; test everything
       overflow: hidden;
+
+      &__expanded {
+        height: auto;
+      }
     }
   }
 }
