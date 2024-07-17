@@ -26,9 +26,12 @@ export function matchersFromStorage(
       const convertedMatchers: Record<string, Matcher> = (
         allStorage["matchers"] as Matcher[]
       ).reduce(
-        (acc, val) => ({
+        (acc, val, idx) => ({
           ...acc,
-          [`matcher__${val.identifier}`]: validatedMatcher.parse(val),
+          [`matcher__${val.identifier}`]: {
+            ...validatedMatcher.parse(val),
+            sortIndex: idx,
+          },
         }),
         {} as Record<string, Matcher>
       );
