@@ -34,16 +34,16 @@ export default function HomePage() {
       {preferences?.activeTab === "domains" && <DomainInput />}
       {preferences?.activeTab === "options" && <Options />}
       {preferences?.activeTab === "rules" && (
-        <div className="d-flex flex-column gap-2">
-          {Boolean(matchers?.length) &&
-            matchers?.map((matcher) => (
-              <RuleRow
-                key={matcher.identifier}
-                matcher={matcher}
-                matchers={matchers}
-              />
-            ))}
-          <div className="ps-5">
+        <>
+          <div className="row gx-2 gy-2">
+            {Boolean(matchers?.length) &&
+              matchers?.map((matcher) => (
+                <div key={matcher.identifier} className="col-12 col-xxl-6">
+                  <RuleRow matcher={matcher} matchers={matchers} />
+                </div>
+              ))}
+          </div>
+          <div className="ps-5 pt-2">
             <button
               className="btn btn-secondary btn-sm"
               onClick={handleNewRuleClick}
@@ -53,7 +53,7 @@ export default function HomePage() {
               </span>
             </button>
           </div>
-        </div>
+        </>
       )}
       {preferences?.activeTab === "support" && <Support />}
     </div>
