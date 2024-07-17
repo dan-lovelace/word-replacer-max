@@ -1,10 +1,7 @@
 import { Matcher, Storage, StorageKey } from "@worm/types";
 
 import { browser } from "./browser";
-import {
-  translateMatchersForStorage,
-  translateStoredMatchers,
-} from "./migrations";
+import { matchersFromStorage, matchersToStorage } from "./matchers";
 
 const {
   storage: { sync },
@@ -17,18 +14,18 @@ export const storageSet = sync.set;
 export async function storageGetByKeys<Key extends StorageKey>(keys?: Key[]) {
   // fetch all storage keys regardless of parameters; we'll filter the results
   const allStorage = await storageGet();
-  let results: Storage = {};
-
   const queryKeys = [...(keys ?? [])];
+
+  let results: Storage = {};
 
   if (!queryKeys.length) {
     results = allStorage;
-    results.matchers = translateStoredMatchers(allStorage);
+    results.matchers = matchersFromStorage(allStorage);
   } else {
     for (const key of queryKeys) {
       switch (key) {
         case "matchers":
-          results.matchers = translateStoredMatchers(allStorage);
+          results.matchers = matchersFromStorage(allStorage);
           break;
 
         default:
@@ -55,8 +52,7 @@ export function storageSetByKeys(keys: Storage) {
      *
      * See: https://github.com/dan-lovelace/word-replacer-max/issues/4
      */
-    storageMatchers = translateMatchersForStorage(keys.matchers);
-
+    storageMatchers = matchersToStorage(keys.matchers);
     delete keys.matchers;
   }
 

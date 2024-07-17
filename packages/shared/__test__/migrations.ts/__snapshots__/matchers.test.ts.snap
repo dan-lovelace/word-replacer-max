@@ -1,18 +1,163 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`translateMatchersForStorage converts an array of matchers to a shape acceptable for storage 1`] = `
-{
-  "matcher__34eb8c78-402e-4006-b5a9-b1b15af7a037": {
+exports[`matchersFromStorage converts a raw storage object's matchers to a shape expected by the rest of the system 1`] = `
+[
+  {
+    "active": true,
+    "identifier": "b7fce47e-58e8-4409-adf4-08da053e713d",
+    "queries": [
+      "my jaw dropped",
+      "I was shocked",
+    ],
+    "queryPatterns": [],
+    "replacement": "I was surprised",
+  },
+  {
     "active": true,
     "identifier": "34eb8c78-402e-4006-b5a9-b1b15af7a037",
     "queries": [
       "This.",
+      "literally",
     ],
     "queryPatterns": [
       "case",
       "wholeWord",
     ],
     "replacement": "",
+  },
+]
+`;
+
+exports[`matchersFromStorage gracefully handles misconfigured stored legacy matchers 1`] = `
+[
+  {
+    "active": true,
+    "identifier": "1234",
+    "queries": [
+      "Hello",
+    ],
+    "queryPatterns": [
+      "case",
+      "wholeWord",
+    ],
+    "replacement": "Hi",
+  },
+]
+`;
+
+exports[`matchersFromStorage returns legacy matchers from storage 1`] = `
+[
+  {
+    "active": true,
+    "identifier": "b7fce47e-58e8-4409-adf4-08da053e713d",
+    "queries": [
+      "my jaw dropped",
+      "I was shocked",
+    ],
+    "queryPatterns": [],
+    "replacement": "I was surprised",
+  },
+  {
+    "active": true,
+    "identifier": "34eb8c78-402e-4006-b5a9-b1b15af7a037",
+    "queries": [
+      "This.",
+      "literally",
+    ],
+    "queryPatterns": [
+      "case",
+      "wholeWord",
+    ],
+    "replacement": "",
+  },
+]
+`;
+
+exports[`matchersFromStorage returns matchers in the correct order 1`] = `
+[
+  {
+    "active": true,
+    "identifier": "001",
+    "queries": [
+      "my jaw dropped",
+      "I was shocked",
+    ],
+    "queryPatterns": [],
+    "replacement": "I was surprised",
+    "sortIndex": 0,
+  },
+  {
+    "active": true,
+    "identifier": "000",
+    "queries": [
+      "This.",
+      "literally",
+    ],
+    "queryPatterns": [
+      "case",
+      "wholeWord",
+    ],
+    "replacement": "",
+    "sortIndex": 1,
+  },
+]
+`;
+
+exports[`matchersFromStorage supports a mix of legacy and new matcher formats 1`] = `
+[
+  {
+    "active": true,
+    "identifier": "b7fce47e-58e8-4409-adf4-08da053e713d",
+    "queries": [
+      "my jaw dropped",
+      "I was shocked",
+    ],
+    "queryPatterns": [],
+    "replacement": "I was surprised",
+  },
+  {
+    "active": true,
+    "identifier": "34eb8c78-402e-4006-b5a9-b1b15af7a037",
+    "queries": [
+      "This.",
+      "literally",
+    ],
+    "queryPatterns": [
+      "case",
+      "wholeWord",
+    ],
+    "replacement": "",
+  },
+  {
+    "active": true,
+    "identifier": "1234",
+    "queries": [
+      "Hello",
+    ],
+    "queryPatterns": [
+      "case",
+      "wholeWord",
+    ],
+    "replacement": "Hi",
+  },
+]
+`;
+
+exports[`matchersToStorage converts an array of matchers to a shape acceptable for storage 1`] = `
+{
+  "matcher__34eb8c78-402e-4006-b5a9-b1b15af7a037": {
+    "active": true,
+    "identifier": "34eb8c78-402e-4006-b5a9-b1b15af7a037",
+    "queries": [
+      "This.",
+      "literally",
+    ],
+    "queryPatterns": [
+      "case",
+      "wholeWord",
+    ],
+    "replacement": "",
+    "sortIndex": 1,
   },
   "matcher__b7fce47e-58e8-4409-adf4-08da053e713d": {
     "active": true,
@@ -23,46 +168,7 @@ exports[`translateMatchersForStorage converts an array of matchers to a shape ac
     ],
     "queryPatterns": [],
     "replacement": "I was surprised",
+    "sortIndex": 0,
   },
 }
-`;
-
-exports[`translateStoredMatchers converts a raw storage object's matchers to a shape expected by the rest of the system 1`] = `
-[
-  {
-    "active": true,
-    "identifier": "34eb8c78-402e-4006-b5a9-b1b15af7a037",
-    "queries": [],
-    "queryPatterns": [
-      "case",
-      "wholeWord",
-    ],
-    "replacement": "",
-  },
-  {
-    "active": true,
-    "identifier": "b7fce47e-58e8-4409-adf4-08da053e713d",
-    "queries": [
-      "my jaw dropped",
-      "I was shocked",
-    ],
-    "queryPatterns": [],
-    "replacement": "I was surprised",
-  },
-]
-`;
-
-exports[`translateStoredMatchers gracefully handles misconfigured stored legacy matchers 1`] = `
-[
-  {
-    "active": true,
-    "identifier": "1234",
-    "queries": [],
-    "queryPatterns": [
-      "case",
-      "wholeWord",
-    ],
-    "replacement": "",
-  },
-]
 `;

@@ -6,22 +6,15 @@ import { logDebug } from "./logging";
 import { validatedMatcher } from "./schemas";
 import { storageRemoveByKeys, storageSetByKeys } from "./storage";
 
-export function translateMatchersForStorage(
-  matchers?: Matcher[]
-): Record<string, Matcher> {
-  if (matchers === undefined) {
-    return {};
-  }
+type StorageMatcher = Matcher & {
+  sortIndex: number;
+};
 
-  return matchers.reduce(
-    (acc, val) => ({ ...acc, [`matcher__${val.identifier}`]: val }),
-    {} as Record<string, Matcher>
-  );
-}
-
-export function translateStoredMatchers(
+export function matchersFromStorage(
   allStorage: Record<string, any>
 ): Matcher[] | undefined {
+  const results: Matcher[] = [];
+
   if (Object.prototype.hasOwnProperty.call(allStorage, "matchers")) {
     /**
      * NOTE: In this case, the user has matchers stored in a legacy format. We
@@ -40,6 +33,8 @@ export function translateStoredMatchers(
         {} as Record<string, Matcher>
       );
 
+      results.push(...Object.values(convertedMatchers));
+
       storageSetByKeys(convertedMatchers);
       storageRemoveByKeys(["matchers"]);
       logDebug("Legacy matchers converted successfully!");
@@ -52,11 +47,31 @@ export function translateStoredMatchers(
     }
   }
 
+  // convert stored matchers to an array and sort
   const matchers = Object.keys(allStorage).reduce(
     (acc, val) =>
       val.startsWith("matcher__") ? [...acc, allStorage[val]] : acc,
-    [] as Matcher[]
+    [] as StorageMatcher[]
   );
+  const sorted = matchers.sort((a, b) => a.sortIndex - b.sortIndex);
 
-  return matchers.length ? matchers : undefined;
+  results.push(...sorted);
+
+  return results.length > 0 ? results : undefined;
+}
+
+export function matchersToStorage(
+  matchers?: Matcher[]
+): Record<string, StorageMatcher> {
+  if (matchers === undefined) {
+    return {};
+  }
+
+  return matchers.reduce(
+    (acc, val, idx) => ({
+      ...acc,
+      [`matcher__${val.identifier}`]: { ...val, sortIndex: idx },
+    }),
+    {} as Record<string, StorageMatcher>
+  );
 }
