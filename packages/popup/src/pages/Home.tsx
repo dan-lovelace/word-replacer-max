@@ -1,4 +1,5 @@
 import { useContext } from "preact/hooks";
+
 import { v4 as uuidv4 } from "uuid";
 
 import { storageSetByKeys } from "@worm/shared";
@@ -38,7 +39,10 @@ export default function HomePage() {
           <div className="row gx-2 gy-2">
             {Boolean(matchers?.length) &&
               matchers?.map((matcher) => (
-                <div key={matcher.identifier} className="col-12 col-xxl-6">
+                <div
+                  key={matcher.identifier}
+                  className="rule-row-wrapper col-12 col-xxl-6 position-relative"
+                >
                   <RuleRow matcher={matcher} matchers={matchers} />
                 </div>
               ))}
