@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from "uuid";
+
 import { browser, storageGetByKeys, storageSetByKeys } from "@worm/shared";
 import { Matcher } from "@worm/types";
 
@@ -10,7 +12,7 @@ browser.runtime.onInstalled.addListener(async () => {
 
   if (domainList === undefined) {
     await storageSetByKeys({
-      domainList: ["docs.google.com"],
+      domainList: ["docs.google.com", "github.com"],
     });
   }
 
@@ -18,26 +20,21 @@ browser.runtime.onInstalled.addListener(async () => {
     const defaultMatchers: Matcher[] = [
       {
         active: true,
-        identifier: "",
+        identifier: uuidv4(),
         queries: ["my jaw dropped", "I was shocked"],
         queryPatterns: [],
         replacement: "I was surprised",
       },
       {
         active: true,
-        identifier: "",
+        identifier: uuidv4(),
         queries: ["This."],
         queryPatterns: ["case", "wholeWord"],
         replacement: "",
       },
     ];
 
-    await storageSetByKeys({
-      matchers: defaultMatchers.map((matcher, idx) => ({
-        ...matcher,
-        identifier: `${matcher.identifier}-${idx}`,
-      })),
-    });
+    await storageSetByKeys({ matchers: defaultMatchers });
   }
 
   if (preferences === undefined) {

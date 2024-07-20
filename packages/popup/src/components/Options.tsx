@@ -9,6 +9,9 @@ import type { Matcher, SchemaExport } from "@worm/types";
 import FileInput from "./FileInput";
 import HelpRedirect from "./HelpRedirect";
 import RuleRow from "./RuleRow";
+import ToastMessage from "./ToastMessage";
+
+import { COPY_CONTAINER_COL_CLASS } from "../lib/classnames";
 import { Config } from "../store/Config";
 import { useToast } from "../store/Toast";
 
@@ -132,21 +135,34 @@ export default function Options() {
           })
         );
 
-        storageSetByKeys({
-          matchers: [...(matchers ?? []), ...enrichedMatchers],
-        });
-
-        showToast({
-          children: (
-            <div className="d-flex align-items-center gap-2">
-              <i className="material-icons-sharp fs-6 text-success">check</i>
-              <div>
-                {enrichedMatchers.length} rule
-                {enrichedMatchers.length > 1 ? "s" : ""} imported successfully.
-              </div>
-            </div>
-          ),
-        });
+        storageSetByKeys(
+          {
+            matchers: [...(matchers ?? []), ...enrichedMatchers],
+          },
+          {
+            onError: (message) => {
+              showToast({
+                children: <ToastMessage message={message} severity="danger" />,
+              });
+            },
+            onSuccess: () => {
+              showToast({
+                children: (
+                  <ToastMessage
+                    message={
+                      <>
+                        {enrichedMatchers.length} rule
+                        {enrichedMatchers.length > 1 ? "s" : ""} imported
+                        successfully.
+                      </>
+                    }
+                    severity="success"
+                  />
+                ),
+              });
+            },
+          }
+        );
       } catch (err) {
         logDebug("`handleImport`", err);
         logDebug("Received file contents", result);
@@ -211,7 +227,7 @@ export default function Options() {
     <>
       <div className="container-fluid gx-0 d-flex flex-column gap-4">
         <div className="row">
-          <div className="col col-sm-8">
+          <div className={COPY_CONTAINER_COL_CLASS}>
             <div className="fw-bold">Export</div>
             <div className="fs-sm mb-2">
               Export your rules to a local file, enabling you to transfer and
@@ -232,7 +248,7 @@ export default function Options() {
           </div>
         </div>
         <div className="row">
-          <div className="col col-sm-8">
+          <div className={COPY_CONTAINER_COL_CLASS}>
             <div className="fw-bold">Import</div>
             <div className="fs-sm mb-2">
               Easily add to your existing settings by importing new rules. This

@@ -1,4 +1,9 @@
-import { logDebug, replaceAll, storageGetByKeys } from "@worm/shared";
+import {
+  isDomainAllowed,
+  logDebug,
+  replaceAll,
+  storageGetByKeys,
+} from "@worm/shared";
 import { Storage } from "@worm/types";
 
 type RenderCache = {
@@ -42,27 +47,7 @@ export async function renderContent(msg = "") {
       return;
     }
 
-    const {
-      location: { hostname },
-    } = window;
-    const locationMatch = domainList.some((domain) =>
-      hostname.includes(domain)
-    );
-    let isAllowed = false;
-
-    switch (preferences.domainListEffect) {
-      case "allow": {
-        isAllowed = locationMatch;
-        break;
-      }
-
-      case "deny": {
-        isAllowed = !locationMatch;
-        break;
-      }
-    }
-
-    if (!isAllowed) {
+    if (!isDomainAllowed(domainList, preferences)) {
       return logDebug("Domain blocked");
     }
   }

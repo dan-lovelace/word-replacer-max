@@ -12,7 +12,6 @@ type PopupToast = {
 
 type PopupToastMessage = {
   children: VNode | string;
-  color?: string;
 };
 
 const AUTOHIDE_DELAY_MS = 3000;
@@ -86,10 +85,9 @@ export function ToastProvider({ children }: { children: VNode }) {
         aria-live="polite"
         className={cx(
           "toast align-items-center",
-          "position-fixed end-0 bottom-0",
-          "w-auto",
+          "text-bg-light",
+          "position-fixed end-0 bottom-0 w-auto",
           "me-1 mb-1",
-          `text-bg-${messages?.[0].color}`,
           "z-1"
         )}
         role="alert"

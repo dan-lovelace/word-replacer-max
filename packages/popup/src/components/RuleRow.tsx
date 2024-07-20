@@ -1,11 +1,17 @@
 import { useCallback, useEffect, useRef, useState } from "preact/hooks";
 
-import { storageSetByKeys } from "@worm/shared";
+import {
+  STORAGE_MATCHER_PREFIX,
+  storageRemoveByKeys,
+  storageSetByKeys,
+} from "@worm/shared";
 import { Matcher } from "@worm/types";
 
 import QueryInput from "./QueryInput";
 import { RefreshRequiredToast } from "./RefreshRequiredToast";
 import ReplacementInput from "./ReplacementInput";
+import ToastMessage from "./ToastMessage";
+
 import cx from "../lib/classnames";
 import { useToast } from "../store/Toast";
 
@@ -75,9 +81,18 @@ export default function RuleRow({
 
     newMatchers[matcherIdx][key] = newValue;
 
-    storageSetByKeys({
-      matchers: newMatchers,
-    });
+    storageSetByKeys(
+      {
+        matchers: newMatchers,
+      },
+      {
+        onError: (message) => {
+          showToast({
+            children: <ToastMessage message={message} severity="danger" />,
+          });
+        },
+      }
+    );
   };
 
   const handleDeleteClick = () => {
@@ -95,13 +110,14 @@ export default function RuleRow({
           (matcher) => matcher.identifier !== identifier
         ),
       });
+      storageRemoveByKeys([`${STORAGE_MATCHER_PREFIX}${identifier}`]);
     } else {
       setIsConfirmingDelete(true);
     }
   };
 
   return (
-    <div className={cx("row d-flex", disabled && "pe-none flex-fill")}>
+    <div className={cx("row", disabled && "pe-none flex-fill")}>
       {!disabled && (
         <div className="col-auto form-check form-switch ps-3 pe-0 pt-2">
           <input

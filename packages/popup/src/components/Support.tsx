@@ -1,3 +1,5 @@
+import { COPY_CONTAINER_COL_CLASS } from "../lib/classnames";
+
 export function EmailButton({ text = "contact@logicnow.io" }) {
   return (
     <a
@@ -13,7 +15,8 @@ export default function Support() {
   return (
     <div className="container-fluid gx-0 d-flex flex-column gap-2">
       <div className="row fs-sm">
-        <div className="col col-sm-8">
+        <div className={COPY_CONTAINER_COL_CLASS}>
+          <div className="fs-5 fw-bold mb-1">Contact Us</div>
           <p>
             Thanks for using Word Replacer Max. We strive to provide the best
             possible experience and want to help with any problems you run into.
@@ -31,13 +34,13 @@ export default function Support() {
         </div>
       </div>
       <div className="row">
-        <div className="col col-sm-8">
+        <div className={COPY_CONTAINER_COL_CLASS}>
           <div className="fw-bold">Email</div>
           <EmailButton />
         </div>
       </div>
       <div className="row">
-        <div className="col col-sm-8">
+        <div className={COPY_CONTAINER_COL_CLASS}>
           <div className="fw-bold">GitHub</div>
           <a
             href="https://github.com/dan-lovelace/word-replacer-max/issues/new"
