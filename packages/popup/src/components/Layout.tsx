@@ -78,7 +78,7 @@ export default function Layout({ children }: LayoutProps) {
       "popup=true,width=900,height=700"
     );
 
-    if (open) {
+    if (!open) {
       return showToast({
         children: (
           <ToastMessage
