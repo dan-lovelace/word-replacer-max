@@ -10,6 +10,8 @@ import { Matcher } from "@worm/types";
 import QueryInput from "./QueryInput";
 import { RefreshRequiredToast } from "./RefreshRequiredToast";
 import ReplacementInput from "./ReplacementInput";
+import ToastMessage from "./ToastMessage";
+
 import cx from "../lib/classnames";
 import { useToast } from "../store/Toast";
 
@@ -79,9 +81,18 @@ export default function RuleRow({
 
     newMatchers[matcherIdx][key] = newValue;
 
-    storageSetByKeys({
-      matchers: newMatchers,
-    });
+    storageSetByKeys(
+      {
+        matchers: newMatchers,
+      },
+      {
+        onError: (message) => {
+          showToast({
+            children: <ToastMessage message={message} severity="danger" />,
+          });
+        },
+      }
+    );
   };
 
   const handleDeleteClick = () => {

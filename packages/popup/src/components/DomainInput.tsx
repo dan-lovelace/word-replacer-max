@@ -5,13 +5,17 @@ import { storageSetByKeys } from "@worm/shared";
 import { DomainEffect } from "@worm/types";
 
 import Chip from "./Chip";
+import ToastMessage from "./ToastMessage";
+
 import { Config } from "../store/Config";
+import { useToast } from "../store/Toast";
 
 export default function DomainInput() {
   const [value, setValue] = useState("");
   const {
     storage: { domainList, preferences },
   } = useContext(Config);
+  const { showToast } = useToast();
 
   const handleEffectChange = (effect: DomainEffect) => () => {
     const newPreferences = Object.assign({}, preferences);
@@ -31,9 +35,18 @@ export default function DomainInput() {
     if (!value || value.length === 0) return;
 
     if (!domainList?.includes(value)) {
-      storageSetByKeys({
-        domainList: [...(domainList || []), value],
-      });
+      storageSetByKeys(
+        {
+          domainList: [...(domainList || []), value],
+        },
+        {
+          onError: (message) => {
+            showToast({
+              children: <ToastMessage message={message} severity="danger" />,
+            });
+          },
+        }
+      );
     }
 
     setValue("");

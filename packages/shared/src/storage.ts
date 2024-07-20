@@ -1,7 +1,13 @@
 import { Matcher, Storage, StorageKey } from "@worm/types";
 
 import { browser } from "./browser";
+import { logDebug } from "./logging";
 import { matchersFromStorage, matchersToStorage } from "./matchers";
+
+type StorageSetOptions = {
+  onError?: (message: string) => void;
+  onSuccess?: () => void;
+};
 
 const {
   storage: { sync },
@@ -43,7 +49,10 @@ export function storageRemoveByKeys<Key extends StorageKey | string>(
   return storageRemove(keys);
 }
 
-export function storageSetByKeys(keys: Storage) {
+export async function storageSetByKeys(
+  keys: Storage,
+  options?: StorageSetOptions
+) {
   let storageMatchers: Record<string, Matcher> = {};
 
   if (Object.prototype.hasOwnProperty.call(keys, "matchers")) {
@@ -58,8 +67,31 @@ export function storageSetByKeys(keys: Storage) {
     delete keys.matchers;
   }
 
-  return storageSet({
-    ...keys,
-    ...storageMatchers,
-  });
+  try {
+    const data = await storageSet({
+      ...keys,
+      ...storageMatchers,
+    });
+
+    if (typeof options?.onSuccess === "function") {
+      options.onSuccess();
+    }
+
+    return data;
+  } catch (error: unknown) {
+    logDebug("Something went wrong updating storage", error);
+
+    if (error instanceof Error && typeof options?.onError === "function") {
+      let { message } = error;
+
+      switch (message) {
+        case "QUOTA_BYTES quota exceeded":
+          message =
+            "Action could not be completed as it exceeds your storage capacity.";
+          break;
+      }
+
+      options.onError(message);
+    }
+  }
 }

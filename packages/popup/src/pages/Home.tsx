@@ -8,26 +8,38 @@ import DomainInput from "../components/DomainInput";
 import Options from "../components/Options";
 import RuleRow from "../components/RuleRow";
 import Support from "../components/Support";
+import ToastMessage from "../components/ToastMessage";
 import { Config } from "../store/Config";
+import { useToast } from "../store/Toast";
 
 export default function HomePage() {
   const {
     storage: { matchers, preferences },
   } = useContext(Config);
+  const { showToast } = useToast();
 
   const handleNewRuleClick = () => {
-    storageSetByKeys({
-      matchers: [
-        ...(matchers ?? []),
-        {
-          active: true,
-          identifier: uuidv4(),
-          queries: [],
-          queryPatterns: [],
-          replacement: "",
+    storageSetByKeys(
+      {
+        matchers: [
+          ...(matchers ?? []),
+          {
+            active: true,
+            identifier: uuidv4(),
+            queries: [],
+            queryPatterns: [],
+            replacement: "",
+          },
+        ],
+      },
+      {
+        onError: (message) => {
+          showToast({
+            children: <ToastMessage message={message} severity="danger" />,
+          });
         },
-      ],
-    });
+      }
+    );
   };
 
   return (

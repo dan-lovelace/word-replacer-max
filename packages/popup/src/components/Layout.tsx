@@ -4,14 +4,16 @@ import { useContext, useEffect, useMemo, useRef } from "preact/hooks";
 import { getAssetURL, storageSetByKeys } from "@worm/shared";
 import { PopupTab } from "@worm/types";
 
+import IconButton from "./IconButton";
 import { RefreshRequiredToast } from "./RefreshRequiredToast";
+import ToastMessage from "./ToastMessage";
+
 import cx from "../lib/classnames";
 import { POPPED_OUT_PARAMETER_KEY } from "../lib/config";
 import { useLanguage } from "../lib/language";
 import { getNotificationMessage, ROUTES } from "../lib/routes";
 import { Config } from "../store/Config";
 import { useToast } from "../store/Toast";
-import IconButton from "./IconButton";
 
 type LayoutProps = {
   children: VNode;
@@ -80,10 +82,10 @@ export default function Layout({ children }: LayoutProps) {
     if (!open) {
       return showToast({
         children: (
-          <div className="d-flex align-items-center gap-2">
-            <span className="material-icons-sharp fs-6">warning</span>
-            {language.options.POPUP_BLOCKED}
-          </div>
+          <ToastMessage
+            message={language.options.POPUP_BLOCKED}
+            severity="danger"
+          />
         ),
       });
     }
