@@ -9,11 +9,12 @@ function writeManifest() {
   const { manifestJSON, version: packageVersion } = JSON.parse(
     fs.readFileSync("package.json", "utf-8")
   );
-  const [, , manifestVersion = "3"] = process.argv;
+  const [, , manifestVersion] = process.argv;
 
   if (!["2", "3"].includes(manifestVersion)) {
     console.log("Invalid manifest version. Available options: 2, 3");
-    console.log("Usage: node build.mjs 3");
+    console.log("Usage:\n\n");
+    console.log("node build.mjs 3");
     process.exit(1);
   }
 
