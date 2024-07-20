@@ -85,7 +85,8 @@ export async function storageSetByKeys(
       let { message } = error;
 
       switch (message) {
-        case "QUOTA_BYTES quota exceeded":
+        case "QUOTA_BYTES quota exceeded": // chrome
+        case "QuotaExceededError: storage.sync API call exceeded its quota limitations.": // firefox
           message =
             "Action could not be completed as it exceeds your storage capacity.";
           break;
