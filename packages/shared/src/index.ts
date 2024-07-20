@@ -1,6 +1,7 @@
 export * from "./assets";
 export * from "./browser";
 export * from "./debounce";
+export * from "./domains";
 export * from "./logging";
 export * from "./matchers";
 export * from "./replace";
