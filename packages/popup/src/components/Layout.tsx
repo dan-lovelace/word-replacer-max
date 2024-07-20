@@ -46,7 +46,6 @@ export default function Layout({ children }: LayoutProps) {
   } = useContext(Config);
   const language = useLanguage();
   const notificationMessage = useMemo(getNotificationMessage, []);
-
   const layoutRef = useRef<HTMLDivElement>(null);
   const { hideToast, showToast } = useToast();
 
@@ -79,12 +78,12 @@ export default function Layout({ children }: LayoutProps) {
       "popup=true,width=900,height=700"
     );
 
-    if (!open) {
+    if (open) {
       return showToast({
         children: (
           <ToastMessage
             message={language.options.POPUP_BLOCKED}
-            severity="danger"
+            severity="info"
           />
         ),
       });

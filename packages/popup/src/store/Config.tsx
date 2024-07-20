@@ -25,14 +25,13 @@ export function ConfigProvider({ children }: { children: VNode }) {
   const [initialized, setInitialized] = useState(false);
   const [storage, setStorage] = useState<Storage>(defaultConfig.storage);
 
-  const isPoppedOut = useMemo(() => {
-    const value =
+  const isPoppedOut = useMemo(
+    () =>
       new URLSearchParams(window.location.search).get(
         POPPED_OUT_PARAMETER_KEY
-      ) === "true";
-
-    return value;
-  }, []);
+      ) === "true",
+    []
+  );
 
   useEffect(() => {
     const updateStorage = async () => {
