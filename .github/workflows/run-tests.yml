@@ -3,7 +3,7 @@ name: Run all tests
 on:
   pull_request:
     paths:
-      - packages/*
+      - packages/**
 
 jobs:
   build:
