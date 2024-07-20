@@ -78,6 +78,7 @@ export default function QueryInput({
 
     if (patternIdx < 0) {
       newPatterns.push(pattern);
+      showToast({ children: <RefreshRequiredToast onClose={hideToast} /> });
     } else {
       newPatterns.splice(patternIdx, 1);
     }
