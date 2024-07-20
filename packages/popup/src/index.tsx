@@ -13,7 +13,6 @@ import { ToastProvider } from "./store/Toast";
 import "./style/index.scss";
 import "material-icons/iconfont/sharp.scss";
 
-
 export function App() {
   return (
     <ConfigProvider>
