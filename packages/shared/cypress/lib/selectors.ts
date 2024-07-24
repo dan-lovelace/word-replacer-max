@@ -1,3 +1,4 @@
 export const selectors = {
-  target: () => cy.findByTestId(/target/g),
+  body: () => cy.findByTestId("body"),
+  target: () => cy.findByTestId("target"),
 };
