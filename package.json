@@ -15,10 +15,11 @@
   "scripts": {
     "build": "yarn clean && ts-node --esm scripts/build.ts",
     "clean": "rm -rf dist",
+    "jest": "jest",
     "package": "ts-node --esm scripts/package.ts",
     "start:2": "yarn clean && ts-node --esm scripts/build.ts 2 && lerna run start",
     "start:3": "yarn clean && ts-node --esm scripts/build.ts 3 && lerna run start",
-    "test": "jest && lerna run test"
+    "test": "yarn run jest && lerna run test"
   },
   "engines": {
     "node": ">=18.0.0"
