@@ -7,8 +7,9 @@
   "type": "module",
   "scripts": {
     "build": "echo \"Info: no build specified\"",
-    "test:open": "cypress open --e2e --browser chrome",
-    "test": "cypress run"
+    "cypress:open": "cypress open --e2e --browser chrome",
+    "cypress:run": "cypress run",
+    "test": "yarn run cypress:run"
   },
   "dependencies": {
     "uuid": "^9.0.1",
