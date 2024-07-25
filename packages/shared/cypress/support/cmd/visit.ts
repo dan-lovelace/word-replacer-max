@@ -2,29 +2,44 @@ import { TargetProps, VisitMockParams } from "../types";
 
 import { selectors as s } from "../../lib/selectors";
 
+function changeHTML(
+  selector: () => Cypress.Chainable<JQuery<HTMLElement>>,
+  html: string
+) {
+  selector().then(($element) => {
+    const targetElement = $element.get(0);
+
+    targetElement.innerHTML = html;
+  });
+}
+
 Cypress.Commands.add("visitMock", (params?: VisitMockParams) => {
-  cy.visit("./__mocks__/index.html");
+  const html = params?.html ?? "simple.html";
+
+  cy.visit(`./__mocks__/${html}`);
 
   if (!params) {
     return;
   }
 
-  const { bodyContents, targetContents, targetProps } = params;
+  const {
+    bodyContents,
+    scriptContents,
+    targetContents,
+    targetProps,
+    titleContents,
+  } = params;
 
   if (bodyContents) {
-    s.body().then(($element) => {
-      const targetElement = $element.get(0);
+    changeHTML(s.body, bodyContents);
+  }
 
-      targetElement.innerHTML = bodyContents;
-    });
+  if (scriptContents) {
+    changeHTML(s.script, scriptContents);
   }
 
   if (targetContents) {
-    s.target().then(($element) => {
-      const targetElement = $element.get(0);
-
-      targetElement.innerHTML = targetContents;
-    });
+    changeHTML(s.target, targetContents);
   }
 
   if (targetProps) {
@@ -42,5 +57,9 @@ Cypress.Commands.add("visitMock", (params?: VisitMockParams) => {
         }
       }
     });
+  }
+
+  if (titleContents) {
+    changeHTML(s.title, titleContents);
   }
 });

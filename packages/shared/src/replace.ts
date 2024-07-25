@@ -167,13 +167,18 @@ export function replace(
   }
 }
 
-export function replaceAll(matchers: Matcher[]) {
-  const body = document.querySelector("body");
+export function replaceAll(
+  matchers: Matcher[],
+  startElement?: HTMLHtmlElement
+) {
+  const startAtElement = startElement ?? document;
+
+  const body = startAtElement.querySelector("body");
   if (!body) {
     logDebug("No `body` element found");
   }
 
-  const head = document.querySelector("head");
+  const head = startAtElement.querySelector("head");
   if (!head) {
     logDebug("No `head` element found");
   }
