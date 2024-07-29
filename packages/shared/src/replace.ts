@@ -48,17 +48,13 @@ export function searchAndReplace(
   }
 }
 
-export function searchNode2(
+export function searchNode(
   element: HTMLElement,
   query: string,
   queryPatterns: QueryPattern[],
-  found: Set<HTMLElement> = new Set()
+  found: HTMLElement[] = []
 ) {
-  const elementContents = String(
-    element.textContent
-    // element[element.nodeType === Node.TEXT_NODE ? "textContent" : "innerText"]
-  );
-  console.log("elementContents", element.nodeName, elementContents);
+  const elementContents = String(element.textContent);
   let containsText = false;
 
   if (!queryPatterns || queryPatterns.length < 1) {
@@ -79,68 +75,6 @@ export function searchNode2(
             query,
             getFlags(queryPatterns)
           ).test(elementContents);
-          break;
-        }
-      }
-    }
-  }
-
-  console.log("containsText", containsText);
-  if (!containsText) {
-    return found;
-  }
-
-  if (element.hasChildNodes()) {
-    const childElements = Array.from(element.childNodes) as HTMLElement[];
-    for (const child of childElements) {
-      console.log("child", child.nodeName, child.nodeType);
-
-      // if (child.nodeType === Node.ELEMENT_NODE) {
-      searchNode2(child, query, queryPatterns, found);
-      // }
-    }
-  }
-  console.log("nodeType", element.nodeType);
-  if (
-    element.nodeType === Node.TEXT_NODE &&
-    !parentNodeBlocklist.includes(
-      String(element.parentNode?.nodeName.toLowerCase())
-    )
-  ) {
-    found.add(element);
-    // found.push(element);
-  }
-
-  return found;
-}
-
-export function searchNode(
-  element: HTMLElement,
-  query: string,
-  queryPatterns: QueryPattern[],
-  found: HTMLElement[] = []
-) {
-  const innerText = String(element.innerText);
-  let containsText = false;
-
-  if (!queryPatterns || queryPatterns.length < 1) {
-    // default query pattern
-    containsText = patternRegex.default(query).test(innerText);
-  } else {
-    for (const pattern of queryPatterns) {
-      switch (pattern) {
-        case "case":
-        case "default": {
-          containsText = patternRegex[pattern](query).test(innerText);
-          break;
-        }
-
-        case "regex":
-        case "wholeWord": {
-          containsText = patternRegex[pattern](
-            query,
-            getFlags(queryPatterns)
-          ).test(innerText);
           break;
         }
       }
@@ -186,11 +120,12 @@ export function replace(
     return;
   }
 
-  const innerText = String(element.innerText);
+  const contentsAttribute: keyof HTMLElement = "textContent";
+  const elementContents = String(element[contentsAttribute]);
 
   if (!queryPatterns || queryPatterns.length < 1) {
     // default query pattern
-    element.innerText = innerText.replace(
+    element[contentsAttribute] = elementContents.replace(
       patternRegex.default(query),
       replacement
     );
@@ -199,7 +134,7 @@ export function replace(
       switch (pattern) {
         case "case":
         case "default": {
-          element.innerText = innerText.replace(
+          element[contentsAttribute] = elementContents.replace(
             patternRegex[pattern](query),
             replacement
           );
@@ -207,7 +142,7 @@ export function replace(
         }
 
         case "regex": {
-          element.innerText = innerText.replace(
+          element[contentsAttribute] = elementContents.replace(
             patternRegex[pattern](query, getFlags(queryPatterns)),
             replacement
           );
@@ -215,7 +150,7 @@ export function replace(
         }
 
         case "wholeWord": {
-          element.innerText = innerText
+          element[contentsAttribute] = elementContents
             .replace(
               patternRegex[pattern](query, getFlags(queryPatterns)),
               ` ${replacement} `
