@@ -77,8 +77,8 @@ function getReplacementHTML(
  * not update blocked elements.
  */
 function updateInnerHTML(targetElement: HTMLElement, newHTML: string) {
-  const isTextTarget = targetElement.nodeType === Node.TEXT_NODE;
-  const targetParent = isTextTarget
+  const isTargetText = targetElement.nodeType === Node.TEXT_NODE;
+  const targetParent = isTargetText
     ? targetElement
     : targetElement.parentElement;
   const parentNodeName = String(targetParent?.nodeName.toLowerCase());
@@ -173,7 +173,14 @@ export function replace(
    * replacing inner HTML because there is no such thing as `innerHTML`.
    */
   const isTextTarget = element.nodeType === Node.TEXT_NODE;
-  const targetElement = isTextTarget ? element.parentElement! : element;
+  const targetElement = isTextTarget ? element.parentElement : element;
+  if (!targetElement) {
+    return logDebug("Error locating target element");
+  }
+
+  /**
+   * Get the element's contents according to the target property.
+   */
   const elementContents = String(targetElement[CONTENTS_PROPERTY]);
 
   /**

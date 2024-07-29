@@ -83,6 +83,34 @@ describe("replaceAll", () => {
     });
   });
 
+  it.only("does not overwrite surrounding elements", () => {
+    cy.visitMock({
+      targetContents: `
+        <h3 class="h3-mktg mb-4 text-medium">
+          <span data-testid="span" class="text-accent-primary d-block">Lorem ipsum</span>
+          Sit dolor
+        </h3>
+      `,
+    });
+
+    cy.document().then((document) => {
+      replaceAll(
+        [
+          {
+            active: true,
+            identifier: "1234",
+            queries: ["ipsum"],
+            queryPatterns: [],
+            replacement: "sit",
+          },
+        ],
+        document
+      );
+
+      cy.findByTestId("span").should("have.text", "Lorem ipsum");
+    });
+  });
+
   it("maintains text enhancement elements", () => {
     cy.visitMock({
       targetContents: "Lorem <u>ipsum</u> dolor",
