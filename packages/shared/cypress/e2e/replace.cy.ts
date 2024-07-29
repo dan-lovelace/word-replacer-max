@@ -30,6 +30,20 @@ describe("replace", () => {
       });
     });
 
+    it("works for multiple rules in the same element", () => {
+      cy.visitMock({
+        targetContents: "Lorem ipsum dolor sit amet",
+      });
+
+      s.target().then(($element) => {
+        const target = $element.get(0);
+
+        replace(target, "ipsum", [], "sit");
+        replace(target, "dolor", [], "sit");
+        cy.wrap($element).should("have.text", "Lorem sit sit sit amet");
+      });
+    });
+
     it("does not affect element attributes", () => {
       cy.visitMock({
         targetContents: "Lorem Ipsum dolor",
@@ -143,7 +157,7 @@ describe("replace", () => {
         const target = $element.get(0);
 
         replace(target, "ipsum.", ["wholeWord"], "sit");
-        cy.wrap($element).should("have.text", "Lorem ipsum dolor sit");
+        cy.wrap($element).should("have.text", "Lorem ipsum dolor sit ");
       });
     });
 
@@ -156,7 +170,7 @@ describe("replace", () => {
         const target = $element.get(0);
 
         replace(target, "ipsum.", ["wholeWord"], "sit");
-        cy.wrap($element).should("have.text", "Lorem ipsum dolor sit sit sit");
+        cy.wrap($element).should("have.text", "Lorem ipsum dolor sit sit sit ");
       });
     });
 
@@ -210,7 +224,7 @@ describe("replace", () => {
         const target = $element.get(0);
 
         replace(target, "Ipsum", ["case", "wholeWord"], "sit");
-        cy.wrap($element).should("have.text", "Lorem sit dolor sIpsum sit");
+        cy.wrap($element).should("have.text", "Lorem sit dolor sIpsum sit ");
       });
     });
   });

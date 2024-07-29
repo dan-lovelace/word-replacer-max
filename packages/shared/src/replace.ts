@@ -2,6 +2,10 @@ import { Matcher, QueryPattern } from "@worm/types";
 
 import { logDebug } from "./logging";
 
+const CONTENTS_PROPERTY = "textContent";
+
+const REPLACEMENT_WRAPPER_ELEMENT = "span";
+
 const escapeRegex = (str: string) =>
   str.replace(/[/\-\\^$*+?.()|[\]{}]/g, "\\$&");
 
@@ -26,7 +30,12 @@ const patternRegex: {
     new RegExp(`(^|\\s)${escapeRegex(query)}($|\\s)`, flags),
 };
 
-function getFlags(queryPatterns: QueryPattern[]) {
+/**
+ * Returns regular expression flags to use based on a list of query patterns.
+ * For instance, absence of the `case` pattern appends the "ignore case" flag
+ * `i`.
+ */
+function getRegexFlags(queryPatterns: QueryPattern[]) {
   let flags = "g";
 
   if (!queryPatterns.includes("case")) {
@@ -34,6 +43,51 @@ function getFlags(queryPatterns: QueryPattern[]) {
   }
 
   return flags;
+}
+
+/**
+ * Gets the HTML necessary to inject back into a target element once its text
+ * has been replaced. Replacement HTML may include new elements around the
+ * replaced text in order to keep track of what's already been modified. This
+ * is necessary to avoid recursive replacements and could be used as a CSS
+ * selector if they ever need style.
+ */
+function getReplacementHTML(
+  targetElement: HTMLElement,
+  query: string,
+  replacement: string
+) {
+  if (targetElement.nodeName === "TITLE") {
+    // do not replace innerHTML of titles
+    return replacement;
+  }
+
+  const now = new Date().getTime().toString();
+  const wrapper = document.createElement(REPLACEMENT_WRAPPER_ELEMENT);
+  wrapper[CONTENTS_PROPERTY] = replacement;
+  wrapper.dataset["isReplaced"] = now;
+  wrapper.dataset["query"] = query;
+
+  return wrapper.outerHTML;
+}
+
+/**
+ * Updates innerHTML based on the given element type. Text nodes have their
+ * parent element targeted. Takes into account the node name blocklist and will
+ * not update blocked elements.
+ */
+function updateInnerHTML(targetElement: HTMLElement, newHTML: string) {
+  const isTextTarget = targetElement.nodeType === Node.TEXT_NODE;
+  const targetParent = isTextTarget
+    ? targetElement
+    : targetElement.parentElement;
+  const parentNodeName = String(targetParent?.nodeName.toLowerCase());
+
+  if (parentNodeBlocklist.includes(parentNodeName)) {
+    return;
+  }
+
+  targetElement.innerHTML = newHTML;
 }
 
 export function searchAndReplace(
@@ -73,7 +127,7 @@ export function searchNode(
         case "wholeWord": {
           containsText = patternRegex[pattern](
             query,
-            getFlags(queryPatterns)
+            getRegexFlags(queryPatterns)
           ).test(elementContents);
           break;
         }
@@ -113,63 +167,83 @@ export function replace(
 ) {
   if (element === null) return;
 
-  const { parentElement } = element;
+  /**
+   * Text nodes are treated different than Element nodes. Instead of targeting
+   * themselves, text nodes reference their parent when it comes to
+   * replacing inner HTML because there is no such thing as `innerHTML`.
+   */
+  const isTextTarget = element.nodeType === Node.TEXT_NODE;
+  const targetElement = isTextTarget ? element.parentElement! : element;
+  const elementContents = String(targetElement[CONTENTS_PROPERTY]);
 
-  if (parentElement?.dataset["isReplaced"]) {
-    // already replaced
-    return;
-  }
+  /**
+   * Build a list of all replaced elements inside the target element. This is
+   * used later when determining whether to do a subsequent replacement of one
+   * that has already been completed.
+   */
+  const replacedElements = targetElement.querySelectorAll<HTMLElement>(
+    `${REPLACEMENT_WRAPPER_ELEMENT}[data-is-replaced]`
+  );
 
-  const contentsAttribute: keyof HTMLElement = "textContent";
-  const elementContents = String(element[contentsAttribute]);
+  /**
+   * Using the query, see if any elements have already been replaced and return
+   * early if so.
+   */
+  const isAlreadyReplaced = Array.from(replacedElements).some((re) =>
+    re.textContent !== replacement ? false : query === re.dataset["query"]
+  );
+  if (isAlreadyReplaced) return;
 
+  /**
+   * Determine what to do with the given query patterns.
+   */
   if (!queryPatterns || queryPatterns.length < 1) {
-    // default query pattern
-    element[contentsAttribute] = elementContents.replace(
-      patternRegex.default(query),
-      replacement
+    // proceed with default
+    const replaced = elementContents.replace(patternRegex.default(query), () =>
+      getReplacementHTML(targetElement, query, replacement)
     );
+
+    updateInnerHTML(targetElement, replaced);
   } else {
     for (const pattern of queryPatterns) {
+      let replaced = "";
+
       switch (pattern) {
         case "case":
         case "default": {
-          element[contentsAttribute] = elementContents.replace(
-            patternRegex[pattern](query),
-            replacement
+          replaced = elementContents.replace(patternRegex[pattern](query), () =>
+            getReplacementHTML(targetElement, query, replacement)
           );
           break;
         }
 
         case "regex": {
-          element[contentsAttribute] = elementContents.replace(
-            patternRegex[pattern](query, getFlags(queryPatterns)),
-            replacement
+          replaced = elementContents.replace(
+            patternRegex[pattern](query, getRegexFlags(queryPatterns)),
+            () => getReplacementHTML(targetElement, query, replacement)
           );
           break;
         }
 
         case "wholeWord": {
-          element[contentsAttribute] = elementContents
+          replaced = elementContents
             .replace(
-              patternRegex[pattern](query, getFlags(queryPatterns)),
-              ` ${replacement} `
+              patternRegex[pattern](query, getRegexFlags(queryPatterns)),
+              () => getReplacementHTML(targetElement, query, ` ${replacement} `)
             )
             .replace(/\s\s+/g, "")
             .trim();
           break;
         }
       }
-    }
-  }
 
-  if (parentElement) {
-    parentElement.dataset["isReplaced"] = new Date().getTime().toString();
+      updateInnerHTML(targetElement, replaced);
+    }
   }
 }
 
-export function replaceAll(matchers: Matcher[], htmlStart?: HTMLHtmlElement) {
-  const startAtElement = htmlStart ?? document;
+export function replaceAll(matchers: Matcher[], startDocument?: Document) {
+  const startAtElement = startDocument ?? document;
 
   const body = startAtElement.querySelector("body");
   if (!body) {

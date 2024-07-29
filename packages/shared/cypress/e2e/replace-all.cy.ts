@@ -9,9 +9,7 @@ describe("replaceAll", () => {
       titleContents: "Lorem ipsum dolor",
     });
 
-    s.html().then(($element) => {
-      const html = $element.get(0) as HTMLHtmlElement;
-
+    cy.document().then((document) => {
       replaceAll(
         [
           {
@@ -22,7 +20,7 @@ describe("replaceAll", () => {
             replacement: "sit",
           },
         ],
-        html
+        document
       );
 
       s.target().should("have.text", "Lorem sit dolor");
@@ -33,7 +31,7 @@ describe("replaceAll", () => {
   it("does not overwrite 'script' elements", () => {
     const headScriptContents = `
       function ipsum() {
-        
+
       }
     `;
     cy.visitMock({
@@ -48,9 +46,7 @@ describe("replaceAll", () => {
       titleContents: "Lorem ipsum dolor",
     });
 
-    s.html().then(($element) => {
-      const html = $element.get(0) as HTMLHtmlElement;
-
+    cy.document().then((document) => {
       replaceAll(
         [
           {
@@ -61,7 +57,7 @@ describe("replaceAll", () => {
             replacement: "sit",
           },
         ],
-        html
+        document
       );
 
       s.script().should("have.text", headScriptContents);
@@ -92,9 +88,7 @@ describe("replaceAll", () => {
       targetContents: "Lorem <u>ipsum</u> dolor",
     });
 
-    s.html().then(($element) => {
-      const html = $element.get(0) as HTMLHtmlElement;
-
+    cy.document().then((document) => {
       replaceAll(
         [
           {
@@ -105,7 +99,7 @@ describe("replaceAll", () => {
             replacement: "sit",
           },
         ],
-        html
+        document
       );
 
       cy.get("u").should("have.text", "sit");
@@ -117,9 +111,7 @@ describe("replaceAll", () => {
       targetContents: "Lorem <u>ipsum</u> dolor",
     });
 
-    s.html().then(($element) => {
-      const html = $element.get(0) as HTMLHtmlElement;
-
+    cy.document().then((document) => {
       replaceAll(
         [
           {
@@ -130,7 +122,7 @@ describe("replaceAll", () => {
             replacement: "sit",
           },
         ],
-        html
+        document
       );
 
       s.target().should("have.text", "Lorem ipsum dolor");
