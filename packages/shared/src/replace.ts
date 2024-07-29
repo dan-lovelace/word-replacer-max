@@ -54,18 +54,18 @@ export function searchNode(
   queryPatterns: QueryPattern[],
   found: HTMLElement[] = []
 ) {
-  const textContent = String(element.textContent);
+  const elementContents = String(element.textContent);
   let containsText = false;
 
   if (!queryPatterns || queryPatterns.length < 1) {
     // default query pattern
-    containsText = patternRegex.default(query).test(textContent);
+    containsText = patternRegex.default(query).test(elementContents);
   } else {
     for (const pattern of queryPatterns) {
       switch (pattern) {
         case "case":
         case "default": {
-          containsText = patternRegex[pattern](query).test(textContent);
+          containsText = patternRegex[pattern](query).test(elementContents);
           break;
         }
 
@@ -74,7 +74,7 @@ export function searchNode(
           containsText = patternRegex[pattern](
             query,
             getFlags(queryPatterns)
-          ).test(textContent);
+          ).test(elementContents);
           break;
         }
       }
@@ -106,7 +106,7 @@ export function searchNode(
 }
 
 export function replace(
-  element: HTMLElement | ChildNode | null,
+  element: HTMLElement | null,
   query: string,
   queryPatterns: QueryPattern[],
   replacement: string
@@ -120,11 +120,12 @@ export function replace(
     return;
   }
 
-  const textContent = String(element.textContent);
+  const contentsAttribute: keyof HTMLElement = "textContent";
+  const elementContents = String(element[contentsAttribute]);
 
   if (!queryPatterns || queryPatterns.length < 1) {
     // default query pattern
-    element.textContent = textContent.replace(
+    element[contentsAttribute] = elementContents.replace(
       patternRegex.default(query),
       replacement
     );
@@ -133,7 +134,7 @@ export function replace(
       switch (pattern) {
         case "case":
         case "default": {
-          element.textContent = textContent.replace(
+          element[contentsAttribute] = elementContents.replace(
             patternRegex[pattern](query),
             replacement
           );
@@ -141,7 +142,7 @@ export function replace(
         }
 
         case "regex": {
-          element.textContent = textContent.replace(
+          element[contentsAttribute] = elementContents.replace(
             patternRegex[pattern](query, getFlags(queryPatterns)),
             replacement
           );
@@ -149,7 +150,7 @@ export function replace(
         }
 
         case "wholeWord": {
-          element.textContent = textContent
+          element[contentsAttribute] = elementContents
             .replace(
               patternRegex[pattern](query, getFlags(queryPatterns)),
               ` ${replacement} `
@@ -167,13 +168,15 @@ export function replace(
   }
 }
 
-export function replaceAll(matchers: Matcher[]) {
-  const body = document.querySelector("body");
+export function replaceAll(matchers: Matcher[], htmlStart?: HTMLHtmlElement) {
+  const startAtElement = htmlStart ?? document;
+
+  const body = startAtElement.querySelector("body");
   if (!body) {
     logDebug("No `body` element found");
   }
 
-  const head = document.querySelector("head");
+  const head = startAtElement.querySelector("head");
   if (!head) {
     logDebug("No `head` element found");
   }
