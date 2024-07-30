@@ -111,15 +111,118 @@ function updateElementWithReplacement(element: Text, replaced: string) {
   parentNode.replaceChild(wrapper, child);
 }
 
-export function searchAndReplace(
-  element: HTMLElement,
+export function replace(
+  element: Text | undefined,
   query: string,
-  { queryPatterns, replacement }: Matcher
+  queryPatterns: QueryPattern[],
+  replacement: string,
+  startPosition: number = 0
 ) {
-  const searchResults = searchNode(element, query, queryPatterns) || [];
+  if (!element) return;
 
-  for (const result of searchResults) {
-    replace(result, query, queryPatterns, replacement);
+  const { parentNode } = element;
+
+  /**
+   * Get the element's contents according to the target property.
+   */
+  const elementContents = String(element[CONTENTS_PROPERTY]);
+
+  /**
+   * Build a list of all replaced elements inside the target element. This is
+   * used later when determining whether to do a subsequent replacement of one
+   * that has already been completed.
+   */
+  const replacedElements = parentNode?.querySelectorAll<HTMLElement>(
+    `${REPLACEMENT_WRAPPER_ELEMENT}[data-is-replaced]`
+  );
+
+  /**
+   * Using the query, see if any elements have already been replaced and return
+   * early if so.
+   */
+  const replacedItem = replacedElements?.item(startPosition);
+  const isAlreadyReplaced = Array.from(replacedElements ?? []).findIndex((re) =>
+    re.textContent !== replacement
+      ? false
+      : replacedItem === undefined && query === re.dataset["query"]
+  );
+  if (isAlreadyReplaced > -1) return;
+
+  /**
+   * Determine what to do with the given query patterns.
+   */
+  if (!queryPatterns || queryPatterns.length < 1) {
+    // proceed with default
+    const replaced = elementContents.replace(patternRegex.default(query), () =>
+      getReplacementHTML(element, query, replacement)
+    );
+
+    updateElementWithReplacement(element, replaced);
+  } else {
+    const sortedPatterns = getSortedQueryPatterns(queryPatterns);
+
+    for (const pattern of sortedPatterns) {
+      let replaced = "";
+
+      switch (pattern) {
+        case "case":
+        case "default": {
+          replaced = elementContents.replace(patternRegex[pattern](query), () =>
+            getReplacementHTML(element, query, replacement)
+          );
+          break;
+        }
+        case "regex": {
+          replaced = elementContents.replace(
+            patternRegex[pattern](query, getRegexFlags(queryPatterns)),
+            () => getReplacementHTML(element, query, replacement)
+          );
+          break;
+        }
+        case "wholeWord": {
+          replaced = elementContents
+            .replace(
+              patternRegex[pattern](query, getRegexFlags(queryPatterns)),
+              () => getReplacementHTML(element, query, ` ${replacement} `)
+            )
+            .replace(/\s\s+/g, "")
+            .trim();
+          break;
+        }
+      }
+
+      updateElementWithReplacement(element, replaced);
+    }
+  }
+}
+
+export function replaceAll(matchers: Matcher[], startDocument?: Document) {
+  const startAtElement = startDocument ?? document;
+
+  const body = startAtElement.querySelector("body");
+  if (!body) {
+    logDebug("No `body` element found");
+  }
+
+  const head = startAtElement.querySelector("head");
+  if (!head) {
+    logDebug("No `head` element found");
+  }
+
+  for (const matcher of matchers) {
+    if (matcher.active !== true) continue;
+
+    for (const query of matcher.queries) {
+      if (body) {
+        searchAndReplace(body, query, matcher);
+      }
+
+      if (head) {
+        for (const title of Array.from(head.querySelectorAll("title"))) {
+          searchAndReplace(title, query, matcher);
+        }
+      }
+    }
   }
 }
 
@@ -181,111 +284,16 @@ export function searchNode(
   return found;
 }
 
-export function replace(
-  element: Text | undefined,
+export function searchAndReplace(
+  element: HTMLElement,
   query: string,
-  queryPatterns: QueryPattern[],
-  replacement: string
+  { queryPatterns, replacement }: Matcher
 ) {
-  if (!element) return;
+  const searchResults = searchNode(element, query, queryPatterns) || [];
 
-  const { parentNode } = element;
+  for (let i = 0; i < searchResults.length; i++) {
+    const result = searchResults[i];
 
-  /**
-   * Get the element's contents according to the target property.
-   */
-  const elementContents = String(element[CONTENTS_PROPERTY]);
-
-  /**
-   * Build a list of all replaced elements inside the target element. This is
-   * used later when determining whether to do a subsequent replacement of one
-   * that has already been completed.
-   */
-  const replacedElements = parentNode?.querySelectorAll<HTMLElement>(
-    `${REPLACEMENT_WRAPPER_ELEMENT}[data-is-replaced]`
-  );
-
-  /**
-   * Using the query, see if any elements have already been replaced and return
-   * early if so.
-   */
-  const isAlreadyReplaced = Array.from(replacedElements ?? []).some((re) =>
-    re.textContent !== replacement ? false : query === re.dataset["query"]
-  );
-  if (isAlreadyReplaced) return;
-
-  /**
-   * Determine what to do with the given query patterns.
-   */
-  if (!queryPatterns || queryPatterns.length < 1) {
-    // proceed with default
-    const replaced = elementContents.replace(patternRegex.default(query), () =>
-      getReplacementHTML(element, query, replacement)
-    );
-
-    updateElementWithReplacement(element, replaced);
-  } else {
-    const sortedPatterns = getSortedQueryPatterns(queryPatterns);
-
-    for (const pattern of sortedPatterns) {
-      let replaced = "";
-      switch (pattern) {
-        case "case":
-        case "default": {
-          replaced = elementContents.replace(patternRegex[pattern](query), () =>
-            getReplacementHTML(element, query, replacement)
-          );
-          break;
-        }
-        case "regex": {
-          replaced = elementContents.replace(
-            patternRegex[pattern](query, getRegexFlags(queryPatterns)),
-            () => getReplacementHTML(element, query, replacement)
-          );
-          break;
-        }
-        case "wholeWord": {
-          replaced = elementContents
-            .replace(
-              patternRegex[pattern](query, getRegexFlags(queryPatterns)),
-              () => getReplacementHTML(element, query, ` ${replacement} `)
-            )
-            .replace(/\s\s+/g, "")
-            .trim();
-          break;
-        }
-      }
-      updateElementWithReplacement(element, replaced);
-    }
-  }
-}
-
-export function replaceAll(matchers: Matcher[], startDocument?: Document) {
-  const startAtElement = startDocument ?? document;
-
-  const body = startAtElement.querySelector("body");
-  if (!body) {
-    logDebug("No `body` element found");
-  }
-
-  const head = startAtElement.querySelector("head");
-  if (!head) {
-    logDebug("No `head` element found");
-  }
-
-  for (const matcher of matchers) {
-    if (matcher.active !== true) continue;
-
-    for (const query of matcher.queries) {
-      if (body) {
-        searchAndReplace(body, query, matcher);
-      }
-
-      if (head) {
-        for (const title of Array.from(head.querySelectorAll("title"))) {
-          searchAndReplace(title, query, matcher);
-        }
-      }
-    }
+    replace(result, query, queryPatterns, replacement, i);
   }
 }

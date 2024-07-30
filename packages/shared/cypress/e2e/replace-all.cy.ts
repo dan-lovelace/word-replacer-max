@@ -14,7 +14,7 @@ describe("replaceAll", () => {
         [
           {
             active: true,
-            identifier: "1234",
+            identifier: "ABCD-1234",
             queries: ["ipsum"],
             queryPatterns: [],
             replacement: "sit",
@@ -51,7 +51,7 @@ describe("replaceAll", () => {
         [
           {
             active: true,
-            identifier: "1234",
+            identifier: "ABCD-1234",
             queries: ["ipsum"],
             queryPatterns: [],
             replacement: "sit",
@@ -98,7 +98,7 @@ describe("replaceAll", () => {
         [
           {
             active: true,
-            identifier: "1234",
+            identifier: "ABCD-1234",
             queries: ["dolor"],
             queryPatterns: [],
             replacement: "sit",
@@ -121,7 +121,7 @@ describe("replaceAll", () => {
         [
           {
             active: true,
-            identifier: "1234",
+            identifier: "ABCD-1234",
             queries: ["ipsum"],
             queryPatterns: [],
             replacement: "sit",
@@ -144,7 +144,7 @@ describe("replaceAll", () => {
         [
           {
             active: true,
-            identifier: "1234",
+            identifier: "ABCD-1234",
             queries: ["ipsum dolor"],
             queryPatterns: [],
             replacement: "sit",
@@ -154,6 +154,34 @@ describe("replaceAll", () => {
       );
 
       s.target().should("have.text", "Lorem ipsum dolor");
+    });
+  });
+
+  it("works for wikipedia", () => {
+    cy.visitMock({
+      html: "wiki.html",
+    });
+
+    cy.document().then((document) => {
+      replaceAll(
+        [
+          {
+            active: true,
+            identifier: "ABCD-1234",
+            queries: ["2014"],
+            queryPatterns: [],
+            replacement: "1979",
+          },
+        ],
+        document
+      );
+
+      cy.findByTestId("anchor1").should("have.text", "1979 Commonwealth Games");
+      cy.findByTestId("anchor2").should(
+        "have.text",
+        "1979 ITU World Triathlon Series"
+      );
+      s.target().contains("from 1979 to 2016");
     });
   });
 });
