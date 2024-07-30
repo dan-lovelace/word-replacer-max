@@ -59,6 +59,19 @@ describe("replace", () => {
       });
     });
 
+    it("works for queries with punctuation", () => {
+      cy.visitMock({
+        targetContents: "Let's ipsum",
+      });
+
+      s.target().then(($element) => {
+        const target = $element.get(0);
+
+        searchAndReplace(target, "Let's", [], "Lorem");
+        cy.wrap($element).should("have.text", "Lorem ipsum");
+      });
+    });
+
     it("does not affect element attributes", () => {
       cy.visitMock({
         targetContents: "Lorem Ipsum dolor",
