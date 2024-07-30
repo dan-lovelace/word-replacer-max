@@ -9,9 +9,7 @@ describe("replaceAll", () => {
       titleContents: "Lorem ipsum dolor",
     });
 
-    s.html().then(($element) => {
-      const html = $element.get(0) as HTMLHtmlElement;
-
+    cy.document().then((document) => {
       replaceAll(
         [
           {
@@ -22,7 +20,7 @@ describe("replaceAll", () => {
             replacement: "sit",
           },
         ],
-        html
+        document
       );
 
       s.target().should("have.text", "Lorem sit dolor");
@@ -33,7 +31,7 @@ describe("replaceAll", () => {
   it("does not overwrite 'script' elements", () => {
     const headScriptContents = `
       function ipsum() {
-        
+
       }
     `;
     cy.visitMock({
@@ -48,9 +46,7 @@ describe("replaceAll", () => {
       titleContents: "Lorem ipsum dolor",
     });
 
-    s.html().then(($element) => {
-      const html = $element.get(0) as HTMLHtmlElement;
-
+    cy.document().then((document) => {
       replaceAll(
         [
           {
@@ -61,7 +57,7 @@ describe("replaceAll", () => {
             replacement: "sit",
           },
         ],
-        html
+        document
       );
 
       s.script().should("have.text", headScriptContents);
@@ -87,14 +83,40 @@ describe("replaceAll", () => {
     });
   });
 
+  it("does not overwrite surrounding children", () => {
+    cy.visitMock({
+      targetContents: `
+        <h3 class="h3-mktg mb-4 text-medium">
+          <span data-testid="span" class="text-accent-primary d-block">Lorem ipsum</span>
+          Sit dolor
+        </h3>
+      `,
+    });
+
+    cy.document().then((document) => {
+      replaceAll(
+        [
+          {
+            active: true,
+            identifier: "1234",
+            queries: ["dolor"],
+            queryPatterns: [],
+            replacement: "sit",
+          },
+        ],
+        document
+      );
+
+      cy.findByTestId("span").should("have.text", "Lorem ipsum");
+    });
+  });
+
   it("maintains text enhancement elements", () => {
     cy.visitMock({
       targetContents: "Lorem <u>ipsum</u> dolor",
     });
 
-    s.html().then(($element) => {
-      const html = $element.get(0) as HTMLHtmlElement;
-
+    cy.document().then((document) => {
       replaceAll(
         [
           {
@@ -105,7 +127,7 @@ describe("replaceAll", () => {
             replacement: "sit",
           },
         ],
-        html
+        document
       );
 
       cy.get("u").should("have.text", "sit");
@@ -117,9 +139,7 @@ describe("replaceAll", () => {
       targetContents: "Lorem <u>ipsum</u> dolor",
     });
 
-    s.html().then(($element) => {
-      const html = $element.get(0) as HTMLHtmlElement;
-
+    cy.document().then((document) => {
       replaceAll(
         [
           {
@@ -130,7 +150,7 @@ describe("replaceAll", () => {
             replacement: "sit",
           },
         ],
-        html
+        document
       );
 
       s.target().should("have.text", "Lorem ipsum dolor");
