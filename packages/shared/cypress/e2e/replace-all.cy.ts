@@ -83,7 +83,7 @@ describe("replaceAll", () => {
     });
   });
 
-  it.only("does not overwrite surrounding elements", () => {
+  it("does not overwrite surrounding children", () => {
     cy.visitMock({
       targetContents: `
         <h3 class="h3-mktg mb-4 text-medium">
@@ -99,7 +99,7 @@ describe("replaceAll", () => {
           {
             active: true,
             identifier: "1234",
-            queries: ["ipsum"],
+            queries: ["dolor"],
             queryPatterns: [],
             replacement: "sit",
           },

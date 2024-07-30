@@ -1,6 +1,21 @@
-import { replace } from "@worm/shared/src/replace";
+import { replace, searchNode } from "@worm/shared/src/replace";
+import { QueryPattern } from "@worm/types";
 
 import { selectors as s } from "../lib/selectors";
+
+/**
+ * Utility function to reduce code duplication.
+ */
+function searchAndReplace(
+  element: HTMLElement,
+  query: string,
+  queryPatterns: QueryPattern[],
+  replacement: string
+) {
+  const results = searchNode(element, query, queryPatterns);
+
+  replace(results[0], query, queryPatterns, replacement);
+}
 
 describe("replace", () => {
   describe("default query pattern", () => {
@@ -12,7 +27,7 @@ describe("replace", () => {
       s.target().then(($element) => {
         const target = $element.get(0);
 
-        replace(target, "ipsum", [], "sit");
+        searchAndReplace(target, "ipsum", [], "sit");
         cy.wrap($element).should("have.text", "Lorem sit dolor");
       });
     });
@@ -25,7 +40,7 @@ describe("replace", () => {
       s.target().then(($element) => {
         const target = $element.get(0);
 
-        replace(target, "lorem ipsum", [], "sit");
+        searchAndReplace(target, "lorem ipsum", [], "sit");
         cy.wrap($element).should("have.text", "sit dolor");
       });
     });
@@ -38,8 +53,8 @@ describe("replace", () => {
       s.target().then(($element) => {
         const target = $element.get(0);
 
-        replace(target, "ipsum", [], "sit");
-        replace(target, "dolor", [], "sit");
+        searchAndReplace(target, "ipsum", [], "sit");
+        searchAndReplace(target, "dolor", [], "sit");
         cy.wrap($element).should("have.text", "Lorem sit sit sit amet");
       });
     });
@@ -55,7 +70,7 @@ describe("replace", () => {
       s.target().then(($element) => {
         const target = $element.get(0);
 
-        replace(target, "ipsum", [], "sit");
+        searchAndReplace(target, "ipsum", [], "sit");
         cy.wrap($element)
           .should("have.text", "Lorem sit dolor")
           .should("have.attr", "class", "ipsum");
@@ -70,9 +85,9 @@ describe("replace", () => {
       s.target().then(($element) => {
         const target = $element.get(0);
 
-        replace(target, "Lo", [], "Losit");
-        replace(target, "Lo", [], "Losit");
-        replace(target, "Lo", [], "Losit");
+        searchAndReplace(target, "Lo", [], "Losit");
+        searchAndReplace(target, "Lo", [], "Losit");
+        searchAndReplace(target, "Lo", [], "Losit");
         cy.wrap($element).should("have.text", "Lositrem Ipsum");
       });
     });
@@ -87,7 +102,7 @@ describe("replace", () => {
       s.target().then(($element) => {
         const target = $element.get(0);
 
-        replace(target, "ipsum", ["case"], "sit");
+        searchAndReplace(target, "ipsum", ["case"], "sit");
         cy.wrap($element).should("have.text", "Lorem sit dolor");
       });
     });
@@ -100,7 +115,7 @@ describe("replace", () => {
       s.target().then(($element) => {
         const target = $element.get(0);
 
-        replace(target, "ipsum", ["case"], "sit");
+        searchAndReplace(target, "ipsum", ["case"], "sit");
         cy.wrap($element).should("have.text", "Lorem sit dolor Ipsum sit sit");
       });
     });
@@ -115,7 +130,7 @@ describe("replace", () => {
       s.target().then(($element) => {
         const target = $element.get(0);
 
-        replace(target, "ipsum", ["regex"], "sit");
+        searchAndReplace(target, "ipsum", ["regex"], "sit");
         cy.wrap($element).should("have.text", "Lorem sit dolor");
       });
     });
@@ -128,7 +143,7 @@ describe("replace", () => {
       s.target().then(($element) => {
         const target = $element.get(0);
 
-        replace(target, "ipsum.*", ["regex"], "sit");
+        searchAndReplace(target, "ipsum.*", ["regex"], "sit");
         cy.wrap($element).should("have.text", "Lorem sit");
       });
     });
@@ -141,7 +156,7 @@ describe("replace", () => {
       s.target().then(($element) => {
         const target = $element.get(0);
 
-        replace(target, "^(Lo)+rem[\\s]+i{1}", ["regex"], "sit");
+        searchAndReplace(target, "^(Lo)+rem[\\s]+i{1}", ["regex"], "sit");
         cy.wrap($element).should("have.text", "sitpsum dolor");
       });
     });
@@ -156,7 +171,7 @@ describe("replace", () => {
       s.target().then(($element) => {
         const target = $element.get(0);
 
-        replace(target, "ipsum.", ["wholeWord"], "sit");
+        searchAndReplace(target, "ipsum.", ["wholeWord"], "sit");
         cy.wrap($element).should("have.text", "Lorem ipsum dolor sit ");
       });
     });
@@ -169,7 +184,7 @@ describe("replace", () => {
       s.target().then(($element) => {
         const target = $element.get(0);
 
-        replace(target, "ipsum.", ["wholeWord"], "sit");
+        searchAndReplace(target, "ipsum.", ["wholeWord"], "sit");
         cy.wrap($element).should("have.text", "Lorem ipsum dolor sit sit sit ");
       });
     });
@@ -182,7 +197,7 @@ describe("replace", () => {
       s.target().then(($element) => {
         const target = $element.get(0);
 
-        replace(target, "'Ipsum'", ["wholeWord"], "sit");
+        searchAndReplace(target, "'Ipsum'", ["wholeWord"], "sit");
         cy.wrap($element).should("have.text", "Lorem sit dolor");
       });
     });
@@ -195,7 +210,7 @@ describe("replace", () => {
       s.target().then(($element) => {
         const target = $element.get(0);
 
-        replace(target, "Ipsum", ["wholeWord"], "sit");
+        searchAndReplace(target, "Ipsum", ["wholeWord"], "sit");
         cy.wrap($element).should("have.text", "Lorem 'Ipsum' dolor");
       });
     });
@@ -210,7 +225,20 @@ describe("replace", () => {
       s.target().then(($element) => {
         const target = $element.get(0);
 
-        replace(target, "Ipsum", ["case", "wholeWord"], "sit");
+        searchAndReplace(target, "Ipsum", ["case", "wholeWord"], "sit");
+        cy.wrap($element).should("have.text", "Lorem sit dolor sIpsum ipsum");
+      });
+    });
+
+    it("works for single words with query patterns in a different order", () => {
+      cy.visitMock({
+        targetContents: "Lorem Ipsum dolor sIpsum ipsum",
+      });
+
+      s.target().then(($element) => {
+        const target = $element.get(0);
+
+        searchAndReplace(target, "Ipsum", ["wholeWord", "case"], "sit");
         cy.wrap($element).should("have.text", "Lorem sit dolor sIpsum ipsum");
       });
     });
@@ -223,7 +251,7 @@ describe("replace", () => {
       s.target().then(($element) => {
         const target = $element.get(0);
 
-        replace(target, "Ipsum", ["case", "wholeWord"], "sit");
+        searchAndReplace(target, "Ipsum", ["case", "wholeWord"], "sit");
         cy.wrap($element).should("have.text", "Lorem sit dolor sIpsum sit ");
       });
     });
