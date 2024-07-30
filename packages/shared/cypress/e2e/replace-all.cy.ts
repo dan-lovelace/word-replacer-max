@@ -157,7 +157,7 @@ describe("replaceAll", () => {
     });
   });
 
-  it("works for wikipedia", () => {
+  it("works for wikipedia - small", () => {
     cy.visitMock({
       html: "wiki.html",
     });
@@ -182,6 +182,29 @@ describe("replaceAll", () => {
         "1979 ITU World Triathlon Series"
       );
       s.target().contains("from 1979 to 2016");
+    });
+  });
+
+  it("works for wikipedia - large", () => {
+    cy.visitMock({
+      html: "wiki-lg.html",
+    });
+
+    cy.document().then((document) => {
+      replaceAll(
+        [
+          {
+            active: true,
+            identifier: "ABCD-1234",
+            queries: ["2014"],
+            queryPatterns: [],
+            replacement: "__REPLACED__",
+          },
+        ],
+        document
+      );
+
+      cy.findAllByText("__REPLACED__").should("have.length", 50);
     });
   });
 });
