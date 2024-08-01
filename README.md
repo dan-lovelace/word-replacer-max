@@ -4,7 +4,9 @@ A browser extension for replacing text on webpages.
 
 ## Available for [<img alt="chrome logo" src="./assets/chrome_logo.svg" style="margin-bottom: -2px;" /> Chrome](https://chromewebstore.google.com/detail/word-replacer-max/gnemoflnihonmkiacnagnbnlppkamfgo) and [<img alt="firefox logo" src="./assets/firefox_logo.svg" style="margin-bottom: -2px;" /> Firefox](https://addons.mozilla.org/en-US/firefox/addon/word-replacer-max)
 
-![screenshot](./assets/store_screenshot_1_1280x800.png)
+<img alt="configure replacements" src="./assets/store_screenshot_1.png" style="max-width: 100%; width: 450px"></img>
+<img alt="domain management" src="./assets/store_screenshot_2.png" style="max-width: 100%; width: 450px"></img>
+<img alt="configure replacements" src="./assets/store_screenshot_3.png" style="max-width: 100%; width: 450px"></img>
 
 # Building locally
 
