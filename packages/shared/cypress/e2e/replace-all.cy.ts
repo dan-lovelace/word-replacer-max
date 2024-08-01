@@ -157,7 +157,7 @@ describe("replaceAll", () => {
     });
   });
 
-  it("works for wikipedia - small", () => {
+  it("works for wikipedia", () => {
     cy.visitMock({
       html: "wiki.html",
     });
@@ -182,6 +182,35 @@ describe("replaceAll", () => {
         "1979 ITU World Triathlon Series"
       );
       s.target().contains("from 1979 to 2016");
+    });
+  });
+
+  it("works for regex negative lookaheads", () => {
+    cy.visitMock({
+      targetContents: `
+        <div data-testid="target-1">Hours: 7,5</div>
+        <div data-testid="target-2">Hours: 8,55</div>
+        <div data-testid="target-3">5Hours: 8,5Lorem</div>
+      `,
+    });
+
+    cy.document().then((document) => {
+      replaceAll(
+        [
+          {
+            active: true,
+            identifier: "ABCD-1234",
+            queries: ["\\b(\\d+),5(?!\\d)"],
+            queryPatterns: ["regex"],
+            replacement: "$1,test",
+          },
+        ],
+        document
+      );
+
+      cy.findByTestId("target-1").should("have.text", "Hours: 7,test");
+      cy.findByTestId("target-2").should("have.text", "Hours: 8,55");
+      cy.findByTestId("target-3").should("have.text", "5Hours: 8,testLorem");
     });
   });
 });

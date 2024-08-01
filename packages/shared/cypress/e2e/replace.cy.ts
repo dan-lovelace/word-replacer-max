@@ -161,7 +161,7 @@ describe("replace", () => {
       });
     });
 
-    it("works with advanced patterns", () => {
+    it("works with basic patterns 3", () => {
       cy.visitMock({
         targetContents: "Lorem ipsum dolor",
       });
@@ -171,6 +171,19 @@ describe("replace", () => {
 
         searchAndReplace(target, "^(Lo)+rem[\\s]+i{1}", ["regex"], "sit");
         cy.wrap(target).should("have.text", "sitpsum dolor");
+      });
+    });
+
+    it("works with backreferences", () => {
+      cy.visitMock({
+        targetContents: "Lorem ipsum dolor",
+      });
+
+      s.target().then(($element) => {
+        const target = $element.get(0);
+
+        searchAndReplace(target, "(Lorem)|(ipsum)", ["regex"], "$1,updated");
+        cy.wrap(target).should("have.text", "Lorem,updated ,updated dolor");
       });
     });
   });
