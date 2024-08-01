@@ -173,10 +173,14 @@ export function replace(
           break;
         }
         case "regex": {
-          replaced = elementContents.replace(
+          // replace by string first to avoid dropping references
+          const regexReplaced = elementContents.replace(
             patternRegex[pattern](query, getRegexFlags(queryPatterns)),
-            () => getReplacementHTML(element, query, replacement)
+            replacement
           );
+
+          // apply the HTML after replacement
+          replaced = getReplacementHTML(element, query, regexReplaced);
           break;
         }
         case "wholeWord": {
