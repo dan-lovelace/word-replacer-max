@@ -267,4 +267,29 @@ describe("replaceAll", () => {
       s.target().should("have.text", "Lorem sit dolor");
     });
   });
+
+  it("does not overwrite elements that have the 'contenteditable' attribute", () => {
+    cy.visitMock({
+      bodyContents: `
+        <div data-testid="target" contenteditable>Lorem ipsum dolor</div>
+      `,
+    });
+
+    cy.document().then((document) => {
+      replaceAll(
+        [
+          {
+            active: true,
+            identifier: "ABCD-1234",
+            queries: ["ipsum"],
+            queryPatterns: [],
+            replacement: "sit",
+          },
+        ],
+        document
+      );
+
+      s.target().should("have.text", "Lorem ipsum dolor");
+    });
+  });
 });

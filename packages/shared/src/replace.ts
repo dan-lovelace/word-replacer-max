@@ -9,7 +9,7 @@ const REPLACEMENT_WRAPPER_ELEMENT = "span";
 const escapeRegex = (str: string) =>
   str.replace(/[/\-\\^$*+?.()|[\]{}]/g, "\\$&");
 
-const parentNodeBlocklist: Node["nodeName"][] = [
+const nodeNameBlocklist: Set<Node["nodeName"]> = new Set([
   "i",
   "img",
   "link",
@@ -19,7 +19,7 @@ const parentNodeBlocklist: Node["nodeName"][] = [
   "svg",
   "textarea",
   "video",
-];
+]);
 
 const patternRegex: {
   [key in QueryPattern]: (query: string, flags?: string) => RegExp;
@@ -278,10 +278,11 @@ export function searchNode(
 
   if (
     element.nodeType === Node.TEXT_NODE &&
-    !parentNodeBlocklist.includes(
+    !element.parentElement?.dataset["isReplaced"] &&
+    !nodeNameBlocklist.has(
       String(element.parentNode?.nodeName.toLowerCase())
     ) &&
-    !element.parentElement?.dataset["isReplaced"]
+    !element.parentElement?.hasAttribute("contenteditable")
   ) {
     found.push(element as unknown as Text);
   }
