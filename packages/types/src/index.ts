@@ -1,7 +1,8 @@
 import { z } from "zod";
 
-const allQueryPatterns = ["case", "default", "regex", "wholeWord"] as const;
-export const schemaVersions = [1] as const;
+const queryPatterns = ["case", "default", "regex", "wholeWord"] as const;
+const schemaVersions = [1] as const;
+const storageVersions = ["1.0.0"] as const;
 
 export type DomainEffect = "allow" | "deny";
 
@@ -15,7 +16,7 @@ export type Matcher = {
 
 export type PopupTab = "domains" | "options" | "rules" | "support";
 
-export type QueryPattern = (typeof allQueryPatterns)[number];
+export type QueryPattern = (typeof queryPatterns)[number];
 
 export type SchemaExport = SchemaVersion & {
   version: SchemaVersionType;
@@ -38,7 +39,9 @@ export type SchemaVersionType = (typeof schemaVersions)[number];
 
 export type Storage = Partial<{
   [key in StorageKey]: StorageKeyMap[key];
-}>;
+}> & {
+  storageVersion?: StorageVersionType;
+};
 
 export type StorageKey = keyof StorageKeyMap;
 
@@ -51,4 +54,7 @@ export type StorageKeyMap = {
     extensionEnabled: boolean;
     focusRule: Matcher["identifier"];
   };
+  storageVersion: StorageVersionType;
 };
+
+export type StorageVersionType = (typeof storageVersions)[number];

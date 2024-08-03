@@ -1,9 +1,23 @@
 import { v4 as uuidv4 } from "uuid";
 
-import { storageGetByKeys, storageSetByKeys } from "@worm/shared";
+import {
+  CURRENT_STORAGE_VERSION,
+  storageGetByKeys,
+  storageSetByKeys,
+} from "@worm/shared";
 import { Matcher } from "@worm/types";
 
 export async function initializeStorage() {
+  const { storageVersion } = await storageGetByKeys(["storageVersion"]);
+
+  if (storageVersion === undefined) {
+    await storageSetByKeys({
+      storageVersion: CURRENT_STORAGE_VERSION,
+    });
+  } else if (storageVersion !== CURRENT_STORAGE_VERSION) {
+    // perform any necessary migrations before proceeding
+  }
+
   const { domainList, matchers, preferences } = await storageGetByKeys([
     "domainList",
     "matchers",
