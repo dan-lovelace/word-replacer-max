@@ -27,7 +27,7 @@ const patternRegex: {
   default: (query) => new RegExp(query, "gi"),
   regex: (query, flags) => new RegExp(query, flags),
   wholeWord: (query, flags) =>
-    new RegExp(`(^|\\s)${escapeRegex(query)}($|\\s)`, flags),
+    new RegExp(`(?<![^\\W_])${escapeRegex(query)}(?![^\\W_])`, flags),
 };
 
 /**
@@ -187,7 +187,7 @@ export function replace(
           replaced = elementContents
             .replace(
               patternRegex[pattern](query, getRegexFlags(queryPatterns)),
-              () => getReplacementHTML(element, query, ` ${replacement} `)
+              () => getReplacementHTML(element, query, replacement)
             )
             .replace(/\s\s+/g, "")
             .trim();

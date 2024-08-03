@@ -198,7 +198,7 @@ describe("replace", () => {
         const target = $element.get(0);
 
         searchAndReplace(target, "ipsum.", ["wholeWord"], "sit");
-        cy.wrap(target).should("have.text", "Lorem ipsum dolor sit ");
+        cy.wrap(target).should("have.text", "Lorem ipsum dolor sit");
       });
     });
 
@@ -211,11 +211,24 @@ describe("replace", () => {
         const target = $element.get(0);
 
         searchAndReplace(target, "ipsum.", ["wholeWord"], "sit");
-        cy.wrap(target).should("have.text", "Lorem ipsum dolor sit sit sit ");
+        cy.wrap(target).should("have.text", "Lorem ipsum dolor sit sit sit");
       });
     });
 
-    it("works when surrounded by punctuation", () => {
+    it("works when followed by punctuation", () => {
+      cy.visitMock({
+        targetContents: "Lorem ipsum, dolor",
+      });
+
+      s.target().then(($element) => {
+        const target = $element.get(0);
+        console.log("target", target);
+        searchAndReplace(target, "ipsum", ["wholeWord"], "sit");
+        cy.wrap(target).should("have.text", "Lorem sit, dolor");
+      });
+    });
+
+    it("works with queries surrounded by punctuation", () => {
       cy.visitMock({
         targetContents: "Lorem 'Ipsum' dolor",
       });
@@ -228,7 +241,7 @@ describe("replace", () => {
       });
     });
 
-    it("does not affect query words surrounded by punctuation", () => {
+    it("works with replacements surrounded by punctuation", () => {
       cy.visitMock({
         targetContents: "Lorem 'Ipsum' dolor",
       });
@@ -237,7 +250,7 @@ describe("replace", () => {
         const target = $element.get(0);
 
         searchAndReplace(target, "Ipsum", ["wholeWord"], "sit");
-        cy.wrap(target).should("have.text", "Lorem 'Ipsum' dolor");
+        cy.wrap(target).should("have.text", "Lorem 'sit' dolor");
       });
     });
   });
@@ -278,7 +291,7 @@ describe("replace", () => {
         const target = $element.get(0);
 
         searchAndReplace(target, "Ipsum", ["case", "wholeWord"], "sit");
-        cy.wrap(target).should("have.text", "Lorem sit dolor sIpsum sit ");
+        cy.wrap(target).should("have.text", "Lorem sit dolor sIpsum sit");
       });
     });
   });
