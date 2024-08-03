@@ -1,3 +1,5 @@
+import cx from "../lib/classnames";
+
 type ChipProps = {
   identifier: string;
   onRemove: (identifier: string) => () => void;
@@ -5,10 +7,17 @@ type ChipProps = {
 
 export default function Chip({ identifier, onRemove }: ChipProps) {
   return (
-    <span className="d-flex align-items-center badge fs-6 rounded-pill text-bg-light flex-fill-0 pe-0">
+    <span
+      className={cx(
+        "badge",
+        "d-flex align-items-center flex-fill-0 pe-0",
+        "fs-6 text-bg-light text-start text-wrap"
+      )}
+    >
       {identifier}
       <button
-        className="bg-transparent border-0"
+        className="bg-transparent border-0 px-0 mx-1 text-secondary"
+        title="Remove search query"
         type="button"
         onClick={onRemove(identifier)}
       >
