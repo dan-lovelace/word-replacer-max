@@ -17,22 +17,6 @@ export type PopupTab = "domains" | "options" | "rules" | "support";
 
 export type QueryPattern = (typeof allQueryPatterns)[number];
 
-export type Storage = Partial<{
-  [key in StorageKey]: StorageKeyMap[key];
-}>;
-
-export type StorageKey = keyof StorageKeyMap;
-
-export type StorageKeyMap = {
-  domainList: string[];
-  matchers: Matcher[];
-  preferences: {
-    activeTab: PopupTab;
-    domainListEffect: DomainEffect;
-    extensionEnabled: boolean;
-  };
-};
-
 export type SchemaExport = SchemaVersion & {
   version: SchemaVersionType;
 };
@@ -51,3 +35,20 @@ export type SchemaVersion1 = {
 };
 
 export type SchemaVersionType = (typeof schemaVersions)[number];
+
+export type Storage = Partial<{
+  [key in StorageKey]: StorageKeyMap[key];
+}>;
+
+export type StorageKey = keyof StorageKeyMap;
+
+export type StorageKeyMap = {
+  domainList: string[];
+  matchers: Matcher[];
+  preferences: {
+    activeTab: PopupTab;
+    domainListEffect: DomainEffect;
+    extensionEnabled: boolean;
+    focusRule: Matcher["identifier"];
+  };
+};

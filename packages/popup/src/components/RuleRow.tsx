@@ -1,4 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from "preact/hooks";
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "preact/hooks";
 
 import {
   STORAGE_MATCHER_PREFIX,
@@ -13,6 +19,7 @@ import ReplacementInput from "./ReplacementInput";
 import ToastMessage from "./ToastMessage";
 
 import cx from "../lib/classnames";
+import { Config } from "../store/Config";
 import { useToast } from "../store/Toast";
 
 type RuleRowProps = {
@@ -26,10 +33,36 @@ export default function RuleRow({
   matchers,
   disabled = false,
 }: RuleRowProps) {
+  const {
+    storage: { preferences },
+  } = useContext(Config);
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
   const confirmingDeleteRef = useRef<boolean>();
+  const replacementInputRef = useRef<HTMLInputElement>(null);
   const { hideToast, showToast } = useToast();
+
   confirmingDeleteRef.current = isConfirmingDelete;
+
+  useEffect(() => {
+    if (!preferences?.focusRule) return;
+
+    const { focusRule } = preferences;
+
+    if (focusRule !== identifier || !replacementInputRef.current) {
+      return;
+    }
+
+    // scroll to and focus the new row's replacement input field
+    replacementInputRef.current.scrollIntoView();
+    replacementInputRef.current.focus();
+
+    // unset focused rule in storage
+    const newPreferences = Object.assign({}, preferences);
+    newPreferences.focusRule = "";
+    storageSetByKeys({
+      preferences: newPreferences,
+    });
+  }, [preferences]);
 
   const clickawayListener = useCallback((event: MouseEvent) => {
     if (
@@ -156,6 +189,7 @@ export default function RuleRow({
           disabled={disabled}
           identifier={identifier}
           queries={queries}
+          inputRef={replacementInputRef}
           replacement={replacement}
           onChange={handleMatcherInputChange}
         />

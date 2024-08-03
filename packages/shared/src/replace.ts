@@ -118,7 +118,7 @@ export function replace(
   replacement: string,
   startPosition: number = 0
 ) {
-  if (!element) return;
+  if (!element || !Boolean(replacement)) return;
 
   const { parentNode } = element;
 

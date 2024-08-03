@@ -34,7 +34,6 @@ const tabs: { identifier: PopupTab; isHidden?: boolean; label: string }[] = [
   },
   {
     identifier: "support",
-    isHidden: true,
     label: "Help",
   },
 ];
@@ -150,48 +149,31 @@ export default function Layout({ children }: LayoutProps) {
             )}
           </ul>
           <div className="d-flex align-items-center justify-content-center">
-            <div className="dropdown">
-              <IconButton
-                aria-expanded={false}
-                icon="more_vert"
-                data-bs-toggle="dropdown"
-              />
-              <ul className="dropdown-menu shadow">
-                {!isPoppedOut && (
-                  <>
-                    <li>
-                      <button
-                        className="dropdown-item"
-                        type="button"
-                        onClick={handlePopoutClick}
-                      >
-                        <span className="d-flex align-items-center gap-3">
-                          <span className="material-icons-sharp">
-                            open_in_new
-                          </span>{" "}
-                          Pop extension out
-                        </span>
-                      </button>
-                    </li>
-                    <li>
-                      <hr class="dropdown-divider" />
-                    </li>
-                  </>
-                )}
-                <li>
-                  <button
-                    className="dropdown-item"
-                    type="button"
-                    onClick={handleTabChange("support")}
-                  >
-                    <span className="d-flex align-items-center gap-3">
-                      <span className="material-icons-sharp">support</span> Get
-                      help
-                    </span>
-                  </button>
-                </li>
-              </ul>
-            </div>
+            {!isPoppedOut && (
+              <div className="dropdown">
+                <IconButton
+                  aria-expanded={false}
+                  icon="more_vert"
+                  data-bs-toggle="dropdown"
+                />
+                <ul className="dropdown-menu shadow">
+                  <li>
+                    <button
+                      className="dropdown-item"
+                      type="button"
+                      onClick={handlePopoutClick}
+                    >
+                      <span className="d-flex align-items-center gap-3">
+                        <span className="material-icons-sharp">
+                          open_in_new
+                        </span>{" "}
+                        Pop extension out
+                      </span>
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            )}
           </div>
         </div>
         {children}

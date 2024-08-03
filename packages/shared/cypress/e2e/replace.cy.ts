@@ -72,6 +72,32 @@ describe("replace", () => {
       });
     });
 
+    it("works for whitespace replacements", () => {
+      cy.visitMock({
+        targetContents: "Lorem ipsum dolor",
+      });
+
+      s.target().then(($element) => {
+        const target = $element.get(0);
+
+        searchAndReplace(target, "ipsum", [], " ");
+        cy.wrap(target).should("have.text", "Lorem   dolor");
+      });
+    });
+
+    it("does not replace when replacement is empty", () => {
+      cy.visitMock({
+        targetContents: "Lorem ipsum dolor",
+      });
+
+      s.target().then(($element) => {
+        const target = $element.get(0);
+
+        searchAndReplace(target, "ipsum", [], "");
+        cy.wrap(target).should("have.text", "Lorem ipsum dolor");
+      });
+    });
+
     it("does not affect element attributes", () => {
       cy.visitMock({
         targetContents: "Lorem Ipsum dolor",
