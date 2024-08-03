@@ -17,6 +17,7 @@ const parentNodeBlocklist: Node["nodeName"][] = [
   "script",
   "style",
   "svg",
+  "textarea",
   "video",
 ];
 

@@ -213,4 +213,58 @@ describe("replaceAll", () => {
       cy.findByTestId("target-3").should("have.text", "5Hours: 8,testLorem");
     });
   });
+
+  it("does not overwrite text input value", () => {
+    cy.visitMock({
+      bodyContents: `
+        <input data-testid="input-target" type="text" value="Lorem ipsum dolor"></input>
+        <div data-testid="target">Lorem ipsum dolor</div>
+      `,
+    });
+
+    cy.document().then((document) => {
+      replaceAll(
+        [
+          {
+            active: true,
+            identifier: "ABCD-1234",
+            queries: ["ipsum"],
+            queryPatterns: [],
+            replacement: "sit",
+          },
+        ],
+        document
+      );
+
+      cy.findByTestId("input-target").should("have.value", "Lorem ipsum dolor");
+      s.target().should("have.text", "Lorem sit dolor");
+    });
+  });
+
+  it("does not overwrite textarea input value", () => {
+    cy.visitMock({
+      bodyContents: `
+        <textarea data-testid="input-target">Lorem ipsum dolor</textarea>
+        <div data-testid="target">Lorem ipsum dolor</div>
+      `,
+    });
+
+    cy.document().then((document) => {
+      replaceAll(
+        [
+          {
+            active: true,
+            identifier: "ABCD-1234",
+            queries: ["ipsum"],
+            queryPatterns: [],
+            replacement: "sit",
+          },
+        ],
+        document
+      );
+
+      cy.findByTestId("input-target").should("have.text", "Lorem ipsum dolor");
+      s.target().should("have.text", "Lorem sit dolor");
+    });
+  });
 });
