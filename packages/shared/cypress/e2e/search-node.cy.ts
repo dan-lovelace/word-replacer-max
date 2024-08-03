@@ -209,7 +209,6 @@ describe("searchNode", () => {
           <div>
             <span>Lorem Ipsum.</span>
 
-            <span>Lorem .Ipsum.</span>
             <span>Lorem .Ipsum</span>
             <span>Lorem Ipsum/</span>
             <span>Lorem Ipsum-</span>
@@ -232,7 +231,6 @@ describe("searchNode", () => {
           <div>
             <span>Lorem Ipsum-</span>
 
-            <span>Lorem -Ipsum-</span>
             <span>Lorem -Ipsum</span>
             <span>Lorem Ipsum/</span>
             <span>Lorem Ipsum_</span>

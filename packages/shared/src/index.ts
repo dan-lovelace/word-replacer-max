@@ -4,6 +4,7 @@ export * from "./debounce";
 export * from "./domains";
 export * from "./logging";
 export * from "./matchers";
+export * from "./popup";
 export * from "./replace";
 export * from "./schemas";
 export * from "./storage";

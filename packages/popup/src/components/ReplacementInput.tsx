@@ -1,3 +1,4 @@
+import { Ref } from "preact";
 import { useState } from "preact/hooks";
 import { JSXInternal } from "preact/src/jsx";
 
@@ -11,6 +12,7 @@ type ReplacementInputProps = Pick<
   "active" | "identifier" | "queries" | "replacement"
 > & {
   disabled: boolean;
+  inputRef: Ref<HTMLInputElement>;
   onChange: (
     identifier: string,
     key: keyof Matcher,
@@ -22,6 +24,7 @@ export default function ReplacementInput({
   active,
   disabled,
   identifier,
+  inputRef,
   queries,
   replacement,
   onChange,
@@ -56,6 +59,7 @@ export default function ReplacementInput({
         className="form-control border-0"
         disabled={disabled}
         enterkeyhint="enter"
+        ref={inputRef}
         size={15}
         type="text"
         value={value}

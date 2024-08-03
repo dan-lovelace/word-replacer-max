@@ -1,7 +1,7 @@
 import { VNode } from "preact";
 import { useContext, useEffect, useMemo, useRef } from "preact/hooks";
 
-import { getAssetURL, storageSetByKeys } from "@worm/shared";
+import { getAssetURL, popoutExtension, storageSetByKeys } from "@worm/shared";
 import { PopupTab } from "@worm/types";
 
 import IconButton from "./IconButton";
@@ -9,9 +9,8 @@ import { RefreshRequiredToast } from "./RefreshRequiredToast";
 import ToastMessage from "./ToastMessage";
 
 import cx from "../lib/classnames";
-import { POPPED_OUT_PARAMETER_KEY } from "../lib/config";
 import { useLanguage } from "../lib/language";
-import { getNotificationMessage, ROUTES } from "../lib/routes";
+import { getNotificationMessage } from "../lib/routes";
 import { Config } from "../store/Config";
 import { useToast } from "../store/Toast";
 
@@ -34,7 +33,6 @@ const tabs: { identifier: PopupTab; isHidden?: boolean; label: string }[] = [
   },
   {
     identifier: "support",
-    isHidden: true,
     label: "Help",
   },
 ];
@@ -71,12 +69,8 @@ export default function Layout({ children }: LayoutProps) {
     });
   };
 
-  const handlePopoutClick = () => {
-    const open = window.open(
-      `${ROUTES.HOME}?${POPPED_OUT_PARAMETER_KEY}=true`,
-      "popup",
-      "popup=true,width=900,height=700"
-    );
+  const handlePopoutClick = async () => {
+    const open = await popoutExtension();
 
     if (!open) {
       return showToast({
@@ -150,48 +144,31 @@ export default function Layout({ children }: LayoutProps) {
             )}
           </ul>
           <div className="d-flex align-items-center justify-content-center">
-            <div className="dropdown">
-              <IconButton
-                aria-expanded={false}
-                icon="more_vert"
-                data-bs-toggle="dropdown"
-              />
-              <ul className="dropdown-menu shadow">
-                {!isPoppedOut && (
-                  <>
-                    <li>
-                      <button
-                        className="dropdown-item"
-                        type="button"
-                        onClick={handlePopoutClick}
-                      >
-                        <span className="d-flex align-items-center gap-3">
-                          <span className="material-icons-sharp">
-                            open_in_new
-                          </span>{" "}
-                          Pop extension out
-                        </span>
-                      </button>
-                    </li>
-                    <li>
-                      <hr class="dropdown-divider" />
-                    </li>
-                  </>
-                )}
-                <li>
-                  <button
-                    className="dropdown-item"
-                    type="button"
-                    onClick={handleTabChange("support")}
-                  >
-                    <span className="d-flex align-items-center gap-3">
-                      <span className="material-icons-sharp">support</span> Get
-                      help
-                    </span>
-                  </button>
-                </li>
-              </ul>
-            </div>
+            {!isPoppedOut && (
+              <div className="dropdown">
+                <IconButton
+                  aria-expanded={false}
+                  icon="more_vert"
+                  data-bs-toggle="dropdown"
+                />
+                <ul className="dropdown-menu shadow">
+                  <li>
+                    <button
+                      className="dropdown-item"
+                      type="button"
+                      onClick={handlePopoutClick}
+                    >
+                      <span className="d-flex align-items-center gap-3">
+                        <span className="material-icons-sharp">
+                          open_in_new
+                        </span>{" "}
+                        Pop extension out
+                      </span>
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            )}
           </div>
         </div>
         {children}

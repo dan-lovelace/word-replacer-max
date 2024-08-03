@@ -9,7 +9,7 @@ const REPLACEMENT_WRAPPER_ELEMENT = "span";
 const escapeRegex = (str: string) =>
   str.replace(/[/\-\\^$*+?.()|[\]{}]/g, "\\$&");
 
-const parentNodeBlocklist: Node["nodeName"][] = [
+const nodeNameBlocklist: Set<Node["nodeName"]> = new Set([
   "i",
   "img",
   "link",
@@ -17,8 +17,9 @@ const parentNodeBlocklist: Node["nodeName"][] = [
   "script",
   "style",
   "svg",
+  "textarea",
   "video",
-];
+]);
 
 const patternRegex: {
   [key in QueryPattern]: (query: string, flags?: string) => RegExp;
@@ -27,7 +28,7 @@ const patternRegex: {
   default: (query) => new RegExp(query, "gi"),
   regex: (query, flags) => new RegExp(query, flags),
   wholeWord: (query, flags) =>
-    new RegExp(`(^|\\s)${escapeRegex(query)}($|\\s)`, flags),
+    new RegExp(`(?<![^\\W_])${escapeRegex(query)}(?![^\\W_])`, flags),
 };
 
 /**
@@ -118,7 +119,7 @@ export function replace(
   replacement: string,
   startPosition: number = 0
 ) {
-  if (!element) return;
+  if (!element || !Boolean(replacement)) return;
 
   const { parentNode } = element;
 
@@ -187,7 +188,7 @@ export function replace(
           replaced = elementContents
             .replace(
               patternRegex[pattern](query, getRegexFlags(queryPatterns)),
-              () => getReplacementHTML(element, query, ` ${replacement} `)
+              () => getReplacementHTML(element, query, replacement)
             )
             .replace(/\s\s+/g, "")
             .trim();
@@ -277,10 +278,11 @@ export function searchNode(
 
   if (
     element.nodeType === Node.TEXT_NODE &&
-    !parentNodeBlocklist.includes(
+    !element.parentElement?.dataset["isReplaced"] &&
+    !nodeNameBlocklist.has(
       String(element.parentNode?.nodeName.toLowerCase())
     ) &&
-    !element.parentElement?.dataset["isReplaced"]
+    !element.parentElement?.hasAttribute("contenteditable")
   ) {
     found.push(element as unknown as Text);
   }
