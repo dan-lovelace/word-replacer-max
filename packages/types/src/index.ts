@@ -40,7 +40,7 @@ export type SchemaVersionType = (typeof schemaVersions)[number];
 export type Storage = Partial<{
   [key in StorageKey]: StorageKeyMap[key];
 }> & {
-  storageVersion?: StorageVersionType;
+  storageVersion?: StorageVersion;
 };
 
 export type StorageKey = keyof StorageKeyMap;
@@ -54,7 +54,7 @@ export type StorageKeyMap = {
     extensionEnabled: boolean;
     focusRule: Matcher["identifier"];
   };
-  storageVersion: StorageVersionType;
+  storageVersion: StorageVersion;
 };
 
-export type StorageVersionType = (typeof storageVersions)[number];
+export type StorageVersion = (typeof storageVersions)[number];
