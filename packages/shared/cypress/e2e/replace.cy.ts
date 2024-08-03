@@ -248,7 +248,7 @@ describe("replace", () => {
 
       s.target().then(($element) => {
         const target = $element.get(0);
-        console.log("target", target);
+
         searchAndReplace(target, "ipsum", ["wholeWord"], "sit");
         cy.wrap(target).should("have.text", "Lorem sit, dolor");
       });

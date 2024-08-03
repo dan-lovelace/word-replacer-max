@@ -13,9 +13,9 @@ export async function popoutExtension() {
   const url = `${popupLocation}?${POPUP_POPPED_OUT_PARAMETER_KEY}=true`;
 
   const open = await browser.windows.create({
-    url,
-    type: "popup",
     height: 700,
+    type: "popup",
+    url,
     width: 900,
   });
 
