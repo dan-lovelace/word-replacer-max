@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import {
   browser,
-  logDebug,
+  popoutExtension,
   storageGetByKeys,
   storageSetByKeys,
 } from "@worm/shared";
@@ -49,12 +49,14 @@ export function initializeContextMenu() {
         });
 
         /**
-         * Attempt to open the popup. This is not widely supported at this
-         * time.
+         * Attempt to open the popup using a developmental API. Fall back to
+         * opening a new window when it's not supported.
          */
-        browser.action
-          .openPopup()
-          .catch((err) => logDebug("Error opening popup", err));
+        try {
+          browser.action.openPopup();
+        } catch (err) {
+          popoutExtension();
+        }
 
         break;
       }

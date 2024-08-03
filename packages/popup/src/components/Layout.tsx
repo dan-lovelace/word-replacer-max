@@ -1,7 +1,7 @@
 import { VNode } from "preact";
 import { useContext, useEffect, useMemo, useRef } from "preact/hooks";
 
-import { getAssetURL, storageSetByKeys } from "@worm/shared";
+import { getAssetURL, popoutExtension, storageSetByKeys } from "@worm/shared";
 import { PopupTab } from "@worm/types";
 
 import IconButton from "./IconButton";
@@ -9,9 +9,8 @@ import { RefreshRequiredToast } from "./RefreshRequiredToast";
 import ToastMessage from "./ToastMessage";
 
 import cx from "../lib/classnames";
-import { POPPED_OUT_PARAMETER_KEY } from "../lib/config";
 import { useLanguage } from "../lib/language";
-import { getNotificationMessage, ROUTES } from "../lib/routes";
+import { getNotificationMessage } from "../lib/routes";
 import { Config } from "../store/Config";
 import { useToast } from "../store/Toast";
 
@@ -70,12 +69,8 @@ export default function Layout({ children }: LayoutProps) {
     });
   };
 
-  const handlePopoutClick = () => {
-    const open = window.open(
-      `${ROUTES.HOME}?${POPPED_OUT_PARAMETER_KEY}=true`,
-      "popup",
-      "popup=true,width=900,height=700"
-    );
+  const handlePopoutClick = async () => {
+    const open = await popoutExtension();
 
     if (!open) {
       return showToast({

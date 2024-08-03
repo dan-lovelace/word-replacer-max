@@ -3,10 +3,6 @@ import { isFirefox } from "@worm/shared";
 export const CAN_UPLOAD_PARAMETER = "u";
 export const NOTIFY_PARAMETER = "msg";
 
-export const ROUTES = {
-  HOME: "/popup.html",
-};
-
 export function canUploadDirect() {
   if (!isFirefox()) return true;
 

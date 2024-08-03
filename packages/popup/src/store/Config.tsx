@@ -1,10 +1,12 @@
 import { VNode, createContext } from "preact";
 import { useEffect, useMemo, useState } from "preact/hooks";
 
-import { browser, storageGetByKeys } from "@worm/shared";
+import {
+  browser,
+  POPUP_POPPED_OUT_PARAMETER_KEY,
+  storageGetByKeys,
+} from "@worm/shared";
 import { Storage } from "@worm/types";
-
-import { POPPED_OUT_PARAMETER_KEY } from "../lib/config";
 
 type ConfigType = {
   isPoppedOut: boolean;
@@ -28,7 +30,7 @@ export function ConfigProvider({ children }: { children: VNode }) {
   const isPoppedOut = useMemo(
     () =>
       new URLSearchParams(window.location.search).get(
-        POPPED_OUT_PARAMETER_KEY
+        POPUP_POPPED_OUT_PARAMETER_KEY
       ) === "true",
     []
   );

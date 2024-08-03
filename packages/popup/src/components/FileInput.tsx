@@ -1,10 +1,11 @@
 import { useMemo } from "preact/hooks";
 import type { JSXInternal } from "preact/src/jsx";
 
+import { POPUP_ROUTES } from "@worm/shared";
+
 import {
   CAN_UPLOAD_PARAMETER,
   NOTIFY_PARAMETER,
-  ROUTES,
   canUploadDirect,
 } from "../lib/routes";
 import { useLanguage } from "../lib/language";
@@ -37,7 +38,7 @@ export default function FileInput({ onChange }: FileUploadProps) {
   ) : (
     <a
       className={WRAPPER_CLASSNAME}
-      href={`${ROUTES.HOME}?${CAN_UPLOAD_PARAMETER}=true&${NOTIFY_PARAMETER}=${message}`}
+      href={`${POPUP_ROUTES.HOME}?${CAN_UPLOAD_PARAMETER}=true&${NOTIFY_PARAMETER}=${message}`}
       target="_blank"
     >
       <Content />
