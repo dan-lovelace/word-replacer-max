@@ -6,6 +6,8 @@ A browser extension for replacing text on webpages.
 
 <img alt="replace words and phrases" src="./assets/word-replacer-max-store-page-1.png" style="max-width: 100%; width: 410px"></img>
 <img alt="flexible domain settings" src="./assets/word-replacer-max-store-page-2.png" style="max-width: 100%; width: 410px"></img>
+<img alt="ruleset sharing" src="./assets/word-replacer-max-store-page-3.png" style="max-width: 100%; width: 410px"></img>
+<img alt="highlight and replace" src="./assets/word-replacer-max-store-page-4.png" style="max-width: 100%; width: 410px"></img>
 
 # Building locally
 
