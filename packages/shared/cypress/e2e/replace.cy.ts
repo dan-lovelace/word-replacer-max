@@ -212,6 +212,58 @@ describe("replace", () => {
         cy.wrap(target).should("have.text", "Lorem,updated ,updated dolor");
       });
     });
+
+    it("works with leading word boundary", () => {
+      cy.visitMock({
+        targetContents: "Lorem ipsum dolor",
+      });
+
+      s.target().then(($element) => {
+        const target = $element.get(0);
+
+        searchAndReplace(target, "\\blorem", ["regex"], "sit");
+        cy.wrap(target).should("have.text", "sit ipsum dolor");
+      });
+    });
+
+    it("works with leading word boundary into capture group", () => {
+      cy.visitMock({
+        targetContents: "Lorem ipsum dolor",
+      });
+
+      s.target().then(($element) => {
+        const target = $element.get(0);
+
+        searchAndReplace(target, "\\b(lorem)", ["regex"], "sit");
+        cy.wrap(target).should("have.text", "sit ipsum dolor");
+      });
+    });
+
+    it("works with trailing word boundary", () => {
+      cy.visitMock({
+        targetContents: "Lorem ipsum dolor",
+      });
+
+      s.target().then(($element) => {
+        const target = $element.get(0);
+
+        searchAndReplace(target, "lorem\\b", ["regex"], "sit");
+        cy.wrap(target).should("have.text", "sit ipsum dolor");
+      });
+    });
+
+    it("works with trailing word boundary after capture group", () => {
+      cy.visitMock({
+        targetContents: "Lorem ipsum dolor",
+      });
+
+      s.target().then(($element) => {
+        const target = $element.get(0);
+
+        searchAndReplace(target, "(lorem)\\b", ["regex"], "sit");
+        cy.wrap(target).should("have.text", "sit ipsum dolor");
+      });
+    });
   });
 
   describe("'wholeWord' query pattern only", () => {
