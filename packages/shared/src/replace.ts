@@ -24,8 +24,8 @@ const nodeNameBlocklist: Set<Node["nodeName"]> = new Set([
 const patternRegex: {
   [key in QueryPattern]: (query: string, flags?: string) => RegExp;
 } = {
-  case: (query) => new RegExp(query, "g"),
-  default: (query) => new RegExp(query, "gi"),
+  case: (query) => new RegExp(escapeRegex(query), "g"),
+  default: (query) => new RegExp(escapeRegex(query), "gi"),
   regex: (query, flags) => new RegExp(query, flags),
   wholeWord: (query, flags) =>
     new RegExp(`(?<![^\\W_])${escapeRegex(query)}(?![^\\W_])`, flags),

@@ -130,6 +130,19 @@ describe("replace", () => {
         cy.wrap(target).should("have.text", "Lositrem Ipsum");
       });
     });
+
+    it("does not respect regular expression characters", () => {
+      cy.visitMock({
+        targetContents: "Lorem ipsum dolor",
+      });
+
+      s.target().then(($element) => {
+        const target = $element.get(0);
+
+        searchAndReplace(target, "Lo.*", [], "sit");
+        cy.wrap(target).should("have.text", "Lorem ipsum dolor");
+      });
+    });
   });
 
   describe("'case' query pattern only", () => {
@@ -156,6 +169,19 @@ describe("replace", () => {
 
         searchAndReplace(target, "ipsum", ["case"], "sit");
         cy.wrap(target).should("have.text", "Lorem sit dolor Ipsum sit sit");
+      });
+    });
+
+    it("does not respect regular expression characters", () => {
+      cy.visitMock({
+        targetContents: "Lorem ipsum dolor",
+      });
+
+      s.target().then(($element) => {
+        const target = $element.get(0);
+
+        searchAndReplace(target, "Lo.*", ["case"], "sit");
+        cy.wrap(target).should("have.text", "Lorem ipsum dolor");
       });
     });
   });
@@ -210,6 +236,58 @@ describe("replace", () => {
 
         searchAndReplace(target, "(Lorem)|(ipsum)", ["regex"], "$1,updated");
         cy.wrap(target).should("have.text", "Lorem,updated ,updated dolor");
+      });
+    });
+
+    it("works with leading word boundary", () => {
+      cy.visitMock({
+        targetContents: "Lorem ipsum dolor",
+      });
+
+      s.target().then(($element) => {
+        const target = $element.get(0);
+
+        searchAndReplace(target, "\\blorem", ["regex"], "sit");
+        cy.wrap(target).should("have.text", "sit ipsum dolor");
+      });
+    });
+
+    it("works with leading word boundary into capture group", () => {
+      cy.visitMock({
+        targetContents: "Lorem ipsum dolor",
+      });
+
+      s.target().then(($element) => {
+        const target = $element.get(0);
+
+        searchAndReplace(target, "\\b(lorem)", ["regex"], "sit");
+        cy.wrap(target).should("have.text", "sit ipsum dolor");
+      });
+    });
+
+    it("works with trailing word boundary", () => {
+      cy.visitMock({
+        targetContents: "Lorem ipsum dolor",
+      });
+
+      s.target().then(($element) => {
+        const target = $element.get(0);
+
+        searchAndReplace(target, "lorem\\b", ["regex"], "sit");
+        cy.wrap(target).should("have.text", "sit ipsum dolor");
+      });
+    });
+
+    it("works with trailing word boundary after capture group", () => {
+      cy.visitMock({
+        targetContents: "Lorem ipsum dolor",
+      });
+
+      s.target().then(($element) => {
+        const target = $element.get(0);
+
+        searchAndReplace(target, "(lorem)\\b", ["regex"], "sit");
+        cy.wrap(target).should("have.text", "sit ipsum dolor");
       });
     });
   });
@@ -279,6 +357,19 @@ describe("replace", () => {
         cy.wrap(target).should("have.text", "Lorem 'sit' dolor");
       });
     });
+
+    it("does not respect regular expression characters", () => {
+      cy.visitMock({
+        targetContents: "Lorem ipsum dolor",
+      });
+
+      s.target().then(($element) => {
+        const target = $element.get(0);
+
+        searchAndReplace(target, "Lo.*", ["wholeWord"], "sit");
+        cy.wrap(target).should("have.text", "Lorem ipsum dolor");
+      });
+    });
   });
 
   describe("'case' and 'wholeWord' query patterns together", () => {
@@ -318,6 +409,19 @@ describe("replace", () => {
 
         searchAndReplace(target, "Ipsum", ["case", "wholeWord"], "sit");
         cy.wrap(target).should("have.text", "Lorem sit dolor sIpsum sit");
+      });
+    });
+
+    it("does not respect regular expression characters", () => {
+      cy.visitMock({
+        targetContents: "Lorem ipsum dolor",
+      });
+
+      s.target().then(($element) => {
+        const target = $element.get(0);
+
+        searchAndReplace(target, "Lo.*", ["case", "wholeWord"], "sit");
+        cy.wrap(target).should("have.text", "Lorem ipsum dolor");
       });
     });
   });
