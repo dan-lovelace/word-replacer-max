@@ -1,4 +1,4 @@
-# <img alt="Word Replace Max" src="./assets/logo_128.png" style="width: 1.8rem;" /> Word Replacer Max
+# <img alt="Word Replace Max" src="./assets/logo_128.png" style="height: 24px;" /> Word Replacer Max
 
 A browser extension for replacing text on webpages.
 
