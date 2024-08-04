@@ -130,6 +130,19 @@ describe("replace", () => {
         cy.wrap(target).should("have.text", "Lositrem Ipsum");
       });
     });
+
+    it("does not respect regular expression characters", () => {
+      cy.visitMock({
+        targetContents: "Lorem ipsum dolor",
+      });
+
+      s.target().then(($element) => {
+        const target = $element.get(0);
+
+        searchAndReplace(target, "Lo.*", [], "sit");
+        cy.wrap(target).should("have.text", "Lorem ipsum dolor");
+      });
+    });
   });
 
   describe("'case' query pattern only", () => {
@@ -156,6 +169,19 @@ describe("replace", () => {
 
         searchAndReplace(target, "ipsum", ["case"], "sit");
         cy.wrap(target).should("have.text", "Lorem sit dolor Ipsum sit sit");
+      });
+    });
+
+    it("does not respect regular expression characters", () => {
+      cy.visitMock({
+        targetContents: "Lorem ipsum dolor",
+      });
+
+      s.target().then(($element) => {
+        const target = $element.get(0);
+
+        searchAndReplace(target, "Lo.*", ["case"], "sit");
+        cy.wrap(target).should("have.text", "Lorem ipsum dolor");
       });
     });
   });
@@ -331,6 +357,19 @@ describe("replace", () => {
         cy.wrap(target).should("have.text", "Lorem 'sit' dolor");
       });
     });
+
+    it("does not respect regular expression characters", () => {
+      cy.visitMock({
+        targetContents: "Lorem ipsum dolor",
+      });
+
+      s.target().then(($element) => {
+        const target = $element.get(0);
+
+        searchAndReplace(target, "Lo.*", ["wholeWord"], "sit");
+        cy.wrap(target).should("have.text", "Lorem ipsum dolor");
+      });
+    });
   });
 
   describe("'case' and 'wholeWord' query patterns together", () => {
@@ -370,6 +409,19 @@ describe("replace", () => {
 
         searchAndReplace(target, "Ipsum", ["case", "wholeWord"], "sit");
         cy.wrap(target).should("have.text", "Lorem sit dolor sIpsum sit");
+      });
+    });
+
+    it("does not respect regular expression characters", () => {
+      cy.visitMock({
+        targetContents: "Lorem ipsum dolor",
+      });
+
+      s.target().then(($element) => {
+        const target = $element.get(0);
+
+        searchAndReplace(target, "Lo.*", ["case", "wholeWord"], "sit");
+        cy.wrap(target).should("have.text", "Lorem ipsum dolor");
       });
     });
   });
