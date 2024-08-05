@@ -1,6 +1,6 @@
 import { searchNode } from "@worm/shared/src/replace";
 
-import { selectors as s } from "../lib/selectors";
+import { selectors as s } from "../support/selectors";
 
 const DEFAULT_TEST_STRING = "Lorem ipsum dolor sit amet";
 

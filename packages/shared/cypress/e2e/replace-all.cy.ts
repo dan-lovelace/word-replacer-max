@@ -1,6 +1,6 @@
 import { replaceAll } from "@worm/shared/src/replace";
 
-import { selectors as s } from "../lib/selectors";
+import { selectors as s } from "../support/selectors";
 
 describe("replaceAll", () => {
   it("includes 'title' elements in the head", () => {

@@ -1,45 +1,25 @@
-import { Storage } from "@worm/types";
+import { selectors as s } from "../support/selectors";
 
-const defaultStore: Partial<Storage> = {
-  domainList: [],
-  matchers: [
-    {
-      active: true,
-      identifier: "1234",
-      queries: ["my jaw dropped", "I was shocked"],
-      queryPatterns: [],
-      replacement: "I was surprised",
-    },
-    {
-      active: true,
-      identifier: "5678",
-      queries: ["This."],
-      queryPatterns: ["case", "wholeWord"],
-      replacement: " ",
-    },
-  ],
-  preferences: {
-    activeTab: "rules",
-    domainListEffect: "deny",
-    extensionEnabled: true,
-    focusRule: "",
-  },
-};
+describe("tab", () => {
+  it("should render the correct number of rule rows", () => {
+    cy.visitWithStorage();
 
-describe("rules list", () => {
-  beforeEach(() => {
-    cy.visit("http://localhost:5173/popup.html");
+    s.ruleRows().should("have.length", 2);
   });
 
-  it("shows current rules", () => {
-    cy.window().then((win) => {
-      const browser = win.CYPRESS_BROWSER;
+  it("should allow addition of new rule rows", () => {
+    cy.visitWithStorage();
 
-      browser.storage?.sync?.set(defaultStore).then(() => {
-        browser.storage?.sync?.get().then((values) => {
-          console.log("storage values", values);
-        });
-      });
+    s.addNewRuleButton().click();
+    s.ruleRows().should("have.length", 3);
+  });
+
+  it("should allow addition of new rule rows when no rules exist", () => {
+    cy.visitWithStorage({
+      matchers: [],
     });
+
+    s.ruleRows().should("have.length", 0);
+    s.addNewRuleButton().should("be.visible");
   });
 });

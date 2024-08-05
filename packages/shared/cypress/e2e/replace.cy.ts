@@ -1,7 +1,7 @@
 import { replace, searchNode } from "@worm/shared/src/replace";
 import { QueryPattern } from "@worm/types";
 
-import { selectors as s } from "../lib/selectors";
+import { selectors as s } from "../support/selectors";
 
 /**
  * Utility function to reduce code duplication.

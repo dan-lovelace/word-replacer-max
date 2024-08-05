@@ -150,7 +150,10 @@ export default function RuleRow({
   };
 
   return (
-    <div className={cx("row", disabled && "pe-none flex-fill")}>
+    <div
+      className={cx("row", disabled && "pe-none flex-fill")}
+      data-testid="rule-row"
+    >
       {!disabled && (
         <div className="col-auto form-check form-switch ps-3 pe-0 pt-2">
           <input
