@@ -1,6 +1,16 @@
 import { Browser, Events, Storage } from "webextension-polyfill";
 
-import { DeepPartial, StorageKey, Storage as WRMStorage } from "@worm/types";
+import { StorageKey, Storage as WRMStorage } from "@worm/types";
+
+declare global {
+  interface Window {
+    CYPRESS_BROWSER: DevBrowser;
+  }
+}
+
+type DevRuntime = Partial<Browser["runtime"]>;
+
+type DevStorage = Partial<Browser["storage"]>;
 
 type ListenerCallback = (
   changes: Storage.StorageAreaSyncOnChangedChangesType
@@ -62,7 +72,7 @@ function deepEqual(obj1: any, obj2: any): boolean {
   return true;
 }
 
-class DevStorage
+class MockStorage
   implements Partial<Omit<Browser["storage"], "local" | "managed" | "session">>
 {
   _onChanged: Events.Event<ListenerCallback> = {
@@ -77,31 +87,7 @@ class DevStorage
 
   onChanged = this._onChanged;
 
-  store: Partial<WRMStorage> = {
-    domainList: [],
-    matchers: [
-      {
-        active: true,
-        identifier: "1234",
-        queries: ["my jaw dropped", "I was shocked"],
-        queryPatterns: [],
-        replacement: "I was surprised",
-      },
-      {
-        active: true,
-        identifier: "5678",
-        queries: ["This."],
-        queryPatterns: ["case", "wholeWord"],
-        replacement: " ",
-      },
-    ],
-    preferences: {
-      activeTab: "rules",
-      domainListEffect: "deny",
-      extensionEnabled: true,
-      focusRule: "",
-    },
-  };
+  store: Partial<WRMStorage> = {};
 
   sync: Storage.SyncStorageAreaSync;
 
@@ -196,11 +182,42 @@ class DevStorage
   }
 }
 
-const _default: DeepPartial<Browser> = {
+export class DevBrowser
+  implements
+    Partial<
+      Omit<Browser, "runtime" | "storage"> & {
+        runtime: DevRuntime | undefined;
+        storage: DevStorage | undefined;
+      }
+    >
+{
+  runtime: DevRuntime | undefined;
+  storage: DevStorage | undefined;
+
+  constructor({
+    runtime,
+    storage,
+  }: {
+    runtime: DevRuntime;
+    storage: DevStorage;
+  }) {
+    if (runtime !== undefined) {
+      this.runtime = runtime;
+    }
+
+    if (storage !== undefined) {
+      this.storage = storage;
+    }
+  }
+}
+
+const defaultBrowser = new DevBrowser({
   runtime: {
     getURL: (path: string) => `mocked_url/${path}`,
   },
-  storage: new DevStorage(),
-};
+  storage: new MockStorage(),
+});
 
-export { _default as default };
+window.CYPRESS_BROWSER = defaultBrowser;
+
+export { defaultBrowser as default };

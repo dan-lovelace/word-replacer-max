@@ -35,3 +35,11 @@
 //     }
 //   }
 // }
+
+import { DevBrowser } from "../../dev-webextension-polyfill";
+
+declare namespace Cypress {
+  interface Window {
+    CYPRESS_BROWSER: DevBrowser;
+  }
+}
