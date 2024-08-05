@@ -36,12 +36,16 @@ input[type="text"] {
 }
 
 .query-patterns {
-  margin-left: -1px; // make it look more concretely-attached
+  margin-left: -1px; // make it appear more concretely attached
 
   .btn {
     min-height: calc($inputHeight + 2px);
     width: 2.5rem;
   }
+}
+
+.z-toast {
+  z-index: $zindex-toast;
 }
 
 @include media-breakpoint-up(xxl) {

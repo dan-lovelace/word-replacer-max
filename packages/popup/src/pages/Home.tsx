@@ -5,10 +5,10 @@ import { v4 as uuidv4 } from "uuid";
 import { storageSetByKeys } from "@worm/shared";
 
 import DomainInput from "../components/DomainInput";
-import Options from "../components/Options";
 import RuleRow from "../components/RuleRow";
 import Support from "../components/Support";
 import ToastMessage from "../components/ToastMessage";
+import Options from "../containers/Options/Options";
 import { Config } from "../store/Config";
 import { useToast } from "../store/Toast";
 

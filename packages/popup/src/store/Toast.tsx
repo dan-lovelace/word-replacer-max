@@ -88,12 +88,12 @@ export function ToastProvider({ children }: { children: VNode }) {
           "text-bg-light",
           "position-fixed end-0 bottom-0 w-auto",
           "me-1 mb-1",
-          "z-1"
+          "z-toast"
         )}
         role="alert"
       >
         <div className="d-flex">
-          <div className="toast-body">{messages?.[0].children}</div>
+          <div className="toast-body px-3">{messages?.[0].children}</div>
         </div>
       </div>
     </Toast.Provider>

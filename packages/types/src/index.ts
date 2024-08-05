@@ -51,6 +51,10 @@ export type StorageKeyMap = {
   preferences: {
     activeTab: PopupTab;
     domainListEffect: DomainEffect;
+    exportLink: {
+      updatedAt: string;
+      url: string;
+    };
     extensionEnabled: boolean;
     focusRule: Matcher["identifier"];
   };

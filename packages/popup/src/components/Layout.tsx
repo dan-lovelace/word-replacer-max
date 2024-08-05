@@ -4,7 +4,7 @@ import { useContext, useEffect, useMemo, useRef } from "preact/hooks";
 import { getAssetURL, popoutExtension, storageSetByKeys } from "@worm/shared";
 import { PopupTab } from "@worm/types";
 
-import IconButton from "./IconButton";
+import IconButton from "./button/IconButton";
 import { RefreshRequiredToast } from "./RefreshRequiredToast";
 import ToastMessage from "./ToastMessage";
 

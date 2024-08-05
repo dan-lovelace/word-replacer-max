@@ -14,13 +14,13 @@ type FileUploadProps = {
   onChange: (event: JSXInternal.TargetedInputEvent<HTMLInputElement>) => void;
 };
 
-const WRAPPER_CLASSNAME = "btn btn-secondary";
+const WRAPPER_CLASSNAME = "btn btn-outline-secondary";
 
 function Content() {
   return (
     <span className="d-flex align-items-center gap-1">
       <i className="material-icons-sharp fs-sm">download</i>
-      Import
+      Import from file
     </span>
   );
 }
