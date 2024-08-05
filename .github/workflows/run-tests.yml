@@ -17,3 +17,8 @@ jobs:
           cache: "yarn"
       - run: yarn install
       - run: yarn test
+      - uses: cypress-io/github-action@v6
+        with:
+          browser: chrome
+          project: packages/popup
+          start: yarn dev

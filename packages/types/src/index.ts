@@ -4,6 +4,12 @@ const queryPatterns = ["case", "default", "regex", "wholeWord"] as const;
 const schemaVersions = [1] as const;
 const storageVersions = ["1.0.0"] as const;
 
+export type DeepPartial<T> = T extends object
+  ? {
+      [P in keyof T]?: DeepPartial<T[P]>;
+    }
+  : T;
+
 export type DomainEffect = "allow" | "deny";
 
 export type Matcher = {

@@ -10,5 +10,9 @@
       "react-dom": ["../../node_modules/preact/compat/"]
     }
   },
-  "include": ["../../node_modules/vite/client.d.ts", "src/**/*"]
+  "include": [
+    "../../node_modules/vite/client.d.ts",
+    "src/**/*",
+    "dev-webextension-polyfill.ts"
+  ]
 }
