@@ -1,1 +1,2 @@
-export * from "./visit";
+import "./browser";
+import "./visit";

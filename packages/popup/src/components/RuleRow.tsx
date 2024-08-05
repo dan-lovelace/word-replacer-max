@@ -159,6 +159,7 @@ export default function RuleRow({
           <input
             checked={active}
             className="form-check-input m-0"
+            data-testid="active-toggle"
             id={`active-check-${identifier}`}
             role="switch"
             title={active ? "Disable Rule" : "Enable Rule"}
