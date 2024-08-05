@@ -21,4 +21,4 @@ jobs:
         with:
           browser: chrome
           project: packages/popup
-          start: yarn dev
+          start: yarn workspace @worm/popup dev
