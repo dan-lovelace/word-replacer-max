@@ -20,7 +20,7 @@ export default function ExportLink() {
 
   const exportLink = useMemo(
     () =>
-      Boolean(preferences?.exportLink.url)
+      Boolean(preferences?.exportLink?.url)
         ? preferences?.exportLink
         : undefined,
     [preferences]

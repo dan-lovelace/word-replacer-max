@@ -51,7 +51,7 @@ export type StorageKeyMap = {
   preferences: {
     activeTab: PopupTab;
     domainListEffect: DomainEffect;
-    exportLink: {
+    exportLink?: {
       updatedAt: string;
       url: string;
     };
