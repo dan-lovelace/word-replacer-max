@@ -16,7 +16,9 @@ export function initializeContextMenu() {
     title: 'Replace "%s"',
     contexts: ["selection"],
   });
+}
 
+export function startContextMenuListener() {
   browser.contextMenus.onClicked.addListener(async (info) => {
     switch (info.menuItemId) {
       case ADD_NEW_RULE_ID: {
