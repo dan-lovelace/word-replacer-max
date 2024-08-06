@@ -115,7 +115,19 @@ export default function LinkImport({ setIsImportingLink }: LinkImportProps) {
         disabled={isLoading}
         type="submit"
       >
-        Import
+        {isLoading ? (
+          <>
+            <span
+              className="spinner-border spinner-border-sm me-1"
+              role="status"
+            >
+              <span className="visually-hidden">Loading...</span>
+            </span>
+            Importing
+          </>
+        ) : (
+          "Import"
+        )}
       </Button>
       <Button
         className="btn btn-outline-primary"
