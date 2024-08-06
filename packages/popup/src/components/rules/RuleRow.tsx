@@ -7,14 +7,14 @@ import {
 } from "@worm/shared";
 import { Matcher } from "@worm/types";
 
-import QueryInput from "./QueryInput";
-import { RefreshRequiredToast } from "./RefreshRequiredToast";
-import ReplacementInput from "./ReplacementInput";
-import ToastMessage from "./ToastMessage";
+import QueryInput from "../QueryInput";
+import { RefreshRequiredToast } from "../RefreshRequiredToast";
+import ReplacementInput from "../ReplacementInput";
+import ToastMessage from "../ToastMessage";
 
-import cx from "../lib/classnames";
-import { useConfig } from "../store/Config";
-import { useToast } from "../store/Toast";
+import cx from "../../lib/classnames";
+import { useConfig } from "../../store/Config";
+import { useToast } from "../../store/Toast";
 
 type RuleRowProps = {
   matcher: Matcher;
@@ -30,9 +30,9 @@ export default function RuleRow({
   const {
     storage: { preferences },
   } = useConfig();
-  const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
   const confirmingDeleteRef = useRef<boolean>();
   const replacementInputRef = useRef<HTMLInputElement>(null);
+  const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
   const { hideToast, showToast } = useToast();
 
   confirmingDeleteRef.current = isConfirmingDelete;
@@ -175,6 +175,7 @@ export default function RuleRow({
           identifier={identifier}
           queries={queries}
           queryPatterns={queryPatterns}
+          replacement={replacement}
           onChange={handleMatcherInputChange}
         />
       </div>

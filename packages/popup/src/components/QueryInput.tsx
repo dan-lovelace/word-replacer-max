@@ -1,7 +1,8 @@
-import { Fragment, VNode } from "preact";
+import { Fragment } from "preact";
 import { useState } from "preact/hooks";
 import { JSXInternal } from "preact/src/jsx";
 
+import { isReplacementEmpty } from "@worm/shared";
 import { Matcher, QueryPattern } from "@worm/types";
 
 import Chip from "./Chip";
@@ -10,11 +11,12 @@ import caseIcon from "../icons/case";
 import regexIcon from "../icons/regex";
 import wholeWordIcon from "../icons/whole-word";
 import cx from "../lib/classnames";
+import { PreactChildren } from "../lib/types";
 import { useToast } from "../store/Toast";
 
 type QueryInputProps = Pick<
   Matcher,
-  "active" | "identifier" | "queries" | "queryPatterns"
+  "active" | "identifier" | "queries" | "queryPatterns" | "replacement"
 > & {
   disabled: boolean;
   onChange: (
@@ -25,7 +27,7 @@ type QueryInputProps = Pick<
 };
 
 const queryPatternMetadata: {
-  icon: VNode;
+  icon: PreactChildren;
   title: string;
   value: QueryPattern;
 }[] = [
@@ -52,6 +54,7 @@ export default function QueryInput({
   identifier,
   queries,
   queryPatterns,
+  replacement,
   onChange,
 }: QueryInputProps) {
   const [value, setValue] = useState("");
@@ -78,7 +81,10 @@ export default function QueryInput({
 
     if (patternIdx < 0) {
       newPatterns.push(pattern);
-      showToast({ children: <RefreshRequiredToast onClose={hideToast} /> });
+
+      if (!isReplacementEmpty(replacement)) {
+        showToast({ children: <RefreshRequiredToast onClose={hideToast} /> });
+      }
     } else {
       newPatterns.splice(patternIdx, 1);
     }

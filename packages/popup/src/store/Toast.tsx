@@ -1,9 +1,10 @@
-import { VNode, createContext } from "preact";
+import { createContext } from "preact";
 import { useContext, useEffect, useState } from "preact/hooks";
 
 import { Toast as BSToast } from "bootstrap";
 
 import cx from "../lib/classnames";
+import { PreactChildren } from "../lib/types";
 
 type ToastStore = {
   hideToast: () => void;
@@ -11,7 +12,7 @@ type ToastStore = {
 };
 
 type ToastMessage = {
-  children: VNode | string;
+  children: PreactChildren;
 };
 
 const AUTOHIDE_DELAY_MS = 3000;
@@ -25,7 +26,7 @@ const Toast = createContext<ToastStore>(storeDefaults);
 
 export const useToast = () => useContext(Toast);
 
-export function ToastProvider({ children }: { children: VNode }) {
+export function ToastProvider({ children }: { children: PreactChildren }) {
   const [messages, setMessages] = useState<ToastMessage[]>();
   const [toast, setToast] = useState<BSToast>();
 

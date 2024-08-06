@@ -112,6 +112,10 @@ function updateElementWithReplacement(element: Text, replaced: string) {
   parentNode.replaceChild(wrapper, child);
 }
 
+export function isReplacementEmpty(replacement: Matcher["replacement"]) {
+  return !Boolean(replacement);
+}
+
 export function replace(
   element: Text | undefined,
   query: string,
@@ -119,7 +123,7 @@ export function replace(
   replacement: string,
   startPosition: number = 0
 ) {
-  if (!element || !Boolean(replacement)) return;
+  if (!element || isReplacementEmpty(replacement)) return;
 
   const { parentNode } = element;
 

@@ -9,8 +9,9 @@ import {
   SchemaExport,
 } from "@worm/types";
 
+import Alert from "../../components/Alerts";
 import Button from "../../components/button/Button";
-import RuleRow from "../../components/RuleRow";
+import RuleRow from "../../components/rules/RuleRow";
 import ToastMessage from "../../components/ToastMessage";
 import { useLanguage } from "../../lib/language";
 import { useConfig } from "../../store/Config";
@@ -268,9 +269,9 @@ export default function ExportModal() {
                   ))}
                 </>
               ) : (
-                <div className="alert alert-info" role="alert">
-                  You don't have any rules to export
-                </div>
+                <Alert title="No rules">
+                  You don't have any rules to export.
+                </Alert>
               )}
             </div>
           </div>

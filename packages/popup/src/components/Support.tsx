@@ -42,7 +42,7 @@ export default function Support() {
               <li>The website URL where you're trying to replace text</li>
               <li>
                 Your rulesets (these can be exported from the Options page and
-                attached as a file)
+                attached as a link or file)
               </li>
               <li>
                 A detailed description of what you expect to happen versus what

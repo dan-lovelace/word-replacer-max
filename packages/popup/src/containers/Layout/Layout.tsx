@@ -1,21 +1,21 @@
-import { VNode } from "preact";
 import { useEffect, useMemo, useRef } from "preact/hooks";
 
 import { getAssetURL, popoutExtension, storageSetByKeys } from "@worm/shared";
 import { PopupTab } from "@worm/types";
 
-import IconButton from "./button/IconButton";
-import { RefreshRequiredToast } from "./RefreshRequiredToast";
-import ToastMessage from "./ToastMessage";
+import IconButton from "../../components/button/IconButton";
+import { RefreshRequiredToast } from "../../components/RefreshRequiredToast";
+import ToastMessage from "../../components/ToastMessage";
 
-import cx from "../lib/classnames";
-import { useLanguage } from "../lib/language";
-import { getNotificationMessage } from "../lib/routes";
-import { useConfig } from "../store/Config";
-import { useToast } from "../store/Toast";
+import cx from "../../lib/classnames";
+import { useLanguage } from "../../lib/language";
+import { getNotificationMessage } from "../../lib/routes";
+import { PreactChildren } from "../../lib/types";
+import { useConfig } from "../../store/Config";
+import { useToast } from "../../store/Toast";
 
 type LayoutProps = {
-  children: VNode;
+  children: PreactChildren;
 };
 
 const tabs: { identifier: PopupTab; isHidden?: boolean; label: string }[] = [
@@ -108,7 +108,10 @@ export default function Layout({ children }: LayoutProps) {
           </div>
         )}
         <div className="d-flex w-100">
-          <div className="d-flex align-items-center justify-content-center">
+          <div
+            className="d-flex align-items-center justify-content-center"
+            style={{ margin: "0px 2px" }}
+          >
             <IconButton
               className={
                 preferences?.extensionEnabled ? "text-success" : "text-danger"

@@ -5,7 +5,7 @@ import { POPUP_ROUTES } from "@worm/shared";
 
 import "bootstrap/js/dist/toast";
 
-import Layout from "./components/Layout";
+import Layout from "./containers/Layout/Layout";
 import HomePage from "./pages/Home";
 import NotFoundPage from "./pages/NotFound";
 import { ConfigProvider } from "./store/Config";

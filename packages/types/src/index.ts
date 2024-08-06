@@ -20,6 +20,8 @@ export type Matcher = {
   replacement: string;
 };
 
+export type PopupAlertSeverity = "danger" | "info" | "success";
+
 export type PopupTab = "domains" | "options" | "rules" | "support";
 
 export type QueryPattern = (typeof queryPatterns)[number];

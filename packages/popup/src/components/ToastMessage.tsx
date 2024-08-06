@@ -1,8 +1,10 @@
-import { VNode } from "preact";
+import { PopupAlertSeverity } from "@worm/types";
+
+import { PreactChildren } from "../lib/types";
 
 type ToastMessageProps = {
-  message: VNode | string;
-  severity: "danger" | "info" | "success";
+  message: PreactChildren;
+  severity: PopupAlertSeverity;
 };
 
 const severityIconMap: Record<ToastMessageProps["severity"], string> = {
