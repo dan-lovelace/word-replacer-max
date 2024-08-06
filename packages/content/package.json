@@ -2,7 +2,6 @@
   "name": "@worm/content",
   "version": "0.0.0",
   "author": "dan-lovelace",
-  "license": "MIT",
   "main": "src/index.ts",
   "type": "module",
   "scripts": {
