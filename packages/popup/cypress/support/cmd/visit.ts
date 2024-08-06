@@ -35,10 +35,10 @@ Cypress.Commands.add(
   "visitWithStorage",
   (overrides?: VisitWithStorageParams) => {
     cy.visit(baseUrl).then(() => {
-      cy.window().then((win) => {
+      cy.window().then(($window) => {
         s.homePage().should("be.visible");
 
-        const browser = win.CYPRESS_BROWSER;
+        const browser = $window.DEV_BROWSER;
         const params = merge.withOptions(
           { mergeArrays: false },
           defaultStore,

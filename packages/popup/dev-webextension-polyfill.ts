@@ -4,7 +4,7 @@ import { StorageKey, Storage as WRMStorage } from "@worm/types";
 
 declare global {
   interface Window {
-    CYPRESS_BROWSER: DevBrowser;
+    DEV_BROWSER: DevBrowser;
   }
 }
 
@@ -218,6 +218,6 @@ const defaultBrowser = new DevBrowser({
   storage: new MockStorage(),
 });
 
-window.CYPRESS_BROWSER = defaultBrowser;
+window.DEV_BROWSER = defaultBrowser;
 
 export { defaultBrowser as default };

@@ -13,7 +13,7 @@ declare global {
     }
 
     interface Window {
-      CYPRESS_BROWSER: DevBrowser;
+      DEV_BROWSER: DevBrowser;
     }
   }
 }

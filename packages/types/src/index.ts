@@ -67,4 +67,9 @@ export type StorageKeyMap = {
   storageVersion: StorageVersion;
 };
 
+export type StorageSetOptions = {
+  onError?: (message: string) => void;
+  onSuccess?: () => void;
+};
+
 export type StorageVersion = (typeof storageVersions)[number];
