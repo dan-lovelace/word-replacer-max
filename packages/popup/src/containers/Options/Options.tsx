@@ -1,4 +1,4 @@
-import ExportLink from "./ExportLink";
+import ExportLinks from "./ExportLinks";
 import ExportModal from "./ExportModal";
 
 import Button from "../../components/button/Button";
@@ -31,7 +31,7 @@ export default function Options() {
               >
                 Export
               </Button>
-              <ExportLink />
+              <ExportLinks />
             </ColumnContent>
           </div>
         </div>

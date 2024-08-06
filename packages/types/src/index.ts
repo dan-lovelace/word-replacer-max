@@ -12,6 +12,11 @@ export type DeepPartial<T> = T extends object
 
 export type DomainEffect = "allow" | "deny";
 
+export type ExportLink = {
+  identifier: ReturnType<Date["getTime"]>;
+  url: string;
+};
+
 export type Matcher = {
   active: boolean;
   identifier: string;
@@ -59,10 +64,7 @@ export type StorageKeyMap = {
   preferences: {
     activeTab: PopupTab;
     domainListEffect: DomainEffect;
-    exportLink?: {
-      updatedAt: string;
-      url: string;
-    };
+    exportLinks?: ExportLink[];
     extensionEnabled: boolean;
     focusRule: Matcher["identifier"];
   };
