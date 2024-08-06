@@ -1,8 +1,8 @@
 import { logDebug } from "@worm/shared";
 
-export function copyToClipboard(text: string) {
+export async function copyToClipboard(text: string) {
   try {
-    navigator.clipboard.writeText(text);
+    await navigator.clipboard.writeText(text);
 
     return true;
   } catch (error) {
@@ -12,8 +12,8 @@ export function copyToClipboard(text: string) {
   return false;
 }
 
-export async function getClipboardCopyPermission() {
-  if (!navigator || !navigator.permissions) {
+export async function canWriteToClipboard() {
+  if (!navigator || !navigator.permissions || !navigator.clipboard) {
     return false;
   }
 
@@ -24,8 +24,11 @@ export async function getClipboardCopyPermission() {
 
     return copyQuery.state === "granted";
   } catch (error) {
-    logDebug("Error querying clipboard permissions", error);
+    // only supported in Chromium browsers
   }
 
-  return false;
+  return (
+    navigator.clipboard.hasOwnProperty("writeText") &&
+    typeof navigator.clipboard.writeText === "function"
+  );
 }

@@ -4,10 +4,7 @@ import { storageSetByKeys } from "@worm/shared";
 
 import Button from "../../components/button/Button";
 import ToastMessage from "../../components/ToastMessage";
-import {
-  copyToClipboard,
-  getClipboardCopyPermission,
-} from "../../lib/clipboard";
+import { copyToClipboard, canWriteToClipboard } from "../../lib/clipboard";
 import { Config } from "../../store/Config";
 import { useToast } from "../../store/Toast";
 
@@ -42,7 +39,7 @@ export default function ExportLink() {
 
   useEffect(() => {
     async function initCopyPermission() {
-      setIsClipboardCopyAllowed(await getClipboardCopyPermission());
+      setIsClipboardCopyAllowed(await canWriteToClipboard());
     }
 
     initCopyPermission();
@@ -60,10 +57,10 @@ export default function ExportLink() {
     });
   };
 
-  const handleCopyClick = () => {
+  const handleCopyClick = async () => {
     if (!exportLink || !exportLink.url) return;
 
-    const result = copyToClipboard(exportLink.url);
+    const result = await copyToClipboard(exportLink.url);
     const children = result ? (
       <ToastMessage message="Copied to clipboard" severity="success" />
     ) : (
