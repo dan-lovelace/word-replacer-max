@@ -1,13 +1,12 @@
-import { VNode } from "preact";
-
-import ExportLink from "./ExportLink";
+import ExportLinks from "./ExportLinks";
 import ExportModal from "./ExportModal";
 
 import Button from "../../components/button/Button";
 import Import from "../../components/import/Import";
 import { COPY_CONTAINER_COL_CLASS } from "../../lib/classnames";
+import { PreactChildren } from "../../lib/types";
 
-function ColumnContent({ children }: { children: VNode | VNode[] }) {
+function ColumnContent({ children }: { children: PreactChildren }) {
   return <>{children}</>;
 }
 
@@ -21,8 +20,9 @@ export default function Options() {
             <ColumnContent>
               <div className="fs-sm mb-2">
                 Create a convenient shareable web link or export your rules to a
-                local file. You can opt to export all your rules or only a
-                chosen subset for easy sharing.
+                local file. You can choose to export all your rules or only a
+                chosen subset. Please note that shareable links are public, and
+                there is no guarantee of privacy.
               </div>
               <Button
                 data-bs-toggle="modal"
@@ -32,7 +32,7 @@ export default function Options() {
               >
                 Export
               </Button>
-              <ExportLink />
+              <ExportLinks />
             </ColumnContent>
           </div>
         </div>
@@ -41,9 +41,10 @@ export default function Options() {
             <div className="fw-bold fs-5">Import</div>
             <ColumnContent>
               <div className="fs-sm mb-2">
-                Easily add to your existing settings by importing new rules.
-                This process is safe &ndash; it won't overwrite your current
-                data, but simply adds the new rules to what you already have.
+                Easily add to your existing settings by importing new rules,
+                either from a file or a link. This process is safe &ndash; it
+                won't overwrite your current data, but simply adds the new rules
+                to what you already have.
               </div>
               <Import />
             </ColumnContent>

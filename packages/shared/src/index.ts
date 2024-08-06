@@ -8,3 +8,4 @@ export * from "./popup";
 export * from "./replace";
 export * from "./schemas";
 export * from "./storage";
+export * from "./time";

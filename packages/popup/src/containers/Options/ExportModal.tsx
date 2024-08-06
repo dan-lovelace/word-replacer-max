@@ -8,9 +8,11 @@ import {
   Matcher,
   SchemaExport,
 } from "@worm/types";
+import { Dropdown } from "bootstrap";
 
+import Alert from "../../components/Alerts";
 import Button from "../../components/button/Button";
-import RuleRow from "../../components/RuleRow";
+import RuleRow from "../../components/rules/RuleRow";
 import ToastMessage from "../../components/ToastMessage";
 import { useLanguage } from "../../lib/language";
 import { useConfig } from "../../store/Config";
@@ -60,9 +62,18 @@ export default function ExportModal() {
     setSelectedRules(refineMatchers(matchers, selectedRules));
   }, [matchers]);
 
+  const closeDropdown = () => {
+    const target = document.getElementById("export-modal-dropdown-button");
+    if (!target) return;
+
+    const element = new Dropdown(target);
+    element.hide();
+  };
+
   const handleExportFile = () => {
     if (!selectedRules) return;
 
+    closeDropdown();
     const selectedMatchers = matchers?.filter(
       (matcher) =>
         selectedRules.find(
@@ -109,6 +120,7 @@ export default function ExportModal() {
       matchers: selectedRules.filter((selectedRule) => selectedRule.isSelected),
     };
 
+    closeDropdown();
     setIsLoading(true);
     const result = await fetch("https://api.wordreplacermax.com/share", {
       method: "POST",
@@ -145,10 +157,15 @@ export default function ExportModal() {
     }
 
     const newPreferences = Object.assign({}, preferences);
-    newPreferences.exportLink = {
-      updatedAt: new Date().getTime().toString(),
-      url: json.data.value.url,
-    };
+    const newExportLinks = [
+      ...(newPreferences.exportLinks || []),
+      {
+        identifier: new Date().getTime(),
+        url: json.data.value.url,
+      },
+    ];
+    newPreferences.exportLinks = newExportLinks;
+
     storageSetByKeys({
       preferences: newPreferences,
     });
@@ -268,9 +285,9 @@ export default function ExportModal() {
                   ))}
                 </>
               ) : (
-                <div className="alert alert-info" role="alert">
-                  You don't have any rules to export
-                </div>
+                <Alert title="No rules">
+                  You don't have any rules to export.
+                </Alert>
               )}
             </div>
           </div>
@@ -289,6 +306,7 @@ export default function ExportModal() {
                 className="btn btn-primary"
                 data-bs-toggle="dropdown"
                 disabled={selectedCount === 0 || isLoading}
+                id="export-modal-dropdown-button"
               >
                 {isLoading ? (
                   <>

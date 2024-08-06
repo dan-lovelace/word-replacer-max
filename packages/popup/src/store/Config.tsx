@@ -1,4 +1,4 @@
-import { VNode, createContext } from "preact";
+import { createContext } from "preact";
 import { useContext, useEffect, useMemo, useState } from "preact/hooks";
 
 import {
@@ -7,6 +7,8 @@ import {
   storageGetByKeys,
 } from "@worm/shared";
 import { Storage } from "@worm/types";
+
+import { PreactChildren } from "../lib/types";
 
 type ConfigStore = {
   isPoppedOut: boolean;
@@ -25,7 +27,7 @@ const Config = createContext<ConfigStore>(storeDefaults);
 
 export const useConfig = () => useContext(Config);
 
-export function ConfigProvider({ children }: { children: VNode }) {
+export function ConfigProvider({ children }: { children: PreactChildren }) {
   const [initialized, setInitialized] = useState(false);
   const [storage, setStorage] = useState<Storage>(storeDefaults.storage);
 

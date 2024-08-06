@@ -1,12 +1,12 @@
-import { VNode } from "preact";
-
 import { browser } from "@worm/shared";
+
+import { PreactChildren } from "../lib/types";
 
 export default function TabRefreshButton({
   children,
   onClick,
 }: {
-  children: string | VNode;
+  children: PreactChildren;
   onClick: () => void;
 }) {
   const handleClick = async () => {

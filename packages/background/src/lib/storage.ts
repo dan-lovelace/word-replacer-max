@@ -56,10 +56,7 @@ export async function initializeStorage() {
       preferences: {
         activeTab: "rules",
         domainListEffect: "deny",
-        exportLink: {
-          updatedAt: new Date().toLocaleDateString(),
-          url: "",
-        },
+        exportLinks: [],
         extensionEnabled: true,
         focusRule: "",
       },
