@@ -3,8 +3,9 @@ import type { JSXInternal } from "preact/src/jsx";
 
 import { logDebug } from "@worm/shared";
 
-import FileInput from "../../components/FileInput";
-import ToastMessage from "../../components/ToastMessage";
+import FileInput from "../FileInput";
+import ToastMessage from "../ToastMessage";
+
 import importMatchers from "../../lib/import";
 import { useLanguage } from "../../lib/language";
 import { Config } from "../../store/Config";
