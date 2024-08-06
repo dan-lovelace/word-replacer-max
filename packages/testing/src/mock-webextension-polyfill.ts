@@ -1,13 +1,16 @@
-import { Browser, Events, Storage } from "webextension-polyfill";
+import { Browser, Events, Storage, Windows } from "webextension-polyfill";
 
-type TBrowser = Omit<Browser, "runtime" | "storage"> & {
-  runtime: TRuntime | undefined;
-  storage: TStorage | undefined;
+type TBrowser = Omit<Browser, "runtime" | "storage" | "windows"> & {
+  runtime: TRuntime;
+  storage: TStorage;
+  windows: TWindows;
 };
 
 type TRuntime = Partial<Browser["runtime"]>;
 
 type TStorage = Partial<Browser["storage"]>;
+
+type TWindows = Partial<Browser["windows"]>;
 
 type Key<T> = keyof T;
 
@@ -75,28 +78,50 @@ function deepEqual(obj1: any, obj2: any): boolean {
   return true;
 }
 
-class MockStorage<T>
-  implements Partial<Omit<Browser["storage"], "local" | "managed" | "session">>
-{
-  private _onChanged: Events.Event<ListenerCallback> = {
-    addListener: (callback: ListenerCallback) => this.listeners.add(callback),
-    hasListener: (callback: ListenerCallback) => this.listeners.has(callback),
-    hasListeners: () => this.listeners.size > 0,
+class MockBrowser<StorageType> implements Partial<TBrowser> {
+  runtime: TRuntime;
+
+  storage: TStorage;
+
+  windows: TWindows;
+
+  constructor({ withStorage }: { withStorage?: StorageType }) {
+    this.runtime = new MockRuntime();
+
+    const mockStorage = new MockStorage(withStorage);
+    this.storage = mockStorage;
+
+    const mockWindows = new MockWindows();
+    this.windows = mockWindows;
+  }
+}
+
+class MockRuntime implements TRuntime {
+  getURL(path: string) {
+    return `/${path}`;
+  }
+}
+
+class MockStorage<T> implements TStorage {
+  _onChanged: Events.Event<ListenerCallback> = {
+    addListener: (callback: ListenerCallback) => this._listeners.add(callback),
+    hasListener: (callback: ListenerCallback) => this._listeners.has(callback),
+    hasListeners: () => this._listeners.size > 0,
     removeListener: (callback: ListenerCallback) =>
-      this.listeners.delete(callback),
+      this._listeners.delete(callback),
   };
 
-  listeners: Set<ListenerCallback> = new Set();
+  _listeners: Set<ListenerCallback> = new Set();
 
-  onChanged = this._onChanged;
+  _store: KeyMap<T> = {};
 
-  store: KeyMap<T> = {};
+  onChanged? = this._onChanged;
 
   sync?: Storage.SyncStorageAreaSync;
 
   constructor(initialValues?: T) {
     if (initialValues !== undefined) {
-      this.store = initialValues;
+      this._store = initialValues;
     }
 
     this.sync = {
@@ -108,14 +133,14 @@ class MockStorage<T>
 
       clear: () =>
         new Promise((resolve) => {
-          this.store = {};
+          this._store = {};
 
           resolve();
         }),
       getBytesInUse: async () => 100,
       get: (keys) => {
         return new Promise((resolve) => {
-          const currentStore = deepClone(this.store);
+          const currentStore = deepClone(this._store);
           const result: Record<any, any> = {};
 
           if (Array.isArray(keys)) {
@@ -136,7 +161,7 @@ class MockStorage<T>
       onChanged: this._onChanged,
       remove: (keys) => {
         return new Promise((resolve) => {
-          const newStore = deepClone(this.store);
+          const newStore = deepClone(this._store);
 
           if (Array.isArray(keys)) {
             keys.forEach((key) => {
@@ -146,9 +171,9 @@ class MockStorage<T>
             delete newStore[keys as Key<T>];
           }
 
-          this.store = newStore;
+          this._store = newStore;
 
-          Array.from(this.listeners).forEach((listener) => {
+          Array.from(this._listeners).forEach((listener) => {
             listener({});
           });
 
@@ -157,7 +182,7 @@ class MockStorage<T>
       },
       set: (items: KeyMap<T>) => {
         return new Promise((resolve) => {
-          const newStore = deepClone(this.store);
+          const newStore = deepClone(this._store);
           let isDifferent = false;
 
           (Object.keys(items) as Key<T>[]).forEach((key) => {
@@ -165,13 +190,13 @@ class MockStorage<T>
 
             isDifferent =
               isDifferent === true ||
-              !deepEqual(this.store[key], newStore[key]);
+              !deepEqual(this._store[key], newStore[key]);
           });
 
-          this.store = newStore;
+          this._store = newStore;
 
           if (isDifferent) {
-            Array.from(this.listeners).forEach((listener) => {
+            Array.from(this._listeners).forEach((listener) => {
               listener({});
             });
           }
@@ -183,24 +208,20 @@ class MockStorage<T>
   }
 }
 
-class MockBrowser<StorageType> implements Partial<TBrowser> {
-  runtime: TRuntime | undefined;
+class MockWindows implements TWindows {
+  create(createData?: Windows.CreateCreateDataType) {
+    return new Promise<Windows.Window>((resolve) => {
+      const createParams = new URLSearchParams(Object(createData));
+      const queryString = createParams.toString();
 
-  storage: TStorage | undefined;
+      window.open(String(createData?.url), "", queryString);
 
-  constructor({
-    runtime,
-    withStorage,
-  }: {
-    runtime?: TRuntime;
-    withStorage?: StorageType;
-  }) {
-    this.runtime = runtime ?? {
-      getURL: (path: string) => `mocked_url/${path}`,
-    };
-
-    const mockStorage = new MockStorage(withStorage);
-    this.storage = mockStorage;
+      resolve({
+        alwaysOnTop: false,
+        focused: true,
+        incognito: false,
+      });
+    });
   }
 }
 
