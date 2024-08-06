@@ -16,7 +16,7 @@ export default function Chip({ identifier, onRemove }: ChipProps) {
     >
       {identifier}
       <button
-        className="bg-transparent border-0 px-0 mx-1 text-secondary"
+        className="bg-transparent border-0 px-0 mx-1 text-body-tertiary"
         title="Remove search query"
         type="button"
         onClick={onRemove(identifier)}
