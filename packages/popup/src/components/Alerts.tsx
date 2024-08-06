@@ -17,8 +17,11 @@ export default function Alert({
   title,
 }: AlertProps) {
   return (
-    <div className={cx("alert", `alert-${severity}`, className)} role="alert">
-      {title && <h6 className="alert-heading fw-bold">{title}</h6>}
+    <div
+      className={cx("alert m-0", `alert-${severity}`, className)}
+      role="alert"
+    >
+      {title && <div className="alert-heading fw-bold">{title}</div>}
       <div className="d-flex align-items-center">{children}</div>
     </div>
   );
