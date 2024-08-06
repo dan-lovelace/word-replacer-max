@@ -1,4 +1,4 @@
-import { StateUpdater, useContext, useState } from "preact/hooks";
+import { StateUpdater, useState } from "preact/hooks";
 import { JSXInternal } from "preact/src/jsx";
 
 import { logDebug } from "@worm/shared";
@@ -8,7 +8,7 @@ import ToastMessage from "../ToastMessage";
 
 import importMatchers from "../../lib/import";
 import { useLanguage } from "../../lib/language";
-import { Config } from "../../store/Config";
+import { useConfig } from "../../store/Config";
 import { useToast } from "../../store/Toast";
 
 type LinkImportProps = {
@@ -18,7 +18,7 @@ type LinkImportProps = {
 export default function LinkImport({ setIsImportingLink }: LinkImportProps) {
   const {
     storage: { matchers },
-  } = useContext(Config);
+  } = useConfig();
   const language = useLanguage();
   const [importLink, setImportLink] = useState("");
   const [isLoading, setIsLoading] = useState(false);

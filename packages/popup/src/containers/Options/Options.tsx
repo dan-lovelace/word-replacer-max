@@ -2,9 +2,9 @@ import { VNode } from "preact";
 
 import ExportLink from "./ExportLink";
 import ExportModal from "./ExportModal";
-import Import from "../../components/import/Import";
 
 import Button from "../../components/button/Button";
+import Import from "../../components/import/Import";
 import { COPY_CONTAINER_COL_CLASS } from "../../lib/classnames";
 
 function ColumnContent({ children }: { children: VNode | VNode[] }) {

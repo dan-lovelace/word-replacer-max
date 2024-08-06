@@ -1,5 +1,3 @@
-import { useContext } from "preact/hooks";
-
 import { v4 as uuidv4 } from "uuid";
 
 import { storageSetByKeys } from "@worm/shared";
@@ -9,13 +7,13 @@ import RuleRow from "../components/RuleRow";
 import Support from "../components/Support";
 import ToastMessage from "../components/ToastMessage";
 import Options from "../containers/Options/Options";
-import { Config } from "../store/Config";
+import { useConfig } from "../store/Config";
 import { useToast } from "../store/Toast";
 
 export default function HomePage() {
   const {
     storage: { matchers, preferences },
-  } = useContext(Config);
+  } = useConfig();
   const { showToast } = useToast();
 
   const handleNewRuleClick = () => {

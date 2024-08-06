@@ -1,11 +1,10 @@
-import { useContext } from "preact/hooks";
-
 import TabRefreshButton from "./TabRefreshButton";
+
 import { useLanguage } from "../lib/language";
-import { Config } from "../store/Config";
+import { useConfig } from "../store/Config";
 
 export function RefreshRequiredToast({ onClose }: { onClose: () => void }) {
-  const { isPoppedOut } = useContext(Config);
+  const { isPoppedOut } = useConfig();
   const language = useLanguage();
 
   return (

@@ -1,10 +1,4 @@
-import {
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "preact/hooks";
+import { useCallback, useEffect, useRef, useState } from "preact/hooks";
 
 import {
   STORAGE_MATCHER_PREFIX,
@@ -19,7 +13,7 @@ import ReplacementInput from "./ReplacementInput";
 import ToastMessage from "./ToastMessage";
 
 import cx from "../lib/classnames";
-import { Config } from "../store/Config";
+import { useConfig } from "../store/Config";
 import { useToast } from "../store/Toast";
 
 type RuleRowProps = {
@@ -35,7 +29,7 @@ export default function RuleRow({
 }: RuleRowProps) {
   const {
     storage: { preferences },
-  } = useContext(Config);
+  } = useConfig();
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
   const confirmingDeleteRef = useRef<boolean>();
   const replacementInputRef = useRef<HTMLInputElement>(null);

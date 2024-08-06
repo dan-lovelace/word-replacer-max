@@ -1,18 +1,19 @@
-import { useContext, useEffect, useMemo, useRef, useState } from "preact/hooks";
+import { useEffect, useMemo, useRef, useState } from "preact/hooks";
 import type { JSXInternal } from "preact/src/jsx";
 
 import { logDebug, storageSetByKeys } from "@worm/shared";
-import type { Matcher, SchemaExport } from "@worm/types";
-import type {
+import {
   ApiShareRequest,
   ApiShareResponse,
-} from "@worm/types/src/api/share";
+  Matcher,
+  SchemaExport,
+} from "@worm/types";
 
 import Button from "../../components/button/Button";
 import RuleRow from "../../components/RuleRow";
 import ToastMessage from "../../components/ToastMessage";
-
-import { Config } from "../../store/Config";
+import { useLanguage } from "../../lib/language";
+import { useConfig } from "../../store/Config";
 import { useToast } from "../../store/Toast";
 
 type SelectedRule = Matcher & {
@@ -42,23 +43,24 @@ function refineMatchers(
 }
 
 export default function ExportModal() {
-  const [isLoading, setIsLoading] = useState(false);
-  const [selectedRules, setSelectedRules] = useState<SelectedRule[]>();
   const {
     storage: { matchers, preferences },
-  } = useContext(Config);
+  } = useConfig();
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedRules, setSelectedRules] = useState<SelectedRule[]>();
   const selectedCount = useMemo(
     () => selectedRules?.filter((s) => s.isSelected).length ?? 0,
     [selectedRules]
   );
-  const { showToast } = useToast();
+  const language = useLanguage();
   const hideModalButtonRef = useRef<HTMLButtonElement>(null);
+  const { showToast } = useToast();
 
   useEffect(() => {
     setSelectedRules(refineMatchers(matchers, selectedRules));
   }, [matchers]);
 
-  const handleExport = () => {
+  const handleExportFile = () => {
     if (!selectedRules) return;
 
     const selectedMatchers = matchers?.filter(
@@ -135,7 +137,7 @@ export default function ExportModal() {
       return showToast({
         children: (
           <ToastMessage
-            message="Something went wrong generating your link. Please try again."
+            message={language.options.GENERATE_SHARE_LINK_FAILED}
             severity="danger"
           />
         ),
@@ -327,7 +329,7 @@ export default function ExportModal() {
                   <button
                     className="dropdown-item"
                     type="button"
-                    onClick={handleExport}
+                    onClick={handleExportFile}
                   >
                     <span className="d-flex align-items-center gap-3">
                       <span className="material-icons-sharp">download</span>{" "}

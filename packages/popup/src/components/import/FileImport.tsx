@@ -1,4 +1,3 @@
-import { useContext } from "preact/hooks";
 import type { JSXInternal } from "preact/src/jsx";
 
 import { logDebug } from "@worm/shared";
@@ -8,13 +7,13 @@ import ToastMessage from "../ToastMessage";
 
 import importMatchers from "../../lib/import";
 import { useLanguage } from "../../lib/language";
-import { Config } from "../../store/Config";
+import { useConfig } from "../../store/Config";
 import { useToast } from "../../store/Toast";
 
 export default function FileImport() {
   const {
     storage: { matchers },
-  } = useContext(Config);
+  } = useConfig();
   const language = useLanguage();
   const { showToast } = useToast();
 

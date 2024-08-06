@@ -1,5 +1,5 @@
 import { VNode } from "preact";
-import { useContext, useEffect, useMemo, useRef } from "preact/hooks";
+import { useEffect, useMemo, useRef } from "preact/hooks";
 
 import { getAssetURL, popoutExtension, storageSetByKeys } from "@worm/shared";
 import { PopupTab } from "@worm/types";
@@ -11,7 +11,7 @@ import ToastMessage from "./ToastMessage";
 import cx from "../lib/classnames";
 import { useLanguage } from "../lib/language";
 import { getNotificationMessage } from "../lib/routes";
-import { Config } from "../store/Config";
+import { useConfig } from "../store/Config";
 import { useToast } from "../store/Toast";
 
 type LayoutProps = {
@@ -41,7 +41,7 @@ export default function Layout({ children }: LayoutProps) {
   const {
     isPoppedOut,
     storage: { preferences },
-  } = useContext(Config);
+  } = useConfig();
   const language = useLanguage();
   const notificationMessage = useMemo(getNotificationMessage, []);
   const layoutRef = useRef<HTMLDivElement>(null);

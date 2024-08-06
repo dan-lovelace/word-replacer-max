@@ -1,4 +1,5 @@
 import { JSXInternal } from "preact/src/jsx";
+
 import cx from "../../lib/classnames";
 
 type ButtonProps = JSXInternal.HTMLAttributes<HTMLButtonElement> & {

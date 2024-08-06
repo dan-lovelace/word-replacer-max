@@ -31,7 +31,7 @@ describe("tab", () => {
     it("allows user to deactivate", () => {
       cy.visitWithStorage();
 
-      s.ruleRowFirst()
+      s.ruleRowsFirst()
         .findByTestId("active-toggle")
         .should("be.visible")
         .click();

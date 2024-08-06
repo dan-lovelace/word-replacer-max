@@ -73,3 +73,5 @@ export type StorageSetOptions = {
 };
 
 export type StorageVersion = (typeof storageVersions)[number];
+
+export * from "./api";

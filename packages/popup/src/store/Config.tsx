@@ -1,5 +1,5 @@
 import { VNode, createContext } from "preact";
-import { useEffect, useMemo, useState } from "preact/hooks";
+import { useContext, useEffect, useMemo, useState } from "preact/hooks";
 
 import {
   browser,
@@ -8,12 +8,12 @@ import {
 } from "@worm/shared";
 import { Storage } from "@worm/types";
 
-type ConfigType = {
+type ConfigStore = {
   isPoppedOut: boolean;
   storage: Storage;
 };
 
-const defaultConfig: ConfigType = {
+const storeDefaults: ConfigStore = {
   isPoppedOut: false,
   storage: {
     domainList: [],
@@ -21,11 +21,13 @@ const defaultConfig: ConfigType = {
   },
 };
 
-export const Config = createContext<ConfigType>(defaultConfig);
+const Config = createContext<ConfigStore>(storeDefaults);
+
+export const useConfig = () => useContext(Config);
 
 export function ConfigProvider({ children }: { children: VNode }) {
   const [initialized, setInitialized] = useState(false);
-  const [storage, setStorage] = useState<Storage>(defaultConfig.storage);
+  const [storage, setStorage] = useState<Storage>(storeDefaults.storage);
 
   const isPoppedOut = useMemo(
     () =>

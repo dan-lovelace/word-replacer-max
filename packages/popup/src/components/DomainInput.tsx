@@ -1,4 +1,4 @@
-import { useContext, useState } from "preact/hooks";
+import { useState } from "preact/hooks";
 import { JSXInternal } from "preact/src/jsx";
 
 import { storageSetByKeys } from "@worm/shared";
@@ -7,14 +7,14 @@ import { DomainEffect } from "@worm/types";
 import Chip from "./Chip";
 import ToastMessage from "./ToastMessage";
 
-import { Config } from "../store/Config";
+import { useConfig } from "../store/Config";
 import { useToast } from "../store/Toast";
 
 export default function DomainInput() {
   const [value, setValue] = useState("");
   const {
     storage: { domainList, preferences },
-  } = useContext(Config);
+  } = useConfig();
   const { showToast } = useToast();
 
   const handleEffectChange = (effect: DomainEffect) => () => {

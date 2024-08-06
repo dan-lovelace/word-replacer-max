@@ -1,18 +1,18 @@
-import { useContext, useEffect, useMemo, useState } from "preact/hooks";
+import { useEffect, useMemo, useState } from "preact/hooks";
 
 import { storageSetByKeys } from "@worm/shared";
 
 import Button from "../../components/button/Button";
 import ToastMessage from "../../components/ToastMessage";
 import { copyToClipboard, canWriteToClipboard } from "../../lib/clipboard";
-import { Config } from "../../store/Config";
+import { useConfig } from "../../store/Config";
 import { useToast } from "../../store/Toast";
 
 export default function ExportLink() {
   const [isClipboardCopyAllowed, setIsClipboardCopyAllowed] = useState(false);
   const {
     storage: { preferences },
-  } = useContext(Config);
+  } = useConfig();
   const { showToast } = useToast();
 
   const exportLink = useMemo(

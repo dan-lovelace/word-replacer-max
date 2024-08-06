@@ -12,18 +12,14 @@ export default function Import() {
     setIsImportingLink(true);
   };
 
-  return (
-    <>
-      {isImportingLink ? (
-        <LinkImport setIsImportingLink={setIsImportingLink} />
-      ) : (
-        <div className="d-flex gap-2">
-          <Button startIcon="link" onClick={handleImportClick}>
-            Import from link
-          </Button>
-          <FileImport />
-        </div>
-      )}
-    </>
+  return isImportingLink ? (
+    <LinkImport setIsImportingLink={setIsImportingLink} />
+  ) : (
+    <div className="d-flex gap-2">
+      <Button startIcon="link" onClick={handleImportClick}>
+        Import from link
+      </Button>
+      <FileImport />
+    </div>
   );
 }

@@ -5,27 +5,28 @@ import { Toast as BSToast } from "bootstrap";
 
 import cx from "../lib/classnames";
 
-type PopupToast = {
+type ToastStore = {
   hideToast: () => void;
-  showToast: (message: PopupToastMessage) => void;
+  showToast: (message: ToastMessage) => void;
 };
 
-type PopupToastMessage = {
+type ToastMessage = {
   children: VNode | string;
 };
 
 const AUTOHIDE_DELAY_MS = 3000;
-const defaultToast = {
+
+const storeDefaults = {
   hideToast: () => undefined,
   showToast: () => undefined,
 };
 
-export const Toast = createContext<PopupToast>(defaultToast);
+const Toast = createContext<ToastStore>(storeDefaults);
 
 export const useToast = () => useContext(Toast);
 
 export function ToastProvider({ children }: { children: VNode }) {
-  const [messages, setMessages] = useState<PopupToastMessage[]>();
+  const [messages, setMessages] = useState<ToastMessage[]>();
   const [toast, setToast] = useState<BSToast>();
 
   useEffect(() => {
@@ -56,7 +57,7 @@ export function ToastProvider({ children }: { children: VNode }) {
     }).hide();
   };
 
-  const showToast = (message: PopupToastMessage) => {
+  const showToast = (message: ToastMessage) => {
     const isShown = toast?.isShown();
 
     if (isShown) {

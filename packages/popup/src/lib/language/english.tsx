@@ -12,6 +12,11 @@ export default {
     ),
     DIRECT_UPLOAD_DISALLOWED:
       "We opened this tab for you because Firefox can't upload files directly into the extension's popup window. Feel free to import your files here and close this window when you're done.",
+    GENERATE_SHARE_LINK_FAILED: (
+      <>
+        Something went wrong creating your share link. Please <HelpRedirect />.
+      </>
+    ),
     INVALID_IMPORT_LINK:
       "Invalid import link. Check your URL format and try again.",
     POPUP_BLOCKED:

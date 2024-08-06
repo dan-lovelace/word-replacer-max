@@ -1,9 +1,7 @@
-import { useContext } from "preact/hooks";
-
-import { Config } from "../store/Config";
+import { useConfig } from "../store/Config";
 
 export default function Debug() {
-  const config = useContext(Config);
+  const config = useConfig();
 
   return <div>{JSON.stringify(config, null, 2)}</div>;
 }

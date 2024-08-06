@@ -1,13 +1,11 @@
-import { useContext } from "preact/hooks";
-
 import { storageSetByKeys } from "@worm/shared";
 
-import { Config } from "../store/Config";
+import { useConfig } from "../store/Config";
 
 export default function HelpRedirect({ text = "contact support" }) {
   const {
     storage: { preferences },
-  } = useContext(Config);
+  } = useConfig();
 
   const handleClick = () => {
     const newPreferences = Object.assign({}, preferences);
