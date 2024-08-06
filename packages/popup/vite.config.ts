@@ -6,7 +6,7 @@ import { defineConfig, UserConfig } from "vite";
 const outDir = join(__dirname, "..", "..", "dist");
 
 const modeConfig: Record<string, UserConfig> = {
-  development: {
+  test: {
     plugins: [preact()],
     build: {
       rollupOptions: {
@@ -17,7 +17,13 @@ const modeConfig: Record<string, UserConfig> = {
       alias: [
         {
           find: "webextension-polyfill",
-          replacement: join(__dirname, "dev-webextension-polyfill.ts"),
+          replacement: join(
+            __dirname,
+            "..",
+            "testing",
+            "src",
+            "test-browser.ts"
+          ),
         },
       ],
     },
@@ -39,4 +45,6 @@ const modeConfig: Record<string, UserConfig> = {
   },
 };
 
-export default defineConfig(({ mode }) => modeConfig[mode]);
+export default defineConfig(
+  ({ mode }) => modeConfig[mode] || modeConfig.production
+);

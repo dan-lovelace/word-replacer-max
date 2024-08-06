@@ -1,16 +1,19 @@
 import { Browser, Events, Storage } from "webextension-polyfill";
 
-import { StorageKey, Storage as WRMStorage } from "@worm/types";
+type TBrowser = Omit<Browser, "runtime" | "storage"> & {
+  runtime: TRuntime | undefined;
+  storage: TStorage | undefined;
+};
 
-declare global {
-  interface Window {
-    DEV_BROWSER: DevBrowser;
-  }
-}
+type TRuntime = Partial<Browser["runtime"]>;
 
-type DevRuntime = Partial<Browser["runtime"]>;
+type TStorage = Partial<Browser["storage"]>;
 
-type DevStorage = Partial<Browser["storage"]>;
+type Key<T> = keyof T;
+
+type KeyMap<T> = Partial<{
+  [key in Key<T>]: T[key];
+}>;
 
 type ListenerCallback = (
   changes: Storage.StorageAreaSyncOnChangedChangesType
@@ -72,10 +75,10 @@ function deepEqual(obj1: any, obj2: any): boolean {
   return true;
 }
 
-class MockStorage
+class MockStorage<T>
   implements Partial<Omit<Browser["storage"], "local" | "managed" | "session">>
 {
-  _onChanged: Events.Event<ListenerCallback> = {
+  private _onChanged: Events.Event<ListenerCallback> = {
     addListener: (callback: ListenerCallback) => this.listeners.add(callback),
     hasListener: (callback: ListenerCallback) => this.listeners.has(callback),
     hasListeners: () => this.listeners.size > 0,
@@ -87,11 +90,11 @@ class MockStorage
 
   onChanged = this._onChanged;
 
-  store: Partial<WRMStorage> = {};
+  store: KeyMap<T> = {};
 
-  sync: Storage.SyncStorageAreaSync;
+  sync?: Storage.SyncStorageAreaSync;
 
-  constructor(initialValues?: WRMStorage) {
+  constructor(initialValues?: T) {
     if (initialValues !== undefined) {
       this.store = initialValues;
     }
@@ -110,17 +113,17 @@ class MockStorage
           resolve();
         }),
       getBytesInUse: async () => 100,
-      get: (keys: StorageKey) => {
+      get: (keys) => {
         return new Promise((resolve) => {
           const currentStore = deepClone(this.store);
           const result: Record<any, any> = {};
 
           if (Array.isArray(keys)) {
-            keys.forEach((key: StorageKey) => {
+            keys.forEach((key: Key<T>) => {
               result[key] = currentStore[key];
             });
-          } else if (typeof keys === "object") {
-            (Object.keys(keys) as StorageKey[]).forEach((key) => {
+          } else if (keys && typeof keys === "object") {
+            (Object.keys(keys) as Key<T>[]).forEach((key) => {
               result[key] = currentStore[key];
             });
           } else {
@@ -137,13 +140,13 @@ class MockStorage
 
           if (Array.isArray(keys)) {
             keys.forEach((key) => {
-              delete newStore[key as StorageKey];
+              delete newStore[key as Key<T>];
             });
           } else {
-            delete newStore[keys as StorageKey];
+            delete newStore[keys as Key<T>];
           }
 
-          this.store = deepClone(newStore);
+          this.store = newStore;
 
           Array.from(this.listeners).forEach((listener) => {
             listener({});
@@ -152,22 +155,20 @@ class MockStorage
           resolve();
         });
       },
-      set: (items) => {
+      set: (items: KeyMap<T>) => {
         return new Promise((resolve) => {
-          const changes: Record<string, any> = {};
-          let isDifferent = false;
           const newStore = deepClone(this.store);
+          let isDifferent = false;
 
-          (Object.keys(items) as StorageKey[]).forEach((key) => {
-            changes[key] = { oldValue: newStore[key], newValue: items[key] };
-            newStore[key] = deepClone(items[key]);
+          (Object.keys(items) as Key<T>[]).forEach((key) => {
+            newStore[key] = items[key];
 
-            if (!deepEqual(changes[key].oldValue, changes[key].newValue)) {
-              isDifferent = true;
-            }
+            isDifferent =
+              isDifferent === true ||
+              !deepEqual(this.store[key], newStore[key]);
           });
 
-          this.store = deepClone(newStore);
+          this.store = newStore;
 
           if (isDifferent) {
             Array.from(this.listeners).forEach((listener) => {
@@ -182,42 +183,25 @@ class MockStorage
   }
 }
 
-export class DevBrowser
-  implements
-    Partial<
-      Omit<Browser, "runtime" | "storage"> & {
-        runtime: DevRuntime | undefined;
-        storage: DevStorage | undefined;
-      }
-    >
-{
-  runtime: DevRuntime | undefined;
-  storage: DevStorage | undefined;
+class MockBrowser<StorageType> implements Partial<TBrowser> {
+  runtime: TRuntime | undefined;
+
+  storage: TStorage | undefined;
 
   constructor({
     runtime,
-    storage,
+    withStorage,
   }: {
-    runtime: DevRuntime;
-    storage: DevStorage;
+    runtime?: TRuntime;
+    withStorage?: StorageType;
   }) {
-    if (runtime !== undefined) {
-      this.runtime = runtime;
-    }
+    this.runtime = runtime ?? {
+      getURL: (path: string) => `mocked_url/${path}`,
+    };
 
-    if (storage !== undefined) {
-      this.storage = storage;
-    }
+    const mockStorage = new MockStorage(withStorage);
+    this.storage = mockStorage;
   }
 }
 
-const defaultBrowser = new DevBrowser({
-  runtime: {
-    getURL: (path: string) => `mocked_url/${path}`,
-  },
-  storage: new MockStorage(),
-});
-
-window.DEV_BROWSER = defaultBrowser;
-
-export { defaultBrowser as default };
+export { MockBrowser as default };

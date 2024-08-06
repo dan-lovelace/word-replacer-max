@@ -27,6 +27,7 @@ export default function Options() {
   const language = useLanguage();
   const [importLink, setImportLink] = useState("");
   const [isImportingLink, setIsImportingLink] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { showToast } = useToast();
 
   const handleCancelImportClick = () => {
@@ -62,6 +63,7 @@ export default function Options() {
     }
 
     try {
+      setIsLoading(true);
       const response = await fetch(importLink);
       const json = await response.json();
 
@@ -79,6 +81,8 @@ export default function Options() {
           });
         },
         onSuccess: () => {
+          setImportLink("");
+          setIsImportingLink(false);
           showToast({
             children: (
               <ToastMessage
@@ -98,6 +102,8 @@ export default function Options() {
           />
         ),
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -138,17 +144,24 @@ export default function Options() {
                 <>
                   <form className="input-group" onSubmit={handleImportSubmit}>
                     <input
+                      autoFocus
                       className="form-control"
                       placeholder="Paste your link here"
-                      type="text"
+                      required
+                      type="url"
                       value={importLink}
-                      onChange={handleImportLinkChange}
+                      onInput={handleImportLinkChange}
                     />
-                    <Button className="btn btn-outline-primary" type="submit">
+                    <Button
+                      className="btn btn-outline-primary"
+                      disabled={isLoading}
+                      type="submit"
+                    >
                       Import
                     </Button>
                     <Button
                       className="btn btn-outline-primary"
+                      disabled={isLoading}
                       onClick={handleCancelImportClick}
                     >
                       Cancel

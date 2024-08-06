@@ -15,6 +15,7 @@
       "@worm/content": ["packages/content"],
       "@worm/popup": ["packages/popup"],
       "@worm/shared": ["packages/shared"],
+      "@worm/testing": ["packages/testing"],
       "@worm/types": ["packages/types"]
     },
     "resolveJsonModule": true,

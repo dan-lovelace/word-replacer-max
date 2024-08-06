@@ -43,6 +43,7 @@ export function startContextMenuListener() {
           },
         ];
 
+        newPreferences.activeTab = "rules";
         newPreferences.focusRule = identifier;
 
         storageSetByKeys({

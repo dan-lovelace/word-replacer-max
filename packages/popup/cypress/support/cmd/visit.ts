@@ -38,7 +38,7 @@ Cypress.Commands.add(
       cy.window().then(($window) => {
         s.homePage().should("be.visible");
 
-        const browser = $window.DEV_BROWSER;
+        const browser = $window.TEST_BROWSER;
         const params = merge.withOptions(
           { mergeArrays: false },
           defaultStore,

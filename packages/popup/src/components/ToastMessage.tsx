@@ -14,10 +14,10 @@ const severityIconMap: Record<ToastMessageProps["severity"], string> = {
 export default function ToastMessage({ message, severity }: ToastMessageProps) {
   return (
     <div className="d-flex align-items-center gap-2">
-      <i className={`material-icons-sharp fs-6 text-${severity}`}>
+      <span className={`material-icons-sharp fs-6 text-${severity}`}>
         {severityIconMap[severity]}
-      </i>
-      <div>{message}</div>
+      </span>
+      <div className="d-flex align-items-center">{message}</div>
     </div>
   );
 }

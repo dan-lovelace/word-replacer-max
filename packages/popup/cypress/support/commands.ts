@@ -1,19 +1,20 @@
 /// <reference types="cypress" />
 import "@testing-library/cypress/add-commands";
 
-import { DevBrowser } from "../../dev-webextension-polyfill";
+import { TestBrowser } from "@worm/testing";
+import { Storage } from "@worm/types";
 
 import { VisitWithStorageParams } from "./types";
 
 declare global {
   namespace Cypress {
     interface Chainable {
-      getBrowser(): Chainable<DevBrowser>;
+      getBrowser(): Chainable<TestBrowser<Storage>>;
       visitWithStorage(params?: VisitWithStorageParams): Chainable<void>;
     }
 
     interface Window {
-      DEV_BROWSER: DevBrowser;
+      TEST_BROWSER: TestBrowser<Storage>;
     }
   }
 }

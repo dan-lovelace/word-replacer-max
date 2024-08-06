@@ -74,7 +74,7 @@ export function ToastProvider({ children }: { children: VNode }) {
     initialToast?.show();
 
     setToast(initialToast);
-    setMessages([...(messages || []), message]);
+    setMessages([message]);
   };
 
   return (
