@@ -27,8 +27,9 @@ export async function canWriteToClipboard() {
     // only supported in Chromium browsers
   }
 
-  return (
-    navigator.clipboard.hasOwnProperty("writeText") &&
-    typeof navigator.clipboard.writeText === "function"
-  );
+  const result =
+    navigator.clipboard !== undefined &&
+    typeof navigator.clipboard.writeText === "function";
+
+  return result;
 }

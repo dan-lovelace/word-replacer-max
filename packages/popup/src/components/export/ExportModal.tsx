@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "preact/hooks";
 import type { JSXInternal } from "preact/src/jsx";
 
+import { Dropdown } from "bootstrap";
+
 import { logDebug, storageSetByKeys } from "@worm/shared";
 import {
   ApiShareRequest,
@@ -8,12 +10,11 @@ import {
   Matcher,
   SchemaExport,
 } from "@worm/types";
-import { Dropdown } from "bootstrap";
 
-import Alert from "../../components/Alerts";
-import Button from "../../components/button/Button";
-import RuleRow from "../../components/rules/RuleRow";
-import ToastMessage from "../../components/ToastMessage";
+import Alert from "../Alerts";
+import Button from "../button/Button";
+import RuleRow from "../rules/RuleRow";
+import ToastMessage from "../ToastMessage";
 import { useLanguage } from "../../lib/language";
 import { useConfig } from "../../store/Config";
 import { useToast } from "../../store/Toast";
