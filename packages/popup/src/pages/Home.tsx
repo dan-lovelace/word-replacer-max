@@ -1,21 +1,19 @@
-import { useContext } from "preact/hooks";
-
 import { v4 as uuidv4 } from "uuid";
 
 import { storageSetByKeys } from "@worm/shared";
 
 import DomainInput from "../components/DomainInput";
-import Options from "../components/Options";
 import RuleRow from "../components/RuleRow";
 import Support from "../components/Support";
 import ToastMessage from "../components/ToastMessage";
-import { Config } from "../store/Config";
+import Options from "../containers/Options/Options";
+import { useConfig } from "../store/Config";
 import { useToast } from "../store/Toast";
 
 export default function HomePage() {
   const {
     storage: { matchers, preferences },
-  } = useContext(Config);
+  } = useConfig();
   const { showToast } = useToast();
 
   const handleNewRuleClick = () => {
@@ -43,7 +41,10 @@ export default function HomePage() {
   };
 
   return (
-    <div className="container-fluid py-2 flex-fill overflow-y-auto">
+    <div
+      className="container-fluid py-2 flex-fill overflow-y-auto"
+      data-testid="home-page"
+    >
       {preferences?.activeTab === "domains" && <DomainInput />}
       {preferences?.activeTab === "options" && <Options />}
       {preferences?.activeTab === "rules" && (
@@ -62,6 +63,7 @@ export default function HomePage() {
           <div className="ps-5 pt-2">
             <button
               className="btn btn-secondary btn-sm"
+              data-testid="add-new-rule-button"
               onClick={handleNewRuleClick}
             >
               <span className="d-flex align-items-center">

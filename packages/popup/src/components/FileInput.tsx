@@ -3,24 +3,24 @@ import type { JSXInternal } from "preact/src/jsx";
 
 import { POPUP_ROUTES } from "@worm/shared";
 
+import { useLanguage } from "../lib/language";
 import {
   CAN_UPLOAD_PARAMETER,
   NOTIFY_PARAMETER,
   canUploadDirect,
 } from "../lib/routes";
-import { useLanguage } from "../lib/language";
 
 type FileUploadProps = {
   onChange: (event: JSXInternal.TargetedInputEvent<HTMLInputElement>) => void;
 };
 
-const WRAPPER_CLASSNAME = "btn btn-secondary";
+const WRAPPER_CLASSNAME = "btn btn-outline-secondary";
 
 function Content() {
   return (
     <span className="d-flex align-items-center gap-1">
       <i className="material-icons-sharp fs-sm">download</i>
-      Import
+      Import from file
     </span>
   );
 }

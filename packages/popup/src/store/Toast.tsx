@@ -5,27 +5,28 @@ import { Toast as BSToast } from "bootstrap";
 
 import cx from "../lib/classnames";
 
-type PopupToast = {
+type ToastStore = {
   hideToast: () => void;
-  showToast: (message: PopupToastMessage) => void;
+  showToast: (message: ToastMessage) => void;
 };
 
-type PopupToastMessage = {
+type ToastMessage = {
   children: VNode | string;
 };
 
 const AUTOHIDE_DELAY_MS = 3000;
-const defaultToast = {
+
+const storeDefaults = {
   hideToast: () => undefined,
   showToast: () => undefined,
 };
 
-export const Toast = createContext<PopupToast>(defaultToast);
+const Toast = createContext<ToastStore>(storeDefaults);
 
 export const useToast = () => useContext(Toast);
 
 export function ToastProvider({ children }: { children: VNode }) {
-  const [messages, setMessages] = useState<PopupToastMessage[]>();
+  const [messages, setMessages] = useState<ToastMessage[]>();
   const [toast, setToast] = useState<BSToast>();
 
   useEffect(() => {
@@ -56,7 +57,7 @@ export function ToastProvider({ children }: { children: VNode }) {
     }).hide();
   };
 
-  const showToast = (message: PopupToastMessage) => {
+  const showToast = (message: ToastMessage) => {
     const isShown = toast?.isShown();
 
     if (isShown) {
@@ -74,7 +75,7 @@ export function ToastProvider({ children }: { children: VNode }) {
     initialToast?.show();
 
     setToast(initialToast);
-    setMessages([...(messages || []), message]);
+    setMessages([message]);
   };
 
   return (
@@ -88,12 +89,12 @@ export function ToastProvider({ children }: { children: VNode }) {
           "text-bg-light",
           "position-fixed end-0 bottom-0 w-auto",
           "me-1 mb-1",
-          "z-1"
+          "z-toast"
         )}
         role="alert"
       >
         <div className="d-flex">
-          <div className="toast-body">{messages?.[0].children}</div>
+          <div className="toast-body px-3">{messages?.[0].children}</div>
         </div>
       </div>
     </Toast.Provider>

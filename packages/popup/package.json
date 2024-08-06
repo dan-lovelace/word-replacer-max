@@ -2,11 +2,13 @@
   "name": "@worm/popup",
   "version": "0.0.0",
   "author": "dan-lovelace",
-  "license": "MIT",
   "main": "src/main.ts",
   "type": "module",
   "scripts": {
     "build": "tsc && vite build",
+    "cypress:open": "cypress open --e2e --browser chrome",
+    "cypress:run": "cypress run",
+    "dev": "vite --host --mode test",
     "start": "yarn build --watch --mode development",
     "test": "echo \"Error: no test specified\" && exit 0"
   },
@@ -22,6 +24,7 @@
   "devDependencies": {
     "@preact/preset-vite": "^2.5.0",
     "@types/bootstrap": "^5.2.10",
+    "@worm/testing": "*",
     "@worm/types": "*",
     "sass": "^1.70.0"
   }

@@ -2,7 +2,6 @@
   "name": "@worm/shared",
   "version": "0.0.0",
   "author": "dan-lovelace",
-  "license": "MIT",
   "main": "src/index.ts",
   "type": "module",
   "scripts": {
@@ -14,22 +13,16 @@
   "dependencies": {
     "uuid": "^9.0.1",
     "webextension-polyfill": "^0.10.0",
-    "zod": "^3.22.4"
+    "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@testing-library/cypress": "^10.0.2",
     "@types/archiver": "^6.0.2",
-    "@types/jest": "^29.5.12",
-    "@types/testing-library__cypress": "^5.0.13",
     "@types/uuid": "^9.0.8",
     "@types/webextension-polyfill": "^0.10.7",
+    "@worm/testing": "*",
     "@worm/types": "*",
     "archiver": "^6.0.1",
-    "cypress": "^13.13.1",
-    "jest": "^29.7.0",
-    "jest-environment-jsdom": "^29.7.0",
     "lerna": "^8.0.2",
-    "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3",
     "vite": "^5.0.12"

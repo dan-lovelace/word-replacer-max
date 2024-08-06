@@ -4,6 +4,12 @@ const queryPatterns = ["case", "default", "regex", "wholeWord"] as const;
 const schemaVersions = [1] as const;
 const storageVersions = ["1.0.0"] as const;
 
+export type DeepPartial<T> = T extends object
+  ? {
+      [P in keyof T]?: DeepPartial<T[P]>;
+    }
+  : T;
+
 export type DomainEffect = "allow" | "deny";
 
 export type Matcher = {
@@ -51,10 +57,21 @@ export type StorageKeyMap = {
   preferences: {
     activeTab: PopupTab;
     domainListEffect: DomainEffect;
+    exportLink?: {
+      updatedAt: string;
+      url: string;
+    };
     extensionEnabled: boolean;
     focusRule: Matcher["identifier"];
   };
   storageVersion: StorageVersion;
 };
 
+export type StorageSetOptions = {
+  onError?: (message: string) => void;
+  onSuccess?: () => void;
+};
+
 export type StorageVersion = (typeof storageVersions)[number];
+
+export * from "./api";

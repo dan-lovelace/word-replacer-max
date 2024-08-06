@@ -1,6 +1,6 @@
 import { TargetProps, VisitMockParams } from "../types";
 
-import { selectors as s } from "../../lib/selectors";
+import { selectors as s } from "../selectors";
 
 function changeHTML(
   selector: () => Cypress.Chainable<JQuery<HTMLElement>>,

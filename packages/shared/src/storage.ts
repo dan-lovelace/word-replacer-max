@@ -1,13 +1,14 @@
-import { Matcher, Storage, StorageKey, StorageVersion } from "@worm/types";
+import {
+  Matcher,
+  Storage,
+  StorageKey,
+  StorageSetOptions,
+  StorageVersion,
+} from "@worm/types";
 
 import { browser } from "./browser";
 import { logDebug } from "./logging";
 import { matchersFromStorage, matchersToStorage } from "./matchers";
-
-type StorageSetOptions = {
-  onError?: (message: string) => void;
-  onSuccess?: () => void;
-};
 
 const {
   storage: { sync },
