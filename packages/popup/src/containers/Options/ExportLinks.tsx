@@ -112,7 +112,9 @@ export default function ExportLink() {
                 </Button>
               </div>
               <Tooltip title={`Created ${formatUnixTimestamp(identifier)}`}>
-                <span className="material-icons-sharp">info</span>
+                <span className="material-icons-sharp text-body-tertiary">
+                  calendar_month
+                </span>
               </Tooltip>
             </div>
           </div>
