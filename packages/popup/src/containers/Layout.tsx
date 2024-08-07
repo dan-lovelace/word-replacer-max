@@ -3,16 +3,16 @@ import { useEffect, useMemo, useRef } from "preact/hooks";
 import { getAssetURL, popoutExtension, storageSetByKeys } from "@worm/shared";
 import { PopupTab } from "@worm/types";
 
-import IconButton from "../../components/button/IconButton";
-import { RefreshRequiredToast } from "../../components/RefreshRequiredToast";
-import ToastMessage from "../../components/ToastMessage";
+import IconButton from "../components/button/IconButton";
+import { RefreshRequiredToast } from "../components/RefreshRequiredToast";
+import ToastMessage from "../components/ToastMessage";
 
-import cx from "../../lib/classnames";
-import { useLanguage } from "../../lib/language";
-import { getNotificationMessage } from "../../lib/routes";
-import { PreactChildren } from "../../lib/types";
-import { useConfig } from "../../store/Config";
-import { useToast } from "../../store/Toast";
+import cx from "../lib/classnames";
+import { useLanguage } from "../lib/language";
+import { getNotificationMessage } from "../lib/routes";
+import { PreactChildren } from "../lib/types";
+import { useConfig } from "../store/Config";
+import { useToast } from "../store/Toast";
 
 type LayoutProps = {
   children: PreactChildren;

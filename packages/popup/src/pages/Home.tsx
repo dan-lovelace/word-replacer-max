@@ -1,7 +1,7 @@
 import DomainInput from "../components/DomainInput";
 import RuleList from "../components/rules/RuleList";
 import Support from "../components/Support";
-import Options from "../containers/Options/Options";
+import Options from "../containers/Options";
 import { useConfig } from "../store/Config";
 
 export default function HomePage() {

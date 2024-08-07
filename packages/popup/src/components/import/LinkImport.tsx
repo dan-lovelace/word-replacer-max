@@ -65,11 +65,6 @@ export default function LinkImport({ setIsImportingLink }: LinkImportProps) {
       }
 
       importMatchers(json, matchers, {
-        onError: (message) => {
-          showToast({
-            children: <ToastMessage message={message} severity="danger" />,
-          });
-        },
         onSuccess: () => {
           setImportLink("");
           setIsImportingLink(false);
@@ -77,7 +72,7 @@ export default function LinkImport({ setIsImportingLink }: LinkImportProps) {
           showToast({
             children: (
               <ToastMessage
-                message="Link imported successfully"
+                message="Rules from link imported successfully"
                 severity="success"
               />
             ),
@@ -86,12 +81,7 @@ export default function LinkImport({ setIsImportingLink }: LinkImportProps) {
       });
     } catch (error) {
       showToast({
-        children: (
-          <ToastMessage
-            message={language.options.CORRUPTED_IMPORT_CONTENT}
-            severity="danger"
-          />
-        ),
+        children: <ToastMessage message={String(error)} severity="danger" />,
       });
     } finally {
       setIsLoading(false);

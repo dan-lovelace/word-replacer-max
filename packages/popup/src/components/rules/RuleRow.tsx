@@ -208,9 +208,9 @@ export default function RuleRow({
             onClick={handleDeleteClick}
           >
             <span data-dismiss="delete" className="d-flex align-items-center">
-              <i data-dismiss="delete" className="material-icons-sharp fs-6">
+              <span data-dismiss="delete" className="material-icons-sharp fs-6">
                 {isConfirmingDelete ? "delete" : "close"}
-              </i>
+              </span>
             </span>
           </button>
         </div>
