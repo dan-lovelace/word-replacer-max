@@ -56,10 +56,7 @@ export function findText(
   if (
     element.nodeType === Node.TEXT_NODE &&
     !element.parentElement?.dataset["isReplaced"] &&
-    !nodeNameBlocklist.has(
-      String(element.parentNode?.nodeName.toLowerCase())
-    ) &&
-    !element.parentElement?.hasAttribute("contenteditable")
+    !nodeNameBlocklist.has(String(element.parentNode?.nodeName.toLowerCase()))
   ) {
     found.push(element as unknown as Text);
   }
