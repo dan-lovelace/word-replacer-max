@@ -194,8 +194,7 @@ export function replace(
               patternRegex[pattern](query, getRegexFlags(queryPatterns)),
               () => getReplacementHTML(element, query, replacement)
             )
-            .replace(/\s\s+/g, "")
-            .trim();
+            .replace(/\s\s+/g, "");
           break;
         }
       }
