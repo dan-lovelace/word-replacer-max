@@ -1,4 +1,5 @@
-import { replace, searchNode } from "@worm/shared/src/replace";
+import { findText } from "@worm/shared/src/replace/find-text";
+import { replaceText } from "@worm/shared/src/replace/replace-text";
 import { QueryPattern } from "@worm/types";
 
 import { selectors as s } from "../support/selectors";
@@ -12,12 +13,12 @@ function searchAndReplace(
   queryPatterns: QueryPattern[],
   replacement: string
 ) {
-  const results = searchNode(element, query, queryPatterns);
+  const results = findText(element, query, queryPatterns);
 
-  replace(results[0], query, queryPatterns, replacement);
+  replaceText(results[0], query, queryPatterns, replacement);
 }
 
-describe("replace", () => {
+describe("replaceText", () => {
   describe("default query pattern", () => {
     it("works for single words", () => {
       cy.visitMock({

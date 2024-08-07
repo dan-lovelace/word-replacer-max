@@ -1,10 +1,10 @@
-import { searchNode } from "@worm/shared/src/replace";
+import { findText } from "@worm/shared/src/replace/find-text";
 
 import { selectors as s } from "../support/selectors";
 
 const DEFAULT_TEST_STRING = "Lorem ipsum dolor sit amet";
 
-describe("searchNode", () => {
+describe("findText", () => {
   describe("default query pattern", () => {
     it("can return empty", () => {
       cy.visitMock({
@@ -14,7 +14,7 @@ describe("searchNode", () => {
       s.html().then(($element) => {
         const html = $element.get(0);
 
-        const result = searchNode(html, "shrike", []);
+        const result = findText(html, "shrike", []);
         cy.wrap(result).should("have.length", 0);
       });
     });
@@ -27,7 +27,7 @@ describe("searchNode", () => {
       s.html().then(($element) => {
         const html = $element.get(0);
 
-        const result = searchNode(html, "ipsum", []);
+        const result = findText(html, "ipsum", []);
         cy.wrap(result).should("have.length", 1);
       });
     });
@@ -44,7 +44,7 @@ describe("searchNode", () => {
       s.html().then(($element) => {
         const html = $element.get(0);
 
-        const result = searchNode(html, "Lorem ipsum", []);
+        const result = findText(html, "Lorem ipsum", []);
         cy.wrap(result).should("have.length", 0);
       });
     });
@@ -60,7 +60,7 @@ describe("searchNode", () => {
       s.html().then(($element) => {
         const html = $element.get(0);
 
-        const result = searchNode(html, "ipsum", []);
+        const result = findText(html, "ipsum", []);
         cy.wrap(result).should("have.length", 2);
       });
     });
@@ -78,7 +78,7 @@ describe("searchNode", () => {
       s.html().then(($element) => {
         const html = $element.get(0);
 
-        const result = searchNode(html, "ipsum", []);
+        const result = findText(html, "ipsum", []);
         cy.wrap(result).should("have.length", 1);
       });
     });
@@ -93,7 +93,7 @@ describe("searchNode", () => {
       s.html().then(($element) => {
         const html = $element.get(0);
 
-        const result = searchNode(html, "Ipsum", ["case"]);
+        const result = findText(html, "Ipsum", ["case"]);
         cy.wrap(result).should("have.length", 0);
       });
     });
@@ -106,7 +106,7 @@ describe("searchNode", () => {
       s.html().then(($element) => {
         const html = $element.get(0);
 
-        const result = searchNode(html, "ipsum", ["case"]);
+        const result = findText(html, "ipsum", ["case"]);
         cy.wrap(result).should("have.length", 1);
       });
     });
@@ -127,7 +127,7 @@ describe("searchNode", () => {
       s.html().then(($element) => {
         const html = $element.get(0);
 
-        const result = searchNode(html, "Ipsum", ["case"]);
+        const result = findText(html, "Ipsum", ["case"]);
         cy.wrap(result).should("have.length", 2);
       });
     });
@@ -145,7 +145,7 @@ describe("searchNode", () => {
       s.html().then(($element) => {
         const html = $element.get(0);
 
-        const result = searchNode(html, "IPSUM", ["case"]);
+        const result = findText(html, "IPSUM", ["case"]);
         cy.wrap(result).should("have.length", 1);
       });
     });
@@ -167,7 +167,7 @@ describe("searchNode", () => {
       s.html().then(($element) => {
         const html = $element.get(0);
 
-        const result = searchNode(html, "ipsum", ["wholeWord"]);
+        const result = findText(html, "ipsum", ["wholeWord"]);
         cy.wrap(result).should("have.length", 0);
       });
     });
@@ -180,7 +180,7 @@ describe("searchNode", () => {
       s.html().then(($element) => {
         const html = $element.get(0);
 
-        const result = searchNode(html, "ipsum", ["wholeWord"]);
+        const result = findText(html, "ipsum", ["wholeWord"]);
         cy.wrap(result).should("have.length", 1);
       });
     });
@@ -198,7 +198,7 @@ describe("searchNode", () => {
       s.html().then(($element) => {
         const html = $element.get(0);
 
-        const result = searchNode(html, "Ipsum", ["wholeWord"]);
+        const result = findText(html, "Ipsum", ["wholeWord"]);
         cy.wrap(result).should("have.length", 2);
       });
     });
@@ -220,7 +220,7 @@ describe("searchNode", () => {
       s.html().then(($element) => {
         const html = $element.get(0);
 
-        const result = searchNode(html, "Ipsum.", ["wholeWord"]);
+        const result = findText(html, "Ipsum.", ["wholeWord"]);
         cy.wrap(result).should("have.length", 1);
       });
     });
@@ -242,7 +242,7 @@ describe("searchNode", () => {
       s.html().then(($element) => {
         const html = $element.get(0);
 
-        const result = searchNode(html, "Ipsum-", ["wholeWord"]);
+        const result = findText(html, "Ipsum-", ["wholeWord"]);
         cy.wrap(result).should("have.length", 1);
       });
     });
@@ -260,7 +260,7 @@ describe("searchNode", () => {
       s.html().then(($element) => {
         const html = $element.get(0);
 
-        const result = searchNode(html, "ipsum", ["wholeWord"]);
+        const result = findText(html, "ipsum", ["wholeWord"]);
         cy.wrap(result).should("have.length", 2);
       });
     });
@@ -275,7 +275,7 @@ describe("searchNode", () => {
       s.html().then(($element) => {
         const html = $element.get(0);
 
-        const result = searchNode(html, "Ipsum", ["case", "wholeWord"]);
+        const result = findText(html, "Ipsum", ["case", "wholeWord"]);
         cy.wrap(result).should("have.length", 0);
       });
     });
@@ -294,7 +294,7 @@ describe("searchNode", () => {
       s.html().then(($element) => {
         const html = $element.get(0);
 
-        const result = searchNode(html, "Ipsum", ["case", "wholeWord"]);
+        const result = findText(html, "Ipsum", ["case", "wholeWord"]);
         cy.wrap(result).should("have.length", 1);
       });
     });
