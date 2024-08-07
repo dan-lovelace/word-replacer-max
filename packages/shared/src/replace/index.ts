@@ -12,10 +12,10 @@ function searchAndReplace(
 ) {
   const searchResults = findText(element, query, queryPatterns) || [];
 
-  for (let i = 0; i < searchResults.length; i++) {
-    const result = searchResults[i];
+  for (let position = 0; position < searchResults.length; position++) {
+    const result = searchResults[position];
 
-    replaceText(result, query, queryPatterns, replacement, i);
+    replaceText(result, query, queryPatterns, replacement, position);
   }
 }
 
@@ -46,3 +46,7 @@ export function replaceAll(matchers: Matcher[], startDocument = document) {
     }
   }
 }
+
+export * from "./find-text";
+export * from "./lib";
+export * from "./replace-text";
