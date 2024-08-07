@@ -1,4 +1,4 @@
-import { findText } from "@worm/shared";
+import { findText } from "@worm/shared/src/replace";
 
 import { selectors as s } from "../support/selectors";
 

@@ -1,4 +1,4 @@
-import { replaceAll } from "@worm/shared";
+import { replaceAll } from "@worm/shared/src/replace";
 
 import { selectors as s } from "../support/selectors";
 
