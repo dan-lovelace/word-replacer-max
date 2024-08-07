@@ -13,17 +13,9 @@ import { useToast } from "../../store/Toast";
 export default function ExportLink() {
   const [isClipboardCopyAllowed, setIsClipboardCopyAllowed] = useState(false);
   const {
-    storage: { preferences },
+    storage: { exportLinks },
   } = useConfig();
   const { showToast } = useToast();
-
-  const exportLinks = useMemo(
-    () =>
-      Boolean(preferences?.exportLinks?.length)
-        ? preferences?.exportLinks
-        : undefined,
-    [preferences]
-  );
 
   useEffect(() => {
     async function initCopyPermission() {
@@ -35,18 +27,12 @@ export default function ExportLink() {
 
   const handleClearExport =
     (identifier: ExportLinkType["identifier"]) => () => {
-      const exportIdx =
-        exportLinks?.findIndex((link) => link.identifier === identifier) ?? -1;
-      const newPreferences = Object.assign({}, preferences);
-
-      if (exportIdx < 0 || !newPreferences?.exportLinks) return;
-
-      newPreferences.exportLinks = newPreferences.exportLinks.filter(
+      const newExportLinks = [...(exportLinks ?? [])].filter(
         (link) => link.identifier !== identifier
       );
 
       storageSetByKeys({
-        preferences: newPreferences,
+        exportLinks: newExportLinks,
       });
     };
 

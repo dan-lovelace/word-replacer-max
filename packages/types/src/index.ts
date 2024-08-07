@@ -60,11 +60,11 @@ export type StorageKey = keyof StorageKeyMap;
 
 export type StorageKeyMap = {
   domainList: string[];
+  exportLinks: ExportLink[];
   matchers: Matcher[];
   preferences: {
     activeTab: PopupTab;
     domainListEffect: DomainEffect;
-    exportLinks?: ExportLink[];
     extensionEnabled: boolean;
     focusRule: Matcher["identifier"];
   };

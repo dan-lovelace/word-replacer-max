@@ -47,7 +47,7 @@ function refineMatchers(
 
 export default function ExportModal() {
   const {
-    storage: { matchers, preferences },
+    storage: { exportLinks, matchers },
   } = useConfig();
   const [isLoading, setIsLoading] = useState(false);
   const [selectedRules, setSelectedRules] = useState<SelectedRule[]>();
@@ -157,26 +157,37 @@ export default function ExportModal() {
       });
     }
 
-    const newPreferences = Object.assign({}, preferences);
     const newExportLinks = [
-      ...(newPreferences.exportLinks || []),
+      ...(exportLinks || []),
       {
         identifier: new Date().getTime(),
         url: json.data.value.url,
       },
     ];
-    newPreferences.exportLinks = newExportLinks;
 
-    storageSetByKeys({
-      preferences: newPreferences,
-    });
-
-    stopExporting();
-    showToast({
-      children: (
-        <ToastMessage message={String(json.data?.message)} severity="success" />
-      ),
-    });
+    storageSetByKeys(
+      {
+        exportLinks: newExportLinks,
+      },
+      {
+        onError: (message) => {
+          showToast({
+            children: <ToastMessage message={message} severity="danger" />,
+          });
+        },
+        onSuccess: () => {
+          stopExporting();
+          showToast({
+            children: (
+              <ToastMessage
+                message="Success! Your link is ready on the Options page."
+                severity="success"
+              />
+            ),
+          });
+        },
+      }
+    );
   };
 
   const handleSelectAllChange = (

@@ -5,7 +5,7 @@ import {
   storageGetByKeys,
   storageSetByKeys,
 } from "@worm/shared";
-import { Matcher } from "@worm/types";
+import { Matcher, Storage } from "@worm/types";
 
 export async function initializeStorage() {
   const { storageVersion } = await storageGetByKeys(["storageVersion"]);
@@ -18,16 +18,22 @@ export async function initializeStorage() {
     // perform any necessary migrations before proceeding
   }
 
-  const { domainList, matchers, preferences } = await storageGetByKeys([
-    "domainList",
-    "matchers",
-    "preferences",
-  ]);
+  const { domainList, exportLinks, matchers, preferences } =
+    await storageGetByKeys([
+      "domainList",
+      "exportLinks",
+      "matchers",
+      "preferences",
+    ]);
+
+  const initialStorage: Storage = {};
 
   if (domainList === undefined) {
-    await storageSetByKeys({
-      domainList: ["docs.google.com", "github.com"],
-    });
+    initialStorage.domainList = ["docs.google.com", "github.com"];
+  }
+
+  if (exportLinks === undefined) {
+    initialStorage.exportLinks = [];
   }
 
   if (matchers === undefined) {
@@ -48,18 +54,17 @@ export async function initializeStorage() {
       },
     ];
 
-    await storageSetByKeys({ matchers: defaultMatchers });
+    initialStorage.matchers = defaultMatchers;
   }
 
   if (preferences === undefined) {
-    await storageSetByKeys({
-      preferences: {
-        activeTab: "rules",
-        domainListEffect: "deny",
-        exportLinks: [],
-        extensionEnabled: true,
-        focusRule: "",
-      },
-    });
+    initialStorage.preferences = {
+      activeTab: "rules",
+      domainListEffect: "deny",
+      extensionEnabled: true,
+      focusRule: "",
+    };
   }
+
+  await storageSetByKeys(initialStorage);
 }
