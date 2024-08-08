@@ -27,6 +27,7 @@ export default function Options() {
               <Button
                 data-bs-toggle="modal"
                 data-bs-target="#export-modal"
+                data-testid="export-button"
                 startIcon="upload"
                 type="button"
               >

@@ -249,7 +249,7 @@ describe("replaceAll", () => {
       });
     });
 
-    it("does not overwrite elements that have the 'contenteditable' attribute", () => {
+    it("works for elements that have the 'contenteditable' attribute", () => {
       cy.visitMock({
         bodyContents: `
           <div data-testid="target" contenteditable>Lorem ipsum dolor</div>
@@ -270,7 +270,7 @@ describe("replaceAll", () => {
           document
         );
 
-        s.target().should("have.text", "Lorem ipsum dolor");
+        s.target().should("have.text", "Lorem sit dolor");
       });
     });
   });

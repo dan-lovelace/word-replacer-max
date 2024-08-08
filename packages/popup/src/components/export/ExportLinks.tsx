@@ -59,7 +59,7 @@ export default function ExportLink() {
   }
 
   return (
-    <div className="mt-2">
+    <div className="mt-2" data-testid="export-links">
       <div className="fs-sm text-secondary fw-medium">Shareable links</div>
       <div className="d-flex flex-column gap-2">
         {exportLinks.map(({ identifier, url }) => (
