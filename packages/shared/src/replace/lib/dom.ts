@@ -37,22 +37,25 @@ export function getReplacementHTML(
   return wrapper.outerHTML;
 }
 
+/**
+ * Creates a temporary element and injects the replaced text string as HTML.
+ * The replacement HTML string comes in looking like this:
+ * `Lorem <span>ipsum</span> dolor`.  It's then converted to an array of child
+ * nodes consisting of at least one Text node and one element wrapping the
+ * replacement text. The array is spread into a fragment which is then used to
+ * replace the original Text node entirely.
+ */
 export function replaceTextNode(element: Text, html: string) {
   const { parentNode } = element;
 
   if (!parentNode) return;
 
-  const parentElement = parentNode as HTMLElement;
-
-  /**
-   * Create an ephemeral element and inject the replaced text string as HTML.
-   * The string comes in as `Lorem <span>ipsum</span> dolor`
-   */
   const wrapper = document.createElement(REPLACEMENT_WRAPPER_ELEMENT);
   wrapper.innerHTML = html;
 
   const fragment = document.createDocumentFragment();
   fragment.append(...wrapper.childNodes);
 
+  const parentElement = parentNode as HTMLElement;
   parentElement.replaceChild(fragment, element);
 }

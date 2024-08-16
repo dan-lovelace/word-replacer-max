@@ -73,14 +73,16 @@ export default function ExportButton({
     stopExporting();
     showToast({
       children: (
-        <div className="d-flex align-items-center gap-2">
-          <i className="material-icons-sharp fs-6 text-success">check</i>
-          <div>
-            Your{" "}
-            {(selectedMatchers?.length ?? 0) > 1 ? "rules were" : "rule was"}{" "}
-            exported successfully as {filename}
-          </div>
-        </div>
+        <ToastMessage
+          message={
+            <>
+              Your{" "}
+              {(selectedMatchers?.length ?? 0) > 1 ? "rules were" : "rule was"}{" "}
+              exported successfully as {filename}
+            </>
+          }
+          severity="success"
+        />
       ),
     });
   };

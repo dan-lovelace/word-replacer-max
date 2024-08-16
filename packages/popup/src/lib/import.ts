@@ -19,19 +19,24 @@ export default async function importMatchers(
   }
 
   const uniqueMatchers = importedMatchers.filter(
-    (importedMatcher: Matcher) =>
+    ({
+      queries: importQueries,
+      queryPatterns: importQueryPatterns,
+      replacement: importReplacement,
+    }: Matcher) =>
       !currentMatchers?.find(
-        (currentMatcher) =>
-          importedMatcher.queries.length === currentMatcher.queries.length &&
-          importedMatcher.queries.every((query) =>
-            currentMatcher.queries.includes(query)
+        ({
+          queries: currentQueries,
+          queryPatterns: currentQueryPatterns,
+          replacement: currentReplacement,
+        }) =>
+          importQueries.length === currentQueries.length &&
+          importQueries.every((query) => currentQueries.includes(query)) &&
+          importQueryPatterns.length === currentQueryPatterns.length &&
+          importQueryPatterns.every((queryPattern) =>
+            currentQueryPatterns.includes(queryPattern)
           ) &&
-          importedMatcher.queryPatterns.length ===
-            currentMatcher.queryPatterns.length &&
-          importedMatcher.queryPatterns.every((queryPattern) =>
-            currentMatcher.queryPatterns.includes(queryPattern)
-          ) &&
-          importedMatcher.replacement === currentMatcher.replacement
+          importReplacement === currentReplacement
       )
   );
 
