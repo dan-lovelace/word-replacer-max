@@ -39,10 +39,12 @@ export function replaceText(
    * early if so.
    */
   const replacedItem = replacedElements?.item(startPosition);
-  const isAlreadyReplaced = Array.from(replacedElements ?? []).findIndex((re) =>
-    re.textContent !== replacement
-      ? false
-      : replacedItem === undefined && query === re.dataset["query"]
+  const isAlreadyReplaced = Array.from(replacedElements ?? []).findIndex(
+    (replacedElement) =>
+      replacedElement[CONTENTS_PROPERTY] !== replacement
+        ? false
+        : replacedItem === undefined &&
+          query === replacedElement.dataset["query"]
   );
   if (isAlreadyReplaced > -1) return;
 
