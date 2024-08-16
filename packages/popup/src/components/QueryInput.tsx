@@ -93,7 +93,7 @@ export default function QueryInput({
   };
 
   const handleRemoveClick = (query: string) => () => {
-    if (active) {
+    if (active && !isReplacementEmpty(replacement)) {
       showToast({ children: <RefreshRequiredToast onClose={hideToast} /> });
     }
 
