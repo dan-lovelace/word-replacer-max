@@ -128,7 +128,7 @@ export default function Layout({ children }: LayoutProps) {
                 preferences?.extensionEnabled ? "text-success" : "text-danger"
               }
               icon="power_settings_new"
-              title="Toggle Extension"
+              title="Toggle Extension On/Off"
               onClick={handleExtensionEnabledClick}
             />
           </div>

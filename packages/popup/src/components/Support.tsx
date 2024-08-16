@@ -16,7 +16,7 @@ export default function Support() {
     <div className="container-fluid gx-0 d-flex flex-column gap-2">
       <div className="row fs-sm">
         <div className={COPY_CONTAINER_COL_CLASS}>
-          <div className="fs-5 fw-bold">Contact Us</div>
+          <div className="fs-5 fw-bold">Get Help</div>
           <p>
             Having trouble with Word Replacer Max? We're here to help! Our goal
             is to provide you with the best possible experience and promptly
