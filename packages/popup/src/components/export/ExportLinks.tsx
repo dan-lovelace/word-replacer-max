@@ -75,14 +75,13 @@ export default function ExportLink() {
                   type="text"
                   value={url}
                 />
-                {isClipboardCopyAllowed && (
-                  <Button
-                    className="btn btn-outline-primary"
-                    onClick={handleCopyClick(identifier)}
-                  >
-                    Copy
-                  </Button>
-                )}
+                <Button
+                  className="btn btn-outline-primary"
+                  disabled={!isClipboardCopyAllowed}
+                  onClick={handleCopyClick(identifier)}
+                >
+                  Copy
+                </Button>
                 <a
                   className="btn btn-outline-primary"
                   href={url}
