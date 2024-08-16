@@ -46,7 +46,7 @@ export default function FileImport() {
             showToast({
               children: (
                 <ToastMessage
-                  message="File imported successfully"
+                  message="Rules from file imported successfully"
                   severity="success"
                 />
               ),

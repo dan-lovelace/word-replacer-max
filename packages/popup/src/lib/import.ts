@@ -18,7 +18,29 @@ export default async function importMatchers(
     return;
   }
 
-  const enrichedMatchers: Matcher[] = importedMatchers.map(
+  const uniqueMatchers = importedMatchers.filter(
+    ({
+      queries: importQueries,
+      queryPatterns: importQueryPatterns,
+      replacement: importReplacement,
+    }: Matcher) =>
+      !currentMatchers?.find(
+        ({
+          queries: currentQueries,
+          queryPatterns: currentQueryPatterns,
+          replacement: currentReplacement,
+        }) =>
+          importQueries.length === currentQueries.length &&
+          importQueries.every((query) => currentQueries.includes(query)) &&
+          importQueryPatterns.length === currentQueryPatterns.length &&
+          importQueryPatterns.every((queryPattern) =>
+            currentQueryPatterns.includes(queryPattern)
+          ) &&
+          importReplacement === currentReplacement
+      )
+  );
+
+  const enrichedMatchers: Matcher[] = uniqueMatchers.map(
     (matcher: Matcher) => ({
       ...matcher,
       identifier: uuidv4(),

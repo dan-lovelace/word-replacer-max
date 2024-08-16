@@ -18,22 +18,33 @@ type LayoutProps = {
   children: PreactChildren;
 };
 
-const tabs: { identifier: PopupTab; isHidden?: boolean; label: string }[] = [
+type LayoutTab = {
+  identifier: PopupTab;
+  isHidden?: boolean;
+  label: string;
+  testId: string;
+};
+
+const tabs: LayoutTab[] = [
   {
     identifier: "rules",
     label: "Rules",
+    testId: "rules-tab",
   },
   {
     identifier: "domains",
     label: "Domains",
+    testId: "domains-tab",
   },
   {
     identifier: "options",
     label: "Options",
+    testId: "options-tab",
   },
   {
     identifier: "support",
     label: "Help",
+    testId: "support-tab",
   },
 ];
 
@@ -117,13 +128,13 @@ export default function Layout({ children }: LayoutProps) {
                 preferences?.extensionEnabled ? "text-success" : "text-danger"
               }
               icon="power_settings_new"
-              title="Toggle Extension"
+              title="Toggle Extension On/Off"
               onClick={handleExtensionEnabledClick}
             />
           </div>
           <ul className="nav nav-tabs flex-fill">
             {tabs.map(
-              ({ identifier, isHidden, label }) =>
+              ({ identifier, isHidden, label, testId }) =>
                 !isHidden && (
                   <li
                     key={identifier}
@@ -132,6 +143,7 @@ export default function Layout({ children }: LayoutProps) {
                       identifier === "support" &&
                         "flex-fill d-flex justify-content-end"
                     )}
+                    data-testid={testId}
                   >
                     <button
                       className={cx(

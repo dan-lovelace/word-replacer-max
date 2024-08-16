@@ -59,7 +59,7 @@ export default function ExportLink() {
   }
 
   return (
-    <div className="mt-2">
+    <div className="mt-2" data-testid="export-links">
       <div className="fs-sm text-secondary fw-medium">Shareable links</div>
       <div className="d-flex flex-column gap-2">
         {exportLinks.map(({ identifier, url }) => (
@@ -75,14 +75,13 @@ export default function ExportLink() {
                   type="text"
                   value={url}
                 />
-                {isClipboardCopyAllowed && (
-                  <Button
-                    className="btn btn-outline-primary"
-                    onClick={handleCopyClick(identifier)}
-                  >
-                    Copy
-                  </Button>
-                )}
+                <Button
+                  className="btn btn-outline-primary"
+                  disabled={!isClipboardCopyAllowed}
+                  onClick={handleCopyClick(identifier)}
+                >
+                  Copy
+                </Button>
                 <a
                   className="btn btn-outline-primary"
                   href={url}
