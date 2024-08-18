@@ -2,7 +2,7 @@ import { Fragment } from "preact";
 import { useState } from "preact/hooks";
 import { JSXInternal } from "preact/src/jsx";
 
-import { isReplacementEmpty } from "@worm/shared";
+import { cx, isReplacementEmpty } from "@worm/shared";
 import { Matcher, QueryPattern } from "@worm/types";
 
 import Chip from "./Chip";
@@ -10,7 +10,6 @@ import { RefreshRequiredToast } from "./RefreshRequiredToast";
 import caseIcon from "../icons/case";
 import regexIcon from "../icons/regex";
 import wholeWordIcon from "../icons/whole-word";
-import cx from "../lib/classnames";
 import { PreactChildren } from "../lib/types";
 import { useToast } from "../store/Toast";
 

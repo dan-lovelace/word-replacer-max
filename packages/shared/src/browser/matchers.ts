@@ -2,8 +2,9 @@ import { ZodError } from "zod";
 
 import { Matcher } from "@worm/types";
 
-import { logDebug } from "./logging";
-import { validatedMatcher } from "./schemas";
+import { logDebug } from "../logging";
+import { validatedMatcher } from "../schemas";
+
 import { storageRemoveByKeys, storageSetByKeys } from "./storage";
 
 type StorageMatcher = Matcher & {

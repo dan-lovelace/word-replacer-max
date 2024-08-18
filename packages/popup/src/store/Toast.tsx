@@ -3,7 +3,8 @@ import { useContext, useEffect, useState } from "preact/hooks";
 
 import { Toast as BSToast } from "bootstrap";
 
-import cx from "../lib/classnames";
+import { cx } from "@worm/shared";
+
 import { PreactChildren } from "../lib/types";
 
 type ToastStore = {

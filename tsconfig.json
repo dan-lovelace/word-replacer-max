@@ -16,7 +16,8 @@
       "@worm/popup": ["packages/popup"],
       "@worm/shared": ["packages/shared"],
       "@worm/testing": ["packages/testing"],
-      "@worm/types": ["packages/types"]
+      "@worm/types": ["packages/types"],
+      "@worm/webapp": ["packages/webapp"]
     },
     "resolveJsonModule": true,
     "skipLibCheck": true,

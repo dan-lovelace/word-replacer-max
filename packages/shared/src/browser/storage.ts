@@ -6,8 +6,9 @@ import {
   StorageVersion,
 } from "@worm/types";
 
+import { logDebug } from "../logging";
+
 import { browser } from "./browser";
-import { logDebug } from "./logging";
 import { matchersFromStorage, matchersToStorage } from "./matchers";
 
 const {

@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from "preact/hooks";
 
+import { cx } from "@worm/shared";
 import {
   STORAGE_MATCHER_PREFIX,
   storageRemoveByKeys,
   storageSetByKeys,
-} from "@worm/shared";
+} from "@worm/shared/src/browser";
 import { Matcher } from "@worm/types";
 
 import QueryInput from "../QueryInput";
@@ -12,7 +13,6 @@ import { RefreshRequiredToast } from "../RefreshRequiredToast";
 import ReplacementInput from "../ReplacementInput";
 import ToastMessage from "../ToastMessage";
 
-import cx from "../../lib/classnames";
 import { useConfig } from "../../store/Config";
 import { useToast } from "../../store/Toast";
 

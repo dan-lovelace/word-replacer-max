@@ -1,5 +1,6 @@
+import { logDebug } from "../logging";
+
 import { browser } from "./browser";
-import { logDebug } from "./logging";
 
 const POPUP_FILENAME = "popup.html";
 

@@ -1,13 +1,17 @@
 import { useEffect, useMemo, useRef } from "preact/hooks";
 
-import { getAssetURL, popoutExtension, storageSetByKeys } from "@worm/shared";
+import { cx } from "@worm/shared";
+import {
+  getAssetURL,
+  popoutExtension,
+  storageSetByKeys,
+} from "@worm/shared/src/browser";
 import { PopupTab } from "@worm/types";
 
 import IconButton from "../components/button/IconButton";
 import { RefreshRequiredToast } from "../components/RefreshRequiredToast";
 import ToastMessage from "../components/ToastMessage";
 
-import cx from "../lib/classnames";
 import { useLanguage } from "../lib/language";
 import { getNotificationMessage } from "../lib/routes";
 import { PreactChildren } from "../lib/types";

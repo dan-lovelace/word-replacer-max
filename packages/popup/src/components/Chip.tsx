@@ -1,4 +1,4 @@
-import cx from "../lib/classnames";
+import { cx } from "@worm/shared";
 
 type ChipProps = {
   identifier: string;
