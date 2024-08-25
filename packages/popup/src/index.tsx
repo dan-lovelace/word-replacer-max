@@ -2,6 +2,7 @@ import { render } from "preact";
 import { LocationProvider, Router, Route } from "preact-iso";
 
 import { POPUP_ROUTES } from "@worm/shared/src/browser";
+import "@worm/shared/vite-env.d.ts";
 
 import Layout from "./containers/Layout";
 import HomePage from "./pages/Home";

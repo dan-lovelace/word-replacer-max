@@ -1,4 +1,4 @@
-import { POPUP_ROUTES } from "@worm/shared";
+import { POPUP_ROUTES } from "@worm/shared/src/browser";
 
 export default function NotFoundPage() {
   return (

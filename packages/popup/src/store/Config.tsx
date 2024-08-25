@@ -5,7 +5,7 @@ import {
   browser,
   POPUP_POPPED_OUT_PARAMETER_KEY,
   storageGetByKeys,
-} from "@worm/shared";
+} from "@worm/shared/src/browser";
 import { Storage } from "@worm/types";
 
 import { PreactChildren } from "../lib/types";

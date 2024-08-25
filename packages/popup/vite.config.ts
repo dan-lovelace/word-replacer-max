@@ -3,16 +3,20 @@ import { join } from "path";
 import preact from "@preact/preset-vite";
 import { defineConfig, UserConfig } from "vite";
 
-const outDir = join(__dirname, "..", "..", "dist");
+const rootDir = join(__dirname, "..", "..");
+
+const envDir = join(rootDir, "config");
+const outDir = join(rootDir, "dist");
 
 const modeConfig: Record<string, UserConfig> = {
   test: {
-    plugins: [preact()],
+    envDir,
     build: {
       rollupOptions: {
         input: "popup.html",
       },
     },
+    plugins: [preact()],
     resolve: {
       alias: [
         {
@@ -29,7 +33,7 @@ const modeConfig: Record<string, UserConfig> = {
     },
   },
   production: {
-    plugins: [preact()],
+    envDir,
     build: {
       assetsDir: "popup",
       minify: true,
@@ -42,6 +46,7 @@ const modeConfig: Record<string, UserConfig> = {
         },
       },
     },
+    plugins: [preact()],
   },
 };
 

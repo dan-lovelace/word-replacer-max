@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 
-import { storageSetByKeys } from "@worm/shared";
+import { storageSetByKeys } from "@worm/shared/src/browser";
 
 import ToastMessage from "../ToastMessage";
 

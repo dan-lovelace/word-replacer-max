@@ -2,7 +2,10 @@ import { basename, dirname, join } from "path";
 
 import { defineConfig } from "vite";
 
-const outDir = join(__dirname, "..", "..", "dist");
+const rootDir = join(__dirname, "..", "..");
+
+const envDir = join(rootDir, "config");
+const outDir = join(rootDir, "dist");
 
 export default defineConfig(({ mode }) => ({
   build: {
@@ -11,6 +14,8 @@ export default defineConfig(({ mode }) => ({
     rollupOptions: {
       input: ["src/index.ts"],
       output: {
+        assetFileNames: "[name].[ext]",
+        chunkFileNames: "[name].js",
         entryFileNames: (chunkInfo) => {
           switch (chunkInfo.name) {
             case "index":
@@ -33,9 +38,8 @@ export default defineConfig(({ mode }) => ({
               );
           }
         },
-        chunkFileNames: "[name].js",
-        assetFileNames: "[name].[ext]",
       },
     },
   },
+  envDir,
 }));

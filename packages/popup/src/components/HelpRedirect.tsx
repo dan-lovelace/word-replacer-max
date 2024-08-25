@@ -1,4 +1,4 @@
-import { storageSetByKeys } from "@worm/shared";
+import { storageSetByKeys } from "@worm/shared/src/browser";
 
 import { useConfig } from "../store/Config";
 

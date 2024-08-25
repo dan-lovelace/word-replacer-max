@@ -1,9 +1,5 @@
-import {
-  isDomainAllowed,
-  logDebug,
-  replaceAll,
-  storageGetByKeys,
-} from "@worm/shared";
+import { isDomainAllowed, logDebug, replaceAll } from "@worm/shared";
+import { storageGetByKeys } from "@worm/shared/src/browser";
 import { Storage } from "@worm/types";
 
 type RenderCache = {

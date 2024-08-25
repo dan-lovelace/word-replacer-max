@@ -1,4 +1,4 @@
-import { browser } from "@worm/shared";
+import { browser } from "@worm/shared/src/browser";
 
 import { PreactChildren } from "../lib/types";
 

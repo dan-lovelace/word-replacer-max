@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { ApiAuthTokensResponse } from "./api";
+
 const queryPatterns = ["case", "default", "regex", "wholeWord"] as const;
 const schemaVersions = [1] as const;
 const storageVersions = ["1.0.0"] as const;
@@ -77,5 +79,17 @@ export type StorageSetOptions = {
 };
 
 export type StorageVersion = (typeof storageVersions)[number];
+
+export type WebAppMessage<T extends WebAppMessageKind> = {
+  data: WebAppMessageKindMap[T];
+  kind: T;
+};
+
+export type WebAppMessageKind = keyof WebAppMessageKindMap;
+
+export type WebAppMessageKindMap = {
+  authTokens: ApiAuthTokensResponse;
+  contentInitialize: boolean;
+};
 
 export * from "./api";

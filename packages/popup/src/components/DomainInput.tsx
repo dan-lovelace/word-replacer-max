@@ -1,7 +1,7 @@
 import { useState } from "preact/hooks";
 import { JSXInternal } from "preact/src/jsx";
 
-import { storageSetByKeys } from "@worm/shared";
+import { storageSetByKeys } from "@worm/shared/src/browser";
 import { DomainEffect } from "@worm/types";
 
 import Chip from "./Chip";

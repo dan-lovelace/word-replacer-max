@@ -5,7 +5,7 @@ import {
   popoutExtension,
   storageGetByKeys,
   storageSetByKeys,
-} from "@worm/shared";
+} from "@worm/shared/src/browser";
 import { Matcher } from "@worm/types";
 
 const ADD_NEW_RULE_ID = "add-new-rule";

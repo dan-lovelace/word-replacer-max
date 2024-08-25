@@ -2,7 +2,8 @@ import { useMemo, useState } from "preact/hooks";
 
 import { Dropdown } from "bootstrap";
 
-import { logDebug, storageSetByKeys } from "@worm/shared";
+import { logDebug } from "@worm/shared";
+import { storageSetByKeys } from "@worm/shared/src/browser";
 import { ApiShareRequest, ApiShareResponse, SchemaExport } from "@worm/types";
 
 import { useLanguage } from "../../lib/language";

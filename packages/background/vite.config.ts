@@ -2,7 +2,10 @@ import { join } from "path";
 
 import { defineConfig } from "vite";
 
-const outDir = join(__dirname, "..", "..", "dist");
+const rootDir = join(__dirname, "..", "..");
+
+const envDir = join(rootDir, "config");
+const outDir = join(rootDir, "dist");
 
 export default defineConfig(({ mode }) => ({
   build: {
@@ -15,4 +18,5 @@ export default defineConfig(({ mode }) => ({
       },
     },
   },
+  envDir,
 }));
