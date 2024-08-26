@@ -50,7 +50,7 @@ describe("tab", () => {
           .exportLinks()
           .should("be.visible")
           .get("input")
-          .should("have.value", response?.body.data.value.url);
+          .should("have.value", response?.body.data.url);
       });
     });
 
