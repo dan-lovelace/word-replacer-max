@@ -22,3 +22,8 @@ jobs:
           browser: chrome
           project: packages/popup
           start: yarn workspace @worm/popup dev
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
