@@ -41,6 +41,7 @@ describe("tab", () => {
 
       exportModal.dropdownButton().click();
       exportModal.dropdownMenuCreateLinkButton().click();
+      exportModal.modal().should("not.be.visible");
 
       cy.wait("@share").then(({ response }) => {
         cy.wrap(response?.body).should("have.property", "url");
