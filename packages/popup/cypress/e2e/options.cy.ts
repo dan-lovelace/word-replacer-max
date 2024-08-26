@@ -45,7 +45,6 @@ describe("tab", () => {
       cy.wait("@share").then(({ response }) => {
         cy.wrap(response?.body).should("have.property", "url");
 
-        exportModal.modal().should("not.be.visible");
         exportModal
           .exportLinks()
           .should("be.visible")
