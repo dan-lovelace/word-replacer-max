@@ -43,14 +43,14 @@ describe("tab", () => {
       exportModal.dropdownMenuCreateLinkButton().click();
 
       cy.wait("@share").then(({ response }) => {
-        cy.wrap(response?.body.data).should("have.property", "url");
+        cy.wrap(response?.body).should("have.property", "url");
 
         exportModal.modal().should("not.be.visible");
         exportModal
           .exportLinks()
           .should("be.visible")
           .get("input")
-          .should("have.value", response?.body.data.url);
+          .should("have.value", response?.body.url);
       });
     });
 
