@@ -108,19 +108,14 @@ export default function ExportButton({
     const json: ApiShareResponse = await result.json();
 
     if (!result.ok) {
-      logDebug(json.error?.value);
-
       return showToast({
         children: (
-          <ToastMessage
-            message={json.error?.message ?? JSON.stringify(json)}
-            severity="danger"
-          />
+          <ToastMessage message={JSON.stringify(json)} severity="danger" />
         ),
       });
     }
 
-    if (!json.data?.value?.url) {
+    if (!json.url) {
       return showToast({
         children: (
           <ToastMessage
@@ -135,7 +130,7 @@ export default function ExportButton({
       ...(exportLinks || []),
       {
         identifier: new Date().getTime(),
-        url: json.data.value.url,
+        url: json.url,
       },
     ];
 
