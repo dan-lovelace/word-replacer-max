@@ -3,7 +3,7 @@ import { expect } from "@jest/globals";
 import {
   matchersToStorage,
   matchersFromStorage,
-} from "@worm/shared/src/matchers";
+} from "@worm/shared/src/browser/matchers";
 import { Matcher } from "@worm/types";
 
 describe("matchersToStorage", () => {
