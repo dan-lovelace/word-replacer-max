@@ -6,7 +6,7 @@ import {
   storageGetByKeys,
   storageSetByKeys,
 } from "@worm/shared";
-import { Matcher } from "@worm/types";
+import { QueryPattern } from "@worm/types";
 
 const ADD_NEW_RULE_ID = "add-new-rule";
 
@@ -30,21 +30,46 @@ export function startContextMenuListener() {
           "matchers",
           "preferences",
         ]);
+
+        const queries = [selectionText];
+        const queryPatterns: QueryPattern[] = [];
+        const replacement = "";
+
+        /**
+         * Check for existing rules that have the same selection text but all
+         * other defaults. This avoids a situation where the popup window
+         * doesn't open automatically and the user inadvertently adding
+         * duplicates.
+         */
+        const existingMatcher = matchers?.find(
+          (matcher) =>
+            matcher.queries.length === queries.length &&
+            matcher.queries.every((query) => queries.includes(query)) &&
+            matcher.queryPatterns.length === queryPatterns.length &&
+            matcher.queryPatterns.every((queryPattern) =>
+              queryPatterns.includes(queryPattern)
+            ) &&
+            matcher.replacement === replacement
+        );
+
         const newPreferences = Object.assign({}, preferences);
         const identifier = uuidv4();
-        const newMatchers: Matcher[] = [
-          ...(matchers ?? []),
-          {
+        const newMatchers = [...(matchers ?? [])];
+
+        if (existingMatcher) {
+          newPreferences.focusRule = existingMatcher.identifier;
+        } else {
+          newMatchers.push({
             active: true,
             identifier,
-            queries: [selectionText],
-            queryPatterns: [],
-            replacement: "",
-          },
-        ];
+            queries,
+            queryPatterns,
+            replacement,
+          });
+          newPreferences.focusRule = identifier;
+        }
 
         newPreferences.activeTab = "rules";
-        newPreferences.focusRule = identifier;
 
         storageSetByKeys({
           matchers: newMatchers,
