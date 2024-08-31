@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 
-import Box from "@mui/material/Box";
+import Box from "@mui/material/Box/Box";
 
 import {
   createWebAppMessage,
@@ -19,6 +19,7 @@ import { useConnectionPing } from "./queries";
 
 type ConnectionProviderContextProps = {
   isConnected: boolean;
+  isConnecting: boolean;
   sendMessage: (message: WebAppMessageData<WebAppMessageKind>) => void;
 };
 
@@ -32,6 +33,7 @@ const useConnectionProviderValue = (
   iframeRef: React.RefObject<HTMLIFrameElement>
 ): ConnectionProviderContextProps => {
   const [isConnected, setIsConnected] = useState(false);
+  const [isConnecting, setIsConnecting] = useState(true);
   const { refetch: ping } = useConnectionPing(iframeRef);
 
   /**
@@ -50,9 +52,11 @@ const useConnectionProviderValue = (
 
       switch (event.data.kind) {
         case webAppMessages.CONTENT_INITIALIZE: {
-          sendMessage(
-            createWebAppMessage(webAppMessages.PING_REQUEST, undefined)
+          const pingRequestMessage = createWebAppMessage(
+            webAppMessages.PING_REQUEST
           );
+
+          sendMessage(pingRequestMessage);
           break;
         }
 
@@ -60,6 +64,7 @@ const useConnectionProviderValue = (
           const pingResponse = event.data.details as WebAppPingResponse;
 
           setIsConnected(pingResponse);
+          setIsConnecting(false);
           break;
         }
       }
@@ -99,6 +104,7 @@ const useConnectionProviderValue = (
 
   return {
     isConnected,
+    isConnecting,
     sendMessage,
   };
 };

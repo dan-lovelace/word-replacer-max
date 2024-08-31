@@ -87,7 +87,7 @@ export interface WebAppMessage<T extends WebAppMessageKind>
   extends MessageEvent {
   data: {
     kind: T;
-    details: WebAppMessageKindMap[T];
+    details?: WebAppMessageKindMap[T];
   };
 }
 

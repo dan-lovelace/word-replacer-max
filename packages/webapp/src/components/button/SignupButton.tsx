@@ -1,5 +1,7 @@
 import { ROUTES } from "../../lib/routes";
 
+import Link from "../link/Link";
+
 import { ButtonProps } from ".";
 import Button from "./Button";
 
@@ -9,8 +11,8 @@ type SignupButtonProps = ButtonProps & {
 
 export default function SignupButton({ text = "Sign up" }: SignupButtonProps) {
   return (
-    <a href={ROUTES.SIGNUP}>
+    <Link to={ROUTES.SIGNUP}>
       <Button variant="contained">{text}</Button>
-    </a>
+    </Link>
   );
 }

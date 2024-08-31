@@ -1,10 +1,11 @@
-import Box from "@mui/material/Box";
+import Box from "@mui/material/Box/Box";
 
 import { cx } from "@worm/shared";
 
-import { ROUTES } from "../lib/routes";
 import LoginButton from "../components/button/LoginButton";
 import SignupButton from "../components/button/SignupButton";
+import ConnectionStatus from "../components/connection/ConnectionStatus";
+import { ROUTES } from "../lib/routes";
 
 type LayoutProps = React.HTMLAttributes<HTMLDivElement>;
 
@@ -66,7 +67,8 @@ export default function Layout({ children }: LayoutProps) {
             </span>
           ))}
         </Box>
-        <Box sx={{ display: "flex", gap: 1 }}>
+        <Box sx={{ alignItems: "center", display: "flex", gap: 1 }}>
+          <ConnectionStatus />
           <LoginButton />
           <SignupButton />
         </Box>

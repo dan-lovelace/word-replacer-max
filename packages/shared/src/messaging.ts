@@ -24,7 +24,7 @@ export const webAppMessages: Record<
 
 export function createWebAppMessage<T extends WebAppMessageKind>(
   kind: T,
-  details: WebAppMessageKindMap[T]
+  details?: WebAppMessageKindMap[T]
 ): WebAppMessageData<T> {
   return { kind, details };
 }

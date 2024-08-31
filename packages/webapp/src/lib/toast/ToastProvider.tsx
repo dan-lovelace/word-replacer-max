@@ -4,7 +4,7 @@ import MuiAlert, { AlertColor, AlertProps } from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
 
 type ToastContextProps = {
-  showMessage: (message: string, severity: AlertColor) => void;
+  showToast: (message: string, severity: AlertColor) => void;
 };
 
 type ToastProviderProps = {
@@ -32,7 +32,7 @@ export function ToastProvider({ children }: ToastProviderProps) {
   const [message, setMessage] = useState("");
   const [severity, setSeverity] = useState<AlertColor>("info");
 
-  const showMessage = (message: string, severity: AlertColor) => {
+  const showToast = (message: string, severity: AlertColor) => {
     setMessage(message);
     setSeverity(severity);
     setOpen(true);
@@ -43,7 +43,7 @@ export function ToastProvider({ children }: ToastProviderProps) {
   };
 
   return (
-    <ToastContext.Provider value={{ showMessage }}>
+    <ToastContext.Provider value={{ showToast }}>
       {children}
       <Snackbar
         open={open}
