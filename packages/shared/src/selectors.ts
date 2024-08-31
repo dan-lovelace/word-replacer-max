@@ -1,3 +1,3 @@
 export const elementIdentifiers = {
-  WEBAPP_MESSAGE_IFRAME: "webapp-message-iframe",
+  CONNECTION_IFRAME: "wrm-connection-iframe",
 };

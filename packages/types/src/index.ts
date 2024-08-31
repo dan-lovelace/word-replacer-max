@@ -61,6 +61,9 @@ export type Storage = Partial<{
 export type StorageKey = keyof StorageKeyMap;
 
 export type StorageKeyMap = {
+  authentication: {
+    tokens: ApiAuthTokensResponse;
+  };
   domainList: string[];
   exportLinks: ExportLink[];
   matchers: Matcher[];
@@ -80,16 +83,28 @@ export type StorageSetOptions = {
 
 export type StorageVersion = (typeof storageVersions)[number];
 
-export type WebAppMessage<T extends WebAppMessageKind> = {
-  data: WebAppMessageKindMap[T];
-  kind: T;
-};
+export interface WebAppMessage<T extends WebAppMessageKind>
+  extends MessageEvent {
+  data: {
+    kind: T;
+    details: WebAppMessageKindMap[T];
+  };
+}
+
+export type WebAppMessageData<T extends WebAppMessageKind> =
+  WebAppMessage<T>["data"];
 
 export type WebAppMessageKind = keyof WebAppMessageKindMap;
 
 export type WebAppMessageKindMap = {
   authTokens: ApiAuthTokensResponse;
   contentInitialize: boolean;
+  pingRequest: WebAppPingRequest;
+  pingResponse: WebAppPingResponse;
 };
+
+export type WebAppPingRequest = undefined;
+
+export type WebAppPingResponse = boolean;
 
 export * from "./api";

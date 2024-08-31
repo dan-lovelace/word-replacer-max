@@ -4,6 +4,12 @@ import {
   logDebug,
   webAppMessages,
 } from "@worm/shared";
+import { storageSetByKeys } from "@worm/shared/src/browser";
+import {
+  ApiAuthTokensResponse,
+  WebAppMessage,
+  WebAppMessageKind,
+} from "@worm/types";
 
 /**
  * Attempt to communicate with the running `webapp` package in whichever
@@ -27,21 +33,51 @@ export function initializeWebApp() {
 
     const elementQuery = getWebAppIFrame();
 
-    if (elementQuery) {
-      elementQuery.contentWindow?.addEventListener("message", (event) => {
-        console.log("received", event);
+    if (!elementQuery || !elementQuery.contentWindow) return;
+
+    elementQuery.contentWindow.addEventListener(
+      "message",
+      (event: WebAppMessage<WebAppMessageKind>) => {
         switch (event.data.kind) {
           case webAppMessages.AUTH_TOKENS: {
+            storageSetByKeys({
+              authentication: {
+                tokens: event.data.details as ApiAuthTokensResponse,
+              },
+            });
             break;
           }
+
+          case webAppMessages.PING_REQUEST: {
+            const latestElement = getWebAppIFrame();
+            const pingResponse = latestElement !== undefined;
+            const pingResponseMessage = createWebAppMessage(
+              webAppMessages.PING_RESPONSE,
+              pingResponse
+            );
+
+            if (!latestElement || !latestElement.contentWindow) {
+              logDebug(
+                "Unable to locate iframe content window when responding to ping"
+              );
+              break;
+            }
+
+            latestElement.contentWindow.postMessage(pingResponseMessage);
+            break;
+          }
+
           default:
         }
-      });
+      }
+    );
 
-      const newMessage = createWebAppMessage("contentInitialize", true);
-      elementQuery.contentWindow?.postMessage(newMessage);
+    const newMessage = createWebAppMessage(
+      webAppMessages.CONTENT_INITIALIZE,
+      true
+    );
+    elementQuery.contentWindow.postMessage(newMessage);
 
-      clearInterval(initialization);
-    }
+    clearInterval(initialization);
   }, initializationIntervalMs);
 }

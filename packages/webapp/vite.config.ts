@@ -1,6 +1,6 @@
 import { join } from "path";
 
-import preact from "@preact/preset-vite";
+import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 
 const rootDir = join(__dirname, "..", "..");
@@ -10,5 +10,5 @@ export default defineConfig({
     global: "window",
   },
   envDir: join(rootDir, "config"),
-  plugins: [preact()],
+  plugins: [react()],
 });

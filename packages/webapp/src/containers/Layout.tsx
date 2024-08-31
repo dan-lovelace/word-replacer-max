@@ -1,4 +1,4 @@
-import { JSXInternal } from "preact/src/jsx";
+import Box from "@mui/material/Box";
 
 import { cx } from "@worm/shared";
 
@@ -6,7 +6,7 @@ import { ROUTES } from "../lib/routes";
 import LoginButton from "../components/button/LoginButton";
 import SignupButton from "../components/button/SignupButton";
 
-type LayoutProps = JSXInternal.HTMLAttributes<HTMLDivElement>;
+type LayoutProps = React.HTMLAttributes<HTMLDivElement>;
 
 const navigation = [
   {
@@ -18,18 +18,46 @@ const navigation = [
 
 export default function Layout({ children }: LayoutProps) {
   return (
-    <div className="h-full flex flex-col" id="layout">
-      <header className="px-4 py-3 flex items-center gap-4">
+    <Box
+      id="layout"
+      sx={{
+        display: "flex",
+        height: "100%",
+        flexDirection: "column",
+      }}
+    >
+      <Box
+        component="header"
+        sx={{
+          alignItems: "center",
+          display: "flex",
+          gap: 1,
+          px: 2,
+          py: 1,
+        }}
+      >
         <a href={ROUTES.HOME}>
-          <div className="h-10 p-1">
-            <img
+          <Box
+            sx={{
+              height: 36,
+              p: 1,
+            }}
+          >
+            <Box
+              component="img"
               alt="Word Replacer Max logo"
-              className="h-full"
               src="/logo_128.png"
+              sx={{
+                height: "100%",
+              }}
             />
-          </div>
+          </Box>
         </a>
-        <div className="flex-1">
+        <Box
+          sx={{
+            flex: "1 1 auto",
+          }}
+        >
           {navigation.map((item) => (
             <span key={item.id}>
               <a className={cx("text-gray-700")} href={item.to}>
@@ -37,16 +65,25 @@ export default function Layout({ children }: LayoutProps) {
               </a>
             </span>
           ))}
-        </div>
-        <div>
+        </Box>
+        <Box sx={{ display: "flex", gap: 1 }}>
           <LoginButton />
           <SignupButton />
-        </div>
-      </header>
-      <main className="flex-1">{children}</main>
-      <footer className="px-4 py-3 text-center">
+        </Box>
+      </Box>
+      <Box component="main" sx={{ flex: "1 1 auto" }}>
+        {children}
+      </Box>
+      <Box
+        component="footer"
+        sx={{
+          px: 2,
+          py: 1,
+          textAlign: "center",
+        }}
+      >
         Copyright &copy; 2024 Logic Now LLC, All Rights Reserved
-      </footer>
-    </div>
+      </Box>
+    </Box>
   );
 }

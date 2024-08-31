@@ -1,27 +1,37 @@
-import { WebAppMessage, WebAppMessageKindMap } from "@worm/types";
+import {
+  WebAppMessageData,
+  WebAppMessageKind,
+  WebAppMessageKindMap,
+} from "@worm/types";
 
 import { elementIdentifiers } from "./selectors";
 
-type WebAppMessageKindLabel = "AUTH_TOKENS" | "CONTENT_INITIALIZE";
+type WebAppMessageLabel =
+  | "AUTH_TOKENS"
+  | "CONTENT_INITIALIZE"
+  | "PING_REQUEST"
+  | "PING_RESPONSE";
 
 export const webAppMessages: Record<
-  WebAppMessageKindLabel,
+  WebAppMessageLabel,
   keyof WebAppMessageKindMap
 > = {
   AUTH_TOKENS: "authTokens",
   CONTENT_INITIALIZE: "contentInitialize",
+  PING_REQUEST: "pingRequest",
+  PING_RESPONSE: "pingResponse",
 };
 
-export function createWebAppMessage<T extends keyof WebAppMessageKindMap>(
+export function createWebAppMessage<T extends WebAppMessageKind>(
   kind: T,
-  data: WebAppMessageKindMap[T]
-): WebAppMessage<T> {
-  return { kind, data };
+  details: WebAppMessageKindMap[T]
+): WebAppMessageData<T> {
+  return { kind, details };
 }
 
 export function getWebAppIFrame() {
   const elementQuery = document.getElementById(
-    elementIdentifiers.WEBAPP_MESSAGE_IFRAME
+    elementIdentifiers.CONNECTION_IFRAME
   );
 
   if (elementQuery && elementQuery.nodeName === "IFRAME") {

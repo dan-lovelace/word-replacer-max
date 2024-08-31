@@ -1,5 +1,3 @@
-import { JSXInternal } from "preact/src/jsx";
+import type { ButtonProps as MuiButtonProps } from "@mui/material/Button";
 
-export type ButtonProps = JSXInternal.HTMLAttributes<HTMLButtonElement> & {
-  variant?: "default" | "primary";
-};
+export type ButtonProps = MuiButtonProps & {};
