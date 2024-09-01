@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import {
   CURRENT_STORAGE_VERSION,
+  DEFAULT_REPLACEMENT_STYLE,
   storageGetByKeys,
   storageSetByKeys,
 } from "@worm/shared";
@@ -18,12 +19,13 @@ export async function initializeStorage() {
     // perform any necessary migrations before proceeding
   }
 
-  const { domainList, exportLinks, matchers, preferences } =
+  const { domainList, exportLinks, matchers, preferences, replacementStyle } =
     await storageGetByKeys([
       "domainList",
       "exportLinks",
       "matchers",
       "preferences",
+      "replacementStyle",
     ]);
 
   const initialStorage: Storage = {};
@@ -44,6 +46,7 @@ export async function initializeStorage() {
         queries: ["my jaw dropped", "I was shocked"],
         queryPatterns: [],
         replacement: "I was surprised",
+        replacementStyle: { useGlobal: true },
       },
       {
         active: true,
@@ -51,6 +54,7 @@ export async function initializeStorage() {
         queries: ["This."],
         queryPatterns: ["case", "wholeWord"],
         replacement: " ",
+        replacementStyle: { useGlobal: true },
       },
     ];
 
@@ -64,6 +68,10 @@ export async function initializeStorage() {
       extensionEnabled: true,
       focusRule: "",
     };
+  }
+
+  if (replacementStyle === undefined) {
+    initialStorage.replacementStyle = DEFAULT_REPLACEMENT_STYLE;
   }
 
   await storageSetByKeys(initialStorage);

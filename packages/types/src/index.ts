@@ -23,6 +23,14 @@ export type Matcher = {
   queries: string[];
   queryPatterns: QueryPattern[];
   replacement: string;
+
+  /**
+   * NEW: Introduced during styled replacements, the optional flag should be
+   * removed at a later time.
+   */
+  replacementStyle?: {
+    useGlobal: boolean;
+  };
 };
 
 export type PopupAlertSeverity = "danger" | "info" | "success";
@@ -30,6 +38,21 @@ export type PopupAlertSeverity = "danger" | "info" | "success";
 export type PopupTab = "domains" | "options" | "rules" | "support";
 
 export type QueryPattern = (typeof queryPatterns)[number];
+
+export type ReplacementStyle = Partial<{
+  active: boolean;
+  backgroundColor: string;
+  color: string;
+  options: ReplacementStyleOption[];
+}>;
+
+export type ReplacementStyleOption =
+  | "backgroundColor"
+  | "bold"
+  | "color"
+  | "italic"
+  | "strikethrough"
+  | "underline";
 
 export type SchemaExport = SchemaVersion & {
   version: SchemaVersionType;
@@ -68,6 +91,7 @@ export type StorageKeyMap = {
     extensionEnabled: boolean;
     focusRule: Matcher["identifier"];
   };
+  replacementStyle: ReplacementStyle;
   storageVersion: StorageVersion;
 };
 

@@ -23,7 +23,14 @@ type RuleRowProps = {
 };
 
 export default function RuleRow({
-  matcher: { active, identifier, queries, queryPatterns, replacement },
+  matcher: {
+    active,
+    identifier,
+    queries,
+    queryPatterns,
+    replacement,
+    replacementStyle,
+  },
   matchers,
   disabled = false,
 }: RuleRowProps) {
@@ -156,7 +163,7 @@ export default function RuleRow({
             data-testid="active-toggle"
             id={`active-check-${identifier}`}
             role="switch"
-            title={active ? "Disable Rule" : "Enable Rule"}
+            title={active ? "Rule Enabled" : "Rule Disabled"}
             type="checkbox"
             onChange={handleActiveChange(identifier)}
           />
@@ -190,6 +197,7 @@ export default function RuleRow({
           queries={queries}
           inputRef={replacementInputRef}
           replacement={replacement}
+          replacementStyle={replacementStyle}
           onChange={handleMatcherInputChange}
         />
       </div>

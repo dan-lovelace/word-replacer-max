@@ -1,8 +1,8 @@
+import Button from "../components/button/Button";
 import ExportLinks from "../components/export/ExportLinks";
 import ExportModal from "../components/export/ExportModal";
-
-import Button from "../components/button/Button";
 import Import from "../components/import/Import";
+import ReplacementStyles from "../components/options/ReplacementStyles";
 import { COPY_CONTAINER_COL_CLASS } from "../lib/classnames";
 import { PreactChildren } from "../lib/types";
 
@@ -14,6 +14,14 @@ export default function Options() {
   return (
     <>
       <div className="container-fluid gx-0 d-flex flex-column gap-4">
+        <div className="row">
+          <div className={COPY_CONTAINER_COL_CLASS}>
+            <div className="fw-bold fs-5">General</div>
+            <ColumnContent>
+              <ReplacementStyles />
+            </ColumnContent>
+          </div>
+        </div>
         <div className="row">
           <div className={COPY_CONTAINER_COL_CLASS}>
             <div className="fw-bold fs-5">Export</div>

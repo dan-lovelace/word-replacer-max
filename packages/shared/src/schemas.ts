@@ -14,6 +14,16 @@ export const validatedMatcher: z.ZodType<Matcher> = z.lazy(() =>
     queries: z.array(z.string()),
     queryPatterns: z.array(validatedQueryPattern),
     replacement: z.string(),
+    replacementStyle: z
+      .object({
+        useGlobal: z.boolean(),
+      })
+      /**
+       * Made optional during initial rollout of styled replacements to avoid
+       * breaking import validation of existing exports. This should be removed
+       * at a later time.
+       */
+      .optional(),
   })
 );
 

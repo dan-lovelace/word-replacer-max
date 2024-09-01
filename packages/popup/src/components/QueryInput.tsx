@@ -148,7 +148,7 @@ export default function QueryInput({
           <Fragment key={value}>
             <input
               checked={queryPatterns.includes(value)}
-              className={cx("btn-check px-0 py-2")}
+              className="btn-check px-0 py-2"
               disabled={disabled}
               id={identifier + value}
               type="checkbox"
