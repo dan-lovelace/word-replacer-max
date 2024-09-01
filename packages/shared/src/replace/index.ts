@@ -1,4 +1,4 @@
-import { Matcher } from "@worm/types";
+import { Matcher, ReplacementStyle } from "@worm/types";
 
 import { findText } from "./find-text";
 import { replaceText } from "./replace-text";
@@ -8,18 +8,24 @@ import { logDebug } from "../logging";
 function searchAndReplace(
   element: HTMLElement,
   query: string,
-  { queryPatterns, replacement }: Matcher
+  matcher: Matcher,
+  replacementStyle: ReplacementStyle | undefined
 ) {
+  const { queryPatterns } = matcher;
   const searchResults = findText(element, query, queryPatterns) || [];
 
   for (let position = 0; position < searchResults.length; position++) {
-    const result = searchResults[position];
+    const textElement = searchResults[position];
 
-    replaceText(result, query, queryPatterns, replacement, position);
+    replaceText(textElement, query, matcher, replacementStyle, position);
   }
 }
 
-export function replaceAll(matchers: Matcher[], startDocument = document) {
+export function replaceAll(
+  matchers: Matcher[],
+  replacementStyle: ReplacementStyle | undefined,
+  startDocument = document
+) {
   const body = startDocument.querySelector("body");
   if (!body) {
     logDebug("No `body` element found");
@@ -35,12 +41,12 @@ export function replaceAll(matchers: Matcher[], startDocument = document) {
 
     for (const query of matcher.queries) {
       if (body) {
-        searchAndReplace(body, query, matcher);
+        searchAndReplace(body, query, matcher, replacementStyle);
       }
 
       if (head) {
         for (const title of Array.from(head.querySelectorAll("title"))) {
-          searchAndReplace(title, query, matcher);
+          searchAndReplace(title, query, matcher, replacementStyle);
         }
       }
     }

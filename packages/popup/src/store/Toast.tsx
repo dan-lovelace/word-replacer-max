@@ -28,7 +28,6 @@ export const useToast = () => useContext(Toast);
 
 export function ToastProvider({ children }: { children: PreactChildren }) {
   const [messages, setMessages] = useState<ToastMessage[]>();
-  const [toast, setToast] = useState<BSToast>();
 
   useEffect(() => {
     const hideListener = () => {
@@ -43,26 +42,31 @@ export function ToastProvider({ children }: { children: PreactChildren }) {
     };
   }, []);
 
-  const hideToast = () => {
-    const isShown = toast?.isShown();
-    if (isShown) {
-      toast?.dispose();
-    }
+  const disposeToast = () => {
+    getToast()?.dispose();
+  };
 
+  const getToast = () => {
     const toastEl = document.querySelector(".toast");
+
     if (!toastEl) return;
 
-    new BSToast(toastEl, {
+    return new BSToast(toastEl, {
       autohide: true,
       delay: AUTOHIDE_DELAY_MS,
-    }).hide();
+    });
+  };
+
+  const hideToast = () => {
+    disposeToast();
   };
 
   const showToast = (message: ToastMessage) => {
-    const isShown = toast?.isShown();
+    const currentToast = getToast();
+    const isCurrentToastShown = currentToast?.isShown();
 
-    if (isShown) {
-      toast?.dispose();
+    if (currentToast) {
+      disposeToast();
     }
 
     const toastEl = document.querySelector(".toast");
@@ -71,11 +75,10 @@ export function ToastProvider({ children }: { children: PreactChildren }) {
     const initialToast = new BSToast(toastEl, {
       autohide: true,
       delay: AUTOHIDE_DELAY_MS,
-      animation: !isShown,
+      animation: !isCurrentToastShown,
     });
     initialToast?.show();
 
-    setToast(initialToast);
     setMessages([message]);
   };
 

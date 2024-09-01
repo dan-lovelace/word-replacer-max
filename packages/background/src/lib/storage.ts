@@ -46,7 +46,7 @@ export async function initializeStorage() {
         queries: ["my jaw dropped", "I was shocked"],
         queryPatterns: [],
         replacement: "I was surprised",
-        replacementStyle: { useGlobal: true },
+        useGlobalReplacementStyle: true,
       },
       {
         active: true,
@@ -54,7 +54,7 @@ export async function initializeStorage() {
         queries: ["This."],
         queryPatterns: ["case", "wholeWord"],
         replacement: " ",
-        replacementStyle: { useGlobal: true },
+        useGlobalReplacementStyle: true,
       },
     ];
 

@@ -65,7 +65,7 @@ export function startContextMenuListener() {
             queries,
             queryPatterns,
             replacement,
-            replacementStyle: { useGlobal: true },
+            useGlobalReplacementStyle: true,
           });
           newPreferences.focusRule = identifier;
         }

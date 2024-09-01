@@ -29,7 +29,7 @@ export default function RuleRow({
     queries,
     queryPatterns,
     replacement,
-    replacementStyle,
+    useGlobalReplacementStyle,
   },
   matchers,
   disabled = false,
@@ -197,7 +197,7 @@ export default function RuleRow({
           queries={queries}
           inputRef={replacementInputRef}
           replacement={replacement}
-          replacementStyle={replacementStyle}
+          useGlobalReplacementStyle={useGlobalReplacementStyle}
           onChange={handleMatcherInputChange}
         />
       </div>

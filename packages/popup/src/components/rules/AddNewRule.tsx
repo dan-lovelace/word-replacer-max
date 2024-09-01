@@ -30,7 +30,7 @@ export default function AddNewRule({ children, className }: AddNewRuleProps) {
             queries: [],
             queryPatterns: [],
             replacement: "",
-            replacementStyle: { useGlobal: true },
+            useGlobalReplacementStyle: true,
           },
         ],
       },

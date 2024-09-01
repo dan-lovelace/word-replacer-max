@@ -1,3 +1,5 @@
+import { Matcher, ReplacementStyle } from "@worm/types";
+
 import { CONTENTS_PROPERTY, REPLACEMENT_WRAPPER_ELEMENT } from ".";
 
 export const nodeNameBlocklist: Set<Node["nodeName"]> = new Set([
@@ -22,8 +24,11 @@ export const nodeNameBlocklist: Set<Node["nodeName"]> = new Set([
 export function getReplacementHTML(
   targetElement: Text,
   query: string,
-  replacement: string
+  matcher: Pick<Matcher, "replacement" | "useGlobalReplacementStyle">,
+  replacementStyle: ReplacementStyle | undefined
 ) {
+  const { replacement, useGlobalReplacementStyle } = matcher;
+
   if (targetElement.nodeName === "TITLE") {
     return replacement;
   }
@@ -34,7 +39,25 @@ export function getReplacementHTML(
   wrapper.dataset["isReplaced"] = now;
   wrapper.dataset["query"] = query;
 
+  if (Boolean(useGlobalReplacementStyle)) {
+    styleReplacement(wrapper, replacementStyle);
+  }
+
   return wrapper.outerHTML;
+}
+
+/**
+ * Applies classnames to a replacement element based on enabled options.
+ */
+export function styleReplacement(
+  element: HTMLElement,
+  replacementStyle: ReplacementStyle | undefined
+) {
+  if (!replacementStyle?.active) return;
+
+  for (const option of replacementStyle.options ?? []) {
+    element.classList.add(`wrm-style__${option}`);
+  }
 }
 
 /**

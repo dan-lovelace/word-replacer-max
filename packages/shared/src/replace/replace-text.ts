@@ -1,4 +1,4 @@
-import { QueryPattern } from "@worm/types";
+import { Matcher, ReplacementStyle } from "@worm/types";
 
 import {
   CONTENTS_PROPERTY,
@@ -12,10 +12,15 @@ import { getRegexFlags, patternRegex } from "./lib/regex";
 export function replaceText(
   element: Text | undefined,
   query: string,
-  queryPatterns: QueryPattern[],
-  replacement: string,
+  matcher: Pick<
+    Matcher,
+    "queryPatterns" | "replacement" | "useGlobalReplacementStyle"
+  >,
+  replacementStyle: ReplacementStyle | undefined,
   startPosition: number = 0
 ) {
+  const { queryPatterns, replacement, useGlobalReplacementStyle } = matcher;
+
   if (!element || isReplacementEmpty(replacement)) return;
 
   const { parentNode } = element;
@@ -54,7 +59,7 @@ export function replaceText(
   if (!queryPatterns || queryPatterns.length < 1) {
     // proceed with default
     const replaced = elementContents.replace(patternRegex.default(query), () =>
-      getReplacementHTML(element, query, replacement)
+      getReplacementHTML(element, query, matcher, replacementStyle)
     );
 
     replaceTextNode(element, replaced);
@@ -68,7 +73,7 @@ export function replaceText(
         case "case":
         case "default": {
           replaced = elementContents.replace(patternRegex[pattern](query), () =>
-            getReplacementHTML(element, query, replacement)
+            getReplacementHTML(element, query, matcher, replacementStyle)
           );
           break;
         }
@@ -80,14 +85,23 @@ export function replaceText(
           );
 
           // apply the HTML after replacement
-          replaced = getReplacementHTML(element, query, regexReplaced);
+          replaced = getReplacementHTML(
+            element,
+            query,
+            {
+              replacement: regexReplaced,
+              useGlobalReplacementStyle,
+            },
+            replacementStyle
+          );
           break;
         }
         case "wholeWord": {
           replaced = elementContents
             .replace(
               patternRegex[pattern](query, getRegexFlags(queryPatterns)),
-              () => getReplacementHTML(element, query, replacement)
+              () =>
+                getReplacementHTML(element, query, matcher, replacementStyle)
             )
             .replace(/\s\s+/g, "");
           break;

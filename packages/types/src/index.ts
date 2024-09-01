@@ -28,9 +28,7 @@ export type Matcher = {
    * NEW: Introduced during styled replacements, the optional flag should be
    * removed at a later time.
    */
-  replacementStyle?: {
-    useGlobal: boolean;
-  };
+  useGlobalReplacementStyle?: boolean;
 };
 
 export type PopupAlertSeverity = "danger" | "info" | "success";

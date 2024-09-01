@@ -2,7 +2,7 @@ import { Ref } from "preact";
 import { useState } from "preact/hooks";
 import { JSXInternal } from "preact/src/jsx";
 
-import { storageSetByKeys } from "@worm/shared";
+import { isReplacementEmpty, storageSetByKeys } from "@worm/shared";
 import { Matcher } from "@worm/types";
 
 import { useConfig } from "../store/Config";
@@ -12,7 +12,11 @@ import { RefreshRequiredToast } from "./RefreshRequiredToast";
 
 type ReplacementInputProps = Pick<
   Matcher,
-  "active" | "identifier" | "queries" | "replacement" | "replacementStyle"
+  | "active"
+  | "identifier"
+  | "queries"
+  | "replacement"
+  | "useGlobalReplacementStyle"
 > & {
   disabled: boolean;
   inputRef: Ref<HTMLInputElement>;
@@ -30,7 +34,7 @@ export default function ReplacementInput({
   inputRef,
   queries,
   replacement,
-  replacementStyle,
+  useGlobalReplacementStyle,
   onChange,
 }: ReplacementInputProps) {
   const [value, setValue] = useState(replacement);
@@ -48,10 +52,13 @@ export default function ReplacementInput({
 
     if (matcherIdx < 0) return;
 
-    newMatchers[matcherIdx].replacementStyle = {
-      ...newMatchers[matcherIdx].replacementStyle,
-      useGlobal: !Boolean(newMatchers[matcherIdx].replacementStyle?.useGlobal),
-    };
+    newMatchers[matcherIdx].useGlobalReplacementStyle = !Boolean(
+      newMatchers[matcherIdx].useGlobalReplacementStyle
+    );
+
+    if (active && Boolean(queries.length) && !isReplacementEmpty(replacement)) {
+      showToast({ children: <RefreshRequiredToast onClose={hideToast} /> });
+    }
 
     storageSetByKeys({
       matchers: newMatchers,
@@ -97,15 +104,16 @@ export default function ReplacementInput({
           <button
             className="btn btn-outline-secondary border-0 bg-transparent text-secondary"
             title={
-              replacementStyle?.useGlobal
+              useGlobalReplacementStyle
                 ? "Replacement Style Enabled"
                 : "Replacement Style Disabled"
             }
+            type="button"
             onClick={handleActiveChange}
           >
             <span className="d-flex align-items-center">
               <span className="material-icons-sharp fs-6">
-                {replacementStyle?.useGlobal
+                {useGlobalReplacementStyle
                   ? "format_color_text"
                   : "format_color_reset"}
               </span>

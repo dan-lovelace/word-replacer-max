@@ -6,7 +6,9 @@ import { ReplacementStyle, ReplacementStyleOption } from "@worm/types";
 import cx from "../../lib/classnames";
 import { PreactChildren } from "../../lib/types";
 import { useConfig } from "../../store/Config";
+import { useToast } from "../../store/Toast";
 
+import { RefreshRequiredToast } from "../RefreshRequiredToast";
 import Slide from "../transition/Slide";
 
 function ColorInput({
@@ -18,7 +20,7 @@ function ColorInput({
   handleOptionChange,
 }: {
   label: string;
-  name: keyof Pick<ReplacementStyle, "backgroundColor" | "color">;
+  name: keyof Pick<NonNullable<ReplacementStyle>, "backgroundColor" | "color">;
   option: ReplacementStyleOption;
   replacementStyle?: ReplacementStyle;
   handleInputChange: <T extends keyof ReplacementStyle>(
@@ -55,7 +57,7 @@ function ColorInput({
           name={name}
           title={`Select a ${label}`}
           type="color"
-          value={replacementStyle?.[name] ?? DEFAULT_REPLACEMENT_STYLE[name]}
+          value={replacementStyle?.[name] ?? DEFAULT_REPLACEMENT_STYLE?.[name]}
           onChange={handleInputChange(name)}
         />
       </label>
@@ -118,6 +120,7 @@ export default function ReplacementStyles() {
   const {
     storage: { replacementStyle },
   } = useConfig();
+  const { hideToast, showToast } = useToast();
 
   const handleActiveChange = (
     event: JSXInternal.TargetedEvent<HTMLInputElement, Event>
@@ -142,6 +145,10 @@ export default function ReplacementStyles() {
       storageSetByKeys({
         replacementStyle: newReplacementStyle,
       });
+
+      if (replacementStyle?.active) {
+        showToast({ children: <RefreshRequiredToast onClose={hideToast} /> });
+      }
     };
 
   const handleOptionChange =
@@ -160,6 +167,10 @@ export default function ReplacementStyles() {
       storageSetByKeys({
         replacementStyle: newReplacementStyle,
       });
+
+      if (replacementStyle?.active) {
+        showToast({ children: <RefreshRequiredToast onClose={hideToast} /> });
+      }
     };
 
   return (
