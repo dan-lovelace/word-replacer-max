@@ -4,10 +4,23 @@ on:
   pull_request:
     paths:
       - packages/**
+  workflow_dispatch:
+    inputs:
+      environment:
+        default: test
+        description: "Which .env config to use"
+        required: true
+        type: choice
+        options:
+          - development
+          - production
+          - test
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      VITE_MODE: ${{ inputs.environment }}
 
     steps:
       - uses: actions/checkout@v4
