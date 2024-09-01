@@ -2,10 +2,10 @@ import { v4 as uuidv4 } from "uuid";
 
 import {
   CURRENT_STORAGE_VERSION,
-  DEFAULT_REPLACEMENT_STYLE,
   storageGetByKeys,
   storageSetByKeys,
 } from "@worm/shared";
+import { DEFAULT_REPLACEMENT_STYLE } from "@worm/shared/src/replace/lib/style";
 import { Matcher, Storage } from "@worm/types";
 
 export async function initializeStorage() {

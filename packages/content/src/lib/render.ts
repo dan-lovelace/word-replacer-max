@@ -1,9 +1,8 @@
+import { isDomainAllowed, replaceAll, storageGetByKeys } from "@worm/shared";
 import {
-  isDomainAllowed,
-  logDebug,
-  replaceAll,
-  storageGetByKeys,
-} from "@worm/shared";
+  getStylesheet,
+  STYLE_ELEMENT_ID,
+} from "@worm/shared/src/replace/lib/style";
 import { Storage } from "@worm/types";
 
 type Cacheable<T> = {
@@ -18,7 +17,6 @@ type RenderCache = {
 
 const RENDER_STORAGE_CACHE_LENGTH_MS = 100;
 const RENDER_STYLE_CACHE_LENGTH_MS = 1000;
-const STYLE_ELEMENT_ID = "wrm-style";
 
 const renderCache: RenderCache = {
   storage: {
@@ -55,43 +53,7 @@ export async function renderContent(msg = "") {
           value: existingStyleElement,
         };
       } else {
-        const newStyleElement = document.createElement("style");
-        newStyleElement.id = STYLE_ELEMENT_ID;
-
-        const stylesheet = document.createTextNode(`
-          .wrm-style__backgroundColor {
-            background-color: ${
-              String(storage.replacementStyle?.backgroundColor) || "unset"
-            } !important;
-          }
-
-          .wrm-style__bold {
-            font-weight: 700 !important;
-          }
-
-          .wrm-style__color {
-            color: ${
-              String(storage.replacementStyle?.color) || "unset"
-            } !important;
-          }
-
-          .wrm-style__italic {
-            font-style: italic !important; 
-          }
-
-          .wrm-style__strikethrough {
-            text-decoration: line-through !important;
-          }
-
-          .wrm-style__underline {
-            text-decoration: underline !important;
-          }
-
-          .wrm-style__strikethrough.wrm-style__underline {
-            text-decoration: line-through underline !important;
-          }
-        `);
-        newStyleElement.appendChild(stylesheet);
+        const newStyleElement = getStylesheet(storage.replacementStyle);
 
         document.head.appendChild(newStyleElement);
 

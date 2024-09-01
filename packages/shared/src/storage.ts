@@ -1,6 +1,5 @@
 import {
   Matcher,
-  ReplacementStyle,
   Storage,
   StorageKey,
   StorageSetOptions,
@@ -16,13 +15,6 @@ const {
 } = browser;
 
 export const CURRENT_STORAGE_VERSION: StorageVersion = "1.0.0";
-
-export const DEFAULT_REPLACEMENT_STYLE: ReplacementStyle = {
-  active: false,
-  backgroundColor: "#ffc107",
-  color: "#dc3545",
-  options: ["backgroundColor"],
-};
 
 export const storageGet = sync.get;
 export const storageRemove = sync.remove;

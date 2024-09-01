@@ -1,6 +1,7 @@
 import { JSXInternal } from "preact/src/jsx";
 
-import { DEFAULT_REPLACEMENT_STYLE, storageSetByKeys } from "@worm/shared";
+import { storageSetByKeys } from "@worm/shared";
+import { DEFAULT_REPLACEMENT_STYLE } from "@worm/shared/src/replace/lib/style";
 import { ReplacementStyle, ReplacementStyleOption } from "@worm/types";
 
 import cx from "../../lib/classnames";
