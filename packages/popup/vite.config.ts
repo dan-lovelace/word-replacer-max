@@ -1,7 +1,7 @@
 import { join } from "path";
 
 import preact from "@preact/preset-vite";
-import { defineConfig, UserConfig } from "vite";
+import { defineConfig, loadEnv, UserConfig } from "vite";
 
 const outDir = join(__dirname, "..", "..", "dist");
 
@@ -45,6 +45,13 @@ const modeConfig: Record<string, UserConfig> = {
   },
 };
 
-export default defineConfig(
-  ({ mode }) => modeConfig[mode] || modeConfig.production
-);
+export default defineConfig(({ mode }) => {
+  if (process.env.VITE_MODE) {
+    process.env = {
+      ...process.env,
+      ...loadEnv(process.env.VITE_MODE, process.cwd()),
+    };
+  }
+
+  return modeConfig[mode] || modeConfig.production;
+});
