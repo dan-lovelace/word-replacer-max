@@ -14,7 +14,12 @@ function searchAndReplace(
 ) {
   const results = findText(element, query, queryPatterns);
 
-  replaceText(results[0], query, queryPatterns, replacement);
+  replaceText(
+    results[0],
+    query,
+    { queryPatterns, replacement, useGlobalReplacementStyle: true },
+    undefined
+  );
 }
 
 describe("replaceText", () => {
