@@ -5,7 +5,6 @@ import {
   storageGetByKeys,
   storageSetByKeys,
 } from "@worm/shared";
-import { DEFAULT_REPLACEMENT_STYLE } from "@worm/shared/src/replace/lib/style";
 import { Matcher, Storage } from "@worm/types";
 
 export async function initializeStorage() {
@@ -15,8 +14,6 @@ export async function initializeStorage() {
     await storageSetByKeys({
       storageVersion: CURRENT_STORAGE_VERSION,
     });
-  } else if (storageVersion !== CURRENT_STORAGE_VERSION) {
-    // perform any necessary migrations before proceeding
   }
 
   const { domainList, exportLinks, matchers, preferences, replacementStyle } =
@@ -68,10 +65,6 @@ export async function initializeStorage() {
       extensionEnabled: true,
       focusRule: "",
     };
-  }
-
-  if (replacementStyle === undefined) {
-    initialStorage.replacementStyle = DEFAULT_REPLACEMENT_STYLE;
   }
 
   await storageSetByKeys(initialStorage);

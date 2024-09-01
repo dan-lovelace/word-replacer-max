@@ -1,0 +1,148 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`runStorageMigrations does not run migrations when on the latest version 1.0.0 1`] = `
+{
+  "domainList": [],
+  "exportLinks": [],
+  "matcher__b7fce47e-58e8-4409-adf4-08da053e713d": {
+    "active": true,
+    "identifier": "b7fce47e-58e8-4409-adf4-08da053e713d",
+    "queries": [
+      "my jaw dropped",
+      "I was shocked",
+    ],
+    "queryPatterns": [],
+    "replacement": "I was surprised",
+  },
+  "preferences": {
+    "activeTab": "rules",
+    "domainListEffect": "deny",
+    "extensionEnabled": true,
+    "focusRule": "",
+  },
+  "storageVersion": "1.0.0",
+}
+`;
+
+exports[`runStorageMigrations does not run migrations when on the latest version 1.1.0 1`] = `
+{
+  "domainList": [],
+  "exportLinks": [],
+  "matcher__b7fce47e-58e8-4409-adf4-08da053e713d": {
+    "active": true,
+    "identifier": "b7fce47e-58e8-4409-adf4-08da053e713d",
+    "queries": [
+      "my jaw dropped",
+      "I was shocked",
+    ],
+    "queryPatterns": [],
+    "replacement": "I was surprised",
+    "useGlobalReplacementStyle": true,
+  },
+  "preferences": {
+    "activeTab": "rules",
+    "domainListEffect": "deny",
+    "extensionEnabled": true,
+    "focusRule": "",
+  },
+  "replacementStyle": {
+    "active": false,
+    "backgroundColor": "#ffc107",
+    "color": "#dc3545",
+    "options": [
+      "backgroundColor",
+    ],
+  },
+  "storageVersion": "1.1.0",
+}
+`;
+
+exports[`runStorageMigrations migrates from 1.0.0 to 1.1.0 1`] = `
+{
+  "domainList": [],
+  "exportLinks": [],
+  "matcher__b7fce47e-58e8-4409-adf4-08da053e713d": {
+    "active": true,
+    "identifier": "b7fce47e-58e8-4409-adf4-08da053e713d",
+    "queries": [
+      "my jaw dropped",
+      "I was shocked",
+    ],
+    "queryPatterns": [],
+    "replacement": "I was surprised",
+    "useGlobalReplacementStyle": true,
+  },
+  "preferences": {
+    "activeTab": "rules",
+    "domainListEffect": "deny",
+    "extensionEnabled": true,
+    "focusRule": "",
+  },
+  "replacementStyle": {
+    "active": false,
+    "backgroundColor": "#ffc107",
+    "color": "#dc3545",
+    "options": [
+      "backgroundColor",
+    ],
+  },
+  "storageVersion": "1.1.0",
+}
+`;
+
+exports[`runStorageMigrations migrates from undefined version to 1.0.0 1`] = `
+{
+  "domainList": [],
+  "exportLinks": [],
+  "matcher__b7fce47e-58e8-4409-adf4-08da053e713d": {
+    "active": true,
+    "identifier": "b7fce47e-58e8-4409-adf4-08da053e713d",
+    "queries": [
+      "my jaw dropped",
+      "I was shocked",
+    ],
+    "queryPatterns": [],
+    "replacement": "I was surprised",
+  },
+  "preferences": {
+    "activeTab": "rules",
+    "domainListEffect": "deny",
+    "extensionEnabled": true,
+    "focusRule": "",
+  },
+  "storageVersion": "1.0.0",
+}
+`;
+
+exports[`runStorageMigrations migrates from undefined version to 1.1.0 1`] = `
+{
+  "domainList": [],
+  "exportLinks": [],
+  "matcher__b7fce47e-58e8-4409-adf4-08da053e713d": {
+    "active": true,
+    "identifier": "b7fce47e-58e8-4409-adf4-08da053e713d",
+    "queries": [
+      "my jaw dropped",
+      "I was shocked",
+    ],
+    "queryPatterns": [],
+    "replacement": "I was surprised",
+    "useGlobalReplacementStyle": true,
+  },
+  "preferences": {
+    "activeTab": "rules",
+    "domainListEffect": "deny",
+    "extensionEnabled": true,
+    "focusRule": "",
+  },
+  "replacementStyle": {
+    "active": false,
+    "backgroundColor": "#ffc107",
+    "color": "#dc3545",
+    "options": [
+      "backgroundColor",
+    ],
+  },
+  "storageVersion": "1.1.0",
+}
+`;

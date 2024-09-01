@@ -2,7 +2,8 @@ import { z } from "zod";
 
 const queryPatterns = ["case", "default", "regex", "wholeWord"] as const;
 const schemaVersions = [1] as const;
-const storageVersions = ["1.0.0"] as const;
+
+export const storageVersions = ["0.0.0", "1.0.0", "1.1.0"] as const;
 
 export type DeepPartial<T> = T extends object
   ? {

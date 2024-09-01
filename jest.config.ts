@@ -9,9 +9,9 @@ module.exports = {
     "^webextension-polyfill$": path.join(
       process.cwd(),
       "packages",
-      "shared",
-      "__mocks__",
-      "browser.ts"
+      "testing",
+      "src",
+      "test-browser.ts"
     ),
   },
 };
