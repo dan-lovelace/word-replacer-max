@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "preact/hooks";
+import { useEffect, useState } from "preact/hooks";
 
 import { formatUnixTimestamp, storageSetByKeys } from "@worm/shared";
 import { ExportLink as ExportLinkType } from "@worm/types";

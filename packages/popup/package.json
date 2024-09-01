@@ -8,7 +8,7 @@
     "build": "tsc && vite build",
     "cypress:open": "cypress open --e2e --browser chrome",
     "cypress:run": "cypress run",
-    "dev": "vite --host --mode test",
+    "dev": "vite --host --mode ${VITE_MODE:-test}",
     "start": "yarn build --watch --mode development",
     "test": "echo \"Error: no test specified\" && exit 0"
   },
