@@ -13,10 +13,10 @@ function ColumnContent({ children }: { children: PreactChildren }) {
 export default function Options() {
   return (
     <>
-      <div className="container-fluid gx-0 d-flex flex-column gap-4">
+      <div className="container-fluid gx-0 d-flex flex-column gap-3">
         <div className="row">
           <div className={COPY_CONTAINER_COL_CLASS}>
-            <div className="fw-bold fs-5">General</div>
+            <div className="fw-bold fs-5">General Settings</div>
             <ColumnContent>
               <ReplacementStyles />
             </ColumnContent>
@@ -24,7 +24,7 @@ export default function Options() {
         </div>
         <div className="row">
           <div className={COPY_CONTAINER_COL_CLASS}>
-            <div className="fw-bold fs-5">Export</div>
+            <div className="fw-bold fs-5">Export Rules</div>
             <ColumnContent>
               <div className="fs-sm mb-2">
                 Create a convenient shareable web link or export your rules to a
@@ -46,7 +46,7 @@ export default function Options() {
         </div>
         <div className="row">
           <div className={COPY_CONTAINER_COL_CLASS}>
-            <div className="fw-bold fs-5">Import</div>
+            <div className="fw-bold fs-5">Import Rules</div>
             <ColumnContent>
               <div className="fs-sm mb-2">
                 Easily add to your existing settings by importing new rules,
