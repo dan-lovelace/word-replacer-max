@@ -120,6 +120,8 @@ export default function ReplacementStyles() {
   const language = useLanguage();
   const { showToast } = useToast();
 
+  const isActive = Boolean(replacementStyle?.active);
+
   const handleActiveChange = (
     event: JSXInternal.TargetedEvent<HTMLInputElement, Event>
   ) => {
@@ -179,7 +181,7 @@ export default function ReplacementStyles() {
       replacementStyle: newReplacementStyle,
     });
 
-    if (replacementStyle?.active) {
+    if (isActive) {
       showToast({
         message: language.rules.REFRESH_REQUIRED,
         options: { showRefresh: true },
@@ -191,7 +193,7 @@ export default function ReplacementStyles() {
     <>
       <div className="form-check form-switch ps-0 d-flex align-items-center gap-2">
         <input
-          checked={replacementStyle?.active}
+          checked={isActive}
           className="form-check-input m-0"
           data-testid="active-toggle"
           id="highlight-enabled-checkbox"
@@ -206,7 +208,7 @@ export default function ReplacementStyles() {
           Styled replacements
         </label>
       </div>
-      {!replacementStyle?.active && (
+      <Slide isOpen={!isActive}>
         <IndentedContent>
           <p className="fs-sm">
             Apply styles like bold, underline, and background color to all
@@ -214,8 +216,8 @@ export default function ReplacementStyles() {
             as needed.
           </p>
         </IndentedContent>
-      )}
-      <Slide isOpen={replacementStyle?.active}>
+      </Slide>
+      <Slide isOpen={isActive}>
         <IndentedContent className="py-1">
           <div
             aria-label="Text Decorators"
