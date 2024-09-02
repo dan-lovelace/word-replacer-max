@@ -206,16 +206,20 @@ export default function ReplacementStyles() {
           Styled replacements
         </label>
       </div>
+      {!replacementStyle?.active && (
+        <IndentedContent>
+          <p className="fs-sm">
+            Apply styles like bold, underline, and background color to all
+            replaced text. Styles may be turned off for individual replacements
+            as needed.
+          </p>
+        </IndentedContent>
+      )}
       <Slide isOpen={replacementStyle?.active}>
         <IndentedContent className="py-1">
-          <p className="fs-sm">
-            Replaced text will show up in your browser with the following
-            styles. You may disable these settings for individual rules in the
-            Rules list.
-          </p>
           <div
             aria-label="Text Decorators"
-            className="btn-group mb-2"
+            className="btn-group my-2"
             role="group"
           >
             <DecoratorInput

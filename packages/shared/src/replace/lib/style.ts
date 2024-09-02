@@ -45,11 +45,14 @@ export function getStylesheet(replacementStyle?: ReplacementStyle) {
   const newStyleElement = document.createElement("style");
   newStyleElement.id = STYLE_ELEMENT_ID;
 
+  const paddingAmount = replacementStyle?.options?.includes("bold") ? 2 : 1;
   const stylesheet = `
     .wrm-style__backgroundColor {
       background-color: ${
         String(replacementStyle?.backgroundColor) || "unset"
       } !important;
+      padding-left: ${paddingAmount}px !important;
+      padding-right: ${paddingAmount}px !important;
     }
 
     .wrm-style__bold {

@@ -40,18 +40,10 @@ export default function ColorPick({
 
   return (
     <div className={cx("input-group", className)}>
-      <input
-        className="form-control"
-        placeholder="#000000"
-        size={12}
-        type="text"
-        value={selectedColor}
-        onChange={handleInputChange}
-      />
       <div className="dropdown">
         <Button
           aria-expanded={false}
-          className="btn btn-outline-primary rounded-start-0 h-100"
+          className="btn btn-outline-primary rounded-end-0 h-100"
           data-bs-toggle="dropdown"
           data-test-id="color-pick-dropdown-button"
           id={`dropdown-button-${name}`}
@@ -92,6 +84,14 @@ export default function ColorPick({
           )}
         </ul>
       </div>
+      <input
+        className="form-control"
+        placeholder="#000000"
+        size={8}
+        type="text"
+        value={selectedColor}
+        onChange={handleInputChange}
+      />
     </div>
   );
 }
