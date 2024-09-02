@@ -1,7 +1,7 @@
 import { useState } from "preact/hooks";
 import { JSXInternal } from "preact/src/jsx";
 
-import { ReplacementStyle } from "@worm/types";
+import { systemColors } from "@worm/shared/src/replace/lib/style";
 
 import cx from "../lib/classnames";
 
@@ -16,21 +16,6 @@ type ColorPickProps = {
     event: JSXInternal.TargetedEvent<HTMLInputElement, Event>
   ) => void;
 };
-
-const systemColors = [
-  "#FFFF00",
-  "#ADD8E6",
-  "#00FF00",
-  "#FF6600",
-  "#00FFFF",
-  "#800080",
-  "#DC143C",
-  "#FFD700",
-  "#FF1493",
-  "#008080",
-  "#ffffff",
-  "#000000",
-];
 
 export default function ColorPick({
   className,
@@ -58,7 +43,7 @@ export default function ColorPick({
       <input
         className="form-control"
         placeholder="#000000"
-        size={8}
+        size={12}
         type="text"
         value={selectedColor}
         onChange={handleInputChange}
@@ -86,23 +71,25 @@ export default function ColorPick({
           data-testid="color-pick-dropdown-menu"
           style={{ minWidth: "unset" }}
         >
-          {systemColors.map((color, index) => (
-            <li key={index}>
-              <Button
-                className="dropdown-item text-center"
-                onClick={() => handleColorSelect(color)}
-              >
-                <span
-                  className="border rounded"
-                  style={{
-                    backgroundColor: color,
-                    height: 20,
-                    width: 40,
-                  }}
-                />
-              </Button>
-            </li>
-          ))}
+          {(Object.keys(systemColors) as (keyof typeof systemColors)[]).map(
+            (color, index) => (
+              <li key={index}>
+                <Button
+                  className="dropdown-item text-center"
+                  onClick={() => handleColorSelect(systemColors[color])}
+                >
+                  <span
+                    className="border rounded"
+                    style={{
+                      backgroundColor: systemColors[color],
+                      height: 20,
+                      width: 40,
+                    }}
+                  />
+                </Button>
+              </li>
+            )
+          )}
         </ul>
       </div>
     </div>

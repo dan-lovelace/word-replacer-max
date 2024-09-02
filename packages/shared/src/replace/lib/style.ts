@@ -1,9 +1,41 @@
 import { ReplacementStyle } from "@worm/types";
 
+type SystemColor =
+  | "black"
+  | "blue"
+  | "blueGray"
+  | "cyan"
+  | "green"
+  | "orange"
+  | "pink"
+  | "red"
+  | "white"
+  | "yellow";
+
+export const systemColors: Record<SystemColor, string> = {
+  /**
+   * System colors sorted by hue.
+   */
+  blueGray: "#add8e6",
+  cyan: "#34caf0",
+  green: "#00e500",
+  yellow: "#ffd700",
+  orange: "#ff6600",
+  red: "#dc3545",
+  pink: "#ff1493",
+  blue: "#025ade",
+
+  /**
+   * Common colors.
+   */
+  white: "#ffffff",
+  black: "#000000",
+};
+
 export const DEFAULT_REPLACEMENT_STYLE: ReplacementStyle = {
   active: false,
-  backgroundColor: "#add8e6",
-  color: "#dc3545",
+  backgroundColor: systemColors.blueGray,
+  color: systemColors.red,
   options: ["backgroundColor"],
 };
 
