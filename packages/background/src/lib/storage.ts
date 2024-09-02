@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 
 import {
-  CURRENT_STORAGE_VERSION,
+  BASELINE_STORAGE_VERSION,
   storageGetByKeys,
   storageSetByKeys,
 } from "@worm/shared";
@@ -12,7 +12,7 @@ export async function initializeStorage() {
 
   if (storageVersion === undefined) {
     await storageSetByKeys({
-      storageVersion: CURRENT_STORAGE_VERSION,
+      storageVersion: BASELINE_STORAGE_VERSION,
     });
   }
 

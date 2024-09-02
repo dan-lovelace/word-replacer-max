@@ -1,6 +1,7 @@
 import { merge } from "ts-deepmerge";
 
 import {
+  BASELINE_STORAGE_VERSION,
   CURRENT_STORAGE_VERSION,
   logDebug,
   STORAGE_MATCHER_PREFIX,
@@ -90,7 +91,7 @@ export async function runStorageMigrations(
      * old installation so we need to start from scratch.
      */
     await storageSet({
-      storageVersion: "0.0.0",
+      storageVersion: BASELINE_STORAGE_VERSION,
     });
 
     storageVersion = await fetchStorageVersion();
@@ -113,6 +114,8 @@ export async function runStorageMigrations(
     return;
   }
 
+  let migrationCount = 0;
+
   for (const version of storageVersions) {
     if (!storageVersion) continue;
     if (!isVersionGreaterThan(againstVersion, version)) continue;
@@ -130,6 +133,12 @@ export async function runStorageMigrations(
     const newStorage = migrateFn(currentStorage);
 
     await storageSet(newStorage);
+
+    migrationCount += 1;
     storageVersion = await fetchStorageVersion();
+  }
+
+  if (migrationCount > 0) {
+    logDebug("Successfully applied", migrationCount, "migration(s)");
   }
 }
