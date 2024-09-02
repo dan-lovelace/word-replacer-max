@@ -130,6 +130,11 @@ export default function ReplacementStyles() {
     storageSetByKeys({
       replacementStyle: newReplacementStyle,
     });
+
+    showToast({
+      message: language.rules.REFRESH_REQUIRED,
+      options: { showRefresh: true },
+    });
   };
 
   const handleColorChange =

@@ -1,5 +1,14 @@
 import { PopupAlertSeverity } from "@worm/types";
 
+export type ShowToastMessageOptions = {
+  message: string;
+  options?: {
+    severity?: PopupAlertSeverity;
+    showContactSupport?: boolean;
+    showRefresh?: boolean;
+  };
+};
+
 export interface ToastMessage<T extends ToastMessageKind> extends MessageEvent {
   data: {
     details?: ToastMessageKindMap[T];
@@ -14,15 +23,6 @@ export type ToastMessageKind = keyof ToastMessageKindMap;
 
 export type ToastMessageKindMap = {
   showToastMessage: ShowToastMessageOptions;
-};
-
-export type ShowToastMessageOptions = {
-  message: string;
-  options?: {
-    severity?: PopupAlertSeverity;
-    showContactSupport?: boolean;
-    showRefresh?: boolean;
-  };
 };
 
 export const DURATION_DEFAULT_MS = 4000;

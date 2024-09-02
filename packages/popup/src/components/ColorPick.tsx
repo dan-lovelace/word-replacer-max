@@ -91,7 +91,6 @@ export default function ColorPick({
                   className="border rounded"
                   style={{
                     backgroundColor: color,
-                    color: "#fff",
                     height: 20,
                     width: 40,
                   }}

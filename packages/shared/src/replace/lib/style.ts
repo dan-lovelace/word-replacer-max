@@ -12,6 +12,7 @@ export const STYLE_ELEMENT_ID = "wrm-style";
 export function getStylesheet(replacementStyle?: ReplacementStyle) {
   const newStyleElement = document.createElement("style");
   newStyleElement.id = STYLE_ELEMENT_ID;
+
   const stylesheet = `
     .wrm-style__backgroundColor {
       background-color: ${
@@ -43,8 +44,8 @@ export function getStylesheet(replacementStyle?: ReplacementStyle) {
       text-decoration: line-through underline !important;
     }
   `;
-
   const stylesheetNode = document.createTextNode(stylesheet);
+
   newStyleElement.appendChild(stylesheetNode);
 
   return newStyleElement;

@@ -5,8 +5,8 @@ type UseToastResult = {
 };
 
 export function useToast(): UseToastResult {
-  const showToast = (event: ShowToastMessageOptions) => {
-    const toastEvent = createToastMessage("showToastMessage", event);
+  const showToast = (options: ShowToastMessageOptions) => {
+    const toastEvent = createToastMessage("showToastMessage", options);
 
     window.postMessage(toastEvent);
   };

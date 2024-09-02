@@ -16,13 +16,12 @@ export async function initializeStorage() {
     });
   }
 
-  const { domainList, exportLinks, matchers, preferences, replacementStyle } =
+  const { domainList, exportLinks, matchers, preferences } =
     await storageGetByKeys([
       "domainList",
       "exportLinks",
       "matchers",
       "preferences",
-      "replacementStyle",
     ]);
 
   const initialStorage: Storage = {};

@@ -1,8 +1,10 @@
 import { merge } from "ts-deepmerge";
 
-import { DEFAULT_REPLACEMENT_STYLE } from "@worm/shared/src/replace/lib/style";
+import {
+  DEFAULT_REPLACEMENT_STYLE,
+  getStylesheet,
+} from "@worm/shared/src/replace/lib/style";
 import { findText, replaceText } from "@worm/shared/src/replace";
-import { getStylesheet } from "@worm/shared/src/replace/lib/style";
 import { QueryPattern, ReplacementStyle } from "@worm/types";
 
 import { selectors as s } from "../support/selectors";

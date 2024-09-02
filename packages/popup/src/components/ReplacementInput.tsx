@@ -9,6 +9,7 @@ import { useLanguage } from "../lib/language";
 import { useConfig } from "../store/Config";
 
 import { useToast } from "./alert/useToast";
+import Button from "./button/Button";
 
 type ReplacementInputProps = Pick<
   Matcher,
@@ -108,14 +109,13 @@ export default function ReplacementInput({
           onInput={handleTextChange}
         />
         {globalReplacementStyle?.active && (
-          <button
+          <Button
             className="btn btn-outline-secondary border-0 bg-transparent text-secondary"
             title={
               useGlobalReplacementStyle
                 ? "Replacement Style Enabled"
                 : "Replacement Style Disabled"
             }
-            type="button"
             onClick={handleActiveChange}
           >
             <span className="d-flex align-items-center">
@@ -125,12 +125,12 @@ export default function ReplacementInput({
                   : "format_color_reset"}
               </span>
             </span>
-          </button>
+          </Button>
         )}
       </div>
-      <button className="visually-hidden" type="submit">
+      <Button className="visually-hidden" type="submit">
         Add
-      </button>
+      </Button>
     </form>
   );
 }

@@ -3,8 +3,8 @@ import { LocationProvider, Router, Route } from "preact-iso";
 
 import { POPUP_ROUTES } from "@worm/shared";
 
-import Layout from "./containers/Layout";
 import ToastContainer from "./components/alert/ToastContainer";
+import Layout from "./containers/Layout";
 import HomePage from "./pages/Home";
 import NotFoundPage from "./pages/NotFound";
 import { ConfigProvider } from "./store/Config";
