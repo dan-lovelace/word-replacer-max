@@ -1,6 +1,8 @@
 import { useState } from "preact/hooks";
 import { JSXInternal } from "preact/src/jsx";
 
+import { ReplacementStyle } from "@worm/types";
+
 import cx from "../lib/classnames";
 
 import Button from "./button/Button";
@@ -9,7 +11,10 @@ type ColorPickProps = {
   className?: boolean | string;
   name: string;
   value?: string;
-  onChange: (event: JSXInternal.TargetedEvent<HTMLInputElement, Event>) => void;
+  onColorChange: (color: string) => void;
+  onInputChange: (
+    event: JSXInternal.TargetedEvent<HTMLInputElement, Event>
+  ) => void;
 };
 
 const systemColors = [
@@ -26,19 +31,21 @@ export default function ColorPick({
   className,
   name,
   value,
-  onChange,
+  onColorChange,
+  onInputChange,
 }: ColorPickProps) {
   const [selectedColor, setSelectedColor] = useState(value);
 
   const handleColorSelect = (color: string) => {
     setSelectedColor(color);
+    onColorChange(color);
   };
 
   const handleInputChange = (
     event: JSXInternal.TargetedEvent<HTMLInputElement, Event>
   ) => {
     setSelectedColor(event.currentTarget.value);
-    onChange(event);
+    onInputChange(event);
   };
 
   return (

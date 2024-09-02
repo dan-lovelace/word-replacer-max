@@ -17,6 +17,7 @@ function ColorInput({
   name,
   option,
   replacementStyle,
+  handleColorChange,
   handleInputChange,
   handleOptionChange,
 }: {
@@ -24,6 +25,9 @@ function ColorInput({
   name: keyof Pick<NonNullable<ReplacementStyle>, "backgroundColor" | "color">;
   option: ReplacementStyleOption;
   replacementStyle?: ReplacementStyle;
+  handleColorChange: <T extends keyof ReplacementStyle>(
+    name: T
+  ) => (color: string) => void;
   handleInputChange: <T extends keyof ReplacementStyle>(
     name: T
   ) => (event: JSXInternal.TargetedEvent<HTMLInputElement, Event>) => void;
@@ -51,7 +55,8 @@ function ColorInput({
         className={!replacementStyle?.options?.includes(option) && "invisible"}
         name={name}
         value={replacementStyle?.[name] ?? DEFAULT_REPLACEMENT_STYLE?.[name]}
-        onChange={handleInputChange(name)}
+        onColorChange={handleColorChange(name)}
+        onInputChange={handleInputChange(name)}
       />
     </>
   );
@@ -127,6 +132,16 @@ export default function ReplacementStyles() {
     });
   };
 
+  const handleColorChange =
+    <T extends keyof ReplacementStyle>(name: T) =>
+    (color: string) => {
+      const newReplacementStyle = Object.assign({}, replacementStyle);
+
+      newReplacementStyle[name] = color as ReplacementStyle[T];
+
+      updateStorage(newReplacementStyle);
+    };
+
   const handleInputChange =
     <T extends keyof ReplacementStyle>(name: T) =>
     (event: JSXInternal.TargetedEvent<HTMLInputElement, Event>) => {
@@ -135,16 +150,7 @@ export default function ReplacementStyles() {
       newReplacementStyle[name] = event.currentTarget
         .value as ReplacementStyle[T];
 
-      storageSetByKeys({
-        replacementStyle: newReplacementStyle,
-      });
-
-      if (replacementStyle?.active) {
-        showToast({
-          message: language.rules.REFRESH_REQUIRED,
-          options: { showRefresh: true },
-        });
-      }
+      updateStorage(newReplacementStyle);
     };
 
   const handleOptionChange =
@@ -160,17 +166,21 @@ export default function ReplacementStyles() {
         );
       }
 
-      storageSetByKeys({
-        replacementStyle: newReplacementStyle,
-      });
-
-      if (replacementStyle?.active) {
-        showToast({
-          message: language.rules.REFRESH_REQUIRED,
-          options: { showRefresh: true },
-        });
-      }
+      updateStorage(newReplacementStyle);
     };
+
+  const updateStorage = (newReplacementStyle: ReplacementStyle) => {
+    storageSetByKeys({
+      replacementStyle: newReplacementStyle,
+    });
+
+    if (replacementStyle?.active) {
+      showToast({
+        message: language.rules.REFRESH_REQUIRED,
+        options: { showRefresh: true },
+      });
+    }
+  };
 
   return (
     <>
@@ -241,6 +251,7 @@ export default function ReplacementStyles() {
                   name="backgroundColor"
                   option="backgroundColor"
                   replacementStyle={replacementStyle}
+                  handleColorChange={handleColorChange}
                   handleInputChange={handleInputChange}
                   handleOptionChange={handleOptionChange}
                 />
@@ -253,6 +264,7 @@ export default function ReplacementStyles() {
                   name="color"
                   option="color"
                   replacementStyle={replacementStyle}
+                  handleColorChange={handleColorChange}
                   handleInputChange={handleInputChange}
                   handleOptionChange={handleOptionChange}
                 />
