@@ -23,9 +23,9 @@ export function App() {
               <Route default component={NotFoundPage} />
             </Router>
           </Layout>
+          <ToastContainer />
         </LocationProvider>
       </ConfigProvider>
-      <ToastContainer />
     </>
   );
 }
