@@ -18,11 +18,16 @@ type ColorPickProps = {
 };
 
 const systemColors = [
-  "#0d6efd",
-  "#1a8754",
-  "#dc3545",
-  "#fbc108",
-  "#34caf0",
+  "#FFFF00",
+  "#ADD8E6",
+  "#00FF00",
+  "#FF6600",
+  "#00FFFF",
+  "#800080",
+  "#DC143C",
+  "#FFD700",
+  "#FF1493",
+  "#008080",
   "#ffffff",
   "#000000",
 ];

@@ -2,7 +2,7 @@ import { ReplacementStyle } from "@worm/types";
 
 export const DEFAULT_REPLACEMENT_STYLE: ReplacementStyle = {
   active: false,
-  backgroundColor: "#ffc107",
+  backgroundColor: "#add8e6",
   color: "#dc3545",
   options: ["backgroundColor"],
 };
