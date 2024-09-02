@@ -47,6 +47,7 @@ export default function Slide({ isOpen, children }: SlideProps) {
       style={{
         maxHeight: height,
         opacity: isOpen ? 1 : 0,
+        overflow: isOpen ? "visible" : "hidden",
         transition: `max-height ${TRANSITION_DURATION_MS}ms, opacity ${TRANSITION_DURATION_MS}ms`,
       }}
     >

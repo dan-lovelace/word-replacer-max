@@ -10,7 +10,7 @@
     "cypress:run": "cypress run",
     "dev": "vite --host --mode test",
     "start": "yarn build --watch --mode development",
-    "test": "echo \"Error: no test specified\" && exit 0"
+    "test": "yarn run cypress:run"
   },
   "dependencies": {
     "@popperjs/core": "^2.11.8",

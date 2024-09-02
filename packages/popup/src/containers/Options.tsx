@@ -37,7 +37,6 @@ export default function Options() {
                 data-bs-target="#export-modal"
                 data-testid="export-button"
                 startIcon="upload"
-                type="button"
               >
                 Export
               </Button>
