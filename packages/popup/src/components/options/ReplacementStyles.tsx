@@ -4,12 +4,12 @@ import { storageSetByKeys } from "@worm/shared";
 import { DEFAULT_REPLACEMENT_STYLE } from "@worm/shared/src/replace/lib/style";
 import { ReplacementStyle, ReplacementStyleOption } from "@worm/types";
 
-import cx from "../../lib/classnames";
+import { useLanguage } from "../../lib/language";
 import { PreactChildren } from "../../lib/types";
 import { useConfig } from "../../store/Config";
-import { useToast } from "../../store/Toast";
 
-import { RefreshRequiredToast } from "../RefreshRequiredToast";
+import { useToast } from "../alert/useToast";
+import ColorPick from "../ColorPick";
 import Slide from "../transition/Slide";
 
 function ColorInput({
@@ -47,21 +47,12 @@ function ColorInput({
           {label}
         </label>
       </div>
-      <label
-        className={cx(
-          "form-label mb-0",
-          !replacementStyle?.options?.includes(option) && "invisible"
-        )}
-      >
-        <input
-          class="form-control form-control-color"
-          name={name}
-          title={`Select a ${label}`}
-          type="color"
-          value={replacementStyle?.[name] ?? DEFAULT_REPLACEMENT_STYLE?.[name]}
-          onChange={handleInputChange(name)}
-        />
-      </label>
+      <ColorPick
+        className={!replacementStyle?.options?.includes(option) && "invisible"}
+        name={name}
+        value={replacementStyle?.[name] ?? DEFAULT_REPLACEMENT_STYLE?.[name]}
+        onChange={handleInputChange(name)}
+      />
     </>
   );
 }
@@ -121,7 +112,8 @@ export default function ReplacementStyles() {
   const {
     storage: { replacementStyle },
   } = useConfig();
-  const { hideToast, showToast } = useToast();
+  const language = useLanguage();
+  const { showToast } = useToast();
 
   const handleActiveChange = (
     event: JSXInternal.TargetedEvent<HTMLInputElement, Event>
@@ -148,7 +140,10 @@ export default function ReplacementStyles() {
       });
 
       if (replacementStyle?.active) {
-        showToast({ children: <RefreshRequiredToast onClose={hideToast} /> });
+        showToast({
+          message: language.rules.REFRESH_REQUIRED,
+          options: { showRefresh: true },
+        });
       }
     };
 
@@ -170,7 +165,10 @@ export default function ReplacementStyles() {
       });
 
       if (replacementStyle?.active) {
-        showToast({ children: <RefreshRequiredToast onClose={hideToast} /> });
+        showToast({
+          message: language.rules.REFRESH_REQUIRED,
+          options: { showRefresh: true },
+        });
       }
     };
 

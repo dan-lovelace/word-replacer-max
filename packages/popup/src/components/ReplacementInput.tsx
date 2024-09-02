@@ -5,10 +5,10 @@ import { JSXInternal } from "preact/src/jsx";
 import { isReplacementEmpty, storageSetByKeys } from "@worm/shared";
 import { Matcher } from "@worm/types";
 
+import { useLanguage } from "../lib/language";
 import { useConfig } from "../store/Config";
-import { useToast } from "../store/Toast";
 
-import { RefreshRequiredToast } from "./RefreshRequiredToast";
+import { useToast } from "./alert/useToast";
 
 type ReplacementInputProps = Pick<
   Matcher,
@@ -42,7 +42,8 @@ export default function ReplacementInput({
   const {
     storage: { matchers, replacementStyle: globalReplacementStyle },
   } = useConfig();
-  const { hideToast, showToast } = useToast();
+  const language = useLanguage();
+  const { showToast } = useToast();
 
   const handleActiveChange = () => {
     const newMatchers = [...(matchers || [])];
@@ -57,7 +58,10 @@ export default function ReplacementInput({
     );
 
     if (active && Boolean(queries.length) && !isReplacementEmpty(replacement)) {
-      showToast({ children: <RefreshRequiredToast onClose={hideToast} /> });
+      showToast({
+        message: language.rules.REFRESH_REQUIRED,
+        options: { showRefresh: true },
+      });
     }
 
     storageSetByKeys({
@@ -74,7 +78,10 @@ export default function ReplacementInput({
     if (value === replacement) return;
 
     if (active && Boolean(queries.length)) {
-      showToast({ children: <RefreshRequiredToast onClose={hideToast} /> });
+      showToast({
+        message: language.rules.REFRESH_REQUIRED,
+        options: { showRefresh: true },
+      });
     }
 
     onChange(identifier, "replacement", value);

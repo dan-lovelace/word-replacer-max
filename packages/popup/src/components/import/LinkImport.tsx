@@ -3,13 +3,12 @@ import { JSXInternal } from "preact/src/jsx";
 
 import { logDebug } from "@worm/shared";
 
-import Button from "../button/Button";
-import ToastMessage from "../ToastMessage";
-
 import importMatchers from "../../lib/import";
 import { useLanguage } from "../../lib/language";
 import { useConfig } from "../../store/Config";
-import { useToast } from "../../store/Toast";
+
+import { useToast } from "../alert/useToast";
+import Button from "../button/Button";
 
 type LinkImportProps = {
   setIsImportingLink: StateUpdater<boolean>;
@@ -43,12 +42,8 @@ export default function LinkImport({ setIsImportingLink }: LinkImportProps) {
       new URL(importLink);
     } catch (error) {
       return showToast({
-        children: (
-          <ToastMessage
-            message={language.options.INVALID_IMPORT_LINK}
-            severity="danger"
-          />
-        ),
+        message: language.options.INVALID_IMPORT_LINK,
+        options: { severity: "danger" },
       });
     }
 
@@ -70,18 +65,15 @@ export default function LinkImport({ setIsImportingLink }: LinkImportProps) {
           setIsImportingLink(false);
 
           showToast({
-            children: (
-              <ToastMessage
-                message="Rules from link imported successfully"
-                severity="success"
-              />
-            ),
+            message: language.options.LINK_IMPORT_SUCCESS,
+            options: { severity: "success" },
           });
         },
       });
     } catch (error) {
       showToast({
-        children: <ToastMessage message={String(error)} severity="danger" />,
+        message: String(error),
+        options: { severity: "danger" },
       });
     } finally {
       setIsLoading(false);

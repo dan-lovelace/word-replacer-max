@@ -2,13 +2,12 @@ import type { JSXInternal } from "preact/src/jsx";
 
 import { logDebug } from "@worm/shared";
 
-import FileInput from "../FileInput";
-import ToastMessage from "../ToastMessage";
-
 import importMatchers from "../../lib/import";
 import { useLanguage } from "../../lib/language";
 import { useConfig } from "../../store/Config";
-import { useToast } from "../../store/Toast";
+
+import { useToast } from "../alert/useToast";
+import FileInput from "../FileInput";
 
 export default function FileImport() {
   const {
@@ -39,17 +38,14 @@ export default function FileImport() {
         importMatchers(parsedJson, matchers, {
           onError: (message) => {
             showToast({
-              children: <ToastMessage message={message} severity="danger" />,
+              message,
+              options: { severity: "danger" },
             });
           },
           onSuccess: () => {
             showToast({
-              children: (
-                <ToastMessage
-                  message="Rules from file imported successfully"
-                  severity="success"
-                />
-              ),
+              message: language.options.FILE_IMPORT_SUCCESS,
+              options: { severity: "success" },
             });
           },
         });
@@ -58,12 +54,8 @@ export default function FileImport() {
         logDebug("Received file contents", result);
 
         showToast({
-          children: (
-            <ToastMessage
-              message={language.options.CORRUPTED_IMPORT_CONTENT}
-              severity="danger"
-            />
-          ),
+          message: language.options.CORRUPTED_IMPORT_CONTENT,
+          options: { severity: "danger", showContactSupport: true },
         });
       }
     };

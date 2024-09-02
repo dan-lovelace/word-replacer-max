@@ -4,11 +4,10 @@ import { JSXInternal } from "preact/src/jsx";
 import { storageSetByKeys } from "@worm/shared";
 import { DomainEffect } from "@worm/types";
 
-import Chip from "./Chip";
-import ToastMessage from "./ToastMessage";
-
 import { useConfig } from "../store/Config";
-import { useToast } from "../store/Toast";
+
+import { useToast } from "./alert/useToast";
+import Chip from "./Chip";
 
 export default function DomainInput() {
   const [value, setValue] = useState("");
@@ -42,7 +41,8 @@ export default function DomainInput() {
         {
           onError: (message) => {
             showToast({
-              children: <ToastMessage message={message} severity="danger" />,
+              message,
+              options: { severity: "danger" },
             });
           },
         }

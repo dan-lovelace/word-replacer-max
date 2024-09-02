@@ -4,18 +4,18 @@ import { LocationProvider, Router, Route } from "preact-iso";
 import { POPUP_ROUTES } from "@worm/shared";
 
 import Layout from "./containers/Layout";
+import ToastContainer from "./components/alert/ToastContainer";
 import HomePage from "./pages/Home";
 import NotFoundPage from "./pages/NotFound";
 import { ConfigProvider } from "./store/Config";
-import { ToastProvider } from "./store/Toast";
 
 import "./style/index.scss";
 import "material-icons/iconfont/sharp.scss";
 
 export function App() {
   return (
-    <ConfigProvider>
-      <ToastProvider>
+    <>
+      <ConfigProvider>
         <LocationProvider>
           <Layout>
             <Router>
@@ -24,8 +24,9 @@ export function App() {
             </Router>
           </Layout>
         </LocationProvider>
-      </ToastProvider>
-    </ConfigProvider>
+      </ConfigProvider>
+      <ToastContainer />
+    </>
   );
 }
 

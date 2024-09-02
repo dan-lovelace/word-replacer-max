@@ -2,11 +2,10 @@ import { v4 as uuidv4 } from "uuid";
 
 import { storageSetByKeys } from "@worm/shared";
 
-import ToastMessage from "../ToastMessage";
-
 import { PreactChildren } from "../../lib/types";
 import { useConfig } from "../../store/Config";
-import { useToast } from "../../store/Toast";
+
+import { useToast } from "../alert/useToast";
 
 type AddNewRuleProps = {
   children?: PreactChildren;
@@ -37,7 +36,8 @@ export default function AddNewRule({ children, className }: AddNewRuleProps) {
       {
         onError: (message) => {
           showToast({
-            children: <ToastMessage message={message} severity="danger" />,
+            message,
+            options: { severity: "danger" },
           });
         },
       }
