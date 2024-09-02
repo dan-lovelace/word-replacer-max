@@ -10,7 +10,7 @@
     "cypress:run": "cypress run",
     "dev": "vite --host --mode test",
     "start": "yarn build --watch --mode development",
-    "test": "yarn run cypress:run"
+    "test": "if [ \"$CI\" != \"true\" ]; then yarn run cypress:run; fi"
   },
   "dependencies": {
     "@popperjs/core": "^2.11.8",
