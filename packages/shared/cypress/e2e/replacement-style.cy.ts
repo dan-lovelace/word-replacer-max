@@ -82,7 +82,7 @@ describe("replacement style", () => {
       cy.wrap(target).within(() => {
         s.replacedText()
           .invoke("css", "background-color")
-          .then((bgColor) => expect(bgColor).to.eq("rgb(255, 193, 7)"));
+          .then((bgColor) => expect(bgColor).to.eq("rgb(173, 216, 230)"));
         s.replacedText()
           .invoke("css", "color")
           .then((color) => expect(color).to.eq("rgb(0, 0, 0)"));

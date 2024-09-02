@@ -80,7 +80,7 @@ exports[`runStorageMigrations migrates from 1.0.0 to 1.1.0 1`] = `
   },
   "replacementStyle": {
     "active": false,
-    "backgroundColor": "#ffc107",
+    "backgroundColor": "#add8e6",
     "color": "#dc3545",
     "options": [
       "backgroundColor",
@@ -137,7 +137,7 @@ exports[`runStorageMigrations migrates from undefined version to 1.1.0 1`] = `
   },
   "replacementStyle": {
     "active": false,
-    "backgroundColor": "#ffc107",
+    "backgroundColor": "#add8e6",
     "color": "#dc3545",
     "options": [
       "backgroundColor",
@@ -196,7 +196,7 @@ exports[`runStorageMigrations works with extension version v0.6.2 storage 1`] = 
   },
   "replacementStyle": {
     "active": false,
-    "backgroundColor": "#ffc107",
+    "backgroundColor": "#add8e6",
     "color": "#dc3545",
     "options": [
       "backgroundColor",
