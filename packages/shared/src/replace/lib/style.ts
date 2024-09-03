@@ -1,16 +1,4 @@
-import { ReplacementStyle } from "@worm/types";
-
-type SystemColor =
-  | "black"
-  | "blue"
-  | "blueGray"
-  | "cyan"
-  | "green"
-  | "orange"
-  | "pink"
-  | "red"
-  | "white"
-  | "yellow";
+import { ReplacementStyle, SystemColor } from "@worm/types";
 
 export const systemColors: Record<SystemColor, string> = {
   /**

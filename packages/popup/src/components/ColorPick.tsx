@@ -2,6 +2,7 @@ import { useState } from "preact/hooks";
 import { JSXInternal } from "preact/src/jsx";
 
 import { systemColors } from "@worm/shared/src/replace/lib/style";
+import { SystemColor } from "@worm/types";
 
 import cx from "../lib/classnames";
 
@@ -63,25 +64,23 @@ export default function ColorPick({
           data-testid="color-pick-dropdown-menu"
           style={{ minWidth: "unset" }}
         >
-          {(Object.keys(systemColors) as (keyof typeof systemColors)[]).map(
-            (color, index) => (
-              <li key={index}>
-                <Button
-                  className="dropdown-item text-center"
-                  onClick={() => handleColorSelect(systemColors[color])}
-                >
-                  <span
-                    className="border rounded"
-                    style={{
-                      backgroundColor: systemColors[color],
-                      height: 20,
-                      width: 40,
-                    }}
-                  />
-                </Button>
-              </li>
-            )
-          )}
+          {(Object.keys(systemColors) as SystemColor[]).map((color, index) => (
+            <li key={index}>
+              <Button
+                className="dropdown-item text-center"
+                onClick={() => handleColorSelect(systemColors[color])}
+              >
+                <span
+                  className="border rounded"
+                  style={{
+                    backgroundColor: systemColors[color],
+                    height: 20,
+                    width: 40,
+                  }}
+                />
+              </Button>
+            </li>
+          ))}
         </ul>
       </div>
       <input

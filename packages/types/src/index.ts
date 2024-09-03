@@ -101,4 +101,16 @@ export type StorageSetOptions = {
 
 export type StorageVersion = (typeof storageVersions)[number];
 
+export type SystemColor =
+  | "black"
+  | "blue"
+  | "blueGray"
+  | "cyan"
+  | "green"
+  | "orange"
+  | "pink"
+  | "red"
+  | "white"
+  | "yellow";
+
 export * from "./api";
