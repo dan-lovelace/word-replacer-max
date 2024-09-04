@@ -22,7 +22,7 @@ export const systemColors: Record<SystemColor, string> = {
 
 export const DEFAULT_REPLACEMENT_STYLE: ReplacementStyle = {
   active: false,
-  backgroundColor: systemColors.blueGray,
+  backgroundColor: systemColors.yellow,
   color: systemColors.red,
   options: ["backgroundColor"],
 };
