@@ -2,12 +2,11 @@ import { expect } from "@jest/globals";
 
 import {
   CURRENT_STORAGE_VERSION,
+  runStorageMigrations,
   storageClear,
   storageGet,
   storageSet,
 } from "@worm/shared/src/storage";
-
-import { runStorageMigrations } from "../src/lib";
 
 describe("runStorageMigrations", () => {
   beforeEach(async () => {
@@ -33,9 +32,10 @@ describe("runStorageMigrations", () => {
       },
       storageVersion: "1.0.0",
     };
-
     await storageSet(testStorage);
-    await runStorageMigrations("1.0.0");
+
+    const migrations = await runStorageMigrations("1.0.0");
+    expect(migrations).toEqual(undefined);
 
     const result = await storageGet();
     expect(result).toMatchSnapshot();
@@ -67,9 +67,10 @@ describe("runStorageMigrations", () => {
       },
       storageVersion: "1.1.0",
     };
-
     await storageSet(testStorage);
-    await runStorageMigrations("1.1.0");
+
+    const migrations = await runStorageMigrations("1.1.0");
+    expect(migrations).toEqual(undefined);
 
     const result = await storageGet();
     expect(result).toMatchSnapshot();
@@ -93,9 +94,10 @@ describe("runStorageMigrations", () => {
         focusRule: "",
       },
     };
-
     await storageSet(testStorage);
-    await runStorageMigrations("1.0.0");
+
+    const migrations = await runStorageMigrations("1.0.0");
+    expect(migrations).toEqual(undefined);
 
     const result = await storageGet();
     expect(result).toMatchSnapshot();
@@ -119,9 +121,10 @@ describe("runStorageMigrations", () => {
         focusRule: "",
       },
     };
-
     await storageSet(testStorage);
-    await runStorageMigrations("1.1.0");
+
+    const migrations = await runStorageMigrations("1.1.0");
+    expect(migrations).toEqual(["1.1.0"]);
 
     const result = await storageGet();
     expect(result).toMatchSnapshot();
@@ -146,9 +149,10 @@ describe("runStorageMigrations", () => {
       },
       storageVersion: "1.0.0",
     };
-
     await storageSet(testStorage);
-    await runStorageMigrations("1.1.0");
+
+    const migrations = await runStorageMigrations("1.1.0");
+    expect(migrations).toEqual(["1.1.0"]);
 
     const result = await storageGet();
     expect(result).toMatchSnapshot();

@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import {
   BASELINE_STORAGE_VERSION,
+  runStorageMigrations,
   storageGetByKeys,
   storageSetByKeys,
 } from "@worm/shared";
@@ -67,4 +68,5 @@ export async function initializeStorage() {
   }
 
   await storageSetByKeys(initialStorage);
+  await runStorageMigrations();
 }
