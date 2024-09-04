@@ -4,7 +4,7 @@
     "name": "dan-lovelace",
     "url": "https://github.com/dan-lovelace/word-replacer-max"
   },
-  "version": "0.6.3",
+  "version": "0.7.0",
   "license": "GPL-3.0-or-later",
   "description": "A browser extension for replacing text on web pages",
   "type": "module",
