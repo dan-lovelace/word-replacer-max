@@ -1,12 +1,6 @@
-import {
-  Matcher,
-  Storage,
-  StorageKey,
-  StorageSetOptions,
-  StorageVersion,
-} from "@worm/types";
+import { Matcher, Storage, StorageKey, StorageSetOptions } from "@worm/types";
 
-import { browser } from "../browser";
+import { browser, matchersFromStorage, matchersToStorage } from "../browser";
 import { logDebug } from "../logging";
 
 const {

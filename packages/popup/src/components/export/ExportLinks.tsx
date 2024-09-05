@@ -1,7 +1,7 @@
 import { useEffect, useState } from "preact/hooks";
 
 import { formatUnixTimestamp } from "@worm/shared";
-import { storageSetByKeys } from "@worm/shared/src/browser";
+import { storageSetByKeys } from "@worm/shared/src/storage";
 import { ExportLink as ExportLinkType } from "@worm/types";
 
 import Button from "../../components/button/Button";

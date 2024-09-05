@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 
-import { storageSetByKeys } from "@worm/shared/src/browser";
+import { storageSetByKeys } from "@worm/shared/src/storage";
 
 import { PreactChildren } from "../../lib/types";
 import { useConfig } from "../../store/Config";

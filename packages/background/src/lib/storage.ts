@@ -5,7 +5,7 @@ import {
   runStorageMigrations,
   storageGetByKeys,
   storageSetByKeys,
-} from "@worm/shared/src/browser";
+} from "@worm/shared/src/storage";
 import { Matcher, Storage } from "@worm/types";
 
 export async function initializeStorage() {

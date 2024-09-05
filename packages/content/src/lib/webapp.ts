@@ -4,7 +4,7 @@ import {
   logDebug,
   webAppMessages,
 } from "@worm/shared";
-import { storageSetByKeys } from "@worm/shared/src/browser";
+import { storageSetByKeys } from "@worm/shared/src/storage";
 import {
   ApiAuthTokensResponse,
   WebAppMessage,

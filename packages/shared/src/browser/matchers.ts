@@ -4,8 +4,7 @@ import { Matcher } from "@worm/types";
 
 import { logDebug } from "../logging";
 import { validatedMatcher } from "../schemas";
-
-import { storageRemoveByKeys, storageSetByKeys } from "./storage";
+import { storageRemoveByKeys, storageSetByKeys } from "../storage";
 
 type StorageMatcher = Matcher & {
   sortIndex: number;

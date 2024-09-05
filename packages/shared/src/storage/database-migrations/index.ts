@@ -3,8 +3,8 @@ import { merge } from "ts-deepmerge";
 import { DEFAULT_REPLACEMENT_STYLE } from "@worm/shared/src/replace/lib/style";
 import { Matcher, Storage, StorageVersion, storageVersions } from "@worm/types";
 
+import { STORAGE_MATCHER_PREFIX } from "../../browser";
 import { logDebug } from "../../logging";
-import { STORAGE_MATCHER_PREFIX } from "../../matchers";
 
 import { BASELINE_STORAGE_VERSION, CURRENT_STORAGE_VERSION } from "../";
 import { storageGet, storageSet } from "../api";

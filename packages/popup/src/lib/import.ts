@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 
 import { getSchemaByVersion } from "@worm/shared";
-import { storageSetByKeys } from "@worm/shared/src/browser";
+import { storageSetByKeys } from "@worm/shared/src/storage";
 import { Matcher, StorageSetOptions } from "@worm/types";
 
 export default async function importMatchers(

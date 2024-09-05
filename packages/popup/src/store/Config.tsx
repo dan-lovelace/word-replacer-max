@@ -4,8 +4,8 @@ import { useContext, useEffect, useMemo, useState } from "preact/hooks";
 import {
   browser,
   POPUP_POPPED_OUT_PARAMETER_KEY,
-  storageGetByKeys,
 } from "@worm/shared/src/browser";
+import { storageGetByKeys } from "@worm/shared/src/storage";
 import { Storage } from "@worm/types";
 
 import { PreactChildren } from "../lib/types";

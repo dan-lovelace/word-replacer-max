@@ -2,6 +2,10 @@ import { useCallback, useEffect, useRef, useState } from "preact/hooks";
 
 import { cx } from "@worm/shared";
 import { STORAGE_MATCHER_PREFIX } from "@worm/shared/src/browser";
+import {
+  storageRemoveByKeys,
+  storageSetByKeys,
+} from "@worm/shared/src/storage";
 import { Matcher } from "@worm/types";
 
 import { useLanguage } from "../../lib/language";

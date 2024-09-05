@@ -1,8 +1,9 @@
-import { isDomainAllowed, logDebug, replaceAll } from "@worm/shared";
+import { isDomainAllowed, replaceAll } from "@worm/shared";
 import {
   getStylesheet,
   STYLE_ELEMENT_ID,
 } from "@worm/shared/src/replace/lib/style";
+import { storageGetByKeys } from "@worm/shared/src/storage";
 import { Storage } from "@worm/types";
 
 type Cacheable<T> = {

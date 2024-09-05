@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "preact/hooks";
 
-import { storageSetByKeys } from "@worm/shared";
+import { cx } from "@worm/shared";
 import { browser } from "@worm/shared/src/browser";
+import { storageSetByKeys } from "@worm/shared/src/storage";
 import { PopupAlertSeverity } from "@worm/types";
 
-import cx from "../../lib/classnames";
 import { useConfig } from "../../store/Config";
 
 import Button from "../button/Button";

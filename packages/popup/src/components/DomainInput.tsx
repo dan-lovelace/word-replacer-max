@@ -1,7 +1,7 @@
 import { useState } from "preact/hooks";
 import { JSXInternal } from "preact/src/jsx";
 
-import { storageSetByKeys } from "@worm/shared/src/browser";
+import { storageSetByKeys } from "@worm/shared/src/storage";
 import { DomainEffect } from "@worm/types";
 
 import { useConfig } from "../store/Config";

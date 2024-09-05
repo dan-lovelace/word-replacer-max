@@ -2,6 +2,7 @@ import { useMemo, useState } from "preact/hooks";
 
 import { Dropdown } from "bootstrap";
 
+import { storageSetByKeys } from "@worm/shared/src/storage";
 import { ApiShareRequest, ApiShareResponse, SchemaExport } from "@worm/types";
 
 import { useLanguage } from "../../lib/language";

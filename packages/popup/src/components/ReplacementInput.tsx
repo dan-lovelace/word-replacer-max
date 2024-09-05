@@ -2,7 +2,8 @@ import { Ref } from "preact";
 import { useState } from "preact/hooks";
 import { JSXInternal } from "preact/src/jsx";
 
-import { isReplacementEmpty, storageSetByKeys } from "@worm/shared";
+import { isReplacementEmpty } from "@worm/shared";
+import { storageSetByKeys } from "@worm/shared/src/storage";
 import { Matcher } from "@worm/types";
 
 import { useLanguage } from "../lib/language";

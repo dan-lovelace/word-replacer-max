@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef } from "preact/hooks";
 
 import { cx } from "@worm/shared";
 import { getAssetURL, popoutExtension } from "@worm/shared/src/browser";
+import { storageSetByKeys } from "@worm/shared/src/storage";
 import { PopupTab } from "@worm/types";
 
 import { useToast } from "../components/alert/useToast";

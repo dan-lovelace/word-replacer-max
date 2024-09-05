@@ -1,11 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 
-import {
-  browser,
-  popoutExtension,
-  storageGetByKeys,
-  storageSetByKeys,
-} from "@worm/shared/src/browser";
+import { browser, popoutExtension } from "@worm/shared/src/browser";
+import { storageGetByKeys, storageSetByKeys } from "@worm/shared/src/storage";
 import { QueryPattern } from "@worm/types";
 
 const ADD_NEW_RULE_ID = "add-new-rule";
