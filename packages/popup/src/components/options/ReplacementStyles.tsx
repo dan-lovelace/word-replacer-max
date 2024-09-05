@@ -4,12 +4,12 @@ import { storageSetByKeys } from "@worm/shared";
 import { DEFAULT_REPLACEMENT_STYLE } from "@worm/shared/src/replace/lib/style";
 import { ReplacementStyle, ReplacementStyleOption } from "@worm/types";
 
+import cx from "../../lib/classnames";
 import { useLanguage } from "../../lib/language";
-import { PreactChildren } from "../../lib/types";
 import { useConfig } from "../../store/Config";
 
 import { useToast } from "../alert/useToast";
-import ColorPick from "../ColorPick";
+import ColorSelect from "../ColorSelect";
 import Slide from "../transition/Slide";
 
 function ColorInput({
@@ -36,7 +36,10 @@ function ColorInput({
   ) => (event: JSXInternal.TargetedEvent<HTMLInputElement, Event>) => void;
 }) {
   return (
-    <>
+    <div
+      className="d-flex align-items-center"
+      data-testid={`color-input-${name}`}
+    >
       <div className="form-check">
         <label
           className="form-label mb-0 user-select-none"
@@ -44,6 +47,8 @@ function ColorInput({
         >
           <input
             className="form-check-input"
+            data-testid={`color-input-checkbox-${name}`}
+            name={option}
             type="checkbox"
             checked={replacementStyle?.options?.includes(option)}
             onChange={handleOptionChange(option)}
@@ -51,14 +56,17 @@ function ColorInput({
           {label}
         </label>
       </div>
-      <ColorPick
-        className={!replacementStyle?.options?.includes(option) && "invisible"}
+      <ColorSelect
+        className={cx(
+          !replacementStyle?.options?.includes(option) && "invisible"
+        )}
+        data-testid={`color-input-color-select-${name}`}
         name={name}
         value={replacementStyle?.[name] ?? DEFAULT_REPLACEMENT_STYLE?.[name]}
         onColorChange={handleColorChange(name)}
         onInputChange={handleInputChange(name)}
       />
-    </>
+    </div>
   );
 }
 
@@ -85,6 +93,7 @@ function DecoratorInput({
         checked={replacementStyle?.options?.includes(option)}
         className="btn-check form-control"
         id={id}
+        name={option}
         type="checkbox"
         onChange={handleOptionChange(option)}
       />
@@ -102,12 +111,10 @@ function DecoratorInput({
 function IndentedContent({
   children,
   className,
-}: {
-  children: PreactChildren;
-  className?: string;
-}) {
+  ...rest
+}: JSXInternal.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={className} style={{ marginLeft: "2.5rem" }}>
+    <div className={className} style={{ marginLeft: "2.5rem" }} {...rest}>
       {children}
     </div>
   );
@@ -191,11 +198,14 @@ export default function ReplacementStyles() {
 
   return (
     <>
-      <div className="form-check form-switch ps-0 d-flex align-items-center gap-2">
+      <div
+        className="form-check form-switch ps-0 d-flex align-items-center gap-2"
+        data-testid="replacement-styles-input-wrapper"
+      >
         <input
           checked={isActive}
           className="form-check-input m-0"
-          data-testid="active-toggle"
+          data-testid="replacement-styles-toggle-button"
           id="highlight-enabled-checkbox"
           role="switch"
           type="checkbox"
@@ -209,7 +219,7 @@ export default function ReplacementStyles() {
         </label>
       </div>
       <Slide isOpen={!isActive}>
-        <IndentedContent>
+        <IndentedContent data-testid="replacement-styles-description">
           <p className="fs-sm">
             Apply styles like bold, underline, and background color to all
             replaced text. Styles may be turned off for individual replacements
@@ -218,10 +228,14 @@ export default function ReplacementStyles() {
         </IndentedContent>
       </Slide>
       <Slide isOpen={isActive}>
-        <IndentedContent className="py-1">
+        <IndentedContent
+          className="py-1"
+          data-testid="replacement-styles-options"
+        >
           <div
             aria-label="Text Decorators"
             className="btn-group my-2"
+            data-testid="text-decorators"
             role="group"
           >
             <DecoratorInput
@@ -254,9 +268,12 @@ export default function ReplacementStyles() {
             />
           </div>
 
-          <div className="container gx-0">
+          <div
+            className="container gx-0"
+            data-testid="replacement-styles-color-inputs"
+          >
             <div className="row mb-1">
-              <div className="col-auto d-flex gap-2 align-items-center">
+              <div className="col-auto">
                 <ColorInput
                   label="Background color"
                   name="backgroundColor"
@@ -269,7 +286,7 @@ export default function ReplacementStyles() {
               </div>
             </div>
             <div className="row">
-              <div className="col-auto d-flex gap-2 align-items-center">
+              <div className="col-auto">
                 <ColorInput
                   label="Text color"
                   name="color"

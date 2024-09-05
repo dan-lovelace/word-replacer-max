@@ -8,23 +8,23 @@ import cx from "../lib/classnames";
 
 import Button from "./button/Button";
 
-type ColorPickProps = {
-  className?: boolean | string;
+interface ColorSelectProps extends JSXInternal.HTMLAttributes<HTMLDivElement> {
   name: string;
   value?: string;
   onColorChange: (color: string) => void;
   onInputChange: (
     event: JSXInternal.TargetedEvent<HTMLInputElement, Event>
   ) => void;
-};
+}
 
-export default function ColorPick({
+export default function ColorSelect({
   className,
   name,
   value,
   onColorChange,
   onInputChange,
-}: ColorPickProps) {
+  ...rest
+}: ColorSelectProps) {
   const [selectedColor, setSelectedColor] = useState(value);
 
   const handleColorSelect = (color: string) => {
@@ -40,13 +40,17 @@ export default function ColorPick({
   };
 
   return (
-    <div className={cx("input-group", className)}>
+    <div
+      className={cx("input-group", className)}
+      data-testid="color-select"
+      {...rest}
+    >
       <div className="dropdown">
         <Button
           aria-expanded={false}
           className="btn btn-outline-primary rounded-end-0 h-100"
           data-bs-toggle="dropdown"
-          data-test-id="color-pick-dropdown-button"
+          data-testid="color-select-dropdown-button"
           id={`dropdown-button-${name}`}
         >
           <div
@@ -61,13 +65,14 @@ export default function ColorPick({
         <ul
           aria-labelledby={`dropdown-button-${name}`}
           className="dropdown-menu shadow"
-          data-testid="color-pick-dropdown-menu"
+          data-testid="color-select-dropdown-menu"
           style={{ minWidth: "unset" }}
         >
           {(Object.keys(systemColors) as SystemColor[]).map((color, index) => (
             <li key={index}>
               <Button
                 className="dropdown-item text-center"
+                data-testid="color-select-dropdown-menu-option"
                 onClick={() => handleColorSelect(systemColors[color])}
               >
                 <span
@@ -85,6 +90,7 @@ export default function ColorPick({
       </div>
       <input
         className="form-control"
+        data-testid="color-select-custom-input"
         placeholder="#000000"
         size={8}
         type="text"
