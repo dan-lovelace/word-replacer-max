@@ -5,13 +5,14 @@ import { JSXInternal } from "preact/src/jsx";
 import { cx, isReplacementEmpty } from "@worm/shared";
 import { Matcher, QueryPattern } from "@worm/types";
 
-import Chip from "./Chip";
-import { RefreshRequiredToast } from "./RefreshRequiredToast";
 import caseIcon from "../icons/case";
 import regexIcon from "../icons/regex";
 import wholeWordIcon from "../icons/whole-word";
+import { useLanguage } from "../lib/language";
 import { PreactChildren } from "../lib/types";
-import { useToast } from "../store/Toast";
+
+import { useToast } from "./alert/useToast";
+import Chip from "./Chip";
 
 type QueryInputProps = Pick<
   Matcher,
@@ -57,7 +58,9 @@ export default function QueryInput({
   onChange,
 }: QueryInputProps) {
   const [value, setValue] = useState("");
-  const { hideToast, showToast } = useToast();
+
+  const language = useLanguage();
+  const { showToast } = useToast();
 
   const handleFormSubmit = (
     event:
@@ -82,7 +85,10 @@ export default function QueryInput({
       newPatterns.push(pattern);
 
       if (!isReplacementEmpty(replacement)) {
-        showToast({ children: <RefreshRequiredToast onClose={hideToast} /> });
+        showToast({
+          message: language.rules.REFRESH_REQUIRED,
+          options: { showRefresh: true },
+        });
       }
     } else {
       newPatterns.splice(patternIdx, 1);
@@ -93,7 +99,10 @@ export default function QueryInput({
 
   const handleRemoveClick = (query: string) => () => {
     if (active && !isReplacementEmpty(replacement)) {
-      showToast({ children: <RefreshRequiredToast onClose={hideToast} /> });
+      showToast({
+        message: language.rules.REFRESH_REQUIRED,
+        options: { showRefresh: true },
+      });
     }
 
     onChange(
@@ -147,7 +156,7 @@ export default function QueryInput({
           <Fragment key={value}>
             <input
               checked={queryPatterns.includes(value)}
-              className={cx("btn-check px-0 py-2")}
+              className="btn-check px-0 py-2"
               disabled={disabled}
               id={identifier + value}
               type="checkbox"

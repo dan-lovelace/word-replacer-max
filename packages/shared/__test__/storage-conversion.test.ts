@@ -14,6 +14,7 @@ describe("matchersToStorage", () => {
       queries: ["my jaw dropped", "I was shocked"],
       queryPatterns: [],
       replacement: "I was surprised",
+      useGlobalReplacementStyle: true,
     },
     {
       active: true,
@@ -21,6 +22,7 @@ describe("matchersToStorage", () => {
       queries: ["This.", "literally"],
       queryPatterns: ["case", "wholeWord"],
       replacement: "",
+      useGlobalReplacementStyle: true,
     },
   ];
 
@@ -155,6 +157,7 @@ describe("matchersFromStorage", () => {
       queries: ["Hello"],
       queryPatterns: ["case", "wholeWord"],
       replacement: "Hi",
+      useGlobalReplacementStyle: true,
     };
 
     const testStorage = {

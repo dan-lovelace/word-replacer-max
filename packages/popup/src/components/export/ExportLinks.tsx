@@ -1,21 +1,23 @@
-import { useEffect, useMemo, useState } from "preact/hooks";
+import { useEffect, useState } from "preact/hooks";
 
 import { formatUnixTimestamp } from "@worm/shared";
 import { storageSetByKeys } from "@worm/shared/src/browser";
 import { ExportLink as ExportLinkType } from "@worm/types";
 
 import Button from "../../components/button/Button";
-import ToastMessage from "../../components/ToastMessage";
 import Tooltip from "../../components/Tooltip";
 import { copyToClipboard, canWriteToClipboard } from "../../lib/clipboard";
+import { useLanguage } from "../../lib/language";
 import { useConfig } from "../../store/Config";
-import { useToast } from "../../store/Toast";
+
+import { useToast } from "../alert/useToast";
 
 export default function ExportLink() {
   const [isClipboardCopyAllowed, setIsClipboardCopyAllowed] = useState(false);
   const {
     storage: { exportLinks },
   } = useConfig();
+  const language = useLanguage();
   const { showToast } = useToast();
 
   useEffect(() => {
@@ -46,13 +48,14 @@ export default function ExportLink() {
       if (!exportLink || !exportLink.url) return;
 
       const result = await copyToClipboard(exportLink.url);
-      const children = result ? (
-        <ToastMessage message="Copied to clipboard" severity="success" />
-      ) : (
-        <ToastMessage message="Unable to copy to clipboard" severity="danger" />
-      );
 
-      showToast({ children });
+      showToast({
+        message:
+          language.options[
+            result ? "CLIPBOARD_COPY_SUCCESS" : "CLIPBOARD_COPY_ERROR"
+          ],
+        options: { severity: result ? "success" : "danger" },
+      });
     };
 
   if (!exportLinks || !Boolean(exportLinks.length)) {

@@ -1,4 +1,5 @@
 import { isWebAppMessagingAllowed } from "@worm/shared";
+import { runStorageMigrations } from "@worm/shared/src/storage";
 import "@worm/shared/vite-env.d.ts";
 
 import { startContentListeners } from "./lib/listeners";
@@ -9,6 +10,7 @@ document.addEventListener("readystatechange", () => {
   renderContent("document state change");
 });
 
+runStorageMigrations();
 startContentListeners();
 
 if (isWebAppMessagingAllowed(window.location.hostname)) {

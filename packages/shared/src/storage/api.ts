@@ -6,16 +6,8 @@ import {
   StorageVersion,
 } from "@worm/types";
 
-<<<<<<<< HEAD:packages/shared/src/browser/storage.ts
-import { logDebug } from "../logging";
-
-import { browser } from "./browser";
-import { matchersFromStorage, matchersToStorage } from "./matchers";
-========
 import { browser } from "../browser";
 import { logDebug } from "../logging";
-import { matchersFromStorage, matchersToStorage } from "../matchers";
->>>>>>>> main:packages/shared/src/storage/api.ts
 
 const {
   storage: { sync },

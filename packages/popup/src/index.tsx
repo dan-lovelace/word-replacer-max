@@ -4,19 +4,19 @@ import { LocationProvider, Router, Route } from "preact-iso";
 import { POPUP_ROUTES } from "@worm/shared/src/browser";
 import "@worm/shared/vite-env.d.ts";
 
+import ToastContainer from "./components/alert/ToastContainer";
 import Layout from "./containers/Layout";
 import HomePage from "./pages/Home";
 import NotFoundPage from "./pages/NotFound";
 import { ConfigProvider } from "./store/Config";
-import { ToastProvider } from "./store/Toast";
 
 import "./style/index.scss";
 import "material-icons/iconfont/sharp.scss";
 
 export function App() {
   return (
-    <ConfigProvider>
-      <ToastProvider>
+    <>
+      <ConfigProvider>
         <LocationProvider>
           <Layout>
             <Router>
@@ -24,9 +24,10 @@ export function App() {
               <Route default component={NotFoundPage} />
             </Router>
           </Layout>
+          <ToastContainer />
         </LocationProvider>
-      </ToastProvider>
-    </ConfigProvider>
+      </ConfigProvider>
+    </>
   );
 }
 

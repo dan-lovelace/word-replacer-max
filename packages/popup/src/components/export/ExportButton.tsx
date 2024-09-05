@@ -2,17 +2,14 @@ import { useMemo, useState } from "preact/hooks";
 
 import { Dropdown } from "bootstrap";
 
-import { logDebug } from "@worm/shared";
-import { storageSetByKeys } from "@worm/shared/src/browser";
 import { ApiShareRequest, ApiShareResponse, SchemaExport } from "@worm/types";
 
 import { useLanguage } from "../../lib/language";
 import { SelectedRule } from "../../lib/types";
 import { useConfig } from "../../store/Config";
-import { useToast } from "../../store/Toast";
 
+import { useToast } from "../alert/useToast";
 import Button from "../button/Button";
-import ToastMessage from "../ToastMessage";
 
 type ExportButtonProps = {
   selectedRules?: SelectedRule[];
@@ -72,19 +69,13 @@ export default function ExportButton({
     anchor.remove();
 
     stopExporting();
+
+    const toastMessage = `Your ${
+      (selectedMatchers?.length ?? 0) > 1 ? "rules were" : "rule was"
+    } exported successfully as ${filename}`;
     showToast({
-      children: (
-        <ToastMessage
-          message={
-            <>
-              Your{" "}
-              {(selectedMatchers?.length ?? 0) > 1 ? "rules were" : "rule was"}{" "}
-              exported successfully as {filename}
-            </>
-          }
-          severity="success"
-        />
-      ),
+      message: toastMessage,
+      options: { severity: "success" },
     });
   };
 
@@ -109,20 +100,17 @@ export default function ExportButton({
 
     if (!result.ok) {
       return showToast({
-        children: (
-          <ToastMessage message={JSON.stringify(json)} severity="danger" />
-        ),
+        message: JSON.stringify(json),
+        options: { severity: "danger" },
       });
     }
 
     if (!json.url) {
+      stopExporting();
+
       return showToast({
-        children: (
-          <ToastMessage
-            message={language.options.GENERATE_SHARE_LINK_FAILED}
-            severity="danger"
-          />
-        ),
+        message: language.options.GENERATE_SHARE_LINK_FAILED,
+        options: { severity: "danger", showContactSupport: true },
       });
     }
 
@@ -141,18 +129,15 @@ export default function ExportButton({
       {
         onError: (message) => {
           showToast({
-            children: <ToastMessage message={message} severity="danger" />,
+            message,
+            options: { severity: "danger" },
           });
         },
         onSuccess: () => {
           stopExporting();
           showToast({
-            children: (
-              <ToastMessage
-                message="Success! Your link is ready on the Options page."
-                severity="success"
-              />
-            ),
+            message: language.options.LINK_EXPORT_SUCCESS,
+            options: { severity: "success" },
           });
         },
       }
@@ -189,6 +174,7 @@ export default function ExportButton({
         )}
       </Button>
       <ul
+        aria-labelledby="export-modal-dropdown-button"
         className="dropdown-menu shadow"
         data-testid="export-modal-dropdown-menu"
       >

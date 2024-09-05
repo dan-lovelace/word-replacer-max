@@ -25,6 +25,7 @@ Cypress.Commands.add("visitMock", (params?: VisitMockParams) => {
   const {
     bodyContents,
     scriptContents,
+    styleContents,
     targetContents,
     targetProps,
     titleContents,
@@ -36,6 +37,10 @@ Cypress.Commands.add("visitMock", (params?: VisitMockParams) => {
 
   if (scriptContents) {
     changeHTML(s.script, scriptContents);
+  }
+
+  if (styleContents) {
+    changeHTML(s.style, styleContents);
   }
 
   if (targetContents) {

@@ -19,8 +19,10 @@ describe("replaceAll", () => {
               queries: ["ipsum"],
               queryPatterns: [],
               replacement: "sit",
+              useGlobalReplacementStyle: true,
             },
           ],
+          undefined,
           document
         );
 
@@ -56,8 +58,10 @@ describe("replaceAll", () => {
               queries: ["ipsum"],
               queryPatterns: [],
               replacement: "sit",
+              useGlobalReplacementStyle: true,
             },
           ],
+          undefined,
           document
         );
 
@@ -103,8 +107,10 @@ describe("replaceAll", () => {
               queries: ["dolor"],
               queryPatterns: [],
               replacement: "sit",
+              useGlobalReplacementStyle: true,
             },
           ],
+          undefined,
           document
         );
 
@@ -126,8 +132,10 @@ describe("replaceAll", () => {
               queries: ["ipsum"],
               queryPatterns: [],
               replacement: "sit",
+              useGlobalReplacementStyle: true,
             },
           ],
+          undefined,
           document
         );
 
@@ -149,8 +157,10 @@ describe("replaceAll", () => {
               queries: ["ipsum dolor"],
               queryPatterns: [],
               replacement: "sit",
+              useGlobalReplacementStyle: true,
             },
           ],
+          undefined,
           document
         );
 
@@ -172,8 +182,10 @@ describe("replaceAll", () => {
               queries: ["2014"],
               queryPatterns: [],
               replacement: "1979",
+              useGlobalReplacementStyle: true,
             },
           ],
+          undefined,
           document
         );
 
@@ -206,8 +218,10 @@ describe("replaceAll", () => {
               queries: ["ipsum"],
               queryPatterns: [],
               replacement: "sit",
+              useGlobalReplacementStyle: true,
             },
           ],
+          undefined,
           document
         );
 
@@ -236,8 +250,10 @@ describe("replaceAll", () => {
               queries: ["ipsum"],
               queryPatterns: [],
               replacement: "sit",
+              useGlobalReplacementStyle: true,
             },
           ],
+          undefined,
           document
         );
 
@@ -265,8 +281,10 @@ describe("replaceAll", () => {
               queries: ["ipsum"],
               queryPatterns: [],
               replacement: "sit",
+              useGlobalReplacementStyle: true,
             },
           ],
+          undefined,
           document
         );
 
@@ -294,8 +312,10 @@ describe("replaceAll", () => {
               queries: ["\\b(\\d+),5(?!\\d)"],
               queryPatterns: ["regex"],
               replacement: "$1,test",
+              useGlobalReplacementStyle: true,
             },
           ],
+          undefined,
           document
         );
 
@@ -325,8 +345,10 @@ describe("replaceAll", () => {
               queries: ["ipsum"],
               queryPatterns: ["wholeWord"],
               replacement: "sit",
+              useGlobalReplacementStyle: true,
             },
           ],
+          undefined,
           document
         );
 

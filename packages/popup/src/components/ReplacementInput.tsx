@@ -2,14 +2,22 @@ import { Ref } from "preact";
 import { useState } from "preact/hooks";
 import { JSXInternal } from "preact/src/jsx";
 
+import { isReplacementEmpty, storageSetByKeys } from "@worm/shared";
 import { Matcher } from "@worm/types";
 
-import { RefreshRequiredToast } from "./RefreshRequiredToast";
-import { useToast } from "../store/Toast";
+import { useLanguage } from "../lib/language";
+import { useConfig } from "../store/Config";
+
+import { useToast } from "./alert/useToast";
+import Button from "./button/Button";
 
 type ReplacementInputProps = Pick<
   Matcher,
-  "active" | "identifier" | "queries" | "replacement"
+  | "active"
+  | "identifier"
+  | "queries"
+  | "replacement"
+  | "useGlobalReplacementStyle"
 > & {
   disabled: boolean;
   inputRef: Ref<HTMLInputElement>;
@@ -27,10 +35,40 @@ export default function ReplacementInput({
   inputRef,
   queries,
   replacement,
+  useGlobalReplacementStyle,
   onChange,
 }: ReplacementInputProps) {
   const [value, setValue] = useState(replacement);
-  const { hideToast, showToast } = useToast();
+
+  const {
+    storage: { matchers, replacementStyle: globalReplacementStyle },
+  } = useConfig();
+  const language = useLanguage();
+  const { showToast } = useToast();
+
+  const handleActiveChange = () => {
+    const newMatchers = [...(matchers || [])];
+    const matcherIdx = newMatchers.findIndex(
+      (matcher) => matcher.identifier === identifier
+    );
+
+    if (matcherIdx < 0) return;
+
+    newMatchers[matcherIdx].useGlobalReplacementStyle = !Boolean(
+      newMatchers[matcherIdx].useGlobalReplacementStyle
+    );
+
+    if (active && Boolean(queries.length) && !isReplacementEmpty(replacement)) {
+      showToast({
+        message: language.rules.REFRESH_REQUIRED,
+        options: { showRefresh: true },
+      });
+    }
+
+    storageSetByKeys({
+      matchers: newMatchers,
+    });
+  };
 
   const handleFormSubmit = (
     event:
@@ -41,7 +79,10 @@ export default function ReplacementInput({
     if (value === replacement) return;
 
     if (active && Boolean(queries.length)) {
-      showToast({ children: <RefreshRequiredToast onClose={hideToast} /> });
+      showToast({
+        message: language.rules.REFRESH_REQUIRED,
+        options: { showRefresh: true },
+      });
     }
 
     onChange(identifier, "replacement", value);
@@ -55,20 +96,41 @@ export default function ReplacementInput({
 
   return (
     <form className="flex-fill border rounded" onSubmit={handleFormSubmit}>
-      <input
-        className="form-control border-0"
-        disabled={disabled}
-        enterkeyhint="enter"
-        ref={inputRef}
-        size={15}
-        type="text"
-        value={value}
-        onBlur={handleFormSubmit}
-        onInput={handleTextChange}
-      />
-      <button className="visually-hidden" type="submit">
+      <div className="input-group">
+        <input
+          className="form-control border-0"
+          disabled={disabled}
+          enterkeyhint="enter"
+          ref={inputRef}
+          size={globalReplacementStyle?.active ? 11 : 15}
+          type="text"
+          value={value}
+          onBlur={handleFormSubmit}
+          onInput={handleTextChange}
+        />
+        {globalReplacementStyle?.active && (
+          <Button
+            className="btn btn-outline-secondary border-0 bg-transparent text-secondary"
+            title={
+              useGlobalReplacementStyle
+                ? "Replacement Style Enabled"
+                : "Replacement Style Disabled"
+            }
+            onClick={handleActiveChange}
+          >
+            <span className="d-flex align-items-center">
+              <span className="material-icons-sharp fs-6">
+                {useGlobalReplacementStyle
+                  ? "format_color_text"
+                  : "format_color_reset"}
+              </span>
+            </span>
+          </Button>
+        )}
+      </div>
+      <Button className="visually-hidden" type="submit">
         Add
-      </button>
+      </Button>
     </form>
   );
 }
