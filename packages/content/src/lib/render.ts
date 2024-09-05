@@ -1,24 +1,29 @@
+import { isDomainAllowed, replaceAll, storageGetByKeys } from "@worm/shared";
 import {
-  isDomainAllowed,
-  logDebug,
-  replaceAll,
-  storageGetByKeys,
-} from "@worm/shared";
+  getStylesheet,
+  STYLE_ELEMENT_ID,
+} from "@worm/shared/src/replace/lib/style";
 import { Storage } from "@worm/types";
 
+type Cacheable<T> = {
+  expires: number;
+  value?: T;
+};
+
 type RenderCache = {
-  storage: {
-    expires: number;
-    value: Storage;
-  };
+  storage: Cacheable<Storage>;
+  styleElement: Cacheable<HTMLStyleElement>;
 };
 
 const RENDER_STORAGE_CACHE_LENGTH_MS = 100;
+const RENDER_STYLE_CACHE_LENGTH_MS = 1000;
 
 const renderCache: RenderCache = {
   storage: {
     expires: 0,
-    value: {},
+  },
+  styleElement: {
+    expires: 0,
   },
 };
 
@@ -30,15 +35,43 @@ export async function renderContent(msg = "") {
       "domainList",
       "matchers",
       "preferences",
+      "replacementStyle",
     ]);
 
     renderCache.storage.expires = now + RENDER_STORAGE_CACHE_LENGTH_MS;
     renderCache.storage.value = storage;
+
+    if (now > renderCache.styleElement.expires) {
+      const renderCacheExpires = now + RENDER_STYLE_CACHE_LENGTH_MS;
+      const existingStyleElement = document.head.querySelector(
+        `#${STYLE_ELEMENT_ID}`
+      ) as HTMLStyleElement;
+
+      if (existingStyleElement) {
+        renderCache.styleElement = {
+          expires: renderCacheExpires,
+          value: existingStyleElement,
+        };
+      } else {
+        const newStyleElement = getStylesheet(storage.replacementStyle);
+
+        document.head.appendChild(newStyleElement);
+
+        renderCache.styleElement = {
+          expires: renderCacheExpires,
+          value: newStyleElement,
+        };
+      }
+    }
+  }
+
+  if (!renderCache.storage.value) {
+    return;
   }
 
   const {
     storage: {
-      value: { domainList = [], matchers = [], preferences },
+      value: { domainList = [], matchers = [], preferences, replacementStyle },
     },
   } = renderCache;
 
@@ -48,9 +81,9 @@ export async function renderContent(msg = "") {
     }
 
     if (!isDomainAllowed(domainList, preferences)) {
-      return logDebug("Domain blocked");
+      return;
     }
   }
 
-  replaceAll(matchers);
+  replaceAll(matchers, replacementStyle);
 }

@@ -7,14 +7,13 @@ import {
 } from "@worm/shared";
 import { Matcher } from "@worm/types";
 
-import QueryInput from "../QueryInput";
-import { RefreshRequiredToast } from "../RefreshRequiredToast";
-import ReplacementInput from "../ReplacementInput";
-import ToastMessage from "../ToastMessage";
-
 import cx from "../../lib/classnames";
+import { useLanguage } from "../../lib/language";
 import { useConfig } from "../../store/Config";
-import { useToast } from "../../store/Toast";
+
+import { useToast } from "../alert/useToast";
+import QueryInput from "../QueryInput";
+import ReplacementInput from "../ReplacementInput";
 
 type RuleRowProps = {
   matcher: Matcher;
@@ -23,17 +22,26 @@ type RuleRowProps = {
 };
 
 export default function RuleRow({
-  matcher: { active, identifier, queries, queryPatterns, replacement },
+  matcher: {
+    active,
+    identifier,
+    queries,
+    queryPatterns,
+    replacement,
+    useGlobalReplacementStyle,
+  },
   matchers,
   disabled = false,
 }: RuleRowProps) {
+  const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
+
   const {
     storage: { preferences },
   } = useConfig();
+  const language = useLanguage();
   const confirmingDeleteRef = useRef<boolean>();
   const replacementInputRef = useRef<HTMLInputElement>(null);
-  const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
-  const { hideToast, showToast } = useToast();
+  const { showToast } = useToast();
 
   confirmingDeleteRef.current = isConfirmingDelete;
 
@@ -86,7 +94,10 @@ export default function RuleRow({
     newMatchers[matcherIdx].active = !newMatchers[matcherIdx].active;
 
     if (!newMatchers[matcherIdx].active) {
-      showToast({ children: <RefreshRequiredToast onClose={hideToast} /> });
+      showToast({
+        message: language.rules.REFRESH_REQUIRED,
+        options: { showRefresh: true },
+      });
     }
 
     storageSetByKeys({
@@ -115,7 +126,8 @@ export default function RuleRow({
       {
         onError: (message) => {
           showToast({
-            children: <ToastMessage message={message} severity="danger" />,
+            message,
+            options: { severity: "danger" },
           });
         },
       }
@@ -129,7 +141,10 @@ export default function RuleRow({
       document.documentElement.removeEventListener("click", clickawayListener);
 
       if (active && queriesExist) {
-        showToast({ children: <RefreshRequiredToast onClose={hideToast} /> });
+        showToast({
+          message: language.rules.REFRESH_REQUIRED,
+          options: { showRefresh: true },
+        });
       }
 
       storageSetByKeys({
@@ -156,7 +171,7 @@ export default function RuleRow({
             data-testid="active-toggle"
             id={`active-check-${identifier}`}
             role="switch"
-            title={active ? "Disable Rule" : "Enable Rule"}
+            title={active ? "Rule Enabled" : "Rule Disabled"}
             type="checkbox"
             onChange={handleActiveChange(identifier)}
           />
@@ -190,6 +205,7 @@ export default function RuleRow({
           queries={queries}
           inputRef={replacementInputRef}
           replacement={replacement}
+          useGlobalReplacementStyle={useGlobalReplacementStyle}
           onChange={handleMatcherInputChange}
         />
       </div>

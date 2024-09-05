@@ -41,6 +41,7 @@ exports[`matchersFromStorage gracefully handles misconfigured stored legacy matc
       "wholeWord",
     ],
     "replacement": "Hi",
+    "useGlobalReplacementStyle": true,
   },
 ]
 `;
@@ -162,6 +163,7 @@ exports[`matchersToStorage converts an array of matchers to a shape acceptable f
     ],
     "replacement": "",
     "sortIndex": 1,
+    "useGlobalReplacementStyle": true,
   },
   "matcher__b7fce47e-58e8-4409-adf4-08da053e713d": {
     "active": true,
@@ -173,6 +175,7 @@ exports[`matchersToStorage converts an array of matchers to a shape acceptable f
     "queryPatterns": [],
     "replacement": "I was surprised",
     "sortIndex": 0,
+    "useGlobalReplacementStyle": true,
   },
 }
 `;

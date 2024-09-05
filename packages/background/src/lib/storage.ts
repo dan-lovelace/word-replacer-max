@@ -1,7 +1,8 @@
 import { v4 as uuidv4 } from "uuid";
 
 import {
-  CURRENT_STORAGE_VERSION,
+  BASELINE_STORAGE_VERSION,
+  runStorageMigrations,
   storageGetByKeys,
   storageSetByKeys,
 } from "@worm/shared";
@@ -12,10 +13,8 @@ export async function initializeStorage() {
 
   if (storageVersion === undefined) {
     await storageSetByKeys({
-      storageVersion: CURRENT_STORAGE_VERSION,
+      storageVersion: BASELINE_STORAGE_VERSION,
     });
-  } else if (storageVersion !== CURRENT_STORAGE_VERSION) {
-    // perform any necessary migrations before proceeding
   }
 
   const { domainList, exportLinks, matchers, preferences } =
@@ -44,6 +43,7 @@ export async function initializeStorage() {
         queries: ["my jaw dropped", "I was shocked"],
         queryPatterns: [],
         replacement: "I was surprised",
+        useGlobalReplacementStyle: true,
       },
       {
         active: true,
@@ -51,6 +51,7 @@ export async function initializeStorage() {
         queries: ["This."],
         queryPatterns: ["case", "wholeWord"],
         replacement: " ",
+        useGlobalReplacementStyle: true,
       },
     ];
 
@@ -67,4 +68,5 @@ export async function initializeStorage() {
   }
 
   await storageSetByKeys(initialStorage);
+  await runStorageMigrations();
 }

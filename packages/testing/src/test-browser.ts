@@ -1,3 +1,4 @@
+import { DEFAULT_REPLACEMENT_STYLE } from "@worm/shared/src/replace/lib/style";
 import { Storage } from "@worm/types";
 
 import MockBrowser from "./mock-webextension-polyfill";
@@ -32,6 +33,7 @@ const storage: Storage = {
     extensionEnabled: true,
     focusRule: "",
   },
+  replacementStyle: DEFAULT_REPLACEMENT_STYLE,
 };
 
 const browser = new MockBrowser({

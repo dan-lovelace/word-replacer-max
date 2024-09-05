@@ -6,16 +6,15 @@ import {
   StorageVersion,
 } from "@worm/types";
 
-import { browser } from "./browser";
-import { logDebug } from "./logging";
-import { matchersFromStorage, matchersToStorage } from "./matchers";
+import { browser } from "../browser";
+import { logDebug } from "../logging";
+import { matchersFromStorage, matchersToStorage } from "../matchers";
 
 const {
   storage: { sync },
 } = browser;
 
-export const CURRENT_STORAGE_VERSION: StorageVersion = "1.0.0";
-
+export const storageClear = sync.clear;
 export const storageGet = sync.get;
 export const storageRemove = sync.remove;
 export const storageSet = sync.set;

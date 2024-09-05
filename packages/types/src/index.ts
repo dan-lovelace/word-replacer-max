@@ -2,7 +2,8 @@ import { z } from "zod";
 
 const queryPatterns = ["case", "default", "regex", "wholeWord"] as const;
 const schemaVersions = [1] as const;
-const storageVersions = ["1.0.0"] as const;
+
+export const storageVersions = ["1.0.0", "1.1.0", "1.1.1"] as const;
 
 export type DeepPartial<T> = T extends object
   ? {
@@ -23,6 +24,12 @@ export type Matcher = {
   queries: string[];
   queryPatterns: QueryPattern[];
   replacement: string;
+
+  /**
+   * NEW: Introduced during styled replacements, the optional flag should be
+   * removed at a later time.
+   */
+  useGlobalReplacementStyle?: boolean;
 };
 
 export type PopupAlertSeverity = "danger" | "info" | "success";
@@ -30,6 +37,21 @@ export type PopupAlertSeverity = "danger" | "info" | "success";
 export type PopupTab = "domains" | "options" | "rules" | "support";
 
 export type QueryPattern = (typeof queryPatterns)[number];
+
+export type ReplacementStyle = Partial<{
+  active: boolean;
+  backgroundColor: string;
+  color: string;
+  options: ReplacementStyleOption[];
+}>;
+
+export type ReplacementStyleOption =
+  | "backgroundColor"
+  | "bold"
+  | "color"
+  | "italic"
+  | "strikethrough"
+  | "underline";
 
 export type SchemaExport = SchemaVersion & {
   version: SchemaVersionType;
@@ -68,6 +90,7 @@ export type StorageKeyMap = {
     extensionEnabled: boolean;
     focusRule: Matcher["identifier"];
   };
+  replacementStyle: ReplacementStyle;
   storageVersion: StorageVersion;
 };
 
@@ -77,5 +100,17 @@ export type StorageSetOptions = {
 };
 
 export type StorageVersion = (typeof storageVersions)[number];
+
+export type SystemColor =
+  | "black"
+  | "blue"
+  | "blueGray"
+  | "cyan"
+  | "green"
+  | "orange"
+  | "pink"
+  | "red"
+  | "white"
+  | "yellow";
 
 export * from "./api";

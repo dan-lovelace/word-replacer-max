@@ -23,15 +23,16 @@ export function startContextMenuListener() {
     switch (info.menuItemId) {
       case ADD_NEW_RULE_ID: {
         const { selectionText } = info;
+        const trimmed = selectionText?.trim();
 
-        if (!selectionText) break;
+        if (!trimmed || trimmed.length < 1) break;
 
         const { matchers, preferences } = await storageGetByKeys([
           "matchers",
           "preferences",
         ]);
 
-        const queries = [selectionText];
+        const queries = [trimmed];
         const queryPatterns: QueryPattern[] = [];
         const replacement = "";
 
@@ -65,6 +66,7 @@ export function startContextMenuListener() {
             queries,
             queryPatterns,
             replacement,
+            useGlobalReplacementStyle: true,
           });
           newPreferences.focusRule = identifier;
         }

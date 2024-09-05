@@ -3,16 +3,13 @@ import { useEffect, useMemo, useRef } from "preact/hooks";
 import { getAssetURL, popoutExtension, storageSetByKeys } from "@worm/shared";
 import { PopupTab } from "@worm/types";
 
+import { useToast } from "../components/alert/useToast";
 import IconButton from "../components/button/IconButton";
-import { RefreshRequiredToast } from "../components/RefreshRequiredToast";
-import ToastMessage from "../components/ToastMessage";
-
 import cx from "../lib/classnames";
 import { useLanguage } from "../lib/language";
 import { getNotificationMessage } from "../lib/routes";
 import { PreactChildren } from "../lib/types";
 import { useConfig } from "../store/Config";
-import { useToast } from "../store/Toast";
 
 type LayoutProps = {
   children: PreactChildren;
@@ -56,7 +53,7 @@ export default function Layout({ children }: LayoutProps) {
   const language = useLanguage();
   const notificationMessage = useMemo(getNotificationMessage, []);
   const layoutRef = useRef<HTMLDivElement>(null);
-  const { hideToast, showToast } = useToast();
+  const { showToast } = useToast();
 
   useEffect(() => {
     layoutRef.current?.classList[isPoppedOut ? "add" : "remove"](
@@ -71,7 +68,8 @@ export default function Layout({ children }: LayoutProps) {
 
     if (!newEnabled) {
       showToast({
-        children: <RefreshRequiredToast onClose={hideToast} />,
+        message: language.rules.REFRESH_REQUIRED,
+        options: { showRefresh: true },
       });
     }
 
@@ -85,12 +83,8 @@ export default function Layout({ children }: LayoutProps) {
 
     if (!open) {
       return showToast({
-        children: (
-          <ToastMessage
-            message={language.options.POPUP_BLOCKED}
-            severity="info"
-          />
-        ),
+        message: language.options.POPUP_BLOCKED,
+        options: { severity: "info" },
       });
     }
 
