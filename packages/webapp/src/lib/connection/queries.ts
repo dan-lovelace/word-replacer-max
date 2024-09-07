@@ -5,11 +5,8 @@ import {
   isWebAppMessagingAllowed,
   webAppMessages,
 } from "@worm/shared";
-import {
-  WebAppMessage,
-  WebAppMessageKind,
-  WebAppPingRequest,
-} from "@worm/types";
+import { WebAppMessage, WebAppMessageKind } from "@worm/types/src/message";
+import { WebAppPingRequest } from "@worm/types";
 
 export const useConnectionPing = (
   iframeRef: React.RefObject<HTMLIFrameElement>

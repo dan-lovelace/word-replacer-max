@@ -7,6 +7,12 @@ const schemaVersions = [1] as const;
 
 export const storageVersions = ["1.0.0", "1.1.0", "1.1.1"] as const;
 
+export type AppUser =
+  | {
+      email: string;
+    }
+  | undefined;
+
 export type DeepPartial<T> = T extends object
   ? {
       [P in keyof T]?: DeepPartial<T[P]>;
@@ -117,26 +123,6 @@ export type SystemColor =
   | "red"
   | "white"
   | "yellow";
-
-export interface WebAppMessage<T extends WebAppMessageKind>
-  extends MessageEvent {
-  data: {
-    kind: T;
-    details?: WebAppMessageKindMap[T];
-  };
-}
-
-export type WebAppMessageData<T extends WebAppMessageKind> =
-  WebAppMessage<T>["data"];
-
-export type WebAppMessageKind = keyof WebAppMessageKindMap;
-
-export type WebAppMessageKindMap = {
-  authTokens: ApiAuthTokensResponse;
-  contentInitialize: boolean;
-  pingRequest: WebAppPingRequest;
-  pingResponse: WebAppPingResponse;
-};
 
 export type WebAppPingRequest = undefined;
 

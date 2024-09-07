@@ -2,7 +2,7 @@ import {
   WebAppMessageData,
   WebAppMessageKind,
   WebAppMessageKindMap,
-} from "@worm/types";
+} from "@worm/types/src/message";
 
 import { elementIdentifiers } from "./selectors";
 
@@ -10,7 +10,10 @@ type WebAppMessageLabel =
   | "AUTH_TOKENS"
   | "CONTENT_INITIALIZE"
   | "PING_REQUEST"
-  | "PING_RESPONSE";
+  | "PING_RESPONSE"
+  | "SHOW_TOAST_MESSAGE";
+
+export const TOAST_MESSAGE_DURATION_DEFAULT_MS = 4000;
 
 export const webAppMessages: Record<
   WebAppMessageLabel,
@@ -20,6 +23,7 @@ export const webAppMessages: Record<
   CONTENT_INITIALIZE: "contentInitialize",
   PING_REQUEST: "pingRequest",
   PING_RESPONSE: "pingResponse",
+  SHOW_TOAST_MESSAGE: "showToastMessage",
 };
 
 export function createWebAppMessage<T extends WebAppMessageKind>(

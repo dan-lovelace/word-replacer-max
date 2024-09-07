@@ -4,12 +4,14 @@ import {
   logDebug,
   webAppMessages,
 } from "@worm/shared";
-import { storageSetByKeys } from "@worm/shared/src/storage";
+import { getApiEndpoint } from "@worm/shared/src/api/endpoints";
 import {
-  ApiAuthTokensResponse,
   WebAppMessage,
   WebAppMessageKind,
-} from "@worm/types";
+  WebAppMessageKindMap,
+} from "@worm/types/src/message";
+import { storageSetByKeys } from "@worm/shared/src/storage";
+import { ApiAuthTokensResponse } from "@worm/types";
 
 /**
  * Attempt to communicate with the running `webapp` package in whichever
@@ -37,24 +39,46 @@ export function initializeWebApp() {
 
     elementQuery.contentWindow.addEventListener(
       "message",
-      (event: WebAppMessage<WebAppMessageKind>) => {
+      async (event: WebAppMessage<WebAppMessageKind>) => {
         switch (event.data.kind) {
           case webAppMessages.AUTH_TOKENS: {
-            storageSetByKeys({
-              authentication: {
-                tokens: event.data.details as ApiAuthTokensResponse,
+            const { data } = event.data.details as ApiAuthTokensResponse;
+            const endpoint = getApiEndpoint("AUTH_WHOAMI");
+            const response = await fetch(endpoint, {
+              headers: {
+                Authorization: `Bearer ${data?.accessToken}`,
+                "Content-Type": "application/json",
               },
+              method: "GET",
             });
+
+            if (!response.ok) {
+              sendWebAppMessage("showToastMessage", {
+                message: "Authorization failed",
+                options: {
+                  severity: "danger",
+                },
+              });
+            } else {
+              sendWebAppMessage("showToastMessage", {
+                message: "Login success",
+                options: {
+                  severity: "success",
+                },
+              });
+
+              storageSetByKeys({
+                authentication: {
+                  tokens: event.data.details as ApiAuthTokensResponse,
+                },
+              });
+            }
+
             break;
           }
 
           case webAppMessages.PING_REQUEST: {
             const latestElement = getWebAppIFrame();
-            const pingResponse = latestElement !== undefined;
-            const pingResponseMessage = createWebAppMessage(
-              webAppMessages.PING_RESPONSE,
-              pingResponse
-            );
 
             if (!latestElement || !latestElement.contentWindow) {
               logDebug(
@@ -63,7 +87,7 @@ export function initializeWebApp() {
               break;
             }
 
-            latestElement.contentWindow.postMessage(pingResponseMessage);
+            sendWebAppMessage(webAppMessages.PING_RESPONSE, true);
             break;
           }
 
@@ -80,4 +104,20 @@ export function initializeWebApp() {
 
     clearInterval(initialization);
   }, initializationIntervalMs);
+}
+
+export function sendWebAppMessage<T extends WebAppMessageKind>(
+  kind: T,
+  details?: WebAppMessageKindMap[T]
+) {
+  const latestElement = getWebAppIFrame();
+
+  if (!latestElement || !latestElement.contentWindow) {
+    return false;
+  }
+
+  const newMessage = createWebAppMessage(kind, details);
+  latestElement.contentWindow.postMessage(newMessage);
+
+  return true;
 }

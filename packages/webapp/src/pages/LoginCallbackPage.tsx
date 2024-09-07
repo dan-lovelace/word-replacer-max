@@ -30,7 +30,7 @@ export default function LoginCallbackPage() {
 
       if (queryCode) {
         /**
-         * Remove the code from history for security.
+         * Remove the code from history for safety.
          */
         url.searchParams.delete(CODE_PARAMETER_NAME);
         window.history.replaceState({}, "", url);
@@ -49,7 +49,7 @@ export default function LoginCallbackPage() {
       const result = await fetchAuthTokens();
 
       if (result.isError) {
-        showToast(`Error getting tokens: ${result.error.message}`, "error");
+        showToast(`Error getting tokens: ${result.error.message}`, "danger");
       }
 
       if (result.isSuccess) {
@@ -59,7 +59,6 @@ export default function LoginCallbackPage() {
         );
         sendMessage(successMessage);
 
-        showToast("Sign in success", "success");
         redirectAway();
       }
     }

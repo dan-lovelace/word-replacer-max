@@ -1,20 +1,18 @@
 import { useEffect, useRef, useState } from "preact/hooks";
 
-import { cx } from "@worm/shared";
+import { cx, TOAST_MESSAGE_DURATION_DEFAULT_MS } from "@worm/shared";
 import { browser } from "@worm/shared/src/browser";
 import { storageSetByKeys } from "@worm/shared/src/storage";
 import { PopupAlertSeverity } from "@worm/types";
+import {
+  ShowToastMessageOptions,
+  WebAppMessage,
+  WebAppMessageKind,
+} from "@worm/types/src/message";
 
 import { useConfig } from "../../store/Config";
 
 import Button from "../button/Button";
-
-import {
-  DURATION_DEFAULT_MS,
-  ShowToastMessageOptions,
-  ToastMessage,
-  ToastMessageKind,
-} from ".";
 
 const severityIconMap: Record<PopupAlertSeverity, string> = {
   danger: "warning",
@@ -36,11 +34,13 @@ export default function ToastContainer() {
   const toastRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    const handleMessage = (event: ToastMessage<ToastMessageKind>) => {
+    const handleMessage = (event: WebAppMessage<WebAppMessageKind>) => {
       if (event.data.kind !== "showToastMessage") return;
 
-      setMessage(String(event.data.details?.message));
-      setOptions(event.data.details?.options);
+      const eventDetails = event.data.details as ShowToastMessageOptions;
+
+      setMessage(String(eventDetails.message));
+      setOptions(eventDetails.options);
       setUpdatedAt(new Date());
       setIsOpen(true);
     };
@@ -65,7 +65,7 @@ export default function ToastContainer() {
 
     timeoutRef.current = setTimeout(() => {
       closeToast();
-    }, DURATION_DEFAULT_MS);
+    }, TOAST_MESSAGE_DURATION_DEFAULT_MS);
 
     return () => {
       if (timeoutRef.current) {

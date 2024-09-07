@@ -3,8 +3,10 @@ import React, { createContext, useContext, useState, ReactNode } from "react";
 import MuiAlert, { AlertColor, AlertProps } from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
 
+import { PopupAlertSeverity } from "@worm/types";
+
 type ToastContextProps = {
-  showToast: (message: string, severity: AlertColor) => void;
+  showToast: (message: string, severity?: PopupAlertSeverity) => void;
 };
 
 type ToastProviderProps = {
@@ -32,10 +34,24 @@ export function ToastProvider({ children }: ToastProviderProps) {
   const [message, setMessage] = useState("");
   const [severity, setSeverity] = useState<AlertColor>("info");
 
-  const showToast = (message: string, severity: AlertColor) => {
+  const showToast = (message: string, severity?: PopupAlertSeverity) => {
     setMessage(message);
-    setSeverity(severity);
     setOpen(true);
+
+    /**
+     * Translate Bootstrap 5 severities to MUI. The same types are used across
+     * multiple packages and we need to account for both.
+     */
+    let alertColor: AlertColor = "info";
+    switch (severity) {
+      case "danger":
+        alertColor = "error";
+        break;
+      case "success":
+        alertColor = "success";
+    }
+
+    setSeverity(alertColor);
   };
 
   const handleClose = () => {

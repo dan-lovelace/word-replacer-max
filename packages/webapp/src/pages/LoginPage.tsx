@@ -1,10 +1,11 @@
 import Redirect from "../components/link/Redirect";
+import { getOauthUrl } from "../lib/auth";
 
 export default function LoginPage() {
   return (
     <Redirect
       options={{ isExternal: true, replace: true }}
-      to={import.meta.env.VITE_SIGN_IN_URL}
+      to={getOauthUrl("authorize")}
     />
   );
 }

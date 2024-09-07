@@ -1,6 +1,6 @@
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 
-import { getApiEndpoint } from "@worm/shared";
+import { getApiEndpoint } from "@worm/shared/src/api/endpoints";
 import { ApiAuthTokensResponse } from "@worm/types";
 
 import { queryKeys } from "../cache";

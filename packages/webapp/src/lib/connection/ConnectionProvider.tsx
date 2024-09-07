@@ -8,14 +8,16 @@ import {
   isWebAppMessagingAllowed,
   webAppMessages,
 } from "@worm/shared";
+import { WebAppPingResponse } from "@worm/types";
 import {
+  ShowToastMessageOptions,
   WebAppMessage,
   WebAppMessageData,
   WebAppMessageKind,
-  WebAppPingResponse,
-} from "@worm/types";
+} from "@worm/types/src/message";
 
 import { useConnectionPing } from "./queries";
+import { useToast } from "../toast/ToastProvider";
 
 type ConnectionProviderContextProps = {
   isConnected: boolean;
@@ -34,7 +36,9 @@ const useConnectionProviderValue = (
 ): ConnectionProviderContextProps => {
   const [isConnected, setIsConnected] = useState(false);
   const [isConnecting, setIsConnecting] = useState(true);
+
   const { refetch: ping } = useConnectionPing(iframeRef);
+  const { showToast } = useToast();
 
   /**
    * This is the root listener on the webapp side for all communications
@@ -66,6 +70,16 @@ const useConnectionProviderValue = (
           setIsConnected(pingResponse);
           setIsConnecting(false);
           break;
+        }
+
+        case webAppMessages.SHOW_TOAST_MESSAGE: {
+          const showToastOptions = event.data
+            .details as ShowToastMessageOptions;
+
+          showToast(
+            showToastOptions.message,
+            showToastOptions.options?.severity
+          );
         }
       }
     };

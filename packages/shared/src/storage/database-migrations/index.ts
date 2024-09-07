@@ -85,7 +85,8 @@ function isVersionGreaterThan(a: StorageVersion, b: StorageVersion): boolean {
  *
  * @remarks
  * Pay attention closely to any changes because this has the potential to mess
- * up real users' storage.
+ * up real users' storage. Write new tests for any changes and DO NOT update
+ * old migration snapshots.
  */
 export async function migrate(
   migrations: Migrations,

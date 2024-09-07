@@ -1,3 +1,5 @@
+import { ApiResponse } from ".";
+
 export type AuthConfiguration = {
   oauth: {
     domain: string;
@@ -20,13 +22,20 @@ export type ApiAuthTokensResponse = ApiResponse<{
   refreshToken: string;
 }>;
 
+export type ApiAuthWhoAmIResponse = ApiResponse<{
+  email: string;
+  emailVerified: string;
+}>;
+
 export type ApiCognitoTokensResponse = {
   access_token: string;
   id_token: string;
   refresh_token: string;
 };
 
-export type ApiResponse<T> = {
-  data?: T;
-  error?: string;
+export type ApiCognitoUserInfoResponse = {
+  email: string;
+  email_verified: string;
+  sub: string;
+  username: string;
 };

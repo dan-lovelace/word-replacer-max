@@ -1,4 +1,4 @@
-import { Matcher } from "..";
+import { ApiResponse, Matcher } from "..";
 
 export type ApiShareRequest = {
   matchers: ApiShareRequestMatcher[];
@@ -6,9 +6,9 @@ export type ApiShareRequest = {
 
 export type ApiShareRequestMatcher = Omit<Matcher, "identifier">;
 
-export type ApiShareResponse = {
+export type ApiShareResponse = ApiResponse<{
   url: string;
-};
+}>;
 
 export type ShareRequest = {
   matchers: Matcher[];

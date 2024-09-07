@@ -1,7 +1,13 @@
 /* eslint-disable no-console */
-import { exec } from "child_process";
-import fs from "fs";
-import path from "path";
+import assert from "node:assert";
+import { exec } from "node:child_process";
+import fs from "node:fs";
+import { join } from "node:path";
+
+import { config } from "dotenv";
+
+const __dirname = process.cwd();
+const envDir = join(__dirname, "config");
 
 const OUT_DIR = "dist";
 
@@ -24,14 +30,28 @@ function writeManifest() {
     version: packageVersion,
   };
 
+  /**
+   * Add permissions to make API requests.
+   */
+  const apiOrigin = `${process.env.VITE_API_ORIGIN}/*`;
+  if (manifestVersion === "2") {
+    manifest.permissions = [...manifest.permissions, apiOrigin];
+  } else {
+    manifest.host_permissions = [...manifest.host_permissions, apiOrigin];
+  }
+
   fs.writeFileSync(
-    path.join(OUT_DIR, "manifest.json"),
+    join(OUT_DIR, "manifest.json"),
     JSON.stringify(manifest, null, 2),
     "utf-8"
   );
 }
 
 function main() {
+  assert(process.env.NODE_ENV);
+  config({ path: join(envDir, ".env") });
+  config({ path: join(envDir, `.env.${process.env.NODE_ENV}`) });
+
   if (!fs.existsSync(OUT_DIR)) {
     fs.mkdirSync(OUT_DIR, { recursive: true });
   }

@@ -106,7 +106,7 @@ export default function ExportButton({
       });
     }
 
-    if (!json.url) {
+    if (!json.data?.url) {
       stopExporting();
 
       return showToast({
@@ -119,7 +119,7 @@ export default function ExportButton({
       ...(exportLinks || []),
       {
         identifier: new Date().getTime(),
-        url: json.url,
+        url: json.data.url,
       },
     ];
 
