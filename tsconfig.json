@@ -11,6 +11,7 @@
     "moduleResolution": "Node",
     "noEmit": true,
     "paths": {
+      "@worm/auth": ["packages/auth"],
       "@worm/background": ["packages/background"],
       "@worm/content": ["packages/content"],
       "@worm/popup": ["packages/popup"],

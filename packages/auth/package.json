@@ -1,0 +1,15 @@
+{
+  "name": "@worm/auth",
+  "version": "0.0.0",
+  "author": "dan-lovelace",
+  "main": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc && vite build",
+    "start": "yarn build --watch --mode development",
+    "test": "echo \"Error: no test specified\" && exit 0"
+  },
+  "dependencies": {
+    "@worm/shared": "*"
+  }
+}

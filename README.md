@@ -18,6 +18,16 @@ To get started, you'll need:
 
 ## Instructions
 
+## Configure environment
+
+Set your desired target environment using `NODE_ENV`:
+
+```
+export NODE_ENV=development
+```
+
+### Steps
+
 1. Install dependencies
    ```
    yarn install
