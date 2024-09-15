@@ -16,16 +16,20 @@ export type ApiAuthTokensRequest = {
   code: string;
 };
 
-export type ApiAuthTokensResponse = ApiResponse<{
-  accessToken: string;
-  idToken: string;
-  refreshToken: string;
-}>;
+export type ApiAuthTokens =
+  | {
+      accessToken: string;
+      idToken: string;
+      refreshToken: string;
+    }
+  | undefined;
+export type ApiAuthTokensResponse = ApiResponse<ApiAuthTokens>;
 
-export type ApiAuthWhoAmIResponse = ApiResponse<{
+export type ApiAuthWhoAmI = {
   email: string;
   emailVerified: string;
-}>;
+};
+export type ApiAuthWhoAmIResponse = ApiResponse<ApiAuthWhoAmI>;
 
 export type ApiCognitoTokensResponse = {
   access_token: string;

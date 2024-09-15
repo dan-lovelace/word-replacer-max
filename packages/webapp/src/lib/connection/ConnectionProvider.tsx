@@ -6,10 +6,10 @@ import {
   createWebAppMessage,
   elementIdentifiers,
   isWebAppMessagingAllowed,
-  webAppMessages,
 } from "@worm/shared";
-import { WebAppPingResponse } from "@worm/types";
+import { AppUser, WebAppPingResponse } from "@worm/types";
 import {
+  ErrorableMessage,
   ShowToastMessageOptions,
   WebAppMessage,
   WebAppMessageData,
@@ -20,6 +20,8 @@ import { useConnectionPing } from "./queries";
 import { useToast } from "../toast/ToastProvider";
 
 type ConnectionProviderContextProps = {
+  appUser?: AppUser;
+  iframeRef: React.RefObject<HTMLIFrameElement>;
   isConnected: boolean;
   isConnecting: boolean;
   sendMessage: (message: WebAppMessageData<WebAppMessageKind>) => void;
@@ -34,6 +36,7 @@ const ConnectionProviderContext = createContext<ConnectionProviderContextProps>(
 const useConnectionProviderValue = (
   iframeRef: React.RefObject<HTMLIFrameElement>
 ): ConnectionProviderContextProps => {
+  const [appUser, setAppUser] = useState<AppUser>();
   const [isConnected, setIsConnected] = useState(false);
   const [isConnecting, setIsConnecting] = useState(true);
 
@@ -55,16 +58,23 @@ const useConnectionProviderValue = (
       }
 
       switch (event.data.kind) {
-        case webAppMessages.CONTENT_INITIALIZE: {
-          const pingRequestMessage = createWebAppMessage(
-            webAppMessages.PING_REQUEST
-          );
+        case "authUserResponse": {
+          const userResponse = event.data.details as ErrorableMessage<AppUser>;
 
-          sendMessage(pingRequestMessage);
+          if (userResponse.error) {
+            return showToast(userResponse.error.message, "danger");
+          }
+
+          setAppUser(userResponse.data);
           break;
         }
 
-        case webAppMessages.PING_RESPONSE: {
+        case "contentInitialize": {
+          sendMessage(createWebAppMessage("pingRequest"));
+          break;
+        }
+
+        case "pingResponse": {
           const pingResponse = event.data.details as WebAppPingResponse;
 
           setIsConnected(pingResponse);
@@ -72,7 +82,7 @@ const useConnectionProviderValue = (
           break;
         }
 
-        case webAppMessages.SHOW_TOAST_MESSAGE: {
+        case "showToastMessage": {
           const showToastOptions = event.data
             .details as ShowToastMessageOptions;
 
@@ -117,6 +127,8 @@ const useConnectionProviderValue = (
   };
 
   return {
+    appUser,
+    iframeRef,
     isConnected,
     isConnecting,
     sendMessage,

@@ -1,7 +1,7 @@
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 
-import { getApiEndpoint } from "@worm/shared/src/api/endpoints";
-import { ApiAuthTokensResponse } from "@worm/types";
+import { getApiEndpoint } from "@worm/shared/src/api/vite";
+import { ApiAuthTokens, ApiAuthTokensResponse } from "@worm/types";
 
 import { queryKeys } from "../cache";
 
@@ -10,36 +10,26 @@ type AuthTokensQueryKey = [string, { code: string }];
 export const useAuthTokens = (
   oauthCode: string | undefined,
   options?: Partial<
-    UseQueryOptions<
-      ApiAuthTokensResponse,
-      Error,
-      ApiAuthTokensResponse,
-      AuthTokensQueryKey
-    >
+    UseQueryOptions<ApiAuthTokens, Error, ApiAuthTokens, AuthTokensQueryKey>
   >
 ) =>
-  useQuery<
-    ApiAuthTokensResponse,
-    Error,
-    ApiAuthTokensResponse,
-    AuthTokensQueryKey
-  >({
+  useQuery<ApiAuthTokens, Error, ApiAuthTokens, AuthTokensQueryKey>({
     enabled: false,
     queryFn: async ({ queryKey: [_, { code: queryKeyCode }] }) => {
-      const response = await fetch(getApiEndpoint("AUTH_TOKENS"), {
+      const result = await fetch(getApiEndpoint("AUTH_TOKENS"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ code: queryKeyCode }),
       });
-      const data = await response.json();
+      const resultJson = (await result.json()) as ApiAuthTokensResponse;
 
-      if (!response.ok) {
-        throw new Error(JSON.stringify(data.error));
+      if (!result.ok) {
+        throw new Error(JSON.stringify(resultJson.error));
       }
 
-      return data as ApiAuthTokensResponse;
+      return resultJson.data;
     },
     queryKey: [queryKeys.AUTH_TOKENS, { code: String(oauthCode) }],
     retry: false,

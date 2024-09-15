@@ -5,7 +5,7 @@ import Box from "@mui/material/Box/Box";
 import CircularProgress from "@mui/material/CircularProgress/CircularProgress";
 import Typography from "@mui/material/Typography/Typography";
 
-import { createWebAppMessage, webAppMessages } from "@worm/shared";
+import { createWebAppMessage } from "@worm/shared";
 
 import { useAuthTokens } from "../lib/auth/queries";
 import { useToast } from "../lib/toast/ToastProvider";
@@ -19,7 +19,7 @@ export default function LoginCallbackPage() {
 
   const { isLoading: isLoadingAuthTokens, refetch: fetchAuthTokens } =
     useAuthTokens(oauthCode);
-  const { sendMessage } = useConnectionProvider();
+  const { isConnected, sendMessage } = useConnectionProvider();
   const navigate = useNavigate();
   const { showToast } = useToast();
 
@@ -43,7 +43,7 @@ export default function LoginCallbackPage() {
   }, []);
 
   useEffect(() => {
-    if (!oauthCode) return;
+    if (!isConnected || !oauthCode) return;
 
     async function getTokens() {
       const result = await fetchAuthTokens();
@@ -54,7 +54,7 @@ export default function LoginCallbackPage() {
 
       if (result.isSuccess) {
         const successMessage = createWebAppMessage(
-          webAppMessages.AUTH_TOKENS,
+          "authUpdateTokens",
           result.data
         );
         sendMessage(successMessage);
@@ -64,7 +64,7 @@ export default function LoginCallbackPage() {
     }
 
     getTokens();
-  }, [oauthCode]);
+  }, [isConnected, oauthCode]);
 
   const redirectAway = () => {
     navigate(ROUTES.HOME, {

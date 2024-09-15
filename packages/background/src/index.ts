@@ -1,9 +1,11 @@
 import { browser } from "@worm/shared/src/browser";
 
+import "./lib/auth";
 import {
   initializeContextMenu,
   startContextMenuListener,
 } from "./lib/context-menu";
+import { startRuntimeMessageListener } from "./lib/messages";
 import { initializeStorage } from "./lib/storage";
 
 /**
@@ -18,3 +20,4 @@ browser.runtime.onInstalled.addListener(async () => {
 });
 
 startContextMenuListener();
+startRuntimeMessageListener();

@@ -69,8 +69,7 @@
         "contextMenus",
         "storage",
         "tabs",
-        "https://dev-api.wordreplacermax.com/*",
-        "https://dev-auth.wordreplacermax.com/*"
+        "https://dev-api.wordreplacermax.com/*"
       ],
       "web_accessible_resources": [
         "assets/*"
@@ -127,8 +126,7 @@
         "tabs"
       ],
       "host_permissions": [
-        "https://dev-api.wordreplacermax.com/*",
-        "https://dev-auth.wordreplacermax.com/*"
+        "https://dev-api.wordreplacermax.com/*"
       ],
       "web_accessible_resources": [
         {

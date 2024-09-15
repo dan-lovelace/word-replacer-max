@@ -1,11 +1,11 @@
 import Redirect from "../components/link/Redirect";
-import { getOauthUrl } from "../lib/auth";
+import { getOAuthUrl } from "../lib/auth";
 
 export default function LoginPage() {
   return (
     <Redirect
       options={{ isExternal: true, replace: true }}
-      to={getOauthUrl("authorize")}
+      to={getOAuthUrl("authorize")}
     />
   );
 }

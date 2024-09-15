@@ -1,7 +1,5 @@
 import { z } from "zod";
 
-import { ApiAuthTokensResponse } from "./api";
-
 const queryPatterns = ["case", "default", "regex", "wholeWord"] as const;
 const schemaVersions = [1] as const;
 
@@ -20,6 +18,17 @@ export type DeepPartial<T> = T extends object
   : T;
 
 export type DomainEffect = "allow" | "deny";
+
+export type EnvConfigProps = {
+  readonly VITE_ALLOWED_CONTENT_ORIGINS: string[];
+  readonly VITE_API_ORIGIN: string;
+  readonly VITE_COGNITO_HOSTED_UI_QUERY: string;
+  readonly VITE_COGNITO_USER_POOL_CLIENT_ID: string;
+  readonly VITE_COGNITO_USER_POOL_CUSTOM_DOMAIN: string;
+  readonly VITE_COGNITO_USER_POOL_ENDPOINT: string;
+  readonly VITE_COGNITO_USER_POOL_ID: string;
+  readonly VITE_WEBAPP_ORIGIN: string;
+};
 
 export type ExportLink = {
   identifier: ReturnType<Date["getTime"]>;
@@ -89,9 +98,16 @@ export type Storage = Partial<{
 export type StorageKey = keyof StorageKeyMap;
 
 export type StorageKeyMap = {
-  authentication: {
-    tokens: ApiAuthTokensResponse;
-  };
+  /**
+   * Auth keys are mapped using their respective names from Amplify. A custom
+   * token provider exists to translate Amplify's version to our own.
+   */
+  authAccessToken: string;
+  authClockDrift: string;
+  authLastAuthUser: string;
+  authIdToken: string;
+  authRefreshToken: string;
+
   domainList: string[];
   exportLinks: ExportLink[];
   matchers: Matcher[];

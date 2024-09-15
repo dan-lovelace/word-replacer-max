@@ -4,27 +4,10 @@ import {
   WebAppMessageKindMap,
 } from "@worm/types/src/message";
 
+import { getEnvConfig } from "./config";
 import { elementIdentifiers } from "./selectors";
 
-type WebAppMessageLabel =
-  | "AUTH_TOKENS"
-  | "CONTENT_INITIALIZE"
-  | "PING_REQUEST"
-  | "PING_RESPONSE"
-  | "SHOW_TOAST_MESSAGE";
-
 export const TOAST_MESSAGE_DURATION_DEFAULT_MS = 4000;
-
-export const webAppMessages: Record<
-  WebAppMessageLabel,
-  keyof WebAppMessageKindMap
-> = {
-  AUTH_TOKENS: "authTokens",
-  CONTENT_INITIALIZE: "contentInitialize",
-  PING_REQUEST: "pingRequest",
-  PING_RESPONSE: "pingResponse",
-  SHOW_TOAST_MESSAGE: "showToastMessage",
-};
 
 export function createWebAppMessage<T extends WebAppMessageKind>(
   kind: T,
@@ -44,5 +27,7 @@ export function getWebAppIFrame() {
 }
 
 export function isWebAppMessagingAllowed(hostname: string) {
-  return import.meta.env.VITE_ALLOWED_CONTENT_ORIGINS.includes(hostname);
+  const envConfig = getEnvConfig();
+
+  return envConfig.VITE_ALLOWED_CONTENT_ORIGINS.includes(hostname);
 }

@@ -1,3 +1,3 @@
-import { logDebug } from "@worm/shared";
+import { initializeWebApp } from "./lib/webapp";
 
-logDebug("auth loaded");
+initializeWebApp();

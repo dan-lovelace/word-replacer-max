@@ -10,6 +10,7 @@
     "test": "echo \"Error: no test specified\" && exit 0"
   },
   "dependencies": {
-    "@worm/shared": "*"
+    "@worm/shared": "*",
+    "@worm/types": "*"
   }
 }

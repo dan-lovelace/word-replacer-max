@@ -1,12 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 
-import {
-  createWebAppMessage,
-  isWebAppMessagingAllowed,
-  webAppMessages,
-} from "@worm/shared";
+import { createWebAppMessage, isWebAppMessagingAllowed } from "@worm/shared";
 import { WebAppMessage, WebAppMessageKind } from "@worm/types/src/message";
-import { WebAppPingRequest } from "@worm/types";
+import { WebAppPingResponse } from "@worm/types";
 
 export const useConnectionPing = (
   iframeRef: React.RefObject<HTMLIFrameElement>
@@ -23,16 +19,20 @@ export const useConnectionPing = (
           return;
         }
 
+        let timeout: NodeJS.Timeout;
+
         const handlePingResponse = (
           event: WebAppMessage<WebAppMessageKind>
         ) => {
-          if (event.data.kind === webAppMessages.PING_REQUEST) {
-            const pingData = event.data.details as WebAppPingRequest;
+          if (event.data.kind === "pingResponse") {
+            const pingData = event.data.details as WebAppPingResponse;
 
             iframeRef.current?.contentWindow?.removeEventListener(
               "message",
               handlePingResponse
             );
+
+            clearInterval(timeout);
             resolve(Boolean(pingData));
           }
         };
@@ -42,11 +42,20 @@ export const useConnectionPing = (
           handlePingResponse
         );
 
-        const pingRequest = createWebAppMessage(
-          webAppMessages.PING_REQUEST,
-          undefined
-        );
+        const pingRequest = createWebAppMessage("pingRequest");
         iframeRef.current.contentWindow?.postMessage(pingRequest);
+
+        /**
+         * Create a timer so there's a threshold to how long an unanswered ping
+         * should linger before considering the connection unalive.
+         */
+        const now = new Date().getTime();
+        timeout = setInterval(() => {
+          if (new Date().getTime() - now > 2000) {
+            resolve(false);
+            clearInterval(timeout);
+          }
+        }, 50);
       }),
     queryKey: ["connection"],
   });
