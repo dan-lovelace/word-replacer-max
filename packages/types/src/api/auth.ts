@@ -1,17 +1,5 @@
 import { ApiResponse } from ".";
 
-export type AuthConfiguration = {
-  oauth: {
-    domain: string;
-    scopes: string[];
-    redirectSignIn: string;
-    redirectSignOut: string;
-  };
-  region: string;
-  userPoolClientId: string;
-  userPoolId: string;
-};
-
 export type ApiAuthTokensRequest = {
   code: string;
 };

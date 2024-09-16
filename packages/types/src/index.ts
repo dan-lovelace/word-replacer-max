@@ -140,8 +140,6 @@ export type SystemColor =
   | "white"
   | "yellow";
 
-export type WebAppPingRequest = undefined;
-
 export type WebAppPingResponse = boolean;
 
 export * from "./api";

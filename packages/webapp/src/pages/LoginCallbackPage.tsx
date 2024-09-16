@@ -8,9 +8,9 @@ import Typography from "@mui/material/Typography/Typography";
 import { createWebAppMessage } from "@worm/shared";
 
 import { useAuthTokens } from "../lib/auth/queries";
-import { useToast } from "../lib/toast/ToastProvider";
 import { useConnectionProvider } from "../lib/connection/ConnectionProvider";
 import { ROUTES } from "../lib/routes";
+import { useToast } from "../lib/toast/ToastProvider";
 
 const CODE_PARAMETER_NAME = "code";
 

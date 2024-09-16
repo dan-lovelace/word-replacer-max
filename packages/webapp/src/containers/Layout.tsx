@@ -6,6 +6,7 @@ import LoginButton from "../components/button/LoginButton";
 import SignupButton from "../components/button/SignupButton";
 import ConnectionStatus from "../components/connection/ConnectionStatus";
 import { ROUTES } from "../lib/routes";
+import Link from "../components/link/Link";
 
 type LayoutProps = React.HTMLAttributes<HTMLDivElement>;
 
@@ -37,7 +38,7 @@ export default function Layout({ children }: LayoutProps) {
           py: 1,
         }}
       >
-        <a href={ROUTES.HOME}>
+        <Link to={ROUTES.HOME}>
           <Box
             sx={{
               height: 36,
@@ -53,7 +54,7 @@ export default function Layout({ children }: LayoutProps) {
               }}
             />
           </Box>
-        </a>
+        </Link>
         <Box
           sx={{
             flex: "1 1 auto",
@@ -61,9 +62,7 @@ export default function Layout({ children }: LayoutProps) {
         >
           {navigation.map((item) => (
             <span key={item.id}>
-              <a className={cx("text-gray-700")} href={item.to}>
-                {item.label}
-              </a>
+              <Link to={item.to}>{item.label}</Link>
             </span>
           ))}
         </Box>

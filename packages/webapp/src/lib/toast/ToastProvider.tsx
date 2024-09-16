@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
-import MuiAlert, { AlertColor, AlertProps } from "@mui/material/Alert";
-import Snackbar from "@mui/material/Snackbar";
+import MuiAlert, { AlertColor, AlertProps } from "@mui/material/Alert/Alert";
+import Snackbar from "@mui/material/Snackbar/Snackbar";
 
 import { PopupAlertSeverity } from "@worm/types";
 
@@ -17,7 +17,7 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>((props, ref) => (
   <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
 ));
 
-const ToastContext = createContext<ToastContextProps | undefined>(undefined);
+const ToastContext = createContext<ToastContextProps>({} as ToastContextProps);
 
 export function useToast(): ToastContextProps {
   const context = useContext(ToastContext);

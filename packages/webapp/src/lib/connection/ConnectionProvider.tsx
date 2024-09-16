@@ -16,8 +16,9 @@ import {
   WebAppMessageKind,
 } from "@worm/types/src/message";
 
-import { useConnectionPing } from "./queries";
 import { useToast } from "../toast/ToastProvider";
+
+import { useConnectionPing } from "./queries";
 
 type ConnectionProviderContextProps = {
   appUser?: AppUser;

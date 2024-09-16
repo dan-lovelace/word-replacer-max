@@ -52,8 +52,8 @@ export const useConnectionPing = (
         const now = new Date().getTime();
         timeout = setInterval(() => {
           if (new Date().getTime() - now > 2000) {
-            resolve(false);
             clearInterval(timeout);
+            resolve(false);
           }
         }, 50);
       }),

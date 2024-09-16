@@ -1,3 +1,4 @@
+import Link from "../components/link/Link";
 import { ROUTES } from "../lib/routes";
 
 export default function NotFoundPage() {
@@ -5,7 +6,7 @@ export default function NotFoundPage() {
     <div>
       <h1>Page not found</h1>
       <p>
-        <a href={ROUTES.HOME}>Go home</a>
+        <Link to={ROUTES.HOME}>Go home</Link>
       </p>
     </div>
   );

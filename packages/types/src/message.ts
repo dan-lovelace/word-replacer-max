@@ -1,14 +1,5 @@
-import {
-  AppUser,
-  PopupAlertSeverity,
-  WebAppPingRequest,
-  WebAppPingResponse,
-} from ".";
+import { AppUser, PopupAlertSeverity, WebAppPingResponse } from ".";
 import { ApiAuthTokens } from "./api";
-
-export type AuthInit = {
-  callbackUrl: string;
-};
 
 export type ErrorableMessage<T> = {
   data?: T;
@@ -41,14 +32,13 @@ export type WebAppMessageData<T extends WebAppMessageKind> =
 export type WebAppMessageKind = keyof WebAppMessageKindMap;
 
 export type WebAppMessageKindMap = {
-  authInit: AuthInit;
   authUpdateTokens: ApiAuthTokens;
   authTokensRequest: undefined;
   authTokensResponse: ErrorableMessage<ApiAuthTokens>;
   authUserRequest: undefined;
   authUserResponse: ErrorableMessage<AppUser>;
   contentInitialize: undefined;
-  pingRequest: WebAppPingRequest;
+  pingRequest: undefined;
   pingResponse: WebAppPingResponse;
   showToastMessage: ShowToastMessageOptions;
 };

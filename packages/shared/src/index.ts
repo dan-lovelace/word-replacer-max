@@ -1,4 +1,4 @@
-import "@worm/shared/vite-env.d.ts";
+import "../vite-env.d.ts";
 
 export * from "./classnames";
 export * from "./debounce";
