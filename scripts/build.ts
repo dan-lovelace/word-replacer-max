@@ -35,9 +35,12 @@ function writeManifest() {
    */
   const apiOrigin = `${process.env.VITE_API_ORIGIN}/*`;
   if (manifestVersion === "2") {
-    manifest.permissions = [...manifest.permissions, apiOrigin];
+    manifest.permissions = [...(manifest.permissions || []), apiOrigin];
   } else {
-    manifest.host_permissions = [...manifest.host_permissions, apiOrigin];
+    manifest.host_permissions = [
+      ...(manifest.host_permissions || []),
+      apiOrigin,
+    ];
   }
 
   fs.writeFileSync(
