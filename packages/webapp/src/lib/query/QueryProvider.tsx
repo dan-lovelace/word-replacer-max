@@ -8,7 +8,7 @@ type QueryClientProps = {
 
 const queryClient = new QueryClient();
 
-export function StoreProvider({ children }: QueryClientProps) {
+export function QueryProvider({ children }: QueryClientProps) {
   return (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );

@@ -8,13 +8,13 @@ import "@worm/shared/vite-env.d.ts";
 import { App } from "./App";
 import { AuthProvider } from "./lib/auth/AuthProvider";
 import { ConnectionProvider } from "./lib/connection/ConnectionProvider";
-import { StoreProvider } from "./lib/store/StoreProvider";
+import { QueryProvider } from "./lib/query/QueryProvider";
 import { ToastProvider } from "./lib/toast/ToastProvider";
 import "./style/index.scss";
 
 createRoot(document.getElementById("app") as HTMLDivElement).render(
   <StrictMode>
-    <StoreProvider>
+    <QueryProvider>
       <ToastProvider>
         <ConnectionProvider>
           <AuthProvider>
@@ -22,6 +22,6 @@ createRoot(document.getElementById("app") as HTMLDivElement).render(
           </AuthProvider>
         </ConnectionProvider>
       </ToastProvider>
-    </StoreProvider>
+    </QueryProvider>
   </StrictMode>
 );
