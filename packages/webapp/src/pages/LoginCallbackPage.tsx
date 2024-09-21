@@ -19,7 +19,7 @@ export default function LoginCallbackPage() {
 
   const { isLoading: isLoadingAuthTokens, refetch: fetchAuthTokens } =
     useAuthTokens(oauthCode);
-  const { isConnected, sendMessage } = useConnectionProvider();
+  const { connectionStatus, sendMessage } = useConnectionProvider();
   const navigate = useNavigate();
   const { showToast } = useToast();
 
@@ -43,7 +43,7 @@ export default function LoginCallbackPage() {
   }, []);
 
   useEffect(() => {
-    if (!isConnected || !oauthCode) return;
+    if (connectionStatus !== "connected" || !oauthCode) return;
 
     async function getTokens() {
       const result = await fetchAuthTokens();
@@ -64,7 +64,7 @@ export default function LoginCallbackPage() {
     }
 
     getTokens();
-  }, [isConnected, oauthCode]);
+  }, [connectionStatus, oauthCode]);
 
   const redirectAway = () => {
     navigate(ROUTES.HOME, {
@@ -87,7 +87,7 @@ export default function LoginCallbackPage() {
         <Typography variant="h4" sx={{ fontWeight: 700 }}>
           Signing in...
         </Typography>
-        <CircularProgress size={64} />
+        <CircularProgress size={48} />
       </Box>
     );
   }

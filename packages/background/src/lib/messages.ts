@@ -4,29 +4,12 @@ import { createWebAppMessage, logDebug } from "@worm/shared";
 import { getApiEndpoint } from "@worm/shared/src/api/vite";
 import { browser } from "@worm/shared/src/browser";
 import { storageSetByKeys } from "@worm/shared/src/storage";
-import { ApiAuthTokens } from "@worm/types";
+import { ApiAuthTokens, IdentificationError } from "@worm/types";
 import {
   WebAppMessageData,
   WebAppMessageKind,
   WebAppMessageKindMap,
 } from "@worm/types/src/message";
-
-type IdentificationErrorName = "MissingTokens" | "Standard" | "UserNotLoggedIn";
-
-const identificationErrorMessages: Record<IdentificationErrorName, string> = {
-  MissingTokens: "Update requires tokens",
-  Standard: "Unable to identify user",
-  UserNotLoggedIn: "User is not logged in",
-};
-
-class IdentificationError extends Error {
-  constructor(name: IdentificationErrorName = "Standard") {
-    super(identificationErrorMessages[name]);
-    this.name = name;
-
-    Object.setPrototypeOf(this, IdentificationError.prototype);
-  }
-}
 
 function getError(error: unknown) {
   let errorMessage: string;

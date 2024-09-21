@@ -7,7 +7,7 @@ import {
   elementIdentifiers,
   isWebAppMessagingAllowed,
 } from "@worm/shared";
-import { AppUser, WebAppPingResponse } from "@worm/types";
+import { AppUser, IdentificationError, WebAppPingResponse } from "@worm/types";
 import {
   ErrorableMessage,
   ShowToastMessageOptions,
@@ -18,17 +18,16 @@ import {
 
 import { useToast } from "../toast/ToastProvider";
 
-import { useConnectionPing } from "./queries";
-
 type ConnectionProviderContextProps = {
   appUser?: AppUser;
+  connectionStatus: ConnectionStatusState;
   iframeRef: React.RefObject<HTMLIFrameElement>;
-  isConnected: boolean;
-  isConnecting: boolean;
   sendMessage: (message: WebAppMessageData<WebAppMessageKind>) => void;
 };
 
 type ConnectionProviderProps = React.HTMLAttributes<HTMLDivElement>;
+
+type ConnectionStatusState = "connected" | "connecting" | "disconnected";
 
 const ConnectionProviderContext = createContext<ConnectionProviderContextProps>(
   {} as ConnectionProviderContextProps
@@ -38,11 +37,14 @@ const useConnectionProviderValue = (
   iframeRef: React.RefObject<HTMLIFrameElement>
 ): ConnectionProviderContextProps => {
   const [appUser, setAppUser] = useState<AppUser>();
-  const [isConnected, setIsConnected] = useState(false);
-  const [isConnecting, setIsConnecting] = useState(true);
+  const [connectionStatus, setConnectionStatus] =
+    useState<ConnectionStatusState>("connecting");
 
-  const { refetch: ping } = useConnectionPing(iframeRef);
+  const timeoutRef = useRef<NodeJS.Timeout>();
+  const connectionStatusRef = useRef<ConnectionStatusState>();
   const { showToast } = useToast();
+
+  connectionStatusRef.current = connectionStatus;
 
   /**
    * This is the root listener on the webapp side for all communications
@@ -59,27 +61,74 @@ const useConnectionProviderValue = (
       }
 
       switch (event.data.kind) {
+        case "authTokensResponse": {
+          /**
+           * Fetch the current user whenever tokens are updated.
+           */
+          sendMessage(createWebAppMessage("authUserRequest"));
+
+          break;
+        }
+
         case "authUserResponse": {
           const userResponse = event.data.details as ErrorableMessage<AppUser>;
 
-          if (userResponse.error) {
-            return showToast(userResponse.error.message, "danger");
+          if (userResponse.data) {
+            setAppUser(userResponse.data);
           }
 
-          setAppUser(userResponse.data);
+          if (
+            userResponse.error &&
+            userResponse.error instanceof IdentificationError &&
+            userResponse.error.name !== "UserNotLoggedIn"
+          ) {
+            showToast(userResponse.error.message, "danger");
+          }
           break;
         }
 
         case "contentInitialize": {
+          /**
+           * The extension's content script is up and running. A ping request
+           * is sent to it. Additionally, the ConnectionProvider listens for
+           * the ping request to instantiate a connection timeout.
+           */
           sendMessage(createWebAppMessage("pingRequest"));
+
+          break;
+        }
+
+        case "pingRequest": {
+          /**
+           * Start a connection timeout timer to avoid waiting indefinitely for
+           * a ping response.
+           */
+          timeoutRef.current = setTimeout(() => {
+            if (connectionStatusRef.current !== "connecting") return;
+
+            setConnectionStatus("disconnected");
+          }, 1500);
           break;
         }
 
         case "pingResponse": {
           const pingResponse = event.data.details as WebAppPingResponse;
 
-          setIsConnected(pingResponse);
-          setIsConnecting(false);
+          /**
+           * NOTE: A ping response of `false` will never occur because the
+           * background script only responds `true` if it is able. If the
+           * extension is not running, no response will be received.
+           */
+          setConnectionStatus(pingResponse ? "connected" : "disconnected");
+
+          /**
+           * Refresh the user on each ping.
+           */
+          sendMessage(createWebAppMessage("authUserRequest"));
+
+          if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+          }
           break;
         }
 
@@ -108,12 +157,14 @@ const useConnectionProviderValue = (
     };
   }, [iframeRef]);
 
-  /**
-   * Listen for window focus events and re-test the connection.
-   */
   useEffect(() => {
+    sendPing();
+
+    /**
+     * Listen for window focus events and re-test the connection.
+     */
     const handleFocus = () => {
-      ping();
+      sendPing();
     };
 
     window.addEventListener("focus", handleFocus);
@@ -121,17 +172,20 @@ const useConnectionProviderValue = (
     return () => {
       window.removeEventListener("focus", handleFocus);
     };
-  }, [ping]);
+  }, []);
 
   const sendMessage = (message: WebAppMessageData<WebAppMessageKind>) => {
     iframeRef.current?.contentWindow?.postMessage(message);
   };
 
+  const sendPing = () => {
+    sendMessage(createWebAppMessage("pingRequest"));
+  };
+
   return {
     appUser,
+    connectionStatus,
     iframeRef,
-    isConnected,
-    isConnecting,
     sendMessage,
   };
 };

@@ -1,5 +1,10 @@
 import { z } from "zod";
 
+const identificationErrorMessages: Record<IdentificationErrorName, string> = {
+  MissingTokens: "Update requires tokens",
+  Standard: "Unable to identify user",
+  UserNotLoggedIn: "User is not logged in",
+};
 const queryPatterns = ["case", "default", "regex", "wholeWord"] as const;
 const schemaVersions = [1] as const;
 
@@ -34,6 +39,17 @@ export type ExportLink = {
   identifier: ReturnType<Date["getTime"]>;
   url: string;
 };
+
+export class IdentificationError extends Error {
+  constructor(name: IdentificationErrorName = "Standard") {
+    super(identificationErrorMessages[name]);
+    this.name = name;
+
+    Object.setPrototypeOf(this, IdentificationError.prototype);
+  }
+}
+
+type IdentificationErrorName = "MissingTokens" | "Standard" | "UserNotLoggedIn";
 
 export type Matcher = {
   active: boolean;
