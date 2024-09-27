@@ -1,14 +1,15 @@
-import { join } from "path";
-
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 
-const rootDir = join(__dirname, "..", "..");
+import { authConfig, envDir } from "@worm/plugins";
 
 export default defineConfig({
+  build: {
+    outDir: "./dist",
+  },
   define: {
     global: "window",
   },
-  envDir: join(rootDir, "config"),
-  plugins: [react()],
+  envDir,
+  plugins: [authConfig(), react()],
 });

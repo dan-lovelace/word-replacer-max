@@ -4,56 +4,36 @@ import { exec } from "node:child_process";
 import fs from "node:fs";
 import { join } from "node:path";
 
-import { config } from "dotenv";
+import { configureNodeEnvironment } from "@worm/plugins";
 
-const __dirname = process.cwd();
-const envDir = join(__dirname, "config");
+import { getManifest } from "./manifest";
 
 const OUT_DIR = "dist";
 
 function writeManifest() {
-  const { manifestJSON, version: packageVersion } = JSON.parse(
-    fs.readFileSync("package.json", "utf-8")
-  );
-  const [, , manifestVersion] = process.argv;
+  return new Promise<void>(async (resolve) => {
+    const [, , manifestVersion] = process.argv;
+    const manifest = await getManifest(Number(manifestVersion));
 
-  if (!["2", "3"].includes(manifestVersion)) {
-    console.log("Invalid manifest version. Available options: 2, 3");
-    console.log("Usage:\n\n");
-    console.log("node build.mjs 3");
-    process.exit(1);
-  }
+    fs.writeFileSync(
+      join(OUT_DIR, "manifest.json"),
+      JSON.stringify(manifest, null, 2),
+      "utf-8"
+    );
 
-  const versionJSON = manifestJSON[`v${manifestVersion}`];
-  const manifest = {
-    ...versionJSON,
-    version: packageVersion,
-  };
-
-  /**
-   * Add permissions to make API requests.
-   */
-  const apiOrigin = `${process.env.VITE_API_ORIGIN}/*`;
-  if (manifestVersion === "2") {
-    manifest.permissions = [...(manifest.permissions || []), apiOrigin];
-  } else {
-    manifest.host_permissions = [
-      ...(manifest.host_permissions || []),
-      apiOrigin,
-    ];
-  }
-
-  fs.writeFileSync(
-    join(OUT_DIR, "manifest.json"),
-    JSON.stringify(manifest, null, 2),
-    "utf-8"
-  );
+    resolve();
+  });
 }
 
 function main() {
-  assert(process.env.NODE_ENV);
-  config({ path: join(envDir, ".env") });
-  config({ path: join(envDir, `.env.${process.env.NODE_ENV}`) });
+  assert(process.env.NODE_ENV, "NODE_ENV is required");
+
+  configureNodeEnvironment(process.env.NODE_ENV);
+
+  assert(
+    process.env.AWS_PROFILE && process.env.AWS_PROFILE === "word-replacer-max",
+    "AWS_PROFILE must be 'word-replacer-max'"
+  );
 
   if (!fs.existsSync(OUT_DIR)) {
     fs.mkdirSync(OUT_DIR, { recursive: true });
@@ -65,9 +45,9 @@ function main() {
       process.exit(1);
     }
 
-    writeManifest();
-
-    console.log(stdout);
+    writeManifest().then(() => {
+      console.log(stdout);
+    });
   });
 }
 

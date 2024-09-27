@@ -1,15 +1,22 @@
-import { AuthError, decodeJWT, fetchAuthSession } from "@aws-amplify/auth";
+import {
+  AuthError,
+  decodeJWT,
+  fetchAuthSession,
+  signOut,
+} from "aws-amplify/auth";
 
 import { createWebAppMessage, logDebug } from "@worm/shared";
-import { getApiEndpoint } from "@worm/shared/src/api/vite";
+import { getApiEndpoint } from "@worm/shared/src/api";
 import { browser } from "@worm/shared/src/browser";
-import { storageSetByKeys } from "@worm/shared/src/storage";
-import { ApiAuthTokens, IdentificationError } from "@worm/types";
 import {
   WebAppMessageData,
   WebAppMessageKind,
   WebAppMessageKindMap,
 } from "@worm/types/src/message";
+import { storageSetByKeys } from "@worm/shared/src/storage";
+import { ApiAuthTokens, IdentificationError } from "@worm/types";
+
+import "./auth";
 
 function getError(error: unknown) {
   let errorMessage: string;
@@ -56,6 +63,22 @@ export function startRuntimeMessageListener() {
   browser.runtime.onMessage.addListener(
     async (event: WebAppMessageData<WebAppMessageKind>) => {
       switch (event.kind) {
+        case "authSignOutRequest": {
+          try {
+            await signOut();
+
+            sendRuntimeMessage("authSignOutResponse", { data: true });
+          } catch (error) {
+            logDebug(error);
+
+            sendRuntimeMessage("authSignOutResponse", {
+              error: getError(error),
+            });
+          }
+
+          break;
+        }
+
         case "authUserRequest": {
           try {
             const authSession = await fetchAuthSession();
@@ -70,6 +93,16 @@ export function startRuntimeMessageListener() {
               data: { email },
             });
           } catch (error) {
+            if (
+              error instanceof IdentificationError &&
+              error.name !== "UserNotLoggedIn"
+            ) {
+              /**
+               * An unexpected identification error was thrown.
+               */
+              logDebug(error);
+            }
+
             sendRuntimeMessage("authUserResponse", { error: getError(error) });
           }
 
@@ -126,6 +159,8 @@ export function startRuntimeMessageListener() {
               },
             });
           } catch (error) {
+            logDebug(error);
+
             sendRuntimeMessage("authTokensResponse", {
               error: getError(error),
             });

@@ -5,10 +5,11 @@
   "main": "src/index.ts",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
+    "dev": "yarn vite:tsx",
+    "build": "tsc && yarn vite:tsx build --mode ${NODE_ENV:-production}",
     "preview": "vite preview",
-    "test": "echo \"Error: no test specified\" && exit 0"
+    "test": "echo \"Error: no test specified\" && exit 0",
+    "vite:tsx": "NODE_OPTIONS='--import tsx' VITE_MODE=${NODE_ENV:-development} vite"
   },
   "dependencies": {
     "@emotion/react": "^11.13.3",
@@ -25,6 +26,7 @@
     "@types/react": "^18.3.5",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
+    "@worm/plugins": "*",
     "@worm/testing": "*",
     "@worm/types": "*",
     "sass": "^1.70.0"

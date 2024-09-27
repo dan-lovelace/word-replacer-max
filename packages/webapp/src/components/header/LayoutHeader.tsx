@@ -1,4 +1,5 @@
 import Box from "@mui/material/Box/Box";
+import Paper from "@mui/material/Paper/Paper";
 import Stack from "@mui/material/Stack/Stack";
 import Typography from "@mui/material/Typography/Typography";
 
@@ -15,7 +16,7 @@ export default function LayoutHeader() {
   const { appUser, connectionStatus } = useConnectionProvider();
 
   return (
-    <Box
+    <Paper
       component="header"
       sx={{
         alignItems: "center",
@@ -51,6 +52,7 @@ export default function LayoutHeader() {
           sx={{
             display: { xs: "none", sm: "unset" },
             fontWeight: "700",
+            mt: 0.25,
           }}
         >
           Word Replacer Max
@@ -71,6 +73,6 @@ export default function LayoutHeader() {
           </>
         )}
       </Stack>
-    </Box>
+    </Paper>
   );
 }

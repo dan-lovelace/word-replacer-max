@@ -1,14 +1,17 @@
 {
-  "name": "@worm/types",
+  "name": "@worm/plugins",
   "version": "0.0.0",
   "author": "dan-lovelace",
   "main": "src/index.ts",
   "type": "module",
   "scripts": {
-    "build": "echo \"Info: no build specified\"",
+    "build": "echo \"Error: no build specified\"",
     "test": "echo \"Error: no test specified\" && exit 0"
   },
+  "dependencies": {
+    "@worm/shared": "*"
+  },
   "devDependencies": {
-    "@types/chrome": "^0.0.271"
+    "@aws-sdk/client-ssm": "^3.654.0"
   }
 }

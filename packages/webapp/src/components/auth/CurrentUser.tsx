@@ -1,15 +1,22 @@
 import { useState } from "react";
 
+import Box from "@mui/material/Box/Box";
+import Divider from "@mui/material/Divider/Divider";
 import IconButton from "@mui/material/IconButton/IconButton";
+import ListItemIcon from "@mui/material/ListItemIcon/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText/ListItemText";
 import Menu from "@mui/material/Menu/Menu";
 import MenuItem from "@mui/material/MenuItem/MenuItem";
+import Typography from "@mui/material/Typography/Typography";
+
+import { createWebAppMessage } from "@worm/shared";
 
 import { useConnectionProvider } from "../../lib/connection/ConnectionProvider";
 
 export default function CurrentUser() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-  const { appUser } = useConnectionProvider();
+  const { appUser, sendMessage } = useConnectionProvider();
 
   const isOpen = Boolean(anchorEl);
 
@@ -19,6 +26,11 @@ export default function CurrentUser() {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleSignOutClick = () => {
+    sendMessage(createWebAppMessage("authSignOutRequest"));
+    handleClose();
   };
 
   return (
@@ -44,7 +56,19 @@ export default function CurrentUser() {
             open={isOpen}
             onClose={handleClose}
           >
-            <MenuItem onClick={handleClose}>Sign out</MenuItem>
+            <Box sx={{ pb: 1, px: 2.5 }}>
+              <Typography variant="body2">Logged in as</Typography>
+              <Typography variant="subtitle2" sx={{ fontWeight: "bold" }}>
+                {appUser.email}
+              </Typography>
+            </Box>
+            <Divider sx={{ mb: 1 }} />
+            <MenuItem onClick={handleSignOutClick}>
+              <ListItemIcon>
+                <span className="material-icons-sharp">logout</span>
+              </ListItemIcon>
+              <ListItemText>Sign out</ListItemText>
+            </MenuItem>
           </Menu>
         </>
       )}

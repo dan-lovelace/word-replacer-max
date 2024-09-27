@@ -1,7 +1,7 @@
 {
   "name": "word-replacer-max",
   "author": {
-    "name": "dan-lovelace",
+    "name": "Dan Lovelace",
     "url": "https://github.com/dan-lovelace/word-replacer-max"
   },
   "version": "0.7.0",
@@ -14,7 +14,7 @@
   "private": true,
   "scripts": {
     "build": "yarn clean && tsx scripts/build.ts",
-    "clean": "rm -rf dist",
+    "clean": "rimraf dist",
     "jest": "jest",
     "package": "tsx scripts/package.ts",
     "start:2": "yarn clean && tsx scripts/build.ts 2 && lerna run start",
@@ -23,117 +23,5 @@
   },
   "engines": {
     "node": ">=18.0.0"
-  },
-  "manifestJSON": {
-    "v2": {
-      "name": "Word Replacer Max",
-      "description": "Seamlessly replace text on any web page.",
-      "homepage_url": "https://github.com/dan-lovelace/word-replacer-max",
-      "manifest_version": 2,
-      "icons": {
-        "48": "assets/img/word-replacer-max-logo_64.png",
-        "128": "assets/img/word-replacer-max-logo_128.png",
-        "256": "assets/img/word-replacer-max-logo_256.png"
-      },
-      "browser_action": {
-        "default_popup": "popup.html"
-      },
-      "background": {
-        "scripts": [
-          "background.js"
-        ]
-      },
-      "content_scripts": [
-        {
-          "matches": [
-            "http://localhost/*"
-          ],
-          "js": [
-            "auth.js"
-          ]
-        },
-        {
-          "matches": [
-            "<all_urls>"
-          ],
-          "exclude_matches": [
-            "http://localhost/*"
-          ],
-          "js": [
-            "content.js"
-          ],
-          "run_at": "document_start"
-        }
-      ],
-      "permissions": [
-        "contextMenus",
-        "storage",
-        "tabs"
-      ],
-      "web_accessible_resources": [
-        "assets/*"
-      ],
-      "browser_specific_settings": {
-        "gecko": {
-          "id": "addon@logicnow.io",
-          "strict_min_version": "1.0"
-        }
-      }
-    },
-    "v3": {
-      "name": "Word Replacer Max",
-      "description": "Seamlessly replace text on any web page.",
-      "homepage_url": "https://github.com/dan-lovelace/word-replacer-max",
-      "manifest_version": 3,
-      "icons": {
-        "48": "assets/img/word-replacer-max-logo_64.png",
-        "128": "assets/img/word-replacer-max-logo_128.png",
-        "256": "assets/img/word-replacer-max-logo_256.png"
-      },
-      "action": {
-        "default_popup": "popup.html"
-      },
-      "background": {
-        "service_worker": "background.js"
-      },
-      "content_scripts": [
-        {
-          "matches": [
-            "http://localhost/*"
-          ],
-          "js": [
-            "auth.js"
-          ],
-          "run_at": "document_start"
-        },
-        {
-          "matches": [
-            "<all_urls>"
-          ],
-          "exclude_matches": [
-            "http://localhost/*"
-          ],
-          "js": [
-            "content.js"
-          ],
-          "run_at": "document_start"
-        }
-      ],
-      "permissions": [
-        "contextMenus",
-        "storage",
-        "tabs"
-      ],
-      "web_accessible_resources": [
-        {
-          "resources": [
-            "assets/*"
-          ],
-          "matches": [
-            "<all_urls>"
-          ]
-        }
-      ]
-    }
   }
 }

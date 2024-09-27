@@ -11,5 +11,5 @@ const oAuthPaths: Record<OAuthPath, string> = {
 export function getOAuthUrl(path: OAuthPath) {
   const envConfig = getEnvConfig();
 
-  return `https://${envConfig.VITE_COGNITO_USER_POOL_CUSTOM_DOMAIN}${oAuthPaths[path]}${envConfig.VITE_COGNITO_HOSTED_UI_QUERY}`;
+  return `https://${envConfig.VITE_SSM_USER_POOL_CUSTOM_DOMAIN}${oAuthPaths[path]}${envConfig.VITE_SSM_USER_POOL_HOSTED_UI_QUERY}`;
 }

@@ -33,6 +33,8 @@ export type WebAppMessageKind = keyof WebAppMessageKindMap;
 
 export type WebAppMessageKindMap = {
   authUpdateTokens: ApiAuthTokens;
+  authSignOutRequest: undefined;
+  authSignOutResponse: ErrorableMessage<boolean>;
   authTokensRequest: undefined;
   authTokensResponse: ErrorableMessage<ApiAuthTokens>;
   authUserRequest: undefined;

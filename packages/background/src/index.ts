@@ -1,6 +1,5 @@
 import { browser } from "@worm/shared/src/browser";
 
-import "./lib/auth";
 import {
   initializeContextMenu,
   startContextMenuListener,

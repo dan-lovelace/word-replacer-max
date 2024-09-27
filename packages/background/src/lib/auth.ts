@@ -1,6 +1,11 @@
-import { Hub, KeyValueStorageInterface } from "@aws-amplify/core";
 import { Amplify } from "aws-amplify";
-import { createUserPoolsTokenProvider } from "aws-amplify/adapter-core";
+import { cognitoUserPoolsTokenProvider } from "aws-amplify/auth/cognito";
+import {
+  AuthConfig,
+  Hub,
+  KeyValueStorageInterface,
+  OAuthConfig,
+} from "@aws-amplify/core";
 
 import { logDebug } from "@worm/shared";
 import { getEnvConfig } from "@worm/shared/src/config";
@@ -13,9 +18,9 @@ import {
 type StorageAuthKey = (typeof storageAuthSuffixes)[number];
 
 const envConfig = getEnvConfig();
-const userPoolClientId = envConfig.VITE_COGNITO_USER_POOL_CLIENT_ID;
-const userPoolEndpoint = envConfig.VITE_COGNITO_USER_POOL_ENDPOINT;
-const userPoolId = envConfig.VITE_COGNITO_USER_POOL_ID;
+const userPoolClientId = envConfig.VITE_SSM_USER_POOL_CLIENT_ID;
+const userPoolEndpoint = envConfig.VITE_SSM_USER_POOL_PROVIDER_URL;
+const userPoolId = envConfig.VITE_SSM_USER_POOL_ID;
 
 /**
  * These are the suffixes of storage keys used by Amplify when getting/setting.
@@ -129,6 +134,18 @@ const storageInterface: KeyValueStorageInterface = {
     }),
   removeItem: (key: string) =>
     new Promise(async (resolve) => {
+      if (key === undefined) {
+        await storageRemoveByKeys([
+          "authAccessToken",
+          "authClockDrift",
+          "authIdToken",
+          "authLastAuthUser",
+          "authRefreshToken",
+        ]);
+
+        return resolve();
+      }
+
       const keyParts = key.split(".");
       const suffix = keyParts[keyParts.length - 1] as StorageAuthKey;
 
@@ -161,30 +178,37 @@ const storageInterface: KeyValueStorageInterface = {
     }),
 };
 
-const tokenProvider = createUserPoolsTokenProvider(
-  {
-    Cognito: {
-      userPoolClientId,
-      userPoolEndpoint,
-      userPoolId,
+const oauthConfig: OAuthConfig = {
+  domain: envConfig.VITE_SSM_USER_POOL_CUSTOM_DOMAIN,
+  redirectSignIn: [envConfig.VITE_SSM_USER_POOL_OAUTH_REDIRECT_SIGN_IN],
+  redirectSignOut: [envConfig.VITE_SSM_USER_POOL_OAUTH_REDIRECT_SIGN_OUT],
+  responseType: envConfig.VITE_SSM_USER_POOL_OAUTH_RESPONSE_TYPE,
+  scopes: envConfig.VITE_SSM_USER_POOL_OAUTH_SCOPES,
+};
+
+const authConfig: AuthConfig = {
+  Cognito: {
+    loginWith: {
+      oauth: oauthConfig,
+      username: true,
     },
+    signUpVerificationMethod: "code",
+    userPoolClientId,
+    userPoolEndpoint,
+    userPoolId,
   },
-  storageInterface
-);
+};
+
+cognitoUserPoolsTokenProvider.setKeyValueStorage(storageInterface);
+cognitoUserPoolsTokenProvider.setAuthConfig(authConfig);
 
 Amplify.configure(
   {
-    Auth: {
-      Cognito: {
-        userPoolClientId,
-        userPoolEndpoint,
-        userPoolId,
-      },
-    },
+    Auth: authConfig,
   },
   {
     Auth: {
-      tokenProvider,
+      tokenProvider: cognitoUserPoolsTokenProvider,
     },
   }
 );

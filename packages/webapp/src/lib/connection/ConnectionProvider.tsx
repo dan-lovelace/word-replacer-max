@@ -9,11 +9,11 @@ import {
 } from "@worm/shared";
 import { AppUser, IdentificationError, WebAppPingResponse } from "@worm/types";
 import {
-  ErrorableMessage,
   ShowToastMessageOptions,
   WebAppMessage,
   WebAppMessageData,
   WebAppMessageKind,
+  WebAppMessageKindMap,
 } from "@worm/types/src/message";
 
 import { useToast } from "../toast/ToastProvider";
@@ -56,11 +56,24 @@ const useConnectionProviderValue = (
     const handleMessageEvent = async (
       event: WebAppMessage<WebAppMessageKind>
     ) => {
-      if (!isWebAppMessagingAllowed(window.location.hostname)) {
+      if (!isWebAppMessagingAllowed(window.location)) {
         return;
       }
-
       switch (event.data.kind) {
+        case "authSignOutResponse": {
+          const signOutResponse = event.data
+            .details as WebAppMessageKindMap["authSignOutResponse"];
+
+          if (signOutResponse.data) {
+            setAppUser(undefined);
+          }
+
+          if (signOutResponse.error) {
+            showToast(signOutResponse.error.message, "danger");
+          }
+          break;
+        }
+
         case "authTokensResponse": {
           /**
            * Fetch the current user whenever tokens are updated.
@@ -71,7 +84,8 @@ const useConnectionProviderValue = (
         }
 
         case "authUserResponse": {
-          const userResponse = event.data.details as ErrorableMessage<AppUser>;
+          const userResponse = event.data
+            .details as WebAppMessageKindMap["authUserResponse"];
 
           if (userResponse.data) {
             setAppUser(userResponse.data);
@@ -140,6 +154,7 @@ const useConnectionProviderValue = (
             showToastOptions.message,
             showToastOptions.options?.severity
           );
+          break;
         }
       }
     };

@@ -5,7 +5,7 @@ export default function LoginPage() {
   return (
     <Redirect
       options={{ isExternal: true, replace: true }}
-      to={getOAuthUrl("authorize")}
+      to={getOAuthUrl("login")}
     />
   );
 }

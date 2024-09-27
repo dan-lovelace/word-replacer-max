@@ -1,16 +1,9 @@
-import { join } from "path";
-
 import { defineConfig } from "vite";
 
-const rootDir = join(__dirname, "..", "..");
+import { authConfig, buildConfig } from "@worm/plugins";
 
-const envDir = join(rootDir, "config");
-const outDir = join(rootDir, "dist");
-
-export default defineConfig(({ mode }) => ({
+export default defineConfig({
   build: {
-    minify: mode === "production",
-    outDir,
     rollupOptions: {
       input: "src/index.ts",
       output: {
@@ -18,5 +11,5 @@ export default defineConfig(({ mode }) => ({
       },
     },
   },
-  envDir,
-}));
+  plugins: [buildConfig(), authConfig()],
+});
