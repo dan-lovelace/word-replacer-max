@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        default: test
+        default: development
         description: "Test target environment"
         required: true
         type: choice
@@ -32,13 +32,13 @@ jobs:
         with:
           node-version: 20
           cache: "yarn"
-      - run: yarn install
-      - run: yarn test
       - uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: us-east-1
           role-to-assume: ${{ secrets.ACTIONS_ROLE_ARN }}
           role-session-name: GitHub-Actions-Role
+      - run: yarn install
+      - run: yarn test
       - uses: cypress-io/github-action@v6
         with:
           browser: chrome
