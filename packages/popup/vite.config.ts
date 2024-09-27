@@ -1,43 +1,32 @@
-import { join } from "path";
+import { join } from "node:path";
 
 import preact from "@preact/preset-vite";
 import { defineConfig, loadEnv, UserConfig } from "vite";
 
-const rootDir = join(__dirname, "..", "..");
+import { authConfig, buildConfig } from "@worm/plugins";
 
-const envDir = join(rootDir, "config");
-const outDir = join(rootDir, "dist");
-
-const modeConfig: Record<string, UserConfig> = {
-  test: {
-    envDir,
-    build: {
-      rollupOptions: {
-        input: "popup.html",
-      },
-    },
-    plugins: [preact()],
-    resolve: {
-      alias: [
-        {
-          find: "webextension-polyfill",
-          replacement: join(
-            __dirname,
-            "..",
-            "testing",
-            "src",
-            "test-browser.ts"
-          ),
-        },
-      ],
+const testConfig: UserConfig = {
+  build: {
+    rollupOptions: {
+      input: "popup.html",
     },
   },
+  plugins: [authConfig(), buildConfig(), preact()],
+  resolve: {
+    alias: [
+      {
+        find: "webextension-polyfill",
+        replacement: join(__dirname, "..", "testing", "src", "test-browser.ts"),
+      },
+    ],
+  },
+};
+
+const modeConfig: Record<string, UserConfig> = {
+  development: testConfig,
   production: {
-    envDir,
     build: {
       assetsDir: "popup",
-      minify: true,
-      outDir,
       rollupOptions: {
         input: "popup.html",
         output: {
@@ -46,7 +35,7 @@ const modeConfig: Record<string, UserConfig> = {
         },
       },
     },
-    plugins: [preact()],
+    plugins: [authConfig(), buildConfig(), preact()],
   },
 };
 

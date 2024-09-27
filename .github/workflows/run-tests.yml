@@ -10,13 +10,12 @@ on:
     inputs:
       environment:
         default: test
-        description: "Which .env config to use"
+        description: "Test target environment"
         required: true
         type: choice
         options:
           - development
           - production
-          - test
 
 jobs:
   test:
@@ -32,6 +31,10 @@ jobs:
           cache: "yarn"
       - run: yarn install
       - run: yarn test
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: us-east-1
+          role-to-assume: ${{ secrets.ACTIONS_ROLE_ARN }}
       - uses: cypress-io/github-action@v6
         with:
           browser: chrome
