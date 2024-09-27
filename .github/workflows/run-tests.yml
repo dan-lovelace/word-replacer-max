@@ -20,6 +20,9 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     env:
       VITE_MODE: ${{ inputs.environment }}
 
@@ -35,6 +38,7 @@ jobs:
         with:
           aws-region: us-east-1
           role-to-assume: ${{ secrets.ACTIONS_ROLE_ARN }}
+          role-session-name: GitHub-Actions-Role
       - uses: cypress-io/github-action@v6
         with:
           browser: chrome
