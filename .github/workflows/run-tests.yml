@@ -1,6 +1,7 @@
 name: Run all tests
 run-name:
-  "${{ github.workflow }} - Environment: ${{ inputs.environment || 'test' }}"
+  "${{ github.workflow }} - Environment: ${{ inputs.environment || 'development'
+  }}"
 
 on:
   pull_request:
