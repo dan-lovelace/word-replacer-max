@@ -8,13 +8,13 @@ import {
 import { createWebAppMessage, logDebug } from "@worm/shared";
 import { getApiEndpoint } from "@worm/shared/src/api";
 import { browser } from "@worm/shared/src/browser";
+import { storageSetByKeys } from "@worm/shared/src/storage";
+import { ApiAuthTokens, IdentificationError } from "@worm/types";
 import {
   WebAppMessageData,
   WebAppMessageKind,
   WebAppMessageKindMap,
 } from "@worm/types/src/message";
-import { storageSetByKeys } from "@worm/shared/src/storage";
-import { ApiAuthTokens, IdentificationError } from "@worm/types";
 
 import "./auth";
 
@@ -155,7 +155,6 @@ export function startRuntimeMessageListener() {
               data: {
                 accessToken: tokens.accessToken,
                 idToken: tokens.accessToken,
-                refreshToken: tokens.accessToken,
               },
             });
           } catch (error) {

@@ -5,7 +5,7 @@
   "main": "src/main.ts",
   "type": "module",
   "scripts": {
-    "build": "tsc && yarn vite:tsx build",
+    "build": "tsc && yarn vite:tsx build --mode ${NODE_ENV:-production}",
     "cypress:open": "cypress open --e2e --browser chrome",
     "cypress:run": "cypress run",
     "dev": "yarn vite:tsx --host --mode ${VITE_MODE:-development}",

@@ -36,7 +36,7 @@ export type WebAppMessageKindMap = {
   authSignOutRequest: undefined;
   authSignOutResponse: ErrorableMessage<boolean>;
   authTokensRequest: undefined;
-  authTokensResponse: ErrorableMessage<ApiAuthTokens>;
+  authTokensResponse: ErrorableMessage<Omit<ApiAuthTokens, "refreshToken">>;
   authUserRequest: undefined;
   authUserResponse: ErrorableMessage<AppUser>;
   contentInitialize: undefined;

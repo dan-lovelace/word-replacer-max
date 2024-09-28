@@ -1,4 +1,4 @@
-import { EnvConfigProps } from "@worm/types";
+import { ViteEnvConfig } from "@worm/types/src/config";
 
 function assert(condition: unknown, message?: string): asserts condition {
   if (!condition) {
@@ -6,7 +6,7 @@ function assert(condition: unknown, message?: string): asserts condition {
   }
 }
 
-export function getEnvConfig(): EnvConfigProps {
+export function getEnvConfig(): Required<ViteEnvConfig> {
   assert(import.meta.env.VITE_API_ORIGIN, "VITE_API_ORIGIN is required");
   assert(
     import.meta.env.VITE_SSM_USER_POOL_HOSTED_UI_QUERY,
