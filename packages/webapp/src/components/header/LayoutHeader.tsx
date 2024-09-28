@@ -3,6 +3,7 @@ import Paper from "@mui/material/Paper/Paper";
 import Stack from "@mui/material/Stack/Stack";
 import Typography from "@mui/material/Typography/Typography";
 
+import { useAuthProvider } from "../../lib/auth/AuthProvider";
 import { useConnectionProvider } from "../../lib/connection/ConnectionProvider";
 import { ROUTES } from "../../lib/routes";
 
@@ -13,7 +14,8 @@ import ConnectionStatus from "../connection/ConnectionStatus";
 import Link from "../link/Link";
 
 export default function LayoutHeader() {
-  const { appUser, connectionStatus } = useConnectionProvider();
+  const { signInStatus } = useAuthProvider();
+  const { connectionStatus } = useConnectionProvider();
 
   return (
     <Paper
@@ -62,9 +64,8 @@ export default function LayoutHeader() {
         <ConnectionStatus />
         {connectionStatus === "connected" && (
           <>
-            {appUser ? (
-              <CurrentUser />
-            ) : (
+            {signInStatus === "signedIn" && <CurrentUser />}
+            {signInStatus === "signedOut" && (
               <>
                 <LoginButton />
                 <SignupButton />

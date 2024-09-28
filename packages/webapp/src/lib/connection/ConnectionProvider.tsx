@@ -16,10 +16,10 @@ import {
   WebAppMessageKindMap,
 } from "@worm/types/src/message";
 
+import { useAuthProvider } from "../auth/AuthProvider";
 import { useToast } from "../toast/ToastProvider";
 
 type ConnectionProviderContextProps = {
-  appUser?: AppUser;
   connectionStatus: ConnectionStatusState;
   iframeRef: React.RefObject<HTMLIFrameElement>;
   sendMessage: (message: WebAppMessageData<WebAppMessageKind>) => void;
@@ -36,12 +36,13 @@ const ConnectionProviderContext = createContext<ConnectionProviderContextProps>(
 const useConnectionProviderValue = (
   iframeRef: React.RefObject<HTMLIFrameElement>
 ): ConnectionProviderContextProps => {
-  const [appUser, setAppUser] = useState<AppUser>();
   const [connectionStatus, setConnectionStatus] =
     useState<ConnectionStatusState>("connecting");
 
   const timeoutRef = useRef<NodeJS.Timeout>();
   const connectionStatusRef = useRef<ConnectionStatusState>();
+
+  const { signInStatus, setAppUser, setSignInStatus } = useAuthProvider();
   const { showToast } = useToast();
 
   connectionStatusRef.current = connectionStatus;
@@ -66,10 +67,12 @@ const useConnectionProviderValue = (
 
           if (signOutResponse.data) {
             setAppUser(undefined);
+            setSignInStatus("signedOut");
           }
 
           if (signOutResponse.error) {
             showToast(signOutResponse.error.message, "danger");
+            setSignInStatus("unknown");
           }
           break;
         }
@@ -88,7 +91,12 @@ const useConnectionProviderValue = (
             .details as WebAppMessageKindMap["authUserResponse"];
 
           if (userResponse.data) {
+            setSignInStatus("signedIn");
             setAppUser(userResponse.data);
+          } else {
+            if (signInStatus !== "signingIn") {
+              setSignInStatus("signedOut");
+            }
           }
 
           if (
@@ -198,7 +206,6 @@ const useConnectionProviderValue = (
   };
 
   return {
-    appUser,
     connectionStatus,
     iframeRef,
     sendMessage,

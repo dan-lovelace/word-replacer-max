@@ -11,12 +11,14 @@ import Typography from "@mui/material/Typography/Typography";
 
 import { createWebAppMessage } from "@worm/shared";
 
+import { useAuthProvider } from "../../lib/auth/AuthProvider";
 import { useConnectionProvider } from "../../lib/connection/ConnectionProvider";
 
 export default function CurrentUser() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-  const { appUser, sendMessage } = useConnectionProvider();
+  const { appUser, signInStatus, setSignInStatus } = useAuthProvider();
+  const { sendMessage } = useConnectionProvider();
 
   const isOpen = Boolean(anchorEl);
 
@@ -30,12 +32,13 @@ export default function CurrentUser() {
 
   const handleSignOutClick = () => {
     sendMessage(createWebAppMessage("authSignOutRequest"));
+    setSignInStatus("signingOut");
     handleClose();
   };
 
   return (
     <>
-      {appUser && (
+      {signInStatus === "signedIn" && appUser && (
         <>
           <IconButton
             aria-controls={isOpen ? "current-user-menu" : undefined}

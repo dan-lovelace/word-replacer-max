@@ -6,10 +6,19 @@ type AppUser = {
 
 type AuthProviderContextProps = {
   appUser?: AppUser;
+  signInStatus: SignInStatusState;
   setAppUser: React.Dispatch<React.SetStateAction<AppUser | undefined>>;
+  setSignInStatus: React.Dispatch<React.SetStateAction<SignInStatusState>>;
 };
 
 type AuthProviderProps = React.HTMLAttributes<HTMLDivElement>;
+
+type SignInStatusState =
+  | "signedIn"
+  | "signedOut"
+  | "signingIn"
+  | "signingOut"
+  | "unknown";
 
 const AuthProviderContext = createContext<AuthProviderContextProps>(
   {} as AuthProviderContextProps
@@ -17,10 +26,14 @@ const AuthProviderContext = createContext<AuthProviderContextProps>(
 
 const useAuthProviderValue = (): AuthProviderContextProps => {
   const [appUser, setAppUser] = useState<AppUser>();
+  const [signInStatus, setSignInStatus] =
+    useState<SignInStatusState>("signingIn");
 
   return {
     appUser,
+    signInStatus,
     setAppUser,
+    setSignInStatus,
   };
 };
 

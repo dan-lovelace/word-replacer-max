@@ -16,11 +16,11 @@ createRoot(document.getElementById("app") as HTMLDivElement).render(
   <StrictMode>
     <QueryProvider>
       <ToastProvider>
-        <ConnectionProvider>
-          <AuthProvider>
+        <AuthProvider>
+          <ConnectionProvider>
             <App />
-          </AuthProvider>
-        </ConnectionProvider>
+          </ConnectionProvider>
+        </AuthProvider>
       </ToastProvider>
     </QueryProvider>
   </StrictMode>
