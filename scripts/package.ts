@@ -1,7 +1,8 @@
 /* eslint-disable no-console */
-import { exec } from "child_process";
-import fs from "fs";
-import path from "path";
+import assert from "node:assert";
+import { exec } from "node:child_process";
+import fs from "node:fs";
+import path from "node:path";
 
 import archiver from "archiver";
 
@@ -10,6 +11,11 @@ const DIST_DIR = "dist";
 const VERSIONS_DIR = "versions";
 
 function main() {
+  assert(
+    process.env.NODE_ENV === "production",
+    "NODE_ENV must be 'production' to package"
+  );
+
   const manifestVersion = process.argv[2];
   const packageJson = fs.readFileSync("package.json", "utf-8");
   const { name, version: packageVersion } = JSON.parse(packageJson);
