@@ -60,6 +60,7 @@ const useConnectionProviderValue = (
       if (!isWebAppMessagingAllowed(window.location)) {
         return;
       }
+
       switch (event.data.kind) {
         case "authSignOutResponse": {
           const signOutResponse = event.data

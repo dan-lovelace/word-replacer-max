@@ -12,5 +12,5 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["../../node_modules/vite/client.d.ts", "src/**/*"]
+  "include": ["src/**/*"]
 }
