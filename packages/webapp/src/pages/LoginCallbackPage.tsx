@@ -7,6 +7,7 @@ import Typography from "@mui/material/Typography/Typography";
 
 import { createWebAppMessage } from "@worm/shared";
 
+import { useAuthProvider } from "../lib/auth/AuthProvider";
 import { useAuthTokens } from "../lib/auth/queries";
 import { useConnectionProvider } from "../lib/connection/ConnectionProvider";
 import { ROUTES } from "../lib/routes";
@@ -17,6 +18,7 @@ const CODE_PARAMETER_NAME = "code";
 export default function LoginCallbackPage() {
   const [oauthCode, setOauthCode] = useState<string>();
 
+  const { setSignInStatus } = useAuthProvider();
   const { isLoading: isLoadingAuthTokens, refetch: fetchAuthTokens } =
     useAuthTokens(oauthCode);
   const { connectionStatus, sendMessage } = useConnectionProvider();
@@ -46,6 +48,8 @@ export default function LoginCallbackPage() {
     if (connectionStatus !== "connected" || !oauthCode) return;
 
     async function getTokens() {
+      setSignInStatus("signingIn");
+
       const result = await fetchAuthTokens();
 
       if (result.isError) {

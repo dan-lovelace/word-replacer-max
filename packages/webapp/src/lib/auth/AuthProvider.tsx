@@ -27,7 +27,7 @@ const AuthProviderContext = createContext<AuthProviderContextProps>(
 const useAuthProviderValue = (): AuthProviderContextProps => {
   const [appUser, setAppUser] = useState<AppUser>();
   const [signInStatus, setSignInStatus] =
-    useState<SignInStatusState>("signingIn");
+    useState<SignInStatusState>("unknown");
 
   return {
     appUser,
