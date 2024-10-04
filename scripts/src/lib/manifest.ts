@@ -8,7 +8,7 @@ import {
   ManifestV3,
 } from "@worm/types/src/manifest";
 
-import { fetchAuthConfig } from "./config";
+import { configureNodeEnvironment } from "./config";
 
 const commonProps: ManifestBase = {
   description: "Seamlessly replace text on any web page.",
@@ -65,6 +65,7 @@ const manifestV3Base: ManifestV3 = {
 
 export async function getManifest(version: number): Promise<Manifest> {
   assert(process.env.NODE_ENV, "NODE_ENV is required");
+  configureNodeEnvironment(process.env.NODE_ENV);
 
   const validVersions = [2, 3];
   assert(validVersions.includes(version), "Invalid manifest version");
@@ -89,16 +90,16 @@ export async function getManifest(version: number): Promise<Manifest> {
 
   manifestBase.version = packageVersion;
 
-  const authConfig = await fetchAuthConfig(process.env.NODE_ENV);
-  const { SSM_WEBAPP_ORIGIN } = authConfig;
-
   /**
    * Append content scripts.
    */
-  assert(SSM_WEBAPP_ORIGIN, "SSM_WEBAPP_ORIGIN is required");
+  assert(
+    process.env.VITE_SSM_WEBAPP_ORIGIN,
+    "VITE_SSM_WEBAPP_ORIGIN is required"
+  );
 
   const { hostname: webappHostname, protocol: webappProtocol } = new URL(
-    SSM_WEBAPP_ORIGIN
+    process.env.VITE_SSM_WEBAPP_ORIGIN
   );
   const authMatches = [`${webappProtocol}//${webappHostname}/*`];
   const contentScripts: Manifest["content_scripts"] = [

@@ -24,13 +24,7 @@ function writeManifest() {
 
 function main() {
   assert(process.env.NODE_ENV, "NODE_ENV is required");
-
   configureNodeEnvironment(process.env.NODE_ENV);
-
-  assert(
-    process.env.AWS_PROFILE && process.env.AWS_PROFILE === "word-replacer-max",
-    "AWS_PROFILE must be 'word-replacer-max'"
-  );
 
   if (!fs.existsSync(distDir)) {
     fs.mkdirSync(distDir, { recursive: true });

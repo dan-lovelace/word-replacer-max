@@ -7,8 +7,8 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const rootDir = join(__dirname, "..", "..", "..");
 
-const envDir = join(rootDir, "config");
-const outDir = join(rootDir, "dist");
+export const envDir = join(rootDir, "config");
+export const outDir = join(rootDir, "dist");
 
 export function buildConfig(): Plugin {
   return {

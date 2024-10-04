@@ -17,9 +17,10 @@
     "clean": "rimraf dist",
     "jest": "jest",
     "package": "tsx scripts/src/package.ts",
-    "start:2": "yarn clean && tsx scripts/src/build.ts 2 && lerna run start",
-    "start:3": "yarn clean && tsx scripts/src/build.ts 3 && lerna run start",
-    "test": "yarn run jest && lerna run test",
+    "start": "lerna run start",
+    "start:2": "yarn build 2 && yarn start",
+    "start:3": "yarn build 3 && yarn start",
+    "test": "yarn jest && lerna run test",
     "write-config": "tsx scripts/src/write-config.ts"
   },
   "engines": {
