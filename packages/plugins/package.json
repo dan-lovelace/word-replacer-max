@@ -7,11 +7,5 @@
   "scripts": {
     "build": "echo \"Error: no build specified\"",
     "test": "echo \"Error: no test specified\" && exit 0"
-  },
-  "dependencies": {
-    "@worm/shared": "*"
-  },
-  "devDependencies": {
-    "@aws-sdk/client-ssm": "^3.654.0"
   }
 }

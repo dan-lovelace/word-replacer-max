@@ -1,6 +1,6 @@
 import { defineConfig } from "vite";
 
-import { authConfig, buildConfig } from "@worm/plugins";
+import { buildConfig } from "@worm/plugins";
 
 export default defineConfig({
   build: {
@@ -11,5 +11,5 @@ export default defineConfig({
       },
     },
   },
-  plugins: [buildConfig(), authConfig()],
+  plugins: [buildConfig()],
 });

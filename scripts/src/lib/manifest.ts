@@ -1,13 +1,14 @@
 import assert from "node:assert";
 import { readFileSync } from "node:fs";
 
-import { fetchAuthConfig } from "@worm/plugins/src/vite-auth-config";
 import {
   Manifest,
   ManifestBase,
   ManifestV2,
   ManifestV3,
 } from "@worm/types/src/manifest";
+
+import { fetchAuthConfig } from "./config";
 
 const commonProps: ManifestBase = {
   description: "Seamlessly replace text on any web page.",

@@ -39,7 +39,7 @@ function getError(error: unknown) {
   };
 }
 
-async function sendRuntimeMessage<T extends WebAppMessageKind>(
+async function sendTabMessage<T extends WebAppMessageKind>(
   kind: T,
   details?: WebAppMessageKindMap[T]
 ) {
@@ -61,49 +61,19 @@ async function sendRuntimeMessage<T extends WebAppMessageKind>(
 
 export function startRuntimeMessageListener() {
   browser.runtime.onMessage.addListener(
-    async (event: WebAppMessageData<WebAppMessageKind>) => {
+    async (event: WebAppMessageData<WebAppMessageKind>, sender) => {
       switch (event.kind) {
         case "authSignOutRequest": {
           try {
             await signOut();
 
-            sendRuntimeMessage("authSignOutResponse", { data: true });
+            sendTabMessage("authSignOutResponse", { data: true });
           } catch (error) {
             logDebug(error);
 
-            sendRuntimeMessage("authSignOutResponse", {
+            sendTabMessage("authSignOutResponse", {
               error: getError(error),
             });
-          }
-
-          break;
-        }
-
-        case "authUserRequest": {
-          try {
-            const authSession = await fetchAuthSession();
-            const email =
-              authSession.tokens?.idToken?.payload.email?.toString();
-
-            if (!email) {
-              throw new IdentificationError("UserNotLoggedIn");
-            }
-
-            sendRuntimeMessage("authUserResponse", {
-              data: { email },
-            });
-          } catch (error) {
-            if (
-              error instanceof IdentificationError &&
-              error.name !== "UserNotLoggedIn"
-            ) {
-              /**
-               * An unexpected identification error was thrown.
-               */
-              logDebug(error);
-            }
-
-            sendRuntimeMessage("authUserResponse", { error: getError(error) });
           }
 
           break;
@@ -151,7 +121,7 @@ export function startRuntimeMessageListener() {
              */
             await fetchAuthSession();
 
-            sendRuntimeMessage("authTokensResponse", {
+            sendTabMessage("authTokensResponse", {
               data: {
                 accessToken: tokens.accessToken,
                 idToken: tokens.accessToken,
@@ -160,7 +130,7 @@ export function startRuntimeMessageListener() {
           } catch (error) {
             logDebug(error);
 
-            sendRuntimeMessage("authTokensResponse", {
+            sendTabMessage("authTokensResponse", {
               error: getError(error),
             });
           }
@@ -168,8 +138,38 @@ export function startRuntimeMessageListener() {
           break;
         }
 
+        case "authUserRequest": {
+          try {
+            const authSession = await fetchAuthSession();
+            const email =
+              authSession.tokens?.idToken?.payload.email?.toString();
+
+            if (!email) {
+              throw new IdentificationError("UserNotLoggedIn");
+            }
+
+            sendTabMessage("authUserResponse", {
+              data: { email },
+            });
+          } catch (error) {
+            if (
+              error instanceof IdentificationError &&
+              error.name !== "UserNotLoggedIn"
+            ) {
+              /**
+               * An unexpected identification error was thrown.
+               */
+              logDebug(error);
+            }
+
+            sendTabMessage("authUserResponse", { error: getError(error) });
+          }
+
+          break;
+        }
+
         case "pingRequest": {
-          sendRuntimeMessage("pingResponse", true);
+          sendTabMessage("pingResponse", true);
 
           break;
         }

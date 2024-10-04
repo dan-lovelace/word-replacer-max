@@ -3,7 +3,7 @@ import { join } from "node:path";
 import preact from "@preact/preset-vite";
 import { defineConfig, loadEnv, UserConfig } from "vite";
 
-import { authConfig, buildConfig } from "@worm/plugins";
+import { buildConfig } from "@worm/plugins";
 
 const testConfig: UserConfig = {
   build: {
@@ -11,7 +11,7 @@ const testConfig: UserConfig = {
       input: "popup.html",
     },
   },
-  plugins: [authConfig(), buildConfig(), preact()],
+  plugins: [buildConfig(), preact()],
   resolve: {
     alias: [
       {
@@ -35,7 +35,7 @@ const modeConfig: Record<string, UserConfig> = {
         },
       },
     },
-    plugins: [authConfig(), buildConfig(), preact()],
+    plugins: [buildConfig(), preact()],
   },
 };
 

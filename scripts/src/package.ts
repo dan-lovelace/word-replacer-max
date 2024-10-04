@@ -6,9 +6,7 @@ import path from "node:path";
 
 import archiver from "archiver";
 
-const __dirname = process.cwd();
-const DIST_DIR = "dist";
-const VERSIONS_DIR = "versions";
+import { distDir, versionsDir } from "./lib/config";
 
 function main() {
   assert(
@@ -20,8 +18,7 @@ function main() {
   const packageJson = fs.readFileSync("package.json", "utf-8");
   const { name, version: packageVersion } = JSON.parse(packageJson);
   const outputFile = path.join(
-    __dirname,
-    VERSIONS_DIR,
+    versionsDir,
     `${name}_${packageVersion}_m${manifestVersion}.zip`
   );
 
@@ -35,13 +32,13 @@ function main() {
       process.exit(1);
     }
 
-    if (!fs.existsSync(VERSIONS_DIR)) {
-      fs.mkdirSync(VERSIONS_DIR);
+    if (!fs.existsSync(versionsDir)) {
+      fs.mkdirSync(versionsDir);
     }
 
     if (manifestVersion === "2") {
       // remove development settings from manifest
-      const manifestLocation = path.join(__dirname, DIST_DIR, "manifest.json");
+      const manifestLocation = path.join(distDir, "manifest.json");
       const versionJSON = JSON.parse(
         fs.readFileSync(manifestLocation, "utf-8")
       );
@@ -63,7 +60,7 @@ function main() {
 
     archive.pipe(output);
     archive.glob("**/*", {
-      cwd: DIST_DIR,
+      cwd: distDir,
       ignore: [".DS_Store"],
     });
     archive.finalize();

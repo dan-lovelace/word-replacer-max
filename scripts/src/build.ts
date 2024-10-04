@@ -4,11 +4,8 @@ import { exec } from "node:child_process";
 import fs from "node:fs";
 import { join } from "node:path";
 
-import { configureNodeEnvironment } from "@worm/plugins";
-
-import { getManifest } from "./manifest";
-
-const OUT_DIR = "dist";
+import { configureNodeEnvironment, distDir } from "./lib/config";
+import { getManifest } from "./lib/manifest";
 
 function writeManifest() {
   return new Promise<void>(async (resolve) => {
@@ -16,7 +13,7 @@ function writeManifest() {
     const manifest = await getManifest(Number(manifestVersion));
 
     fs.writeFileSync(
-      join(OUT_DIR, "manifest.json"),
+      join(distDir, "manifest.json"),
       JSON.stringify(manifest, null, 2),
       "utf-8"
     );
@@ -35,13 +32,14 @@ function main() {
     "AWS_PROFILE must be 'word-replacer-max'"
   );
 
-  if (!fs.existsSync(OUT_DIR)) {
-    fs.mkdirSync(OUT_DIR, { recursive: true });
+  if (!fs.existsSync(distDir)) {
+    fs.mkdirSync(distDir, { recursive: true });
   }
 
-  exec("lerna run build", (error, stdout, stderr) => {
+  exec("lerna run build --ignore=@worm/webapp", (error, stdout, stderr) => {
     if (error) {
-      console.error(`exec error: ${stderr}`);
+      console.error(`exec error: ${error.message}`);
+      console.error(`stderr: ${stderr}`);
       process.exit(1);
     }
 

@@ -13,13 +13,14 @@
   ],
   "private": true,
   "scripts": {
-    "build": "yarn clean && tsx scripts/build.ts",
+    "build": "yarn clean && tsx scripts/src/build.ts",
     "clean": "rimraf dist",
     "jest": "jest",
-    "package": "tsx scripts/package.ts",
-    "start:2": "yarn clean && tsx scripts/build.ts 2 && lerna run start",
-    "start:3": "yarn clean && tsx scripts/build.ts 3 && lerna run start",
-    "test": "yarn run jest && lerna run test"
+    "package": "tsx scripts/src/package.ts",
+    "start:2": "yarn clean && tsx scripts/src/build.ts 2 && lerna run start",
+    "start:3": "yarn clean && tsx scripts/src/build.ts 3 && lerna run start",
+    "test": "yarn run jest && lerna run test",
+    "write-config": "tsx scripts/src/write-config.ts"
   },
   "engines": {
     "node": ">=18.0.0"

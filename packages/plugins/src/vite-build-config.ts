@@ -1,6 +1,14 @@
+import { join, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+
 import { Plugin } from "vite";
 
-import { envDir, outDir } from ".";
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+const rootDir = join(__dirname, "..", "..", "..");
+
+const envDir = join(rootDir, "config");
+const outDir = join(rootDir, "dist");
 
 export function buildConfig(): Plugin {
   return {
