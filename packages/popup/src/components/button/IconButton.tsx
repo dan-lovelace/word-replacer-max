@@ -19,6 +19,7 @@ export default function IconButton({
         "mx-1",
         className
       )}
+      type="button"
       {...rest}
     >
       {icon}

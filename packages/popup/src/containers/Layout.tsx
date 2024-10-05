@@ -1,11 +1,17 @@
 import { useEffect, useMemo, useRef } from "preact/hooks";
 
 import { cx } from "@worm/shared";
-import { getAssetURL, popoutExtension } from "@worm/shared/src/browser";
+import {
+  getAssetURL,
+  popoutExtension,
+  sendConnectMessage,
+} from "@worm/shared/src/browser";
+import { getEnvConfig } from "@worm/shared/src/config";
 import { storageSetByKeys } from "@worm/shared/src/storage";
 import { PopupTab } from "@worm/types";
 
 import { useToast } from "../components/alert/useToast";
+import Button from "../components/button/Button";
 import IconButton from "../components/button/IconButton";
 import { useLanguage } from "../lib/language";
 import { getNotificationMessage } from "../lib/routes";
@@ -22,6 +28,8 @@ type LayoutTab = {
   label: string;
   testId: string;
 };
+
+const envConfig = getEnvConfig();
 
 const tabs: LayoutTab[] = [
   {
@@ -49,7 +57,7 @@ const tabs: LayoutTab[] = [
 export default function Layout({ children }: LayoutProps) {
   const {
     isPoppedOut,
-    storage: { preferences },
+    storage: { currentUser, preferences },
   } = useConfig();
   const language = useLanguage();
   const notificationMessage = useMemo(getNotificationMessage, []);
@@ -90,6 +98,10 @@ export default function Layout({ children }: LayoutProps) {
     }
 
     window.close();
+  };
+
+  const handleSignOutClick = () => {
+    sendConnectMessage("popup", "signOut");
   };
 
   const handleTabChange = (newTab: PopupTab) => () => {
@@ -140,7 +152,7 @@ export default function Layout({ children }: LayoutProps) {
                     )}
                     data-testid={testId}
                   >
-                    <button
+                    <Button
                       className={cx(
                         "nav-link",
                         preferences?.activeTab === identifier && "active"
@@ -148,7 +160,7 @@ export default function Layout({ children }: LayoutProps) {
                       onClick={handleTabChange(identifier)}
                     >
                       {label}
-                    </button>
+                    </Button>
                   </li>
                 )
             )}
@@ -163,22 +175,72 @@ export default function Layout({ children }: LayoutProps) {
                 />
                 <ul className="dropdown-menu shadow">
                   <li>
-                    <button
+                    <Button
                       className="dropdown-item"
-                      type="button"
                       onClick={handlePopoutClick}
                     >
                       <span className="d-flex align-items-center gap-3">
                         <span className="material-icons-sharp">
                           open_in_new
-                        </span>{" "}
+                        </span>
                         Pop extension out
                       </span>
-                    </button>
+                    </Button>
                   </li>
                 </ul>
               </div>
             )}
+            <div className="dropdown">
+              <IconButton
+                aria-expanded={false}
+                icon="account_circle"
+                data-bs-toggle="dropdown"
+              />
+              <ul className="dropdown-menu shadow" style={{ minWidth: 200 }}>
+                {currentUser ? (
+                  <>
+                    <li onClick={(e) => e.stopPropagation()}>
+                      <div
+                        aria-disabled={true}
+                        className="dropdown-item pe-none"
+                      >
+                        <div>Signed in as</div>
+                        <div className="fw-bold">{currentUser.email}</div>
+                      </div>
+                    </li>
+                    <li>
+                      <hr class="dropdown-divider" />
+                    </li>
+                    <li>
+                      <Button
+                        className="dropdown-item"
+                        onClick={handleSignOutClick}
+                      >
+                        <span className="d-flex align-items-center gap-3">
+                          <span className="material-icons-sharp">logout</span>
+                          Sign out
+                        </span>
+                      </Button>
+                    </li>
+                  </>
+                ) : (
+                  <>
+                    <li>
+                      <a
+                        className="dropdown-item"
+                        href={envConfig.VITE_SSM_WEBAPP_ORIGIN}
+                        target="_blank"
+                      >
+                        <span className="d-flex align-items-center gap-3">
+                          <span className="material-icons-sharp">login</span>
+                          Sign in
+                        </span>
+                      </a>
+                    </li>
+                  </>
+                )}
+              </ul>
+            </div>
           </div>
         </div>
         {children}

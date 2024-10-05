@@ -1,5 +1,9 @@
 import { Amplify } from "aws-amplify";
-import { cognitoUserPoolsTokenProvider } from "aws-amplify/auth/cognito";
+import { fetchAuthSession } from "aws-amplify/auth";
+import {
+  cognitoUserPoolsTokenProvider,
+  signOut,
+} from "aws-amplify/auth/cognito";
 import {
   AuthConfig,
   Hub,
@@ -14,6 +18,7 @@ import {
   storageRemoveByKeys,
   storageSetByKeys,
 } from "@worm/shared/src/storage";
+import { AppUser } from "@worm/types";
 
 type StorageAuthKey = (typeof storageAuthSuffixes)[number];
 
@@ -216,3 +221,18 @@ Amplify.configure(
 Hub.listen("auth", (event) => {
   logDebug("Hub auth event", event);
 });
+
+export async function getCurrentUser(): Promise<AppUser> {
+  const authSession = await fetchAuthSession();
+  const email = authSession.tokens?.idToken?.payload.email?.toString();
+
+  if (!email) {
+    return undefined;
+  }
+
+  return { email };
+}
+
+export function signUserOut() {
+  return signOut();
+}

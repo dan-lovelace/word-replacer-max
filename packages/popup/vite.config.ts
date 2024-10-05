@@ -5,6 +5,20 @@ import { defineConfig, loadEnv, UserConfig } from "vite";
 
 import { buildConfig } from "@worm/plugins";
 
+const productionConfig: UserConfig = {
+  build: {
+    assetsDir: "popup",
+    rollupOptions: {
+      input: "popup.html",
+      output: {
+        chunkFileNames: "[name].js",
+        assetFileNames: "[name].[ext]",
+      },
+    },
+  },
+  plugins: [buildConfig(), preact()],
+};
+
 const testConfig: UserConfig = {
   build: {
     rollupOptions: {
@@ -23,20 +37,8 @@ const testConfig: UserConfig = {
 };
 
 const modeConfig: Record<string, UserConfig> = {
-  development: testConfig,
-  production: {
-    build: {
-      assetsDir: "popup",
-      rollupOptions: {
-        input: "popup.html",
-        output: {
-          chunkFileNames: "[name].js",
-          assetFileNames: "[name].[ext]",
-        },
-      },
-    },
-    plugins: [buildConfig(), preact()],
-  },
+  development: productionConfig,
+  production: productionConfig,
 };
 
 export default defineConfig(({ mode }) => {

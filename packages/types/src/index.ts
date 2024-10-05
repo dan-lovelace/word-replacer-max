@@ -113,6 +113,7 @@ export type StorageKeyMap = {
   authIdToken: string;
   authRefreshToken: string;
 
+  currentUser: AppUser;
   domainList: string[];
   exportLinks: ExportLink[];
   matchers: Matcher[];

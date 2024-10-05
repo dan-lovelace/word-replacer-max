@@ -4,7 +4,7 @@ import {
   initializeContextMenu,
   startContextMenuListener,
 } from "./lib/context-menu";
-import { startRuntimeMessageListener } from "./lib/messages";
+import { startConnectListener, startMessageListener } from "./lib/messages";
 import { initializeStorage } from "./lib/storage";
 
 /**
@@ -19,4 +19,5 @@ browser.runtime.onInstalled.addListener(async () => {
 });
 
 startContextMenuListener();
-startRuntimeMessageListener();
+startConnectListener();
+startMessageListener();

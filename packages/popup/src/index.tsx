@@ -8,7 +8,9 @@ import ToastContainer from "./components/alert/ToastContainer";
 import Layout from "./containers/Layout";
 import HomePage from "./pages/Home";
 import NotFoundPage from "./pages/NotFound";
+import { AuthProvider } from "./store/Auth";
 import { ConfigProvider } from "./store/Config";
+import { QueryProvider } from "./store/Query";
 
 import "./style/index.scss";
 import "material-icons/iconfont/sharp.scss";
@@ -17,15 +19,19 @@ export function App() {
   return (
     <>
       <ConfigProvider>
-        <LocationProvider>
-          <Layout>
-            <Router>
-              <Route path={POPUP_ROUTES.HOME} component={HomePage} />
-              <Route default component={NotFoundPage} />
-            </Router>
-          </Layout>
-          <ToastContainer />
-        </LocationProvider>
+        <QueryProvider>
+          <AuthProvider>
+            <LocationProvider>
+              <Layout>
+                <Router>
+                  <Route path={POPUP_ROUTES.HOME} component={HomePage} />
+                  <Route default component={NotFoundPage} />
+                </Router>
+              </Layout>
+              <ToastContainer />
+            </LocationProvider>
+          </AuthProvider>
+        </QueryProvider>
       </ConfigProvider>
     </>
   );

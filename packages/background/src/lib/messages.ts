@@ -5,18 +5,27 @@ import {
   signOut,
 } from "aws-amplify/auth";
 
-import { createWebAppMessage, logDebug } from "@worm/shared";
+import {
+  createRuntimeMessage,
+  createWebAppMessage,
+  logDebug,
+} from "@worm/shared";
 import { getApiEndpoint } from "@worm/shared/src/api";
-import { browser } from "@worm/shared/src/browser";
+import { browser, sendConnectMessage } from "@worm/shared/src/browser";
 import { storageSetByKeys } from "@worm/shared/src/storage";
 import { ApiAuthTokens, IdentificationError } from "@worm/types";
 import {
+  RuntimeMessage,
+  RuntimeMessageKind,
   WebAppMessageData,
   WebAppMessageKind,
   WebAppMessageKindMap,
 } from "@worm/types/src/message";
 
-import "./auth";
+import "./auth/amplify";
+import { getCurrentUser, signUserOut } from "./auth/amplify";
+
+let runtimePort: browser.Runtime.Port;
 
 function getError(error: unknown) {
   let errorMessage: string;
@@ -59,7 +68,63 @@ async function sendTabMessage<T extends WebAppMessageKind>(
   );
 }
 
-export function startRuntimeMessageListener() {
+export function startConnectListener() {
+  browser.runtime.onConnect.addListener((connectionPort) => {
+    runtimePort = connectionPort;
+
+    runtimePort.onMessage.addListener(
+      async (event: RuntimeMessage<RuntimeMessageKind>) => {
+        switch (event.data.kind) {
+          case "currentUserRequest": {
+            try {
+              const currentUser = await getCurrentUser();
+
+              if (currentUser === undefined) {
+                throw new IdentificationError("UserNotLoggedIn");
+              }
+
+              storageSetByKeys({ currentUser });
+
+              const responseMessage = createRuntimeMessage(
+                "currentUserResponse",
+                {
+                  data: currentUser,
+                }
+              );
+              runtimePort.postMessage({ data: responseMessage });
+            } catch (error) {
+              storageSetByKeys({
+                currentUser: undefined,
+              });
+
+              const responseMessage = createRuntimeMessage(
+                "currentUserResponse",
+                {
+                  error: getError(error),
+                }
+              );
+              runtimePort.postMessage({ data: responseMessage });
+            }
+
+            break;
+          }
+
+          case "signOut": {
+            await signUserOut();
+
+            storageSetByKeys({
+              currentUser: undefined,
+            });
+
+            break;
+          }
+        }
+      }
+    );
+  });
+}
+
+export function startMessageListener() {
   browser.runtime.onMessage.addListener(
     async (event: WebAppMessageData<WebAppMessageKind>, sender) => {
       switch (event.kind) {

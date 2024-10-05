@@ -9,12 +9,13 @@
     "cypress:open": "cypress open --e2e --browser chrome",
     "cypress:run": "cypress run",
     "dev": "yarn vite:tsx --host --mode ${VITE_MODE:-development}",
-    "start": "yarn build --watch --mode development",
+    "start": "yarn build --watch",
     "test": "if [ \"$CI\" != \"true\" ]; then yarn run cypress:run; fi",
     "vite:tsx": "NODE_OPTIONS='--import tsx' vite"
   },
   "dependencies": {
     "@popperjs/core": "^2.11.8",
+    "@tanstack/react-query": "^5.53.1",
     "@worm/shared": "*",
     "bootstrap": "5.3.2",
     "material-icons": "^1.13.12",
