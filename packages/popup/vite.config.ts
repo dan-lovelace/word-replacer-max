@@ -39,6 +39,7 @@ const testConfig: UserConfig = {
 const modeConfig: Record<string, UserConfig> = {
   development: productionConfig,
   production: productionConfig,
+  test: testConfig,
 };
 
 export default defineConfig(({ mode }) => {
