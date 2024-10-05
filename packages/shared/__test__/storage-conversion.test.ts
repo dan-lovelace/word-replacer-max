@@ -6,6 +6,10 @@ import {
 } from "@worm/shared/src/browser/matchers";
 import { Matcher } from "@worm/types";
 
+jest.mock("@worm/shared/src/config/values", () => ({
+  VITE_API_ORIGIN: "https://dev-api.wordreplacermax.com",
+}));
+
 describe("matchersToStorage", () => {
   const testMatchers: Matcher[] = [
     {
