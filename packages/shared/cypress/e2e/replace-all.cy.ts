@@ -168,6 +168,31 @@ describe("replaceAll", () => {
       });
     });
 
+    it("replaces idiomatic text elements", () => {
+      cy.visitMock({
+        targetContents: "Lorem <i>ipsum</i> dolor",
+      });
+
+      cy.document().then((document) => {
+        replaceAll(
+          [
+            {
+              active: true,
+              identifier: "ABCD-1234",
+              queries: ["ipsum"],
+              queryPatterns: [],
+              replacement: "sit",
+              useGlobalReplacementStyle: true,
+            },
+          ],
+          undefined,
+          document
+        );
+
+        cy.get("i").should("have.text", "sit");
+      });
+    });
+
     it("works for wikipedia", () => {
       cy.visitMock({
         html: "wiki.html",
