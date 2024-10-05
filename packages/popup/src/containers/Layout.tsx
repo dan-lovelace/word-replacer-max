@@ -16,6 +16,7 @@ import IconButton from "../components/button/IconButton";
 import { useLanguage } from "../lib/language";
 import { getNotificationMessage } from "../lib/routes";
 import { PreactChildren } from "../lib/types";
+import { useAuth } from "../store/Auth";
 import { useConfig } from "../store/Config";
 
 type LayoutProps = {
@@ -55,9 +56,10 @@ const tabs: LayoutTab[] = [
 ];
 
 export default function Layout({ children }: LayoutProps) {
+  const { currentUser } = useAuth();
   const {
     isPoppedOut,
-    storage: { currentUser, preferences },
+    storage: { preferences },
   } = useConfig();
   const language = useLanguage();
   const notificationMessage = useMemo(getNotificationMessage, []);
@@ -170,8 +172,8 @@ export default function Layout({ children }: LayoutProps) {
               <div className="dropdown">
                 <IconButton
                   aria-expanded={false}
-                  icon="more_vert"
                   data-bs-toggle="dropdown"
+                  icon="more_vert"
                 />
                 <ul className="dropdown-menu shadow">
                   <li>
@@ -193,8 +195,10 @@ export default function Layout({ children }: LayoutProps) {
             <div className="dropdown">
               <IconButton
                 aria-expanded={false}
-                icon="account_circle"
+                className={currentUser ? "text-primary" : "text-secondary"}
                 data-bs-toggle="dropdown"
+                icon="account_circle"
+                style={{ transition: "color 150ms" }}
               />
               <ul className="dropdown-menu shadow" style={{ minWidth: 200 }}>
                 {currentUser ? (
@@ -202,7 +206,7 @@ export default function Layout({ children }: LayoutProps) {
                     <li onClick={(e) => e.stopPropagation()}>
                       <div
                         aria-disabled={true}
-                        className="dropdown-item pe-none"
+                        className="dropdown-item pe-none fs-sm"
                       >
                         <div>Signed in as</div>
                         <div className="fw-bold">{currentUser.email}</div>

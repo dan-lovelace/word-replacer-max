@@ -1,5 +1,7 @@
 import { createContext, useContext, useState } from "react";
 
+import { SignInStatusState } from "@worm/types";
+
 type AppUser = {
   email: string;
 };
@@ -12,13 +14,6 @@ type AuthProviderContextProps = {
 };
 
 type AuthProviderProps = React.HTMLAttributes<HTMLDivElement>;
-
-type SignInStatusState =
-  | "signedIn"
-  | "signedOut"
-  | "signingIn"
-  | "signingOut"
-  | "unknown";
 
 const AuthProviderContext = createContext<AuthProviderContextProps>(
   {} as AuthProviderContextProps

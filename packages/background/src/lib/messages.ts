@@ -83,8 +83,6 @@ export function startConnectListener() {
                 throw new IdentificationError("UserNotLoggedIn");
               }
 
-              storageSetByKeys({ currentUser });
-
               const responseMessage = createRuntimeMessage(
                 "currentUserResponse",
                 {
@@ -93,10 +91,6 @@ export function startConnectListener() {
               );
               runtimePort.postMessage({ data: responseMessage });
             } catch (error) {
-              storageSetByKeys({
-                currentUser: undefined,
-              });
-
               const responseMessage = createRuntimeMessage(
                 "currentUserResponse",
                 {
@@ -111,10 +105,6 @@ export function startConnectListener() {
 
           case "signOut": {
             await signUserOut();
-
-            storageSetByKeys({
-              currentUser: undefined,
-            });
 
             break;
           }
@@ -176,7 +166,9 @@ export function startMessageListener() {
             await storageSetByKeys({
               authAccessToken: tokens.accessToken,
               authIdToken: tokens.idToken,
-              authLastAuthUser: decodeJWT(String(tokens.idToken)).payload.sub,
+              authLastAuthUser: decodeJWT(
+                String(tokens.idToken)
+              ).payload.email?.toString(),
               authRefreshToken: tokens.refreshToken,
             });
 

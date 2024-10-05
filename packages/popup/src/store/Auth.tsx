@@ -1,7 +1,11 @@
 import { createContext } from "preact";
-import { useContext, useEffect, useMemo } from "preact/hooks";
+import { useContext, useMemo } from "preact/hooks";
 
-import { useQuery } from "@tanstack/react-query";
+import {
+  QueryObserverResult,
+  RefetchOptions,
+  useQuery,
+} from "@tanstack/react-query";
 
 import { createRuntimeMessage } from "@worm/shared";
 import { browser } from "@worm/shared/src/browser";
@@ -9,82 +13,84 @@ import { AppUser } from "@worm/types";
 import { RuntimeMessage, RuntimeMessageKind } from "@worm/types/src/message";
 
 import { PreactChildren } from "../lib/types";
-
 import { useConfig } from "./Config";
 
 type AuthStore = {
   currentUser: AppUser;
-  isLoggedIn: boolean;
+  fetchCurrentUser: (
+    options?: RefetchOptions
+  ) => Promise<QueryObserverResult<false | AppUser, Error>>;
 };
 
-const storeDefaults: AuthStore = {
-  currentUser: undefined,
-  isLoggedIn: false,
-};
-
-const Auth = createContext<AuthStore>(storeDefaults);
+const Auth = createContext<AuthStore>({} as AuthStore);
 
 export const useAuth = () => useContext(Auth);
 
 export function AuthProvider({ children }: { children: PreactChildren }) {
   const {
-    storage: { currentUser },
+    storage: { authLastAuthUser },
   } = useConfig();
-  const isLoggedIn = useMemo(() => currentUser !== undefined, [currentUser]);
 
-  const { data, refetch: fetchCurrentUser } = useQuery<
-    AppUser | false,
-    Error,
-    AppUser
-  >({
-    enabled: Boolean(currentUser),
-    queryFn: async () => {
+  /**
+   * Construct the current user object.
+   */
+  const currentUser = useMemo<AppUser>(() => {
+    return authLastAuthUser !== undefined ? { email: authLastAuthUser } : false;
+  }, [authLastAuthUser]);
+
+  const { refetch: fetchCurrentUser } = useQuery<AppUser, Error, AppUser>({
+    queryKey: ["fetchCurrentUser"],
+    retry: false,
+    queryFn: async ({ signal }) => {
       const port = browser.runtime.connect({ name: "popup" });
 
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         const userRequest = createRuntimeMessage("currentUserRequest");
         port.postMessage({ data: userRequest });
 
-        port.onMessage.addListener(
-          (event: RuntimeMessage<RuntimeMessageKind>) => {
-            switch (event.data.kind) {
-              case "currentUserResponse": {
-                resolve(event.data.details?.data);
-                break;
-              }
-
-              default:
-                resolve(false);
-            }
+        const responsePollStarted = new Date().getTime();
+        const responsePollIntervalMs = 10;
+        const responsePollLengthMs = 2000;
+        const responsePoll = setInterval(() => {
+          if (
+            new Date().getTime() - responsePollStarted >
+            responsePollLengthMs
+          ) {
+            doResolve(false);
           }
-        );
+        }, responsePollIntervalMs);
+
+        const doResolve = (response: AppUser) => {
+          clearInterval(responsePoll);
+          resolve(response);
+        };
+
+        const messageHandler = (event: RuntimeMessage<RuntimeMessageKind>) => {
+          switch (event.data.kind) {
+            case "currentUserResponse": {
+              doResolve(event.data.details?.data ?? false);
+              break;
+            }
+
+            default:
+              doResolve(false);
+          }
+        };
+
+        port.onMessage.addListener(messageHandler);
+
+        signal.addEventListener("abort", () => {
+          clearInterval(responsePoll);
+          port.onMessage.removeListener(messageHandler);
+          port.disconnect();
+          reject(new Error("Query was cancelled"));
+        });
       });
     },
-    queryKey: ["getCurrentUser"],
-    retry: false,
   });
 
-  useEffect(() => {
-    function pingCurrentUser() {
-      fetchCurrentUser();
-    }
-
-    pingCurrentUser();
-
-    const handleWindowFocus = () => {
-      pingCurrentUser();
-    };
-
-    window.addEventListener("focus", handleWindowFocus);
-
-    return () => {
-      window.removeEventListener("focus", handleWindowFocus);
-    };
-  }, []);
-
   return (
-    <Auth.Provider value={{ currentUser, isLoggedIn }}>
-      <div>Data: {JSON.stringify(data)}</div>
+    <Auth.Provider value={{ currentUser, fetchCurrentUser }}>
       {children}
     </Auth.Provider>
   );

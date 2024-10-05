@@ -227,7 +227,7 @@ export async function getCurrentUser(): Promise<AppUser> {
   const email = authSession.tokens?.idToken?.payload.email?.toString();
 
   if (!email) {
-    return undefined;
+    return false;
   }
 
   return { email };

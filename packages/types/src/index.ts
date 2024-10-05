@@ -14,7 +14,7 @@ export type AppUser =
   | {
       email: string;
     }
-  | undefined;
+  | false;
 
 export type DeepPartial<T> = T extends object
   ? {
@@ -94,6 +94,13 @@ export type SchemaVersion1 = {
 
 export type SchemaVersionType = (typeof schemaVersions)[number];
 
+export type SignInStatusState =
+  | "signedIn"
+  | "signedOut"
+  | "signingIn"
+  | "signingOut"
+  | "unknown";
+
 export type Storage = Partial<{
   [key in StorageKey]: StorageKeyMap[key];
 }> & {
@@ -113,7 +120,6 @@ export type StorageKeyMap = {
   authIdToken: string;
   authRefreshToken: string;
 
-  currentUser: AppUser;
   domainList: string[];
   exportLinks: ExportLink[];
   matchers: Matcher[];
