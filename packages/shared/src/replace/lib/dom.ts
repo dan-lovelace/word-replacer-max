@@ -3,7 +3,6 @@ import { Matcher, ReplacementStyle } from "@worm/types";
 import { CONTENTS_PROPERTY, REPLACEMENT_WRAPPER_ELEMENT } from ".";
 
 export const nodeNameBlocklist: Set<Node["nodeName"]> = new Set([
-  "i",
   "img",
   "link",
   "meta",
