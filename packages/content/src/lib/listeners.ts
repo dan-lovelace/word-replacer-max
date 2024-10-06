@@ -1,4 +1,5 @@
-import { browser, debounce } from "@worm/shared";
+import { debounce } from "@worm/shared";
+import { browser } from "@worm/shared/src/browser";
 
 import { renderContent } from "./render";
 

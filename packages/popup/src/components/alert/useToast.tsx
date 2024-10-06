@@ -1,4 +1,5 @@
-import { createToastMessage, ShowToastMessageOptions } from ".";
+import { createWebAppMessage } from "@worm/shared";
+import { ShowToastMessageOptions } from "@worm/types/src/message";
 
 type UseToastResult = {
   showToast: (options: ShowToastMessageOptions) => void;
@@ -6,7 +7,7 @@ type UseToastResult = {
 
 export function useToast(): UseToastResult {
   const showToast = (options: ShowToastMessageOptions) => {
-    const toastEvent = createToastMessage("showToastMessage", options);
+    const toastEvent = createWebAppMessage("showToastMessage", options);
 
     window.postMessage(toastEvent);
   };

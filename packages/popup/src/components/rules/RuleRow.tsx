@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from "preact/hooks";
 
+import { cx } from "@worm/shared";
+import { STORAGE_MATCHER_PREFIX } from "@worm/shared/src/browser";
 import {
-  STORAGE_MATCHER_PREFIX,
   storageRemoveByKeys,
   storageSetByKeys,
-} from "@worm/shared";
+} from "@worm/shared/src/storage";
 import { Matcher } from "@worm/types";
 
-import cx from "../../lib/classnames";
 import { useLanguage } from "../../lib/language";
 import { useConfig } from "../../store/Config";
 

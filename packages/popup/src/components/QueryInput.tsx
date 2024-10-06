@@ -2,13 +2,12 @@ import { Fragment } from "preact";
 import { useState } from "preact/hooks";
 import { JSXInternal } from "preact/src/jsx";
 
-import { isReplacementEmpty } from "@worm/shared";
+import { cx, isReplacementEmpty } from "@worm/shared";
 import { Matcher, QueryPattern } from "@worm/types";
 
 import caseIcon from "../icons/case";
 import regexIcon from "../icons/regex";
 import wholeWordIcon from "../icons/whole-word";
-import cx from "../lib/classnames";
 import { useLanguage } from "../lib/language";
 import { PreactChildren } from "../lib/types";
 
@@ -137,13 +136,18 @@ export default function QueryInput({
           onBlur={handleFormSubmit}
           onInput={handleTextChange}
         />
-        <button className="visually-hidden" type="submit">
+        <button className="visually-hidden" disabled={disabled} type="submit">
           Add
         </button>
         {Boolean(queries.length) && (
           <div className="d-flex align-items-start flex-wrap gap-1 p-1">
             {queries.map((query, idx) => (
-              <Chip key={idx} identifier={query} onRemove={handleRemoveClick} />
+              <Chip
+                key={idx}
+                disabled={disabled}
+                identifier={query}
+                onRemove={handleRemoveClick}
+              />
             ))}
           </div>
         )}

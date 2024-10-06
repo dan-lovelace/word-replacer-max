@@ -1,6 +1,6 @@
+import { cx } from "@worm/shared";
 import { PopupAlertSeverity } from "@worm/types";
 
-import cx from "../lib/classnames";
 import { PreactChildren } from "../lib/types";
 
 type AlertProps = {
