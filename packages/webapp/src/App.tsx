@@ -1,4 +1,5 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { useLayoutEffect } from "react";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 
 import CssBaseline from "@mui/material/CssBaseline";
 import createTheme from "@mui/material/styles/createTheme";
@@ -19,6 +20,26 @@ import TermsPage from "./pages/TermsPage";
 
 const theme = createTheme(muiTheme);
 
+function AppRoutes() {
+  const { pathname } = useLocation();
+
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return (
+    <Routes>
+      <Route path={ROUTES.HOME} element={<HomePage />} />
+      <Route path={ROUTES.LOGIN} element={<LoginPage />} />
+      <Route path={ROUTES.LOGIN_CALLBACK} element={<LoginCallbackPage />} />
+      <Route path={ROUTES.PRIVACY} element={<PrivacyPage />} />
+      <Route path={ROUTES.SIGNUP} element={<SignUpPage />} />
+      <Route path={ROUTES.TERMS} element={<TermsPage />} />
+      <Route path="*" element={<NotFoundPage />} />
+    </Routes>
+  );
+}
+
 export function App() {
   const { appUser } = useAuthProvider();
 
@@ -27,18 +48,7 @@ export function App() {
       <CssBaseline />
       <BrowserRouter>
         <Layout>
-          <Routes>
-            <Route path={ROUTES.HOME} element={<HomePage />} />
-            <Route path={ROUTES.LOGIN} element={<LoginPage />} />
-            <Route
-              path={ROUTES.LOGIN_CALLBACK}
-              element={<LoginCallbackPage />}
-            />
-            <Route path={ROUTES.PRIVACY} element={<PrivacyPage />} />
-            <Route path={ROUTES.SIGNUP} element={<SignUpPage />} />
-            <Route path={ROUTES.TERMS} element={<TermsPage />} />
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
+          <AppRoutes />
         </Layout>
       </BrowserRouter>
     </ThemeProvider>

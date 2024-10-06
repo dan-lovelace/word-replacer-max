@@ -1,5 +1,7 @@
 import Container from "@mui/material/Container/Container";
 
+import Link from "../components/link/Link";
+
 export default function PrivacyPage() {
   return (
     <Container>
@@ -176,13 +178,13 @@ export default function PrivacyPage() {
           <p>
             <strong>Website</strong> refers to Word Replacer Max, accessible
             from{" "}
-            <a
-              href="https://wordreplacermax.com"
+            <Link
+              to="https://wordreplacermax.com"
               rel="external nofollow noopener"
               target="_blank"
             >
               https://wordreplacermax.com
-            </a>
+            </Link>
           </p>
         </li>
         <li>
@@ -267,12 +269,12 @@ export default function PrivacyPage() {
         Persistent Cookies remain on Your personal computer or mobile device
         when You go offline, while Session Cookies are deleted as soon as You
         close Your web browser. You can learn more about cookies on{" "}
-        <a
-          href="https://www.termsfeed.com/blog/cookies/#What_Are_Cookies"
+        <Link
+          to="https://www.termsfeed.com/blog/cookies/#What_Are_Cookies"
           target="_blank"
         >
           TermsFeed website
-        </a>{" "}
+        </Link>{" "}
         article.
       </p>
       <p>
@@ -582,24 +584,24 @@ export default function PrivacyPage() {
             mobile device settings, such as your device advertising settings or
             by following the instructions provided by Google in their Privacy
             Policy:{" "}
-            <a
-              href="https://policies.google.com/privacy"
+            <Link
+              to="https://policies.google.com/privacy"
               rel="external nofollow noopener"
               target="_blank"
             >
               https://policies.google.com/privacy
-            </a>
+            </Link>
           </p>
           <p>
             For more information on the privacy practices of Google, please
             visit the Google Privacy &amp; Terms web page:{" "}
-            <a
-              href="https://policies.google.com/privacy"
+            <Link
+              to="https://policies.google.com/privacy"
               rel="external nofollow noopener"
               target="_blank"
             >
               https://policies.google.com/privacy
-            </a>
+            </Link>
           </p>
         </li>
       </ul>
@@ -622,13 +624,13 @@ export default function PrivacyPage() {
           </p>
           <p>
             Their Privacy Policy can be viewed at{" "}
-            <a
-              href="https://aws.amazon.com/privacy"
+            <Link
+              to="https://aws.amazon.com/privacy"
               rel="external nofollow noopener"
               target="_blank"
             >
               https://aws.amazon.com/privacy
-            </a>
+            </Link>
           </p>
         </li>
       </ul>
@@ -654,13 +656,13 @@ export default function PrivacyPage() {
           </p>
           <p>
             Their Privacy Policy can be viewed at{" "}
-            <a
-              href="https://stripe.com/us/privacy"
+            <Link
+              to="https://stripe.com/us/privacy"
               rel="external nofollow noopener"
               target="_blank"
             >
               https://stripe.com/us/privacy
-            </a>
+            </Link>
           </p>
         </li>
       </ul>
@@ -1412,33 +1414,33 @@ export default function PrivacyPage() {
       <ul>
         <li>
           The NAI's opt-out platform:{" "}
-          <a
-            href="http://www.networkadvertising.org/choices/"
+          <Link
+            to="http://www.networkadvertising.org/choices/"
             rel="external nofollow noopener"
             target="_blank"
           >
             http://www.networkadvertising.org/choices/
-          </a>
+          </Link>
         </li>
         <li>
           The EDAA's opt-out platform{" "}
-          <a
-            href="http://www.youronlinechoices.com/"
+          <Link
+            to="http://www.youronlinechoices.com/"
             rel="external nofollow noopener"
             target="_blank"
           >
             http://www.youronlinechoices.com/
-          </a>
+          </Link>
         </li>
         <li>
           The DAA's opt-out platform:{" "}
-          <a
-            href="http://optout.aboutads.info/?c=2&amp;lang=EN"
+          <Link
+            to="http://optout.aboutads.info/?c=2&amp;lang=EN"
             rel="external nofollow noopener"
             target="_blank"
           >
             http://optout.aboutads.info/?c=2&amp;lang=EN
-          </a>
+          </Link>
         </li>
       </ul>
       <p>

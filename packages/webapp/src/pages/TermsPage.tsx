@@ -1,5 +1,7 @@
 import Container from "@mui/material/Container/Container";
 
+import Link from "../components/link/Link";
+
 export default function TermsPage() {
   return (
     <Container>
@@ -115,13 +117,13 @@ export default function TermsPage() {
           <p>
             <strong>Website</strong> refers to Word Replacer Max, accessible
             from{" "}
-            <a
-              href="https://wordreplacermax.com"
+            <Link
+              to="https://wordreplacermax.com"
               rel="external nofollow noopener"
               target="_blank"
             >
               https://wordreplacermax.com
-            </a>
+            </Link>
           </p>
         </li>
         <li>

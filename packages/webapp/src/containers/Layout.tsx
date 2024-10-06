@@ -11,8 +11,8 @@ export default function Layout({ children }: LayoutProps) {
       id="layout"
       sx={{
         display: "flex",
-        height: "100%",
         flexDirection: "column",
+        minHeight: 1,
       }}
     >
       <LayoutHeader />

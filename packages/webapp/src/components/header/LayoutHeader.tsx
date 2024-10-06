@@ -1,7 +1,9 @@
+import { matchPath, useLocation } from "react-router-dom";
+
 import Box from "@mui/material/Box/Box";
 import Paper from "@mui/material/Paper/Paper";
 import Stack from "@mui/material/Stack/Stack";
-import Typography from "@mui/material/Typography/Typography";
+import useTheme from "@mui/material/styles/useTheme";
 
 import { useAuthProvider } from "../../lib/auth/AuthProvider";
 import { useConnectionProvider } from "../../lib/connection/ConnectionProvider";
@@ -13,29 +15,45 @@ import SignupButton from "../button/SignupButton";
 import ConnectionStatus from "../connection/ConnectionStatus";
 import Link from "../link/Link";
 
+const HEADER_HEIGHT_PX = 54;
+
+const navigation = [
+  {
+    id: "home",
+    label: "Home",
+    to: "/",
+  },
+];
+
 export default function LayoutHeader() {
   const { signInStatus } = useAuthProvider();
   const { connectionStatus } = useConnectionProvider();
+  const { pathname } = useLocation();
+  const { palette } = useTheme();
 
   return (
     <Paper
       component="header"
       sx={{
         alignItems: "center",
+        borderRadius: 0,
         display: "flex",
         gap: 1,
+        height: HEADER_HEIGHT_PX,
+        position: "sticky",
         px: 2,
         py: 1,
+        top: 0,
       }}
     >
       <Stack
         direction="row"
-        sx={{ alignItems: "center", flex: "1 1 auto", gap: 1 }}
+        sx={{ alignItems: "center", flex: "1 1 auto", gap: 2 }}
       >
         <Link to={ROUTES.HOME}>
           <Box
             sx={{
-              height: 36,
+              height: 32,
               p: 0.25,
             }}
           >
@@ -44,21 +62,52 @@ export default function LayoutHeader() {
               alt="Word Replacer Max logo"
               src="/logo_128.png"
               sx={{
-                height: "100%",
+                height: 1,
               }}
             />
           </Box>
         </Link>
-        <Typography
-          variant="h5"
+        <Stack
+          component="nav"
+          direction="row"
           sx={{
-            display: { xs: "none", sm: "unset" },
-            fontWeight: "700",
-            mt: 0.25,
+            alignItems: "center",
+            height: HEADER_HEIGHT_PX,
+            my: -1,
+            gap: 2,
           }}
         >
-          Word Replacer Max
-        </Typography>
+          {navigation.map(({ id, label, to }) => (
+            <Link
+              key={id}
+              to={to}
+              sx={{
+                height: 1,
+              }}
+            >
+              <Stack
+                sx={{
+                  height: 1,
+                  justifyContent: "center",
+                  position: "relative",
+                }}
+              >
+                {label}
+                {matchPath(to, pathname) && (
+                  <Box
+                    sx={{
+                      backgroundColor: palette.primary.main,
+                      bottom: 0,
+                      height: 2,
+                      position: "absolute",
+                      width: 1,
+                    }}
+                  />
+                )}
+              </Stack>
+            </Link>
+          ))}
+        </Stack>
       </Stack>
       <Stack direction="row" sx={{ alignItems: "center", gap: 1 }}>
         <ConnectionStatus />
