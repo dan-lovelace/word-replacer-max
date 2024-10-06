@@ -185,10 +185,12 @@ export default function Layout({ children }: LayoutProps) {
                     <li onClick={(e) => e.stopPropagation()}>
                       <div
                         aria-disabled={true}
-                        className="dropdown-item pe-none fs-sm"
+                        className="dropdown-item pe-none"
                       >
-                        <div>Signed in as</div>
-                        <div className="fw-bold">{currentUser.email}</div>
+                        <div className="fs-sm">Signed in as</div>
+                        <div className="fw-bold text-truncate">
+                          <code>{currentUser.email}</code>
+                        </div>
                       </div>
                     </li>
                     <li>

@@ -11,7 +11,10 @@ export default function DropdownMenu({
   return (
     <ul
       className={cx("dropdown-menu shadow overflow-hidden", className)}
-      style={{ minWidth: 260 }}
+      style={{
+        maxWidth: 800, // derived from the `body` style in `index.scss`
+        minWidth: 260,
+      }}
       {...rest}
     />
   );
