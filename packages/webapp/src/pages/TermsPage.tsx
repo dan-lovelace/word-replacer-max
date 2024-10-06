@@ -4,7 +4,7 @@ export default function TermsPage() {
   return (
     <Container>
       <h1>Terms and Conditions</h1>
-      <p>Last updated: September 19, 2024</p>
+      <p>Last updated: October 6, 2024</p>
       <p>
         Please read these terms and conditions carefully before using Our
         Service.
@@ -31,7 +31,8 @@ export default function TermsPage() {
           <p>
             <strong>Application Store</strong> means the digital distribution
             service operated and developed by Apple Inc. (Apple App Store) or
-            Google Inc. (Google Play Store) in which the Application has been
+            Google Inc. (Google Play Store) or Google LLC (Google Chrome Web
+            Store) or Mozilla Foundation (AMO) in which the Application has been
             downloaded.
           </p>
         </li>
