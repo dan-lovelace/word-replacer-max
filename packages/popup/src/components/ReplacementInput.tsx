@@ -112,6 +112,7 @@ export default function ReplacementInput({
         {globalReplacementStyle?.active && (
           <Button
             className="btn btn-outline-secondary border-0 bg-transparent text-secondary"
+            disabled={disabled}
             title={
               useGlobalReplacementStyle
                 ? "Replacement Style Enabled"
@@ -129,7 +130,7 @@ export default function ReplacementInput({
           </Button>
         )}
       </div>
-      <Button className="visually-hidden" type="submit">
+      <Button className="visually-hidden" disabled={disabled} type="submit">
         Add
       </Button>
     </form>

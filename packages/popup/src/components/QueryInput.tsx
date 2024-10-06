@@ -136,13 +136,18 @@ export default function QueryInput({
           onBlur={handleFormSubmit}
           onInput={handleTextChange}
         />
-        <button className="visually-hidden" type="submit">
+        <button className="visually-hidden" disabled={disabled} type="submit">
           Add
         </button>
         {Boolean(queries.length) && (
           <div className="d-flex align-items-start flex-wrap gap-1 p-1">
             {queries.map((query, idx) => (
-              <Chip key={idx} identifier={query} onRemove={handleRemoveClick} />
+              <Chip
+                key={idx}
+                disabled={disabled}
+                identifier={query}
+                onRemove={handleRemoveClick}
+              />
             ))}
           </div>
         )}
