@@ -12,6 +12,8 @@ import { useConfig } from "../../store/Config";
 
 import { useToast } from "../alert/useToast";
 import Button from "../button/Button";
+import DropdownMenu from "../menu/DropdownMenu";
+import MenuItem from "../menu/MenuItem";
 
 type ExportButtonProps = {
   selectedRules?: SelectedRule[];
@@ -175,7 +177,7 @@ export default function ExportButton({
           </>
         )}
       </Button>
-      <ul
+      <DropdownMenu
         aria-labelledby="export-modal-dropdown-button"
         className="dropdown-menu shadow"
         data-testid="export-modal-dropdown-menu"
@@ -187,14 +189,8 @@ export default function ExportButton({
             type="button"
             onClick={handleExportLink}
           >
-            <span className="d-flex align-items-center gap-3">
-              <span className="material-icons-sharp">link</span> Create
-              shareable link
-            </span>
+            <MenuItem icon="link">Create shareable link</MenuItem>
           </button>
-        </li>
-        <li>
-          <hr className="dropdown-divider" />
         </li>
         <li>
           <button
@@ -203,13 +199,10 @@ export default function ExportButton({
             type="button"
             onClick={handleExportFile}
           >
-            <span className="d-flex align-items-center gap-3">
-              <span className="material-icons-sharp">download</span> Download
-              file locally
-            </span>
+            <MenuItem icon="download">Download file locally</MenuItem>
           </button>
         </li>
-      </ul>
+      </DropdownMenu>
     </div>
   );
 }

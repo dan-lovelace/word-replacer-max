@@ -13,6 +13,8 @@ import { PopupTab } from "@worm/types";
 import { useToast } from "../components/alert/useToast";
 import Button from "../components/button/Button";
 import IconButton from "../components/button/IconButton";
+import MenuItem from "../components/menu/MenuItem";
+import DropdownMenu from "../components/menu/DropdownMenu";
 import { useLanguage } from "../lib/language";
 import { getNotificationMessage } from "../lib/routes";
 import { PreactChildren } from "../lib/types";
@@ -89,8 +91,8 @@ export default function Layout({ children }: LayoutProps) {
     });
   };
 
-  const handlePopoutClick = async () => {
-    const open = await popoutExtension();
+  const handlePopoutClick = (isPopup: boolean) => async () => {
+    const open = await popoutExtension(isPopup);
 
     if (!open) {
       return showToast({
@@ -133,9 +135,10 @@ export default function Layout({ children }: LayoutProps) {
             style={{ margin: "0px 2px" }}
           >
             <IconButton
-              className={
+              className={cx(
+                "px-3",
                 preferences?.extensionEnabled ? "text-success" : "text-danger"
-              }
+              )}
               icon="power_settings_new"
               title="Toggle Extension On/Off"
               onClick={handleExtensionEnabledClick}
@@ -167,40 +170,16 @@ export default function Layout({ children }: LayoutProps) {
                 )
             )}
           </ul>
-          <div className="d-flex align-items-center justify-content-center">
-            {!isPoppedOut && (
-              <div className="dropdown">
-                <IconButton
-                  aria-expanded={false}
-                  data-bs-toggle="dropdown"
-                  icon="more_vert"
-                />
-                <ul className="dropdown-menu shadow">
-                  <li>
-                    <Button
-                      className="dropdown-item"
-                      onClick={handlePopoutClick}
-                    >
-                      <span className="d-flex align-items-center gap-3">
-                        <span className="material-icons-sharp">
-                          open_in_new
-                        </span>
-                        Pop extension out
-                      </span>
-                    </Button>
-                  </li>
-                </ul>
-              </div>
-            )}
+          <div className="d-flex align-items-center justify-content-center px-2">
             <div className="dropdown">
               <IconButton
                 aria-expanded={false}
-                className={currentUser ? "text-primary" : "text-secondary"}
+                className={cx(!currentUser && "text-primary")}
                 data-bs-toggle="dropdown"
                 icon="account_circle"
                 style={{ transition: "color 150ms" }}
               />
-              <ul className="dropdown-menu shadow" style={{ minWidth: 200 }}>
+              <DropdownMenu>
                 {currentUser ? (
                   <>
                     <li onClick={(e) => e.stopPropagation()}>
@@ -220,31 +199,90 @@ export default function Layout({ children }: LayoutProps) {
                         className="dropdown-item"
                         onClick={handleSignOutClick}
                       >
-                        <span className="d-flex align-items-center gap-3">
-                          <span className="material-icons-sharp">logout</span>
-                          Sign out
-                        </span>
+                        <MenuItem icon="logout">Sign out</MenuItem>
                       </Button>
                     </li>
                   </>
                 ) : (
                   <>
+                    <li
+                      className="bg-warning"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <div
+                        aria-disabled={true}
+                        className={cx(
+                          "dropdown-item pe-none",
+                          "mb-2 mt-n2 py-2",
+                          "fs-sm fw-bold"
+                        )}
+                      >
+                        Unlock additional features with your account
+                      </div>
+                    </li>
                     <li>
                       <a
                         className="dropdown-item"
                         href={envConfig.VITE_SSM_WEBAPP_ORIGIN}
                         target="_blank"
                       >
-                        <span className="d-flex align-items-center gap-3">
-                          <span className="material-icons-sharp">login</span>
-                          Sign in
-                        </span>
+                        <MenuItem icon="open_in_new">Learn more</MenuItem>
+                      </a>
+                    </li>
+                    <li>
+                      <hr class="dropdown-divider" />
+                    </li>
+                    <li>
+                      <a
+                        className="dropdown-item"
+                        href={`${envConfig.VITE_SSM_WEBAPP_ORIGIN}/signup`}
+                        target="_blank"
+                      >
+                        <MenuItem icon="app_registration">
+                          Create account
+                        </MenuItem>
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        className="dropdown-item"
+                        href={`${envConfig.VITE_SSM_WEBAPP_ORIGIN}/login`}
+                        target="_blank"
+                      >
+                        <MenuItem icon="login">Log in</MenuItem>
                       </a>
                     </li>
                   </>
                 )}
-              </ul>
+              </DropdownMenu>
             </div>
+            {!isPoppedOut && (
+              <div className="dropdown">
+                <IconButton
+                  aria-expanded={false}
+                  data-bs-toggle="dropdown"
+                  icon="more_vert"
+                />
+                <DropdownMenu>
+                  <li>
+                    <Button
+                      className="dropdown-item"
+                      onClick={handlePopoutClick(false)}
+                    >
+                      <MenuItem icon="add">Open in tab</MenuItem>
+                    </Button>
+                  </li>
+                  <li>
+                    <Button
+                      className="dropdown-item"
+                      onClick={handlePopoutClick(true)}
+                    >
+                      <MenuItem icon="open_in_new">Open as popup</MenuItem>
+                    </Button>
+                  </li>
+                </DropdownMenu>
+              </div>
+            )}
           </div>
         </div>
         {children}

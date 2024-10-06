@@ -9,20 +9,31 @@ export const POPUP_ROUTES = {
   HOME: `/${POPUP_FILENAME}`,
 };
 
-export async function popoutExtension() {
-  const popupLocation = browser.runtime.getURL(POPUP_FILENAME);
-  const url = `${popupLocation}?${POPUP_POPPED_OUT_PARAMETER_KEY}=true`;
-
-  const open = await browser.windows.create({
-    height: 700,
-    type: "popup",
+export async function popoutExtension(isPopup: boolean) {
+  const url = getPopoutURL();
+  const baseProps: browser.Tabs.CreateCreatePropertiesType &
+    browser.Windows.CreateCreateDataType = {
     url,
-    width: 900,
-  });
+  };
+
+  if (isPopup) {
+    baseProps.height = 700;
+    baseProps.type = "popup";
+    baseProps.width = 900;
+  }
+
+  const openMethod = isPopup ? browser.windows : browser.tabs;
+  const open = await openMethod.create(baseProps);
 
   if (!open) {
     logDebug("Error opening popup");
   }
 
   return open;
+}
+
+export function getPopoutURL() {
+  const popupLocation = browser.runtime.getURL(POPUP_FILENAME);
+
+  return `${popupLocation}?${POPUP_POPPED_OUT_PARAMETER_KEY}=true`;
 }

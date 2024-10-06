@@ -1,6 +1,6 @@
 export function logDebug(...data: any[]) {
   console.log(
-    `${new Date().toUTCString()} %cWRM%c:`,
+    `%cWRM%c ${new Date().toUTCString()}\n>`,
     "color: #ff6600",
     "color: unset",
     ...data
