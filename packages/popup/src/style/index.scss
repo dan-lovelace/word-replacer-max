@@ -7,6 +7,8 @@ $tooltip-max-width: 300px;
 $inputHeight: 38px;
 
 body {
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   min-width: 800px; // this is not an arbitrary number; test changes on all browsers
 
   #app {
@@ -38,7 +40,7 @@ input[type="text"] {
 }
 
 .fs-sm {
-  font-size: 0.8rem;
+  font-size: 0.85rem;
 }
 
 .query-patterns {

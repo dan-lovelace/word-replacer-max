@@ -81,7 +81,7 @@ export function startContextMenuListener() {
         try {
           browser.action.openPopup();
         } catch (err) {
-          popoutExtension();
+          popoutExtension(true);
         }
 
         break;

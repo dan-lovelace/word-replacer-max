@@ -176,8 +176,10 @@ export default function Layout({ children }: LayoutProps) {
                 aria-expanded={false}
                 className={cx(!currentUser && "text-primary")}
                 data-bs-toggle="dropdown"
-                icon="account_circle"
-                style={{ transition: "color 150ms" }}
+                icon={currentUser ? "account_circle" : "person"}
+                style={{
+                  transition: "color 150ms",
+                }}
               />
               <DropdownMenu>
                 {currentUser ? (

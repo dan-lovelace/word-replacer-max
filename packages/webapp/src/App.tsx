@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 
 import CssBaseline from "@mui/material/CssBaseline";
 import createTheme from "@mui/material/styles/createTheme";
+import responsiveFontSizes from "@mui/material/styles/responsiveFontSizes";
 import ThemeProvider from "@mui/material/styles/ThemeProvider";
 
 import Layout from "./containers/Layout";
@@ -18,7 +19,8 @@ import PrivacyPage from "./pages/PrivacyPage";
 import SignUpPage from "./pages/SignUpPage";
 import TermsPage from "./pages/TermsPage";
 
-const theme = createTheme(muiTheme);
+let theme = createTheme(muiTheme);
+theme = responsiveFontSizes(theme);
 
 function AppRoutes() {
   const { pathname } = useLocation();

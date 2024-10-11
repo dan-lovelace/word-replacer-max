@@ -30,7 +30,7 @@ export default function LayoutHeader() {
   const { signInStatus } = useAuthProvider();
   const { connectionStatus } = useConnectionProvider();
   const { pathname } = useLocation();
-  const { palette } = useTheme();
+  const { palette, zIndex } = useTheme();
 
   return (
     <Paper
@@ -42,6 +42,7 @@ export default function LayoutHeader() {
         borderRadius: 0,
         position: "sticky",
         top: 0,
+        zIndex: zIndex.appBar,
       }}
     >
       <Container

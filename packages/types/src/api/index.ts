@@ -1,6 +1,11 @@
+type ApiResponseName = "InternalServerError" | "InvalidRequestBody";
+
 export type ApiResponse<T> = {
   data?: T;
-  error?: string;
+  error?: {
+    name: ApiResponseName;
+    details?: any;
+  };
 };
 
 export * from "./auth";

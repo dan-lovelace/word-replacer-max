@@ -11,7 +11,7 @@ import {
   logDebug,
 } from "@worm/shared";
 import { getApiEndpoint } from "@worm/shared/src/api";
-import { browser, sendConnectMessage } from "@worm/shared/src/browser";
+import { browser } from "@worm/shared/src/browser";
 import { storageSetByKeys } from "@worm/shared/src/storage";
 import { ApiAuthTokens, IdentificationError } from "@worm/types";
 import {
