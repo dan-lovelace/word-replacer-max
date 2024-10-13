@@ -4,6 +4,8 @@ import Stack from "@mui/material/Stack/Stack";
 import useTheme from "@mui/material/styles/useTheme";
 import Typography from "@mui/material/Typography/Typography";
 
+import popperImage from "../assets/popper.png";
+
 import Hero from "../containers/Hero";
 
 export default function LoginSuccessPage() {
@@ -33,11 +35,14 @@ export default function LoginSuccessPage() {
             component="span"
             sx={{
               color: palette.success.dark,
-              fontSize: { xs: 64, md: 96 },
-              mb: { xs: 5, md: 6 },
+              mb: { xs: 2, md: 4 },
             }}
           >
-            🎉
+            <Box
+              component="img"
+              src={popperImage}
+              sx={{ width: { xs: 84, md: 128 } }}
+            />
           </Box>
           <Container maxWidth="xs">
             <Typography component="h2" sx={{ fontSize: 18, mb: 5 }}>
