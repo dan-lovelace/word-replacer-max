@@ -7,6 +7,7 @@ import Typography from "@mui/material/Typography/Typography";
 
 import { createWebAppMessage } from "@worm/shared";
 
+import Hero from "../containers/Hero";
 import { useAuthProvider } from "../lib/auth/AuthProvider";
 import { useAuthTokens } from "../lib/auth/queries";
 import { useConnectionProvider } from "../lib/connection/ConnectionProvider";
@@ -63,35 +64,36 @@ export default function LoginCallbackPage() {
         );
         sendMessage(successMessage);
 
-        redirectAway();
+        handleLoginSuccess();
       }
     }
 
     getTokens();
   }, [connectionStatus, oauthCode]);
 
-  const redirectAway = () => {
-    navigate(ROUTES.HOME, {
+  const handleLoginSuccess = () => {
+    navigate(ROUTES.LOGIN_SUCCESS, {
       replace: true,
     });
   };
 
   if (isLoadingAuthTokens) {
     return (
-      <Stack
-        maxWidth="md"
-        sx={{
-          alignItems: "center",
-          gap: 4,
-          py: { xs: 8, md: 15 },
-          mx: "auto",
-        }}
-      >
-        <Typography variant="h4" sx={{ fontWeight: 700 }}>
-          Signing you in...
-        </Typography>
-        <CircularProgress size={48} />
-      </Stack>
+      <Hero>
+        <Stack
+          maxWidth="md"
+          sx={{
+            alignItems: "center",
+            gap: 4,
+            mx: "auto",
+          }}
+        >
+          <Typography variant="h4" sx={{ fontWeight: "bold" }}>
+            Signing you in...
+          </Typography>
+          <CircularProgress size={48} />
+        </Stack>
+      </Hero>
     );
   }
 

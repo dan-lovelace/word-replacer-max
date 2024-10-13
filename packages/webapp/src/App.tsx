@@ -13,6 +13,7 @@ import { muiTheme } from "./style/mui-theme";
 
 import HomePage from "./pages/HomePage";
 import LoginCallbackPage from "./pages/LoginCallbackPage";
+import LoginSuccessPage from "./pages/LoginSuccessPage";
 import LoginPage from "./pages/LoginPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import PrivacyPage from "./pages/PrivacyPage";
@@ -34,6 +35,7 @@ function AppRoutes() {
       <Route path={ROUTES.HOME} element={<HomePage />} />
       <Route path={ROUTES.LOGIN} element={<LoginPage />} />
       <Route path={ROUTES.LOGIN_CALLBACK} element={<LoginCallbackPage />} />
+      <Route path={ROUTES.LOGIN_SUCCESS} element={<LoginSuccessPage />} />
       <Route path={ROUTES.PRIVACY} element={<PrivacyPage />} />
       <Route path={ROUTES.SIGNUP} element={<SignUpPage />} />
       <Route path={ROUTES.TERMS} element={<TermsPage />} />

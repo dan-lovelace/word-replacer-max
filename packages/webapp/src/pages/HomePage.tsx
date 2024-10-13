@@ -7,6 +7,7 @@ import chromeSvg from "../assets/chrome-logo.svg";
 import firefoxSvg from "../assets/firefox-logo.svg";
 import Button from "../components/button/Button";
 import Link from "../components/link/Link";
+import Hero from "../containers/Hero";
 
 type StoreLinkProps = {
   imageSrc: string;
@@ -35,11 +36,7 @@ function StoreLink({ imageSrc, text, to }: StoreLinkProps) {
 export default function HomePage() {
   return (
     <>
-      <Box
-        sx={{
-          py: { xs: 8, md: 15 },
-        }}
-      >
+      <Hero>
         <Container maxWidth="md" sx={{ textAlign: "center" }}>
           <Typography
             component="h1"
@@ -52,7 +49,7 @@ export default function HomePage() {
             Powerful text replacement to personalize your web content
           </Typography>
           <Container maxWidth="sm">
-            <Typography component="h2" sx={{ fontSize: 18, mb: 5, mx: "auto" }}>
+            <Typography component="h2" sx={{ fontSize: 18, mb: 5 }}>
               A browser extension for automatically replacing words on websites.
               Visit the extension store to get started today.
             </Typography>
@@ -80,7 +77,7 @@ export default function HomePage() {
             </Grid2>
           </Grid2>
         </Container>
-      </Box>
+      </Hero>
     </>
   );
 }
