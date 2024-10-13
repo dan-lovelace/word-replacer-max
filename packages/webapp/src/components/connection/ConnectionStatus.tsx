@@ -31,7 +31,7 @@ export default function ConnectionStatus() {
               color: palette.success.main,
               cursor: "default",
               pl: "5px",
-              pr: signInStatus === "signedIn" ? "3px" : "5px",
+              pr: signInStatus === "signedIn" ? "5px" : "8px",
             }}
           >
             check_circle
@@ -44,7 +44,7 @@ export default function ConnectionStatus() {
 
   if (connectionStatus === "connecting") {
     return (
-      <Tooltip title="Trying to connect with browser extension">
+      <Tooltip title="Trying to connect to browser extension">
         <Chip
           color="info"
           icon={
@@ -88,7 +88,7 @@ export default function ConnectionStatus() {
       </Tooltip>
       <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
       <Stack direction="row" sx={{ alignItems: "center", gap: 1, pl: "5px" }}>
-        <Typography>Install for</Typography>
+        <Typography sx={{ pl: "2px" }}>Install for</Typography>
         <Link to="https://chromewebstore.google.com/detail/word-replacer-max/gnemoflnihonmkiacnagnbnlppkamfgo">
           <IconButton
             title="Chrome"

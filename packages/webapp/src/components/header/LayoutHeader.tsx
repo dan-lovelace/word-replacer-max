@@ -65,8 +65,9 @@ export default function LayoutHeader() {
             <ConnectionStatus />
             {connectionStatus === "connected" && (
               <>
-                {signInStatus === "signedIn" && <CurrentUser />}
-                {signInStatus === "signedOut" && (
+                {signInStatus === "signedIn" ? (
+                  <CurrentUser />
+                ) : (
                   <>
                     <LoginButton />
                     <SignupButton />
