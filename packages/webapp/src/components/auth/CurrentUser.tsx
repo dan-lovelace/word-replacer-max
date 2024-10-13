@@ -52,11 +52,19 @@ export default function CurrentUser() {
           </IconButton>
           <Menu
             anchorEl={anchorEl}
+            anchorOrigin={{
+              horizontal: "right",
+              vertical: "bottom",
+            }}
             id="current-user-menu"
             MenuListProps={{
               "aria-labelledby": "current-user-button",
             }}
             open={isOpen}
+            transformOrigin={{
+              horizontal: "right",
+              vertical: "top",
+            }}
             onClose={handleClose}
           >
             <Box sx={{ pb: 1, px: 2.5 }}>

@@ -12,7 +12,7 @@ type SignupButtonProps = ButtonProps & {
 export default function SignupButton({ text = "Sign up" }: SignupButtonProps) {
   return (
     <Link to={ROUTES.SIGNUP}>
-      <Button variant="contained">{text}</Button>
+      <Button variant="outlined">{text}</Button>
     </Link>
   );
 }

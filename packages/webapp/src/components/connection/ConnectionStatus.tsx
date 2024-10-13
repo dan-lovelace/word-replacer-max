@@ -1,5 +1,7 @@
+import Box from "@mui/material/Box/Box";
 import Chip from "@mui/material/Chip/Chip";
 import CircularProgress from "@mui/material/CircularProgress/CircularProgress";
+import Divider from "@mui/material/Divider/Divider";
 import IconButton from "@mui/material/IconButton/IconButton";
 import Stack from "@mui/material/Stack/Stack";
 import useTheme from "@mui/material/styles/useTheme";
@@ -18,16 +20,18 @@ export default function ConnectionStatus() {
 
   if (connectionStatus === "connected") {
     return (
-      <Tooltip title="Browser extension connected">
-        <Chip
-          color="success"
-          icon={<span className="material-icons-sharp">check_circle</span>}
-          label="Connected"
-          sx={{
-            userSelect: "none",
-          }}
-        />
-      </Tooltip>
+      <>
+        <Tooltip title="Browser extension connected">
+          <Box
+            className="material-icons-sharp"
+            component="span"
+            sx={{ color: palette.success.main, cursor: "default", px: "5px" }}
+          >
+            check_circle
+          </Box>
+        </Tooltip>
+        <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
+      </>
     );
   }
 
@@ -63,8 +67,21 @@ export default function ConnectionStatus() {
 
   return (
     <>
-      <Stack direction="row" sx={{ alignItems: "center", gap: 0.5 }}>
-        <Typography>Available for</Typography>
+      <Tooltip
+        title="Browser extension not connected"
+        sx={{ display: "block" }}
+      >
+        <Box
+          className="material-icons-sharp"
+          component="span"
+          sx={{ color: palette.error.main, cursor: "default", px: "5px" }}
+        >
+          cancel
+        </Box>
+      </Tooltip>
+      <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
+      <Stack direction="row" sx={{ alignItems: "center", gap: 1, pl: "5px" }}>
+        <Typography>Install for</Typography>
         <Link to="https://chromewebstore.google.com/detail/word-replacer-max/gnemoflnihonmkiacnagnbnlppkamfgo">
           <IconButton
             title="Chrome"
@@ -84,19 +101,6 @@ export default function ConnectionStatus() {
           </IconButton>
         </Link>
       </Stack>
-      <Tooltip
-        title="Install the browser extension for the best experience"
-        sx={{ display: "block", mr: 3 }}
-      >
-        <Chip
-          color="error"
-          icon={<span className="material-icons-sharp">cancel</span>}
-          label="Not connected"
-          sx={{
-            userSelect: "none",
-          }}
-        />
-      </Tooltip>
     </>
   );
 }

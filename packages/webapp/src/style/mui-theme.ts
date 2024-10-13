@@ -1,4 +1,4 @@
-import blueGrey from "@mui/material/colors/blueGrey";
+import indigo from "@mui/material/colors/indigo";
 import type { ThemeOptions } from "@mui/material/styles/createTheme";
 
 export const muiTheme: ThemeOptions = {
@@ -19,10 +19,30 @@ export const muiTheme: ThemeOptions = {
             boxShadow: "none",
           },
         },
+        root: {
+          borderRadius: 8,
+          textTransform: "none",
+        },
       },
     },
   },
   palette: {
-    primary: { main: blueGrey[500] },
+    mode: "dark",
+    primary: { main: indigo.A100 },
+  },
+  typography: {
+    fontFamily: [
+      "Inter",
+      "-apple-system",
+      "BlinkMacSystemFont",
+      '"Segoe UI"',
+      "Roboto",
+      '"Helvetica Neue"',
+      "Arial",
+      "sans-serif",
+      '"Apple Color Emoji"',
+      '"Segoe UI Emoji"',
+      '"Segoe UI Symbol"',
+    ].join(","),
   },
 };

@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import Box from "@mui/material/Box/Box";
 import CircularProgress from "@mui/material/CircularProgress/CircularProgress";
+import Stack from "@mui/material/Stack/Stack";
 import Typography from "@mui/material/Typography/Typography";
 
 import { createWebAppMessage } from "@worm/shared";
@@ -78,21 +78,20 @@ export default function LoginCallbackPage() {
 
   if (isLoadingAuthTokens) {
     return (
-      <Box
+      <Stack
+        maxWidth="md"
         sx={{
           alignItems: "center",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          gap: 2,
-          height: "100%",
+          gap: 4,
+          py: { xs: 8, md: 15 },
+          mx: "auto",
         }}
       >
         <Typography variant="h4" sx={{ fontWeight: 700 }}>
-          Signing in...
+          Signing you in...
         </Typography>
         <CircularProgress size={48} />
-      </Box>
+      </Stack>
     );
   }
 

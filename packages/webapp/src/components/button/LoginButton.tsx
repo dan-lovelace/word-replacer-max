@@ -12,7 +12,7 @@ type LoginButtonProps = ButtonProps & {
 export default function LoginButton({ text = "Log in" }: LoginButtonProps) {
   return (
     <Link to={ROUTES.LOGIN}>
-      <Button variant="outlined">{text}</Button>
+      <Button>{text}</Button>
     </Link>
   );
 }
