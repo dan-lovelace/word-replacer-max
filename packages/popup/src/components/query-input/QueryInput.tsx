@@ -5,14 +5,16 @@ import { JSXInternal } from "preact/src/jsx";
 import { cx, isReplacementEmpty } from "@worm/shared";
 import { Matcher, QueryPattern } from "@worm/types";
 
-import caseIcon from "../icons/case";
-import regexIcon from "../icons/regex";
-import wholeWordIcon from "../icons/whole-word";
-import { useLanguage } from "../lib/language";
-import { PreactChildren } from "../lib/types";
+import caseIcon from "../../icons/case";
+import regexIcon from "../../icons/regex";
+import wholeWordIcon from "../../icons/whole-word";
+import { useLanguage } from "../../lib/language";
+import { PreactChildren } from "../../lib/types";
 
-import { useToast } from "./alert/useToast";
-import Chip from "./Chip";
+import { useToast } from "../alert/useToast";
+import Chip from "../Chip";
+
+import "./query-input.scss";
 
 type QueryInputProps = Pick<
   Matcher,
@@ -68,6 +70,7 @@ export default function QueryInput({
       | JSXInternal.TargetedFocusEvent<HTMLInputElement>
   ) => {
     event.preventDefault();
+
     if (!value || value.length === 0) return;
 
     if (!queries.includes(value)) {
@@ -118,16 +121,25 @@ export default function QueryInput({
     setValue(event.currentTarget.value);
   };
 
+  const queriesExist = Boolean(queries.length);
+
   return (
-    <form className="d-flex flex-fill" onSubmit={handleFormSubmit}>
+    <form
+      className="d-flex flex-fill"
+      id="query-input"
+      onSubmit={handleFormSubmit}
+    >
       <div
-        className="flex-fill border rounded rounded-end-0"
-        style={`border-bottom-right-radius: ${
-          Boolean(queries.length) ? "6px !important" : "0"
-        };`}
+        className={cx(
+          "flex-fill border rounded",
+          queriesExist && "rounded-end-0"
+        )}
       >
         <input
-          className="form-control border-0 rounded-end-0"
+          className={cx(
+            "form-control border-0",
+            queriesExist && "rounded-end-0"
+          )}
           disabled={disabled}
           enterkeyhint="enter"
           placeholder="Search for..."
@@ -139,7 +151,7 @@ export default function QueryInput({
         <button className="visually-hidden" disabled={disabled} type="submit">
           Add
         </button>
-        {Boolean(queries.length) && (
+        {queriesExist && (
           <div className="d-flex align-items-start flex-wrap gap-1 p-1">
             {queries.map((query, idx) => (
               <Chip
@@ -154,31 +166,39 @@ export default function QueryInput({
       </div>
       <div
         aria-label="Query Patterns"
-        className="query-patterns btn-group align-self-start"
+        className={cx(
+          "query-patterns btn-group-vertical align-self-start",
+          queriesExist && "queries-exist"
+        )}
         role="group"
       >
-        {queryPatternMetadata.map(({ icon, title, value }, idx) => (
-          <Fragment key={value}>
-            <input
-              checked={queryPatterns.includes(value)}
-              className="btn-check px-0 py-2"
-              disabled={disabled}
-              id={identifier + value}
-              type="checkbox"
-              onClick={handlePatternChange(value)}
-            />
-            <label
-              className={cx(
-                "btn btn-outline-primary d-flex align-items-center",
-                idx === 0 && "rounded-start-0"
-              )}
-              for={identifier + value}
-              title={title}
-            >
-              {icon}
-            </label>
-          </Fragment>
-        ))}
+        {queryPatternMetadata.map(({ icon, title, value }, idx) => {
+          const inputId = `${identifier}__${value}`;
+
+          return (
+            <Fragment key={value}>
+              <input
+                checked={queryPatterns.includes(value)}
+                className="btn-check"
+                disabled={disabled || !queriesExist}
+                id={inputId}
+                type="checkbox"
+                onClick={handlePatternChange(value)}
+              />
+              <label
+                className={cx(
+                  "btn btn-outline-primary d-flex align-items-center py-0",
+                  (idx === 0 || idx === queryPatternMetadata.length - 1) &&
+                    "rounded-start-0"
+                )}
+                for={inputId}
+                title={title}
+              >
+                {icon}
+              </label>
+            </Fragment>
+          );
+        })}
       </div>
     </form>
   );

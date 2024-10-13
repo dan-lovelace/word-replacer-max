@@ -103,7 +103,7 @@ export default function ReplacementInput({
           disabled={disabled}
           enterkeyhint="enter"
           ref={inputRef}
-          size={globalReplacementStyle?.active ? 11 : 15}
+          size={globalReplacementStyle?.active ? 16 : 20}
           type="text"
           value={value}
           onBlur={handleFormSubmit}

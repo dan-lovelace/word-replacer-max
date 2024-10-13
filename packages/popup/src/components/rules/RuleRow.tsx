@@ -12,7 +12,7 @@ import { useLanguage } from "../../lib/language";
 import { useConfig } from "../../store/Config";
 
 import { useToast } from "../alert/useToast";
-import QueryInput from "../QueryInput";
+import QueryInput from "../query-input/QueryInput";
 import ReplacementInput from "../ReplacementInput";
 
 type RuleRowProps = {

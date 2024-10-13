@@ -43,15 +43,6 @@ input[type="text"] {
   font-size: 0.85rem;
 }
 
-.query-patterns {
-  margin-left: -1px; // make it appear more concretely attached
-
-  .btn {
-    min-height: calc($inputHeight + 2px);
-    width: 2.5rem;
-  }
-}
-
 .z-toast {
   z-index: $zindex-toast;
 }
