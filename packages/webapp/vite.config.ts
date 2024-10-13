@@ -1,7 +1,7 @@
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 
-import { envDir } from "@worm/plugins";
+import { envDir, publicImagePreload } from "@worm/plugins";
 
 export default defineConfig({
   build: {
@@ -11,5 +11,5 @@ export default defineConfig({
     global: "window",
   },
   envDir,
-  plugins: [react()],
+  plugins: [publicImagePreload(), react()],
 });

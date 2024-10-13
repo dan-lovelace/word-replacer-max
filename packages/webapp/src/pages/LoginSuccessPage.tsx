@@ -40,7 +40,7 @@ export default function LoginSuccessPage() {
           >
             <Box
               component="img"
-              src={popperImage}
+              src="/preload/popper.png"
               sx={{ width: { xs: 84, md: 128 } }}
             />
           </Box>

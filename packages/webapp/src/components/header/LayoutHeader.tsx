@@ -43,7 +43,7 @@ export default function LayoutHeader() {
                 <Box
                   component="img"
                   alt="Word Replacer Max logo"
-                  src="/logo_128.png"
+                  src="/preload/logo_128.png"
                   sx={{
                     height: 1,
                   }}

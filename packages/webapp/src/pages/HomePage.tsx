@@ -60,7 +60,7 @@ export default function HomePage() {
               size={{ xs: 6, sm: 6, md: 3 }}
             >
               <StoreLink
-                imageSrc={chromeSvg}
+                imageSrc="/preload/chrome-logo.svg"
                 text="Chrome"
                 to="https://chromewebstore.google.com/detail/word-replacer-max/gnemoflnihonmkiacnagnbnlppkamfgo"
               />
@@ -70,7 +70,7 @@ export default function HomePage() {
               size={{ xs: 6, sm: 6, md: 3 }}
             >
               <StoreLink
-                imageSrc={firefoxSvg}
+                imageSrc="/preload/firefox-logo.svg"
                 text="Firefox"
                 to="https://addons.mozilla.org/en-US/firefox/addon/word-replacer-max"
               />
