@@ -46,7 +46,7 @@ export default function HomePage() {
               fontWeight: "bold",
             }}
           >
-            Powerful text replacement to personalize your web content
+            Powerful text replacement to personalize your web
           </Typography>
           <Container maxWidth="sm">
             <Typography component="h2" sx={{ fontSize: 18, mb: 5 }}>

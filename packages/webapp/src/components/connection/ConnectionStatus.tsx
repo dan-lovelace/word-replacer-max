@@ -10,11 +10,13 @@ import Typography from "@mui/material/Typography/Typography";
 
 import chromeLogo from "../../assets/chromeLogo";
 import firefoxLogo from "../../assets/firefoxLogo";
+import { useAuthProvider } from "../../lib/auth/AuthProvider";
 import { useConnectionProvider } from "../../lib/connection/ConnectionProvider";
 
 import Link from "../link/Link";
 
 export default function ConnectionStatus() {
+  const { signInStatus } = useAuthProvider();
   const { connectionStatus } = useConnectionProvider();
   const { palette } = useTheme();
 
@@ -25,7 +27,12 @@ export default function ConnectionStatus() {
           <Box
             className="material-icons-sharp"
             component="span"
-            sx={{ color: palette.success.main, cursor: "default", px: "5px" }}
+            sx={{
+              color: palette.success.main,
+              cursor: "default",
+              pl: "5px",
+              pr: signInStatus === "signedIn" ? "3px" : "5px",
+            }}
           >
             check_circle
           </Box>
