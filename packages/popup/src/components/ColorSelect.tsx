@@ -1,10 +1,9 @@
 import { useState } from "preact/hooks";
 import { JSXInternal } from "preact/src/jsx";
 
+import { cx } from "@worm/shared";
 import { systemColors } from "@worm/shared/src/replace/lib/style";
 import { SystemColor } from "@worm/types";
-
-import cx from "../lib/classnames";
 
 import Button from "./button/Button";
 

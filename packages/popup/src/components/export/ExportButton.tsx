@@ -2,7 +2,8 @@ import { useMemo, useState } from "preact/hooks";
 
 import { Dropdown } from "bootstrap";
 
-import { logDebug, storageSetByKeys } from "@worm/shared";
+import { getEnvConfig } from "@worm/shared/src/config";
+import { storageSetByKeys } from "@worm/shared/src/storage";
 import { ApiShareRequest, ApiShareResponse, SchemaExport } from "@worm/types";
 
 import { useLanguage } from "../../lib/language";
@@ -11,6 +12,8 @@ import { useConfig } from "../../store/Config";
 
 import { useToast } from "../alert/useToast";
 import Button from "../button/Button";
+import DropdownMenu from "../menu/DropdownMenu";
+import MenuItem from "../menu/MenuItem";
 
 type ExportButtonProps = {
   selectedRules?: SelectedRule[];
@@ -89,7 +92,7 @@ export default function ExportButton({
 
     closeDropdown();
     setIsLoading(true);
-    const result = await fetch(`${import.meta.env.VITE_API_ORIGIN}/share`, {
+    const result = await fetch(`${getEnvConfig().VITE_API_ORIGIN}/share`, {
       method: "POST",
       body: JSON.stringify(requestBody),
     })
@@ -100,15 +103,13 @@ export default function ExportButton({
     const json: ApiShareResponse = await result.json();
 
     if (!result.ok) {
-      logDebug(json.error?.value);
-
       return showToast({
-        message: json.error?.message ?? JSON.stringify(json),
+        message: JSON.stringify(json),
         options: { severity: "danger" },
       });
     }
 
-    if (!json.data?.value?.url) {
+    if (!json.data?.url) {
       stopExporting();
 
       return showToast({
@@ -121,7 +122,7 @@ export default function ExportButton({
       ...(exportLinks || []),
       {
         identifier: new Date().getTime(),
-        url: json.data.value.url,
+        url: json.data.url,
       },
     ];
 
@@ -176,7 +177,7 @@ export default function ExportButton({
           </>
         )}
       </Button>
-      <ul
+      <DropdownMenu
         aria-labelledby="export-modal-dropdown-button"
         className="dropdown-menu shadow"
         data-testid="export-modal-dropdown-menu"
@@ -188,14 +189,8 @@ export default function ExportButton({
             type="button"
             onClick={handleExportLink}
           >
-            <span className="d-flex align-items-center gap-3">
-              <span className="material-icons-sharp">link</span> Create
-              shareable link
-            </span>
+            <MenuItem icon="link">Create shareable link</MenuItem>
           </button>
-        </li>
-        <li>
-          <hr className="dropdown-divider" />
         </li>
         <li>
           <button
@@ -204,13 +199,10 @@ export default function ExportButton({
             type="button"
             onClick={handleExportFile}
           >
-            <span className="d-flex align-items-center gap-3">
-              <span className="material-icons-sharp">download</span> Download
-              file locally
-            </span>
+            <MenuItem icon="download">Download file locally</MenuItem>
           </button>
         </li>
-      </ul>
+      </DropdownMenu>
     </div>
   );
 }

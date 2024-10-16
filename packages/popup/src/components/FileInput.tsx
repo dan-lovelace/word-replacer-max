@@ -1,7 +1,7 @@
 import { useMemo } from "preact/hooks";
 import type { JSXInternal } from "preact/src/jsx";
 
-import { POPUP_ROUTES } from "@worm/shared";
+import { POPUP_ROUTES } from "@worm/shared/src/browser";
 
 import { useLanguage } from "../lib/language";
 import {

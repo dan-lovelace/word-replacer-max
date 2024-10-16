@@ -1,6 +1,7 @@
 name: Run all tests
 run-name:
-  "${{ github.workflow }} - Environment: ${{ inputs.environment || 'test' }}"
+  "${{ github.workflow }} - Environment: ${{ inputs.environment || 'development'
+  }}"
 
 on:
   pull_request:
@@ -9,27 +10,34 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        default: test
-        description: "Which .env config to use"
+        default: development
+        description: "Test target environment"
         required: true
         type: choice
         options:
           - development
           - production
-          - test
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     env:
-      VITE_MODE: ${{ inputs.environment }}
+      VITE_MODE: test
 
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
           cache: "yarn"
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: us-east-1
+          role-to-assume: ${{ secrets.ACTIONS_ROLE_ARN }}
+          role-session-name: GitHub-Actions-Role
       - run: yarn install
       - run: yarn test
       - uses: cypress-io/github-action@v6

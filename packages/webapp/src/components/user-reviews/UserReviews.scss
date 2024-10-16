@@ -1,0 +1,12 @@
+#user-reviews {
+  .user-reviews__marquee {
+    .rfm-initial-child-container {
+      height: 100%;
+    }
+
+    .rfm-child {
+      display: flex;
+      height: 100%;
+    }
+  }
+}

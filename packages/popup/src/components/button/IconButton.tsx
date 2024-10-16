@@ -1,9 +1,14 @@
 import { JSXInternal } from "preact/src/jsx";
 
-import cx from "../../lib/classnames";
+import { cx } from "@worm/shared";
 
-type IconButtonProps = JSXInternal.HTMLAttributes<HTMLButtonElement> & {
-  icon: string;
+import { PreactChildren } from "../../lib/types";
+
+type IconButtonProps = Omit<
+  JSXInternal.HTMLAttributes<HTMLButtonElement>,
+  "icon"
+> & {
+  icon: PreactChildren;
 };
 
 export default function IconButton({
@@ -16,9 +21,10 @@ export default function IconButton({
       className={cx(
         "material-icons-sharp",
         "btn btn-light bg-transparent border-0",
-        "mx-1",
+        "px-2",
         className
       )}
+      type="button"
       {...rest}
     >
       {icon}

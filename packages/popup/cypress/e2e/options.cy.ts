@@ -46,13 +46,13 @@ describe("user interface", () => {
       exportModal.modal().should("not.be.visible");
 
       cy.wait("@share").then(({ response }) => {
-        cy.wrap(response?.body.data.value).should("have.property", "url");
+        cy.wrap(response?.body.data).should("have.property", "url");
 
         exportModal
           .exportLinks()
           .should("be.visible")
           .within(() => {
-            cy.get("input").should("have.value", response?.body.data.value.url);
+            cy.get("input").should("have.value", response?.body.data.url);
           });
       });
     });

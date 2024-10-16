@@ -2,7 +2,8 @@ import { Ref } from "preact";
 import { useState } from "preact/hooks";
 import { JSXInternal } from "preact/src/jsx";
 
-import { isReplacementEmpty, storageSetByKeys } from "@worm/shared";
+import { isReplacementEmpty } from "@worm/shared";
+import { storageSetByKeys } from "@worm/shared/src/storage";
 import { Matcher } from "@worm/types";
 
 import { useLanguage } from "../lib/language";
@@ -102,7 +103,7 @@ export default function ReplacementInput({
           disabled={disabled}
           enterkeyhint="enter"
           ref={inputRef}
-          size={globalReplacementStyle?.active ? 11 : 15}
+          size={globalReplacementStyle?.active ? 16 : 20}
           type="text"
           value={value}
           onBlur={handleFormSubmit}
@@ -111,6 +112,7 @@ export default function ReplacementInput({
         {globalReplacementStyle?.active && (
           <Button
             className="btn btn-outline-secondary border-0 bg-transparent text-secondary"
+            disabled={disabled}
             title={
               useGlobalReplacementStyle
                 ? "Replacement Style Enabled"
@@ -128,7 +130,7 @@ export default function ReplacementInput({
           </Button>
         )}
       </div>
-      <Button className="visually-hidden" type="submit">
+      <Button className="visually-hidden" disabled={disabled} type="submit">
         Add
       </Button>
     </form>
