@@ -3,10 +3,9 @@ import Container from "@mui/material/Container/Container";
 import Grid2 from "@mui/material/Grid2/Grid2";
 import Typography from "@mui/material/Typography/Typography";
 
-import chromeSvg from "../assets/chrome-logo.svg";
-import firefoxSvg from "../assets/firefox-logo.svg";
 import Button from "../components/button/Button";
 import Link from "../components/link/Link";
+import UserReviews from "../components/user-reviews/UserReviews";
 import Hero from "../containers/Hero";
 
 type StoreLinkProps = {
@@ -18,11 +17,18 @@ type StoreLinkProps = {
 function StoreLink({ imageSrc, text, to }: StoreLinkProps) {
   return (
     <Link to={to}>
-      <Button variant="outlined" color="primary" size="large" sx={{ width: 1 }}>
+      <Button
+        color="primary"
+        size="large"
+        tabIndex={-1}
+        variant="outlined"
+        sx={{ width: 1 }}
+      >
         <img src={imageSrc} />
         <Typography
           sx={{
             fontSize: "1.35rem",
+            fontWeight: "bold",
             ml: { xs: 1, sm: 2 },
           }}
         >
@@ -78,6 +84,9 @@ export default function HomePage() {
           </Grid2>
         </Container>
       </Hero>
+      <Container sx={{ pb: 8 }}>
+        <UserReviews />
+      </Container>
     </>
   );
 }

@@ -14,6 +14,8 @@ import { createWebAppMessage } from "@worm/shared";
 import { useAuthProvider } from "../../lib/auth/AuthProvider";
 import { useConnectionProvider } from "../../lib/connection/ConnectionProvider";
 
+import MaterialIcon from "../icon/MaterialIcon";
+
 export default function CurrentUser() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -44,11 +46,12 @@ export default function CurrentUser() {
             aria-controls={isOpen ? "current-user-menu" : undefined}
             aria-expanded={isOpen ? "true" : undefined}
             aria-haspopup="true"
+            aria-label="Open user menu"
             id="current-user-button"
             size="small"
             onClick={handleClick}
           >
-            <span className="material-icons-sharp">account_circle</span>
+            <MaterialIcon>account_circle</MaterialIcon>
           </IconButton>
           <Menu
             anchorEl={anchorEl}
@@ -76,7 +79,7 @@ export default function CurrentUser() {
             <Divider sx={{ mb: 1 }} />
             <MenuItem onClick={handleSignOutClick}>
               <ListItemIcon>
-                <span className="material-icons-sharp">logout</span>
+                <MaterialIcon>logout</MaterialIcon>
               </ListItemIcon>
               <ListItemText>Sign out</ListItemText>
             </MenuItem>

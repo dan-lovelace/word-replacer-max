@@ -2,7 +2,6 @@
   "compilerOptions": {
     "allowJs": false,
     "allowSyntheticDefaultImports": true,
-    "baseUrl": ".",
     "esModuleInterop": false,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
@@ -11,15 +10,15 @@
     "moduleResolution": "Node",
     "noEmit": true,
     "paths": {
-      "@worm/auth": ["packages/auth"],
-      "@worm/background": ["packages/background"],
-      "@worm/content": ["packages/content"],
-      "@worm/plugins": ["packages/plugins"],
-      "@worm/popup": ["packages/popup"],
-      "@worm/shared": ["packages/shared"],
-      "@worm/testing": ["packages/testing"],
-      "@worm/types": ["packages/types"],
-      "@worm/webapp": ["packages/webapp"]
+      "@worm/auth": ["./packages/auth"],
+      "@worm/background": ["./packages/background"],
+      "@worm/content": ["./packages/content"],
+      "@worm/plugins": ["./packages/plugins"],
+      "@worm/popup": ["./packages/popup"],
+      "@worm/shared": ["./packages/shared"],
+      "@worm/testing": ["./packages/testing"],
+      "@worm/types": ["./packages/types"],
+      "@worm/webapp": ["./packages/webapp"]
     },
     "resolveJsonModule": true,
     "skipLibCheck": true,

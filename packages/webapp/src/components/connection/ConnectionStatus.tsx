@@ -13,6 +13,7 @@ import firefoxLogo from "../../assets/firefoxLogo";
 import { useAuthProvider } from "../../lib/auth/AuthProvider";
 import { useConnectionProvider } from "../../lib/connection/ConnectionProvider";
 
+import MaterialIcon from "../icon/MaterialIcon";
 import Link from "../link/Link";
 
 export default function ConnectionStatus() {
@@ -24,9 +25,7 @@ export default function ConnectionStatus() {
     return (
       <>
         <Tooltip title="Browser extension connected">
-          <Box
-            className="material-icons-sharp"
-            component="span"
+          <MaterialIcon
             sx={{
               color: palette.success.main,
               cursor: "default",
@@ -35,7 +34,7 @@ export default function ConnectionStatus() {
             }}
           >
             check_circle
-          </Box>
+          </MaterialIcon>
         </Tooltip>
         <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
       </>
@@ -78,13 +77,15 @@ export default function ConnectionStatus() {
         title="Browser extension not connected"
         sx={{ display: "block" }}
       >
-        <Box
-          className="material-icons-sharp"
-          component="span"
-          sx={{ color: palette.error.main, cursor: "default", px: "5px" }}
+        <MaterialIcon
+          sx={{
+            color: palette.error.main,
+            cursor: "default",
+            px: "5px",
+          }}
         >
           cancel
-        </Box>
+        </MaterialIcon>
       </Tooltip>
       <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
       <Stack direction="row" sx={{ alignItems: "center", gap: 1, pl: "5px" }}>
