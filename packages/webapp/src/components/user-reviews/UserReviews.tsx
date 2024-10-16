@@ -76,7 +76,7 @@ export default function UserReviews() {
               mx: 1.5,
               my: 2,
               transition: "scale 0.3s",
-              width: 300,
+              width: { xs: 300, md: 380 },
               "&:hover": {
                 scale: 1.075,
               },

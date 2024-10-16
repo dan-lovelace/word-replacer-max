@@ -1,18 +1,27 @@
+import { useEffect, useState } from "react";
+
 import Box from "@mui/material/Box/Box";
 import Container from "@mui/material/Container/Container";
+import Grow from "@mui/material/Grow/Grow";
 import Stack from "@mui/material/Stack/Stack";
 import useTheme from "@mui/material/styles/useTheme";
 import Typography from "@mui/material/Typography/Typography";
 
-import popperImage from "../assets/popper.png";
-
+import Link from "../components/link/Link";
 import Hero from "../containers/Hero";
+import { ROUTES } from "../lib/routes";
 
 export default function LoginSuccessPage() {
+  const [isOpen, setIsOpen] = useState(false);
+
   const { palette } = useTheme();
 
+  useEffect(() => {
+    setIsOpen(true);
+  }, []);
+
   return (
-    <>
+    <Grow in={isOpen}>
       <Hero>
         <Stack
           maxWidth="md"
@@ -47,11 +56,11 @@ export default function LoginSuccessPage() {
           <Container maxWidth="xs">
             <Typography component="h2" sx={{ fontSize: 18, mb: 5 }}>
               You have been signed in to the extension. You may now close this
-              window.
+              window or <Link to={ROUTES.HOME}>go home</Link>.
             </Typography>
           </Container>
         </Stack>
       </Hero>
-    </>
+    </Grow>
   );
 }

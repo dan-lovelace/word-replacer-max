@@ -1,13 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import CircularProgress from "@mui/material/CircularProgress/CircularProgress";
-import Stack from "@mui/material/Stack/Stack";
-import Typography from "@mui/material/Typography/Typography";
-
 import { createWebAppMessage } from "@worm/shared";
 
-import Hero from "../containers/Hero";
+import PageLoader from "../components/loader/PageLoader";
 import { useAuthProvider } from "../lib/auth/AuthProvider";
 import { useAuthTokens } from "../lib/auth/queries";
 import { useConnectionProvider } from "../lib/connection/ConnectionProvider";
@@ -78,23 +74,7 @@ export default function LoginCallbackPage() {
   };
 
   if (isLoadingAuthTokens) {
-    return (
-      <Hero>
-        <Stack
-          maxWidth="md"
-          sx={{
-            alignItems: "center",
-            gap: 4,
-            mx: "auto",
-          }}
-        >
-          <Typography variant="h4" sx={{ fontWeight: "bold" }}>
-            Signing you in...
-          </Typography>
-          <CircularProgress size={48} />
-        </Stack>
-      </Hero>
-    );
+    return <PageLoader heading="Signing you in..." />;
   }
 
   return false;

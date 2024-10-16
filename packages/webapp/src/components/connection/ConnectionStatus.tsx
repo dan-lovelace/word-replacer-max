@@ -1,6 +1,3 @@
-import Box from "@mui/material/Box/Box";
-import Chip from "@mui/material/Chip/Chip";
-import CircularProgress from "@mui/material/CircularProgress/CircularProgress";
 import Divider from "@mui/material/Divider/Divider";
 import IconButton from "@mui/material/IconButton/IconButton";
 import Stack from "@mui/material/Stack/Stack";
@@ -42,33 +39,7 @@ export default function ConnectionStatus() {
   }
 
   if (connectionStatus === "connecting") {
-    return (
-      <Tooltip title="Trying to connect to browser extension">
-        <Chip
-          color="info"
-          icon={
-            <Stack
-              sx={{
-                alignItems: "center",
-                backgroundColor: palette.background.default,
-                borderRadius: "100%",
-                height: 20,
-                justifyContent: "center",
-                marginLeft: "7px !important",
-                marginRight: "-4px !important",
-                width: 20,
-              }}
-            >
-              <CircularProgress color="info" size={12} />
-            </Stack>
-          }
-          label="Connecting"
-          sx={{
-            userSelect: "none",
-          }}
-        />
-      </Tooltip>
-    );
+    return <></>;
   }
 
   return (

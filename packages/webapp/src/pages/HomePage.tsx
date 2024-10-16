@@ -1,4 +1,3 @@
-import Box from "@mui/material/Box/Box";
 import Container from "@mui/material/Container/Container";
 import Grid2 from "@mui/material/Grid2/Grid2";
 import Typography from "@mui/material/Typography/Typography";

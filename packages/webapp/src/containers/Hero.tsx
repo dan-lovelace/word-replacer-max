@@ -1,15 +1,22 @@
-import Box from "@mui/material/Box/Box";
+import { forwardRef } from "react";
 
-type HeroProps = React.HTMLAttributes<HTMLDivElement>;
+import Box, { BoxProps } from "@mui/material/Box/Box";
 
-export default function Hero({ children }: HeroProps) {
-  return (
+type HeroProps = BoxProps & {};
+
+const Hero = forwardRef<HTMLDivElement, HeroProps>(
+  ({ children, sx, ...rest }, ref) => (
     <Box
+      ref={ref}
       sx={{
         py: { xs: 8, md: 15 },
+        ...sx,
       }}
+      {...rest}
     >
       {children}
     </Box>
-  );
-}
+  )
+);
+
+export default Hero;
