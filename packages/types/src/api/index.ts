@@ -1,4 +1,7 @@
-type ApiResponseName = "InternalServerError" | "InvalidRequestBody";
+type ApiResponseName =
+  | "InternalServerError"
+  | "InvalidRequestBody"
+  | "UsageLimitExceeded";
 
 export type ApiResponse<T> = {
   data?: T;
@@ -9,5 +12,7 @@ export type ApiResponse<T> = {
 };
 
 export * from "./auth";
+export * from "./event";
 export * from "./share";
 export * from "./suggest";
+export * from "./usage";
