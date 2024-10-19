@@ -12,9 +12,9 @@ export type ApiSuggestResponse = ApiResponse<{
 
 export type ToneOption =
   | "casual"
-  | "comical"
-  | "formal"
+  | "emotional"
   | "neutral"
-  | "non-triggering"
   | "poetic"
-  | "technical";
+  | "professional"
+  | "technical"
+  | "witty";
