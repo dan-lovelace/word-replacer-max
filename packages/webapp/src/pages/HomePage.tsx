@@ -3,6 +3,7 @@ import Grid2 from "@mui/material/Grid2/Grid2";
 import Typography from "@mui/material/Typography/Typography";
 
 import Button from "../components/button/Button";
+import NewsletterSignup from "../components/form/NewsletterSignup";
 import Link from "../components/link/Link";
 import UserReviews from "../components/user-reviews/UserReviews";
 import Hero from "../containers/Hero";
@@ -86,6 +87,7 @@ export default function HomePage() {
       <Container sx={{ pb: 8 }}>
         <UserReviews />
       </Container>
+      <NewsletterSignup />
     </>
   );
 }

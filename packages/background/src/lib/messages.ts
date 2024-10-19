@@ -148,11 +148,11 @@ export function startMessageListener() {
             /**
              * Ensure protected API requests succeed with the received token.
              */
-            const response = await fetch(getApiEndpoint("AUTH_WHOAMI"), {
+            const response = await fetch(getApiEndpoint("GET:authWhoAmI"), {
+              method: "GET",
               headers: {
                 Authorization: `Bearer ${tokens.accessToken}`,
               },
-              method: "GET",
             });
 
             if (!response.ok) {

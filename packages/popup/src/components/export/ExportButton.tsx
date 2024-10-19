@@ -2,7 +2,7 @@ import { useMemo, useState } from "preact/hooks";
 
 import { Dropdown } from "bootstrap";
 
-import { getEnvConfig } from "@worm/shared/src/config";
+import { getApiEndpoint } from "@worm/shared/src/api";
 import { storageSetByKeys } from "@worm/shared/src/storage";
 import { ApiShareRequest, ApiShareResponse, SchemaExport } from "@worm/types";
 
@@ -92,7 +92,7 @@ export default function ExportButton({
 
     closeDropdown();
     setIsLoading(true);
-    const result = await fetch(`${getEnvConfig().VITE_API_ORIGIN}/share`, {
+    const result = await fetch(getApiEndpoint("POST:share"), {
       method: "POST",
       body: JSON.stringify(requestBody),
     })

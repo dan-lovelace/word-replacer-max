@@ -16,7 +16,7 @@ export const useAuthTokens = (
   useQuery<ApiAuthTokens, Error, ApiAuthTokens, AuthTokensQueryKey>({
     enabled: false,
     queryFn: async ({ queryKey: [_, { code: queryKeyCode }] }) => {
-      const result = await fetch(getApiEndpoint("AUTH_TOKENS"), {
+      const result = await fetch(getApiEndpoint("POST:authTokens"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
