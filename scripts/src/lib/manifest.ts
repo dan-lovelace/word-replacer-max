@@ -14,7 +14,7 @@ const commonProps: ManifestBase = {
   description: "Seamlessly replace text on any web page.",
   homepage_url: "https://github.com/dan-lovelace/word-replacer-max",
   icons: {
-    48: "assets/img/word-replacer-max-logo_64.png",
+    64: "assets/img/word-replacer-max-logo_64.png",
     128: "assets/img/word-replacer-max-logo_128.png",
     256: "assets/img/word-replacer-max-logo_256.png",
   },
