@@ -20,6 +20,7 @@ export type ViteEnvConfig = {
    * Values from `.env` files.
    */
   readonly VITE_API_ORIGIN?: string;
+  readonly VITE_RECAPTCHA_SITE_KEY?: string;
 
   /**
    * Values pulled from SSM.

@@ -33,7 +33,7 @@ export async function fetchAuthConfig(mode: string) {
   configureNodeEnvironment(mode);
 
   const parameterKey = "AuthConfiguration";
-  const parameterName = `${process.env.SSM_PARAMETER_PREFIX}-${mode}/${parameterKey}`;
+  const parameterName = `/word-replacer-max-api-infra-${mode}/${parameterKey}`;
   const parameterValue = await fetchParameter(parameterName);
 
   if (parameterValue === undefined) {

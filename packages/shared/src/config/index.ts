@@ -10,6 +10,7 @@ function assert(condition: unknown, message?: string): asserts condition {
 
 export function getEnvConfig(): Required<ViteEnvConfig> {
   assert(values.VITE_API_ORIGIN, "VITE_API_ORIGIN is required");
+  assert(values.VITE_RECAPTCHA_SITE_KEY, "VITE_RECAPTCHA_SITE_KEY is required");
   assert(
     values.VITE_SSM_USER_POOL_HOSTED_UI_QUERY,
     "VITE_SSM_USER_POOL_HOSTED_UI_QUERY is required"

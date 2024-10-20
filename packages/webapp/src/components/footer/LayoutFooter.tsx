@@ -14,7 +14,7 @@ export default function LayoutFooter() {
   const { palette } = useTheme();
 
   return (
-    <Paper component="footer" sx={{ color: palette.text.secondary }}>
+    <Paper component="footer" square sx={{ color: palette.text.secondary }}>
       <Container sx={{ py: 3 }}>
         <Grid2
           container

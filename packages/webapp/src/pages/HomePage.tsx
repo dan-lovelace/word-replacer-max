@@ -87,7 +87,12 @@ export default function HomePage() {
       <Container sx={{ pb: 8 }}>
         <UserReviews />
       </Container>
-      <NewsletterSignup />
+
+      <Hero>
+        <Container sx={{ pb: 8 }}>
+          <NewsletterSignup />
+        </Container>
+      </Hero>
     </>
   );
 }
