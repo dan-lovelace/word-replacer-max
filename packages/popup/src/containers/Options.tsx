@@ -3,6 +3,7 @@ import ExportLinks from "../components/export/ExportLinks";
 import ExportModal from "../components/export/ExportModal";
 import Import from "../components/import/Import";
 import ReplacementStyles from "../components/options/ReplacementStyles";
+import ReplacementSuggestions from "../components/options/ReplacementSuggestions";
 import { COPY_CONTAINER_COL_CLASS } from "../lib/classnames";
 import { PreactChildren } from "../lib/types";
 
@@ -19,6 +20,7 @@ export default function Options() {
             <div className="fw-bold fs-5">General Settings</div>
             <ColumnContent>
               <ReplacementStyles />
+              <ReplacementSuggestions />
             </ColumnContent>
           </div>
         </div>

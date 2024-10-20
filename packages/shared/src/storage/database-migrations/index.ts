@@ -5,8 +5,9 @@ import { Matcher, Storage, StorageVersion, storageVersions } from "@worm/types";
 
 import { STORAGE_MATCHER_PREFIX } from "../../browser";
 import { logDebug } from "../../logging";
+import { DEFAULT_REPLACEMENT_SUGGEST } from "../../replace/lib/suggest";
 
-import { BASELINE_STORAGE_VERSION, CURRENT_STORAGE_VERSION } from "../";
+import { BASELINE_STORAGE_VERSION, CURRENT_STORAGE_VERSION } from "..";
 import { storageGet, storageSet } from "../api";
 
 export type MigrateFn = (storage: Storage) => Storage;
@@ -50,12 +51,19 @@ export const MIGRATIONS: Migrations = {
         return merged;
       },
       /**
-       * **1.1.1** - PLACEHOLDER
+       * **1.1.1** - Replacement suggestions
        *
-       * This was put in place to assist with the migration system tests. It
-       * may be replaced/removed by the next necessary migration.
+       * Initializes replacement suggestions by creating a new storage
+       * property with default values.
        */
-      1: (storage) => storage,
+      1: (storage) => {
+        const updatedValues: Storage = {
+          replacementSuggest: DEFAULT_REPLACEMENT_SUGGEST,
+        };
+        const merged = merge(storage, updatedValues);
+
+        return merged;
+      },
     },
   },
 };

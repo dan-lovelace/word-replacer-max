@@ -75,6 +75,10 @@ export type ReplacementStyleOption =
   | "strikethrough"
   | "underline";
 
+export type ReplacementSuggest = Partial<{
+  active: boolean;
+}>;
+
 export type SchemaExport = SchemaVersion & {
   version: SchemaVersionType;
 };
@@ -130,6 +134,7 @@ export type StorageKeyMap = {
     focusRule: Matcher["identifier"];
   };
   replacementStyle: ReplacementStyle;
+  replacementSuggest: ReplacementSuggest;
   storageVersion: StorageVersion;
 };
 

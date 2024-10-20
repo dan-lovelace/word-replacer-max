@@ -5,6 +5,7 @@ import { DEFAULT_REPLACEMENT_STYLE } from "@worm/shared/src/replace/lib/style";
 import { storageSetByKeys } from "@worm/shared/src/storage";
 import { ReplacementStyle, ReplacementStyleOption } from "@worm/types";
 
+import { Indented } from "../../containers/Indented";
 import { useLanguage } from "../../lib/language";
 import { useConfig } from "../../store/Config";
 
@@ -108,18 +109,6 @@ function DecoratorInput({
   );
 }
 
-function IndentedContent({
-  children,
-  className,
-  ...rest
-}: JSXInternal.HTMLAttributes<HTMLDivElement>) {
-  return (
-    <div className={className} style={{ marginLeft: "2.5rem" }} {...rest}>
-      {children}
-    </div>
-  );
-}
-
 export default function ReplacementStyles() {
   const {
     storage: { replacementStyle },
@@ -212,26 +201,23 @@ export default function ReplacementStyles() {
           onChange={handleActiveChange}
         />
         <label
-          className="form-check-label user-select-none"
+          className="form-check-label user-select-none fw-medium"
           for="highlight-enabled-checkbox"
         >
           Styled replacements
         </label>
       </div>
       <Slide isOpen={!isActive}>
-        <IndentedContent data-testid="replacement-styles-description">
+        <Indented data-testid="replacement-styles-description">
           <p className="fs-sm">
             Apply styles like bold, underline, and background color to all
             replaced text. Styles may be turned off for individual replacements
             as needed.
           </p>
-        </IndentedContent>
+        </Indented>
       </Slide>
       <Slide isOpen={isActive}>
-        <IndentedContent
-          className="py-1"
-          data-testid="replacement-styles-options"
-        >
+        <Indented className="py-1" data-testid="replacement-styles-options">
           <div
             aria-label="Text Decorators"
             className="btn-group my-2"
@@ -299,7 +285,7 @@ export default function ReplacementStyles() {
               </div>
             </div>
           </div>
-        </IndentedContent>
+        </Indented>
       </Slide>
     </>
   );

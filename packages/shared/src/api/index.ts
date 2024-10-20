@@ -1,9 +1,8 @@
 import { getEnvConfig } from "../config";
+import { ApiRouteIdentifier, getApiRoute } from "./endpoints";
 
-import { API_PATHS } from "./endpoints";
-
-export function getApiEndpoint(name: keyof typeof API_PATHS) {
+export function getApiEndpoint(name: ApiRouteIdentifier) {
   const envConfig = getEnvConfig();
 
-  return `${envConfig.VITE_API_ORIGIN}${API_PATHS[name]}`;
+  return `${envConfig.VITE_API_ORIGIN}${getApiRoute(name)}`;
 }
