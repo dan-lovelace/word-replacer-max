@@ -1,5 +1,8 @@
 import { z } from "zod";
 
+import { ToneOption } from "./api";
+import { ReplacementSuggestion } from "./replacement";
+
 const identificationErrorMessages: Record<IdentificationErrorName, string> = {
   MissingTokens: "Update requires tokens",
   Standard: "Unable to identify user",
@@ -77,6 +80,11 @@ export type ReplacementStyleOption =
 
 export type ReplacementSuggest = Partial<{
   active: boolean;
+  lastSuggestions: {
+    suggestions?: ReplacementSuggestion[];
+    tone?: ToneOption;
+  };
+  selectedTone: ToneOption;
 }>;
 
 export type SchemaExport = SchemaVersion & {

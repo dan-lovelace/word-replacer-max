@@ -1,8 +1,8 @@
 import {
-  UserPermission,
   UserGroups,
-  UserRolePolicy,
+  UserPermission,
   UserRolePermission,
+  UserRolePolicy,
 } from "@worm/types/src/permission";
 
 const rolePolicies: UserRolePolicy = {
@@ -24,6 +24,8 @@ const rolePermissions: UserRolePermission = {
   OrganizationModerator: generatePolicy(["member"]),
   SystemAdmin: generatePolicy(["member", "systemAdmin"]),
 };
+
+export const JWT_GROUPS_KEY = "cognito:groups" as const;
 
 export const canAccess = (groups: UserGroups, permission: UserPermission) => {
   return groups.some((group) => rolePermissions[group].includes(permission));

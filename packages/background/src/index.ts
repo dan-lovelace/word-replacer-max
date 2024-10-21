@@ -1,3 +1,5 @@
+import "./lib/auth/amplify";
+
 import { browser } from "@worm/shared/src/browser";
 
 import {

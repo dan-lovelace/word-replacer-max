@@ -11,6 +11,8 @@
     "test": "yarn run cypress:run"
   },
   "dependencies": {
+    "aws-amplify": "^6.6.0",
+    "axios": "^1.7.7",
     "uuid": "^9.0.1",
     "webextension-polyfill": "^0.10.0",
     "zod": "^3.23.8"

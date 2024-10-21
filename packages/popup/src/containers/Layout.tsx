@@ -13,8 +13,8 @@ import { PopupTab } from "@worm/types";
 import { useToast } from "../components/alert/useToast";
 import Button from "../components/button/Button";
 import IconButton from "../components/button/IconButton";
-import MenuItem from "../components/menu/MenuItem";
 import DropdownMenu from "../components/menu/DropdownMenu";
+import MenuItem from "../components/menu/MenuItem";
 import { useLanguage } from "../lib/language";
 import { getNotificationMessage } from "../lib/routes";
 import { PreactChildren } from "../lib/types";
@@ -196,7 +196,7 @@ export default function Layout({ children }: LayoutProps) {
                       </div>
                     </li>
                     <li>
-                      <hr class="dropdown-divider" />
+                      <hr className="dropdown-divider" />
                     </li>
                     <li>
                       <Button
@@ -234,7 +234,7 @@ export default function Layout({ children }: LayoutProps) {
                       </a>
                     </li>
                     <li>
-                      <hr class="dropdown-divider" />
+                      <hr className="dropdown-divider" />
                     </li>
                     <li>
                       <a

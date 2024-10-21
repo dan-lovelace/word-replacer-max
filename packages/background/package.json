@@ -11,7 +11,6 @@
     "vite:tsx": "NODE_OPTIONS='--import tsx' vite"
   },
   "dependencies": {
-    "@worm/shared": "*",
-    "aws-amplify": "^6.6.0"
+    "@worm/shared": "*"
   }
 }

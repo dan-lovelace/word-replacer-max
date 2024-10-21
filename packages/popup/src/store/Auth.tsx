@@ -1,6 +1,8 @@
 import { createContext } from "preact";
 import { useContext, useMemo } from "preact/hooks";
 
+import { decodeJWT } from "aws-amplify/auth";
+
 import {
   QueryObserverResult,
   RefetchOptions,
@@ -9,10 +11,13 @@ import {
 
 import { createRuntimeMessage } from "@worm/shared";
 import { browser } from "@worm/shared/src/browser";
+import { canAccess, JWT_GROUPS_KEY } from "@worm/shared/src/permission";
 import { AppUser } from "@worm/types";
 import { RuntimeMessage, RuntimeMessageKind } from "@worm/types/src/message";
+import { UserGroups, UserPermission } from "@worm/types/src/permission";
 
 import { PreactChildren } from "../lib/types";
+
 import { useConfig } from "./Config";
 
 type AuthStore = {
@@ -20,6 +25,7 @@ type AuthStore = {
   fetchCurrentUser: (
     options?: RefetchOptions
   ) => Promise<QueryObserverResult<false | AppUser, Error>>;
+  hasAccess: (permission: UserPermission) => boolean;
 };
 
 const Auth = createContext<AuthStore>({} as AuthStore);
@@ -28,7 +34,7 @@ export const useAuth = () => useContext(Auth);
 
 export function AuthProvider({ children }: { children: PreactChildren }) {
   const {
-    storage: { authLastAuthUser },
+    storage: { authIdToken, authLastAuthUser },
   } = useConfig();
 
   /**
@@ -89,8 +95,22 @@ export function AuthProvider({ children }: { children: PreactChildren }) {
     },
   });
 
+  const hasAccess = (permission: UserPermission) => {
+    if (!authIdToken) {
+      return false;
+    }
+
+    const groups = decodeJWT(authIdToken).payload[JWT_GROUPS_KEY];
+
+    if (!groups || !Array.isArray(groups)) {
+      return false;
+    }
+
+    return canAccess(groups as UserGroups, permission);
+  };
+
   return (
-    <Auth.Provider value={{ currentUser, fetchCurrentUser }}>
+    <Auth.Provider value={{ currentUser, fetchCurrentUser, hasAccess }}>
       {children}
     </Auth.Provider>
   );

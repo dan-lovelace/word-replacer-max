@@ -1,4 +1,4 @@
-import { ApiResponse, Matcher } from "..";
+import { ApiResponse, Matcher } from "../";
 import { ReplacementSuggestion } from "../replacement";
 
 export type ApiSuggestRequest = {
@@ -8,6 +8,7 @@ export type ApiSuggestRequest = {
 
 export type ApiSuggestResponse = ApiResponse<{
   suggestions: ReplacementSuggestion[];
+  tone: ToneOption;
 }>;
 
 export type ToneOption =

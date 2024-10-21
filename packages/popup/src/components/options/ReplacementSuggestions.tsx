@@ -3,15 +3,16 @@ import { JSXInternal } from "preact/src/jsx";
 import { storageSetByKeys } from "@worm/shared/src/storage";
 
 import { Indented } from "../../containers/Indented";
+import { useAuth } from "../../store/Auth";
 import { useConfig } from "../../store/Config";
 
 import Slide from "../transition/Slide";
 
 export default function ReplacementSuggestions() {
+  const { hasAccess } = useAuth();
   const {
     storage: { replacementSuggest },
   } = useConfig();
-  const isActive = Boolean(replacementSuggest?.active);
 
   const handleActiveChange = (
     event: JSXInternal.TargetedEvent<HTMLInputElement, Event>
@@ -26,6 +27,11 @@ export default function ReplacementSuggestions() {
   };
 
   const inputId = "replacement-suggestion-enabled-checkbox";
+  const isActive = Boolean(replacementSuggest?.active);
+
+  if (!hasAccess("api:InvokeSuggest")) {
+    return <></>;
+  }
 
   return (
     <>
@@ -53,7 +59,7 @@ export default function ReplacementSuggestions() {
         <Indented data-testid="replacement-suggestions-description">
           <p className="fs-sm">
             Use the power of generative AI to suggest replacements for your
-            words and phrases.
+            searches.
           </p>
         </Indented>
       </Slide>

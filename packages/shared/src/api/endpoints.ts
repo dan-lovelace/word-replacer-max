@@ -13,6 +13,10 @@ export type ApiRouteIdentifier = keyof ApiRoutes;
 
 export type ApiRoute<T extends ApiRouteIdentifier> = ApiRoutes[T];
 
+export type ApiUsageLimits = Partial<
+  Record<ApiRouteIdentifier, { periodDays: number; threshold: number }>
+>;
+
 export const getApiRoute = <T extends ApiRouteIdentifier>(
   identifier: T
 ): ApiRoute<T> => {

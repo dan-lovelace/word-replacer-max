@@ -1,7 +1,6 @@
 import { useRef, useState } from "react";
 
-import { useMutation } from "@tanstack/react-query";
-import axios, { AxiosError } from "axios";
+import axios, { AxiosError, AxiosRequestConfig } from "axios";
 
 import Alert from "@mui/material/Alert/Alert";
 import AlertTitle from "@mui/material/AlertTitle/AlertTitle";
@@ -19,6 +18,7 @@ import Stack from "@mui/material/Stack/Stack";
 import useTheme from "@mui/material/styles/useTheme";
 import TextField from "@mui/material/TextField/TextField";
 import Typography from "@mui/material/Typography/Typography";
+import { useMutation } from "@tanstack/react-query";
 
 import { logDebug } from "@worm/shared";
 import { getApiEndpoint } from "@worm/shared/src/api";
@@ -42,7 +42,7 @@ const DEFAULT_FORM_DATA: MarketingContact = {
 
 const useMarketingSignup = () =>
   useMutation<
-    ApiMarketingSignupResponse,
+    AxiosRequestConfig<ApiMarketingSignupResponse>,
     AxiosError<ApiResponse<ApiMarketingSignupResponse>>,
     ApiMarketingSignupRequest
   >({

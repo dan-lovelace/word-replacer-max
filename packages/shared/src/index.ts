@@ -8,4 +8,5 @@ export * from "./messaging";
 export * from "./replace";
 export * from "./schemas";
 export * from "./selectors";
+export * from "./strings";
 export * from "./time";
