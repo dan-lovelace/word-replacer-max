@@ -1,48 +1,45 @@
-import { join } from "path";
+import { join } from "node:path";
 
 import preact from "@preact/preset-vite";
 import { defineConfig, loadEnv, UserConfig } from "vite";
 
-const outDir = join(__dirname, "..", "..", "dist");
+import { buildConfig } from "@worm/plugins";
+
+const productionConfig: UserConfig = {
+  build: {
+    assetsDir: "popup",
+    rollupOptions: {
+      input: "popup.html",
+      output: {
+        chunkFileNames: "[name].js",
+        assetFileNames: "[name].[ext]",
+      },
+    },
+  },
+  plugins: [buildConfig(), preact()],
+};
+
+const testConfig: UserConfig = {
+  build: {
+    rollupOptions: {
+      input: "popup.html",
+    },
+  },
+  plugins: [buildConfig(), preact()],
+  resolve: {
+    alias: [
+      {
+        find: "webextension-polyfill",
+        replacement: join(__dirname, "..", "testing", "src", "test-browser.ts"),
+      },
+    ],
+  },
+};
 
 const modeConfig: Record<string, UserConfig> = {
-  test: {
-    plugins: [preact()],
-    build: {
-      rollupOptions: {
-        input: "popup.html",
-      },
-    },
-    resolve: {
-      alias: [
-        {
-          find: "webextension-polyfill",
-          replacement: join(
-            __dirname,
-            "..",
-            "testing",
-            "src",
-            "test-browser.ts"
-          ),
-        },
-      ],
-    },
-  },
-  production: {
-    plugins: [preact()],
-    build: {
-      assetsDir: "popup",
-      minify: true,
-      outDir,
-      rollupOptions: {
-        input: "popup.html",
-        output: {
-          chunkFileNames: "[name].js",
-          assetFileNames: "[name].[ext]",
-        },
-      },
-    },
-  },
+  development: productionConfig,
+  production: productionConfig,
+  test: testConfig,
 };
 
 export default defineConfig(({ mode }) => {

@@ -1,6 +1,6 @@
 import { JSXInternal } from "preact/src/jsx";
 
-import cx from "../../lib/classnames";
+import { cx } from "@worm/shared";
 
 type ButtonProps = JSXInternal.HTMLAttributes<HTMLButtonElement> & {
   startIcon?: string;

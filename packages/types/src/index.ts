@@ -1,9 +1,23 @@
 import { z } from "zod";
 
+import { ToneOption } from "./api";
+import { ReplacementSuggestion } from "./replacement";
+
+const identificationErrorMessages: Record<IdentificationErrorName, string> = {
+  MissingTokens: "Update requires tokens",
+  Standard: "Unable to identify user",
+  UserNotLoggedIn: "User is not logged in",
+};
 const queryPatterns = ["case", "default", "regex", "wholeWord"] as const;
 const schemaVersions = [1] as const;
 
 export const storageVersions = ["1.0.0", "1.1.0", "1.1.1"] as const;
+
+export type AppUser =
+  | {
+      email: string;
+    }
+  | false;
 
 export type DeepPartial<T> = T extends object
   ? {
@@ -17,6 +31,17 @@ export type ExportLink = {
   identifier: ReturnType<Date["getTime"]>;
   url: string;
 };
+
+export class IdentificationError extends Error {
+  constructor(name: IdentificationErrorName = "Standard") {
+    super(identificationErrorMessages[name]);
+    this.name = name;
+
+    Object.setPrototypeOf(this, IdentificationError.prototype);
+  }
+}
+
+type IdentificationErrorName = "MissingTokens" | "Standard" | "UserNotLoggedIn";
 
 export type Matcher = {
   active: boolean;
@@ -53,6 +78,15 @@ export type ReplacementStyleOption =
   | "strikethrough"
   | "underline";
 
+export type ReplacementSuggest = Partial<{
+  active: boolean;
+  lastSuggestions: {
+    suggestions?: ReplacementSuggestion[];
+    tone?: ToneOption;
+  };
+  selectedTone: ToneOption;
+}>;
+
 export type SchemaExport = SchemaVersion & {
   version: SchemaVersionType;
 };
@@ -72,6 +106,13 @@ export type SchemaVersion1 = {
 
 export type SchemaVersionType = (typeof schemaVersions)[number];
 
+export type SignInStatusState =
+  | "signedIn"
+  | "signedOut"
+  | "signingIn"
+  | "signingOut"
+  | "unknown";
+
 export type Storage = Partial<{
   [key in StorageKey]: StorageKeyMap[key];
 }> & {
@@ -81,6 +122,16 @@ export type Storage = Partial<{
 export type StorageKey = keyof StorageKeyMap;
 
 export type StorageKeyMap = {
+  /**
+   * Auth keys are mapped using their respective names from Amplify. A custom
+   * token provider exists to translate Amplify's version to our own.
+   */
+  authAccessToken: string;
+  authClockDrift: string;
+  authLastAuthUser: string;
+  authIdToken: string;
+  authRefreshToken: string;
+
   domainList: string[];
   exportLinks: ExportLink[];
   matchers: Matcher[];
@@ -91,6 +142,7 @@ export type StorageKeyMap = {
     focusRule: Matcher["identifier"];
   };
   replacementStyle: ReplacementStyle;
+  replacementSuggest: ReplacementSuggest;
   storageVersion: StorageVersion;
 };
 
@@ -112,5 +164,7 @@ export type SystemColor =
   | "red"
   | "white"
   | "yellow";
+
+export type WebAppPingResponse = boolean;
 
 export * from "./api";

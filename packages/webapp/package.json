@@ -1,0 +1,35 @@
+{
+  "name": "@worm/webapp",
+  "version": "0.0.0",
+  "author": "dan-lovelace",
+  "main": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "yarn vite:tsx",
+    "build": "tsc && yarn vite:tsx build --mode ${NODE_ENV:-production}",
+    "preview": "vite preview",
+    "test": "echo \"Error: no test specified\" && exit 0",
+    "vite:tsx": "NODE_OPTIONS='--import tsx' VITE_MODE=${NODE_ENV:-development} vite"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
+    "@mui/material": "^6.0.1",
+    "@tanstack/react-query": "^5.53.1",
+    "@worm/shared": "*",
+    "material-icons": "^1.13.12",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-fast-marquee": "^1.6.5",
+    "react-router-dom": "^6.26.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.5",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "@worm/plugins": "*",
+    "@worm/testing": "*",
+    "@worm/types": "*",
+    "sass": "^1.70.0"
+  }
+}

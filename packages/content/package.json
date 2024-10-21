@@ -5,9 +5,10 @@
   "main": "src/index.ts",
   "type": "module",
   "scripts": {
-    "build": "tsc && vite build",
-    "start": "yarn build --watch --mode development",
-    "test": "echo \"Error: no test specified\" && exit 0"
+    "build": "tsc && yarn vite:tsx build --mode ${NODE_ENV:-production}",
+    "start": "yarn build --watch",
+    "test": "echo \"Error: no test specified\" && exit 0",
+    "vite:tsx": "NODE_OPTIONS='--import tsx' vite"
   },
   "dependencies": {
     "@worm/shared": "*"

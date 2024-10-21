@@ -1,0 +1,11 @@
+{
+  "name": "@worm/plugins",
+  "version": "0.0.0",
+  "author": "dan-lovelace",
+  "main": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "build": "echo \"Error: no build specified\"",
+    "test": "echo \"Error: no test specified\" && exit 0"
+  }
+}

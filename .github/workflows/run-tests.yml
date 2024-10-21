@@ -1,34 +1,25 @@
 name: Run all tests
-run-name:
-  "${{ github.workflow }} - Environment: ${{ inputs.environment || 'test' }}"
+run-name: "${{ github.workflow }} - Mode: test"
 
 on:
   pull_request:
     paths:
       - packages/**
-  workflow_dispatch:
-    inputs:
-      environment:
-        default: test
-        description: "Which .env config to use"
-        required: true
-        type: choice
-        options:
-          - development
-          - production
-          - test
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     env:
-      VITE_MODE: ${{ inputs.environment }}
+      VITE_MODE: test
 
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
           cache: "yarn"
       - run: yarn install
       - run: yarn test
