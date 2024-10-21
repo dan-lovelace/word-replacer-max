@@ -303,15 +303,18 @@ export default function ReplacementInput({
                   aria-disabled={true}
                   className="d-flex flex-column gap-2 pb-2 px-3"
                 >
-                  <div className="fw-bold">Choose a suggestion style</div>
+                  <div className="fw-bold">Get suggestions</div>
                   <div className="input-group" role="group">
+                    <label className="visually-hidden" for="tone-select">
+                      Suggestion style
+                    </label>
                     <select
-                      aria-label="Select a tone"
                       className="form-select"
+                      id="tone-select"
                       value={replacementSuggest.selectedTone}
                       onChange={handleToneChange}
                     >
-                      <option disabled>Select a tone</option>
+                      <option disabled>Suggestion style</option>
                       {toneOptions.map(({ label, value }) => (
                         <option key={value} value={value}>
                           {label}
