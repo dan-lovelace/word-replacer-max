@@ -5,6 +5,7 @@
   "main": "src/index.ts",
   "type": "module",
   "scripts": {
+    "benchmark": "tsx ./__benchmark__/replace.ts",
     "build": "echo \"Info: no build specified\"",
     "cypress:open": "cypress open --e2e --browser chrome",
     "cypress:run": "cypress run",
@@ -17,11 +18,13 @@
   },
   "devDependencies": {
     "@types/archiver": "^6.0.2",
+    "@types/benchmark": "^2.1.5",
     "@types/uuid": "^9.0.8",
     "@types/webextension-polyfill": "^0.10.7",
     "@worm/testing": "*",
     "@worm/types": "*",
     "archiver": "^6.0.1",
+    "benchmark": "^2.1.4",
     "lerna": "^8.0.2",
     "ts-node": "^10.9.2",
     "tsx": "^4.17.0",

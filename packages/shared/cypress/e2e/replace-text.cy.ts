@@ -1,26 +1,6 @@
-import { findText, replaceText } from "@worm/shared/src/replace";
-import { QueryPattern } from "@worm/types";
-
 import { selectors as s } from "../support/selectors";
 
-/**
- * Utility function to reduce code duplication.
- */
-function searchAndReplace(
-  element: HTMLElement,
-  query: string,
-  queryPatterns: QueryPattern[],
-  replacement: string
-) {
-  const results = findText(element, query, queryPatterns);
-
-  replaceText(
-    results[0],
-    query,
-    { queryPatterns, replacement, useGlobalReplacementStyle: true },
-    undefined
-  );
-}
+import { searchAndReplace } from "./replace/lib";
 
 describe("replaceText", () => {
   describe("default query pattern", () => {
