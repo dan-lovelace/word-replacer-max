@@ -7,7 +7,7 @@ import {
   REPLACEMENT_WRAPPER_ELEMENT,
 } from "./lib";
 import { getReplacementHTML, replaceTextNode } from "./lib/dom";
-import { getRegexFlags, patternRegex } from "./lib/regex";
+import { getRegexFlags, patternRegex, regExpReplace } from "./lib/regex";
 
 export function replaceText(
   element: Text | undefined,
@@ -72,16 +72,22 @@ export function replaceText(
       switch (pattern) {
         case "case":
         case "default": {
-          replaced = elementContents.replace(patternRegex[pattern](query), () =>
+          const searchValue = patternRegex[pattern](query);
+
+          replaced = elementContents.replace(searchValue, () =>
             getReplacementHTML(element, query, matcher, replacementStyle)
           );
           break;
         }
         case "regex": {
-          // replace by string first to avoid dropping references
+          const searchValue = patternRegex.regex(
+            query,
+            getRegexFlags(queryPatterns)
+          );
+
           const regexReplaced = elementContents.replace(
-            patternRegex[pattern](query, getRegexFlags(queryPatterns)),
-            replacement
+            searchValue,
+            regExpReplace(replacement)
           );
 
           // apply the HTML after replacement
@@ -97,11 +103,14 @@ export function replaceText(
           break;
         }
         case "wholeWord": {
+          const searchValue = patternRegex.wholeWord(
+            query,
+            getRegexFlags(queryPatterns)
+          );
+
           replaced = elementContents
-            .replace(
-              patternRegex[pattern](query, getRegexFlags(queryPatterns)),
-              () =>
-                getReplacementHTML(element, query, matcher, replacementStyle)
+            .replace(searchValue, () =>
+              getReplacementHTML(element, query, matcher, replacementStyle)
             )
             .replace(/\s\s+/g, "");
           break;

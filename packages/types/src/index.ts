@@ -32,6 +32,11 @@ export type Matcher = {
   useGlobalReplacementStyle?: boolean;
 };
 
+/**
+ * PCRE case modes for use in regex replacements.
+ */
+export type PCRECaseMode = "lower" | "title" | "upper" | null;
+
 export type PopupAlertSeverity = "danger" | "info" | "success";
 
 export type PopupTab = "domains" | "options" | "rules" | "support";
