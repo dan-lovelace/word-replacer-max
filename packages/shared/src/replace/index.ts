@@ -1,9 +1,9 @@
 import { Matcher, ReplacementStyle } from "@worm/types";
 
+import { logDebug } from "../logging";
+
 import { findText } from "./find-text";
 import { replaceText } from "./replace-text";
-
-import { logDebug } from "../logging";
 
 function searchAndReplace(
   element: HTMLElement,

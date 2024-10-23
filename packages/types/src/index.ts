@@ -32,6 +32,19 @@ export type Matcher = {
   useGlobalReplacementStyle?: boolean;
 };
 
+/**
+ * Matcher properties used at replacement time.
+ */
+export type MatcherReplaceProps = Pick<
+  Matcher,
+  "queryPatterns" | "replacement" | "useGlobalReplacementStyle"
+>;
+
+/**
+ * PCRE case modes for use in regex replacements.
+ */
+export type PCRECaseMode = "lower" | "title" | "upper" | null;
+
 export type PopupAlertSeverity = "danger" | "info" | "success";
 
 export type PopupTab = "domains" | "options" | "rules" | "support";
