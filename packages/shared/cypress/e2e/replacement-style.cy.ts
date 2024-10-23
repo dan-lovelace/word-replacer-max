@@ -4,10 +4,11 @@ import {
   DEFAULT_REPLACEMENT_STYLE,
   getStylesheet,
 } from "@worm/shared/src/replace/lib/style";
-import { findText, replaceText } from "@worm/shared/src/replace";
-import { QueryPattern, ReplacementStyle } from "@worm/types";
+import { ReplacementStyle } from "@worm/types";
 
 import { selectors as s } from "../support/selectors";
+
+import { searchAndReplace } from "./replace/lib";
 
 const defaultReplacementStyle: ReplacementStyle = {
   ...DEFAULT_REPLACEMENT_STYLE,
@@ -18,23 +19,6 @@ function generateReplacementStyle(
   overrides: Partial<ReplacementStyle> = {}
 ): ReplacementStyle {
   return merge(defaultReplacementStyle, overrides);
-}
-
-function searchAndReplace(
-  element: HTMLElement,
-  query: string,
-  queryPatterns: QueryPattern[],
-  replacement: string,
-  replacementStyle: ReplacementStyle
-) {
-  const results = findText(element, query, queryPatterns);
-
-  replaceText(
-    results[0],
-    query,
-    { queryPatterns, replacement, useGlobalReplacementStyle: true },
-    replacementStyle
-  );
 }
 
 describe("replacement style", () => {

@@ -109,7 +109,18 @@ export default function ExportButton({
       });
     }
 
-    if (!json.data?.url) {
+    /**
+     * NOTE: Backwards compatibility handler between API changes. This may be
+     * removed later.
+     */
+    // @ts-ignore
+    let responseUrl = json.data?.value?.url;
+
+    if (!responseUrl) {
+      responseUrl = json.data?.url;
+    }
+
+    if (!responseUrl) {
       stopExporting();
 
       return showToast({
@@ -122,7 +133,7 @@ export default function ExportButton({
       ...(exportLinks || []),
       {
         identifier: new Date().getTime(),
-        url: json.data.url,
+        url: responseUrl,
       },
     ];
 

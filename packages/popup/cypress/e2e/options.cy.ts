@@ -46,13 +46,20 @@ describe("user interface", () => {
       exportModal.modal().should("not.be.visible");
 
       cy.wait("@share").then(({ response }) => {
-        cy.wrap(response?.body.data).should("have.property", "url");
+        /**
+         * Tests for backwards compatibility. This may be removed later.
+         */
+        const responseData = response?.body.data.value
+          ? response?.body.data.value
+          : response?.body.data;
+
+        cy.wrap(responseData).should("have.property", "url");
 
         exportModal
           .exportLinks()
           .should("be.visible")
           .within(() => {
-            cy.get("input").should("have.value", response?.body.data.url);
+            cy.get("input").should("have.value", responseData.url);
           });
       });
     });
