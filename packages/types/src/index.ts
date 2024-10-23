@@ -32,6 +32,11 @@ export type Matcher = {
   useGlobalReplacementStyle?: boolean;
 };
 
+export type MatcherReplaceProps = Pick<
+  Matcher,
+  "queryPatterns" | "replacement" | "useGlobalReplacementStyle"
+>;
+
 /**
  * PCRE case modes for use in regex replacements.
  */

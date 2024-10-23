@@ -1,4 +1,8 @@
-import { PCRECaseMode, QueryPattern } from "@worm/types";
+import {
+  MatcherReplaceProps, PCRECaseMode, QueryPattern, ReplacementStyle
+} from "@worm/types";
+
+import { getReplacementHTML } from "./dom";
 
 export const patternRegex: {
   [key in QueryPattern]: (query: string, flags?: string) => RegExp;
@@ -26,8 +30,15 @@ export const patternRegex: {
  * - `\E` - Ends the current case modification
  */
 export const regExpReplace =
-  (replacement: string) =>
+  (
+    element: Text,
+    query: string,
+    matcherReplaceProps: MatcherReplaceProps,
+    replacementStyle?: ReplacementStyle
+  ) =>
   (match: string, ...args: any[]) => {
+    const { replacement, useGlobalReplacementStyle } = matcherReplaceProps;
+
     const groups = args.slice(0, -2);
     let result = replacement;
 
@@ -86,7 +97,17 @@ export const regExpReplace =
       }
     }
 
-    return processedResult;
+    const resultHTML = getReplacementHTML(
+      element,
+      query,
+      {
+        replacement: processedResult,
+        useGlobalReplacementStyle,
+      },
+      replacementStyle
+    );
+
+    return resultHTML;
   };
 
 export function escapeRegex(str: string) {

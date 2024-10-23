@@ -349,6 +349,34 @@ describe("replaceAll", () => {
         cy.findByTestId("target-3").should("have.text", "5Hours: 8,testLorem");
       });
     });
+
+    it("does not wrap the entire text node's contents when replacing", () => {
+      cy.visitMock({
+        targetContents: "Lorem ipsum dolor",
+      });
+
+      cy.document().then((document) => {
+        replaceAll(
+          [
+            {
+              active: true,
+              identifier: "ABCD-1234",
+              queries: ["ipsum"],
+              queryPatterns: ["regex"],
+              replacement: "sit",
+              useGlobalReplacementStyle: true,
+            },
+          ],
+          undefined,
+          document
+        );
+      });
+
+      s.replacedText().should("have.text", "sit");
+      s.target()
+        .invoke("html")
+        .should("match", /^Lorem <span[^>]*>sit<\/span> dolor$/);
+    });
   });
 
   describe("'wholeWord' query pattern only", () => {

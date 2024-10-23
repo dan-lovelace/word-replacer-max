@@ -1,10 +1,8 @@
-import { Matcher, ReplacementStyle } from "@worm/types";
+import { Matcher, MatcherReplaceProps, ReplacementStyle } from "@worm/types";
 
 import {
-  CONTENTS_PROPERTY,
-  getSortedQueryPatterns,
-  isReplacementEmpty,
-  REPLACEMENT_WRAPPER_ELEMENT,
+  CONTENTS_PROPERTY, getSortedQueryPatterns, isReplacementEmpty,
+  REPLACEMENT_WRAPPER_ELEMENT
 } from "./lib";
 import { getReplacementHTML, replaceTextNode } from "./lib/dom";
 import { getRegexFlags, patternRegex, regExpReplace } from "./lib/regex";
@@ -12,10 +10,7 @@ import { getRegexFlags, patternRegex, regExpReplace } from "./lib/regex";
 export function replaceText(
   element: Text | undefined,
   query: string,
-  matcher: Pick<
-    Matcher,
-    "queryPatterns" | "replacement" | "useGlobalReplacementStyle"
-  >,
+  matcher: MatcherReplaceProps,
   replacementStyle: ReplacementStyle | undefined,
   startPosition: number = 0
 ) {
@@ -51,6 +46,7 @@ export function replaceText(
         : replacedItem === undefined &&
           query === replacedElement.dataset["query"]
   );
+
   if (isAlreadyReplaced > -1) return;
 
   /**
@@ -85,20 +81,9 @@ export function replaceText(
             getRegexFlags(queryPatterns)
           );
 
-          const regexReplaced = elementContents.replace(
+          replaced = elementContents.replace(
             searchValue,
-            regExpReplace(replacement)
-          );
-
-          // apply the HTML after replacement
-          replaced = getReplacementHTML(
-            element,
-            query,
-            {
-              replacement: regexReplaced,
-              useGlobalReplacementStyle,
-            },
-            replacementStyle
+            regExpReplace(element, query, matcher, replacementStyle)
           );
           break;
         }
