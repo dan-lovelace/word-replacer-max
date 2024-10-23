@@ -1642,11 +1642,6 @@
   dependencies:
     "@babel/types" "^7.20.7"
 
-"@types/benchmark@^2.1.5":
-  version "2.1.5"
-  resolved "https://registry.yarnpkg.com/@types/benchmark/-/benchmark-2.1.5.tgz#940c1850c18fdfdaee3fd6ed29cd92ae0d445b45"
-  integrity sha512-cKio2eFB3v7qmKcvIHLUMw/dIx/8bhWPuzpzRT4unCPRTD8VdA9Zb0afxpcxOqR4PixRS7yT42FqGS8BYL8g1w==
-
 "@types/bootstrap@^5.2.10":
   version "5.2.10"
   resolved "https://registry.yarnpkg.com/@types/bootstrap/-/bootstrap-5.2.10.tgz#58506463bccc6602bc051487ad8d3a6458f94c6c"

@@ -17,7 +17,6 @@
   },
   "devDependencies": {
     "@types/archiver": "^6.0.2",
-    "@types/benchmark": "^2.1.5",
     "@types/uuid": "^9.0.8",
     "@types/webextension-polyfill": "^0.10.7",
     "@worm/testing": "*",

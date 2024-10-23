@@ -145,7 +145,6 @@ describe("JavaScript regex backwards compatibility", () => {
       input: "HELLO WORLD",
       pattern: "hello",
       replacement: "hi",
-      flags: "i",
       expected: "hi WORLD",
     },
     {
@@ -153,7 +152,6 @@ describe("JavaScript regex backwards compatibility", () => {
       input: "test test test",
       pattern: "test",
       replacement: "exam",
-      flags: "g",
       expected: "exam exam exam",
     },
     {

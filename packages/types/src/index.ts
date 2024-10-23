@@ -32,6 +32,9 @@ export type Matcher = {
   useGlobalReplacementStyle?: boolean;
 };
 
+/**
+ * Matcher properties used at replacement time.
+ */
 export type MatcherReplaceProps = Pick<
   Matcher,
   "queryPatterns" | "replacement" | "useGlobalReplacementStyle"
