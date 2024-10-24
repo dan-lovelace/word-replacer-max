@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc && yarn vite:tsx build --mode ${NODE_ENV:-production}",
-    "start": "yarn build --watch",
+    "start": ": ${NODE_ENV:=development} && yarn build --watch",
     "test": "echo \"Error: no test specified\" && exit 0",
     "vite:tsx": "NODE_OPTIONS='--import tsx' vite"
   },

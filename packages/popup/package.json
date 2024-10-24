@@ -9,7 +9,7 @@
     "cypress:open": "cypress open --e2e --browser chrome",
     "cypress:run": "cypress run",
     "dev": "yarn vite:tsx --host --mode ${VITE_MODE:-development}",
-    "start": "yarn build --watch",
+    "start": ": ${NODE_ENV:=development} && yarn build --watch",
     "test": "if [ \"$CI\" != \"true\" ]; then yarn run cypress:run; fi",
     "vite:tsx": "NODE_OPTIONS='--import tsx' vite"
   },
