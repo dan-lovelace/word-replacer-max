@@ -6,6 +6,9 @@ import Stack from "@mui/material/Stack/Stack";
 import useTheme from "@mui/material/styles/useTheme";
 import Typography from "@mui/material/Typography/Typography";
 
+import { PUBLIC_GITHUB_REPOSITORY_URL } from "@worm/shared/src/support";
+
+import githubLogo from "../../assets/githubLogo";
 import { ROUTES } from "../../lib/routes";
 
 import Link from "../link/Link";
@@ -29,8 +32,20 @@ export default function LayoutFooter() {
           <Grid2 size={{ xs: 12, md: 6 }}>
             <Stack
               direction="row"
-              sx={{ justifyContent: { xs: "center", md: "end" }, gap: 2 }}
+              sx={{
+                alignItems: "center",
+                justifyContent: { xs: "center", md: "end" },
+                gap: 2,
+              }}
             >
+              <Link
+                to={PUBLIC_GITHUB_REPOSITORY_URL}
+                target="_blank"
+                sx={{ color: palette.text.primary, height: 24, width: 24 }}
+              >
+                {githubLogo}
+              </Link>
+              <Divider orientation="vertical" flexItem />
               <Link to="mailto:hello@wordreplacermax.com">
                 <Typography variant="body2">Contact</Typography>
               </Link>

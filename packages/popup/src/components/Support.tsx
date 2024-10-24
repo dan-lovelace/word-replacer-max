@@ -1,3 +1,5 @@
+import { SUBMIT_NEW_TICKET_URL } from "@worm/shared/src/support";
+
 import { COPY_CONTAINER_COL_CLASS } from "../lib/classnames";
 
 export function EmailButton({ text = "contact@logicnow.io" }) {
@@ -52,10 +54,7 @@ export default function Support() {
       <div className="row">
         <div className={COPY_CONTAINER_COL_CLASS}>
           <div className="fw-bold">GitHub</div>
-          <a
-            href="https://github.com/dan-lovelace/word-replacer-max/issues/new"
-            target="_blank"
-          >
+          <a href={SUBMIT_NEW_TICKET_URL} target="_blank">
             Create a new issue
           </a>
         </div>

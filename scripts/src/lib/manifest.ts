@@ -1,18 +1,16 @@
 import assert from "node:assert";
 import { readFileSync } from "node:fs";
 
+import { PUBLIC_GITHUB_REPOSITORY_URL } from "@worm/shared/src/support";
 import {
-  Manifest,
-  ManifestBase,
-  ManifestV2,
-  ManifestV3,
+  Manifest, ManifestBase, ManifestV2, ManifestV3
 } from "@worm/types/src/manifest";
 
 import { configureNodeEnvironment } from "./config";
 
 const commonProps: ManifestBase = {
   description: "Seamlessly replace text on any web page.",
-  homepage_url: "https://github.com/dan-lovelace/word-replacer-max",
+  homepage_url: PUBLIC_GITHUB_REPOSITORY_URL,
   icons: {
     64: "assets/img/word-replacer-max-logo_64.png",
     128: "assets/img/word-replacer-max-logo_128.png",

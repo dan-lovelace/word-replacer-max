@@ -23,10 +23,8 @@ import { useMutation } from "@tanstack/react-query";
 import { logDebug } from "@worm/shared";
 import { getApiEndpoint } from "@worm/shared/src/api";
 import {
-  ApiMarketingSignupRequest,
-  ApiMarketingSignupResponse,
-  ApiResponse,
-  MarketingContact,
+  ApiMarketingSignupRequest, ApiMarketingSignupResponse, ApiResponse,
+  MarketingContact
 } from "@worm/types";
 import { ValidationErrors } from "@worm/types/src/validation";
 
@@ -118,7 +116,7 @@ export default function NewsletterSignup() {
 
   return (
     <Container disableGutters maxWidth="md" sx={{ textAlign: "center" }}>
-      <Card elevation={1} variant="outlined">
+      <Card variant="outlined">
         <CardHeader title="Stay in the Loop" />
         <CardContent>
           <Box ref={containerRef} sx={{ position: "relative" }}>
