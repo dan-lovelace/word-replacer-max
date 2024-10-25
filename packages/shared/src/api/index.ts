@@ -1,5 +1,8 @@
+import { ApiRouteIdentifier } from "@worm/types/src/api";
+
 import { getEnvConfig } from "../config";
-import { ApiRouteIdentifier, getApiRoute } from "./endpoints";
+
+import { getApiRoute } from "./endpoints";
 
 export function getApiEndpoint(name: ApiRouteIdentifier) {
   const envConfig = getEnvConfig();

@@ -2,7 +2,7 @@ import { JSXInternal } from "preact/src/jsx";
 
 import { cx } from "@worm/shared";
 
-type ButtonProps = JSXInternal.HTMLAttributes<HTMLButtonElement> & {
+export type ButtonProps = JSXInternal.HTMLAttributes<HTMLButtonElement> & {
   startIcon?: string;
 };
 

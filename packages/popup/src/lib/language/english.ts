@@ -1,5 +1,10 @@
 export default {
   api: {
+    account: {
+      usage: {
+        GENERAL_ERROR: "Something went wrong getting your usage",
+      },
+    },
     suggest: {
       GENERAL_ERROR: "Something went wrong generating your suggestions.",
       MISSING_DATA:

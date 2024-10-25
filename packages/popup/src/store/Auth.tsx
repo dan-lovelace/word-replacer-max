@@ -4,9 +4,7 @@ import { useContext, useMemo } from "preact/hooks";
 import { decodeJWT } from "aws-amplify/auth";
 
 import {
-  QueryObserverResult,
-  RefetchOptions,
-  useQuery,
+  QueryObserverResult, RefetchOptions, useQuery
 } from "@tanstack/react-query";
 
 import { createRuntimeMessage } from "@worm/shared";
@@ -45,7 +43,7 @@ export function AuthProvider({ children }: { children: PreactChildren }) {
   }, [authLastAuthUser]);
 
   const { refetch: fetchCurrentUser } = useQuery<AppUser, Error, AppUser>({
-    queryKey: ["fetchCurrentUser"],
+    queryKey: ["getCurrentUser"],
     retry: false,
     queryFn: async ({ signal }) => {
       const port = browser.runtime.connect({ name: "popup" });

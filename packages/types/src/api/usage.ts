@@ -1,3 +1,34 @@
+import { ApiResponse, ApiRouteIdentifier } from "./";
+
+export type ApiAccountUsage = Partial<
+  Record<
+    ApiRouteIdentifier,
+    {
+      count: number;
+      label: string;
+      limit: ApiUsageLimit;
+    }
+  >
+>;
+
+export type ApiAccountUsageResponse = ApiResponse<ApiAccountUsage>;
+
+export type ApiUsageIdentifier = "replacement-suggestions";
+
+export type ApiUsageLimit = {
+  period: ApiUsageLimitPeriod;
+  threshold: number;
+};
+
+export type ApiUsageLimitPeriod = {
+  interval: ApiUsageLimitPeriodInterval;
+  value: number;
+};
+
+export type ApiUsageLimitPeriodInterval = "days";
+
+export type ApiUsageLimits = Partial<Record<ApiRouteIdentifier, ApiUsageLimit>>;
+
 export type ApiUsageRecord = {
   cognitoId: string;
   endpoint: string;

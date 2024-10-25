@@ -1,4 +1,4 @@
-import { ApiResponse } from ".";
+import { ApiResponse } from "./";
 
 export type ApiAuthTokensRequest = {
   code: string;
@@ -11,6 +11,7 @@ export type ApiAuthTokens =
       refreshToken: string;
     }
   | undefined;
+
 export type ApiAuthTokensResponse = ApiResponse<ApiAuthTokens>;
 
 export type ApiAuthWhoAmI = {

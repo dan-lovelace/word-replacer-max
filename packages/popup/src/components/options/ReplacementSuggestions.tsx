@@ -8,6 +8,8 @@ import { useConfig } from "../../store/Config";
 
 import Slide from "../transition/Slide";
 
+import ApiUsage from "./ApiUsage";
+
 export default function ReplacementSuggestions() {
   const { hasAccess } = useAuth();
   const {
@@ -67,8 +69,9 @@ export default function ReplacementSuggestions() {
         <Indented
           className="py-1"
           data-testid="replacement-suggestions-options"
+          style={{ height: 63 }}
         >
-          Usage
+          <ApiUsage />
         </Indented>
       </Slide>
     </>

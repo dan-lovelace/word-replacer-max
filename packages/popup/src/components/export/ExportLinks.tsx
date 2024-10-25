@@ -6,7 +6,7 @@ import { ExportLink as ExportLinkType } from "@worm/types";
 
 import Button from "../../components/button/Button";
 import Tooltip from "../../components/Tooltip";
-import { copyToClipboard, canWriteToClipboard } from "../../lib/clipboard";
+import { canWriteToClipboard, copyToClipboard } from "../../lib/clipboard";
 import { useLanguage } from "../../lib/language";
 import { useConfig } from "../../store/Config";
 

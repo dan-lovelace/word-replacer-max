@@ -2,17 +2,15 @@ import { useEffect, useRef, useState } from "preact/hooks";
 
 import { cx, TOAST_MESSAGE_DURATION_DEFAULT_MS } from "@worm/shared";
 import { browser } from "@worm/shared/src/browser";
-import { storageSetByKeys } from "@worm/shared/src/storage";
 import { PopupAlertSeverity } from "@worm/types";
 import {
-  ShowToastMessageOptions,
-  WebAppMessage,
-  WebAppMessageKind,
+  ShowToastMessageOptions, WebAppMessage, WebAppMessageKind
 } from "@worm/types/src/message";
 
 import { useConfig } from "../../store/Config";
 
 import Button from "../button/Button";
+import ContactSupportLink from "../button/ContactSupportLink";
 
 const severityIconMap: Record<PopupAlertSeverity, string> = {
   danger: "warning",
@@ -26,10 +24,7 @@ export default function ToastContainer() {
   const [options, setOptions] = useState<ShowToastMessageOptions["options"]>();
   const [updatedAt, setUpdatedAt] = useState<Date>();
 
-  const {
-    isPoppedOut,
-    storage: { preferences },
-  } = useConfig();
+  const { isPoppedOut } = useConfig();
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const toastRef = useRef<HTMLDivElement | null>(null);
 
@@ -82,13 +77,6 @@ export default function ToastContainer() {
     }
   };
 
-  const handleContactSupportClick = () => {
-    const newPreferences = Object.assign({}, preferences);
-    newPreferences.activeTab = "support";
-
-    storageSetByKeys({ preferences: newPreferences });
-  };
-
   const handleRefreshClick = async () => {
     const tabs = await browser.tabs.query({
       active: true,
@@ -127,12 +115,7 @@ export default function ToastContainer() {
           {options?.showContactSupport && (
             <div className="d-flex align-items-center gap-1">
               <span>Please</span>
-              <Button
-                className="btn btn-link btn-sm p-0 text-nowrap"
-                onClick={handleContactSupportClick}
-              >
-                contact support
-              </Button>
+              <ContactSupportLink>contact support</ContactSupportLink>
             </div>
           )}
           {!isPoppedOut && options?.showRefresh && (
