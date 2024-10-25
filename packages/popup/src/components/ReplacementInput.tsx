@@ -91,8 +91,8 @@ export default function ReplacementInput({
 
   const { hasAccess } = useAuth();
   const {
+    sessionStorage: { authAccessToken },
     storage: {
-      authAccessToken,
       matchers,
       replacementStyle: globalReplacementStyle,
       replacementSuggest,

@@ -7,7 +7,7 @@ import {
   elementIdentifiers,
   isWebAppMessagingAllowed,
 } from "@worm/shared";
-import { AppUser, IdentificationError, WebAppPingResponse } from "@worm/types";
+import { IdentificationError, WebAppPingResponse } from "@worm/types";
 import {
   ShowToastMessageOptions,
   WebAppMessage,

@@ -15,7 +15,7 @@ import Tooltip from "../Tooltip";
 
 export default function ApiUsage() {
   const {
-    storage: { authAccessToken },
+    sessionStorage: { authAccessToken },
   } = useConfig();
   const language = useLanguage();
 

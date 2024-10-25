@@ -4,7 +4,9 @@ import { useContext, useMemo } from "preact/hooks";
 import { decodeJWT } from "aws-amplify/auth";
 
 import {
-  QueryObserverResult, RefetchOptions, useQuery
+  QueryObserverResult,
+  RefetchOptions,
+  useQuery,
 } from "@tanstack/react-query";
 
 import { createRuntimeMessage } from "@worm/shared";
@@ -32,7 +34,7 @@ export const useAuth = () => useContext(Auth);
 
 export function AuthProvider({ children }: { children: PreactChildren }) {
   const {
-    storage: { authIdToken, authLastAuthUser },
+    sessionStorage: { authIdToken, authLastAuthUser },
   } = useConfig();
 
   /**

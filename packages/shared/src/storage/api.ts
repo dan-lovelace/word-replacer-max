@@ -1,4 +1,10 @@
-import { Matcher, Storage, StorageKey, StorageSetOptions } from "@worm/types";
+import {
+  Matcher,
+  Storage,
+  StorageKey,
+  StorageProvider,
+  StorageSetOptions,
+} from "@worm/types";
 
 import { browser, matchersFromStorage, matchersToStorage } from "../browser";
 import { logDebug } from "../logging";
@@ -11,6 +17,10 @@ export const storageClear = sync.clear;
 export const storageGet = sync.get;
 export const storageRemove = sync.remove;
 export const storageSet = sync.set;
+
+export function getStorageProvider(providerName: StorageProvider = "sync") {
+  return browser.storage[providerName];
+}
 
 export async function storageGetByKeys<Key extends StorageKey>(keys?: Key[]) {
   // fetch all storage keys regardless of parameters; we'll filter the results

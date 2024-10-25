@@ -119,6 +119,18 @@ export type SchemaVersion1 = {
 
 export type SchemaVersionType = (typeof schemaVersions)[number];
 
+export type SessionStorage = Partial<{
+  /**
+   * Auth keys are mapped using their respective names from Amplify. A custom
+   * token provider exists to translate Amplify's version to our own.
+   */
+  authAccessToken: string;
+  authClockDrift: string;
+  authLastAuthUser: string;
+  authIdToken: string;
+  authRefreshToken: string;
+}>;
+
 export type SignInStatusState =
   | "signedIn"
   | "signedOut"
@@ -135,16 +147,6 @@ export type Storage = Partial<{
 export type StorageKey = keyof StorageKeyMap;
 
 export type StorageKeyMap = {
-  /**
-   * Auth keys are mapped using their respective names from Amplify. A custom
-   * token provider exists to translate Amplify's version to our own.
-   */
-  authAccessToken: string;
-  authClockDrift: string;
-  authLastAuthUser: string;
-  authIdToken: string;
-  authRefreshToken: string;
-
   domainList: string[];
   exportLinks: ExportLink[];
   matchers: Matcher[];
@@ -158,6 +160,8 @@ export type StorageKeyMap = {
   replacementSuggest: ReplacementSuggest;
   storageVersion: StorageVersion;
 };
+
+export type StorageProvider = "local" | "session" | "sync";
 
 export type StorageSetOptions = {
   onError?: (message: string) => void;

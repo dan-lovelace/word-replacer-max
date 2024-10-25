@@ -5,18 +5,26 @@ import {
   browser,
   POPUP_POPPED_OUT_PARAMETER_KEY,
 } from "@worm/shared/src/browser";
-import { storageGetByKeys } from "@worm/shared/src/storage";
-import { Storage } from "@worm/types";
+import { getStorageProvider, storageGetByKeys } from "@worm/shared/src/storage";
+import { SessionStorage, Storage } from "@worm/types";
 
 import { PreactChildren } from "../lib/types";
 
 type ConfigStore = {
   isPoppedOut: boolean;
+  sessionStorage: SessionStorage;
   storage: Storage;
 };
 
 const storeDefaults: ConfigStore = {
   isPoppedOut: false,
+  sessionStorage: {
+    authAccessToken: undefined,
+    authClockDrift: undefined,
+    authIdToken: undefined,
+    authLastAuthUser: undefined,
+    authRefreshToken: undefined,
+  },
   storage: {
     domainList: [],
     matchers: [],
@@ -29,6 +37,9 @@ export const useConfig = () => useContext(Config);
 
 export function ConfigProvider({ children }: { children: PreactChildren }) {
   const [initialized, setInitialized] = useState(false);
+  const [sessionStorage, setSessionStorage] = useState<SessionStorage>(
+    storeDefaults.sessionStorage
+  );
   const [storage, setStorage] = useState<Storage>(storeDefaults.storage);
 
   const isPoppedOut = useMemo(
@@ -41,6 +52,9 @@ export function ConfigProvider({ children }: { children: PreactChildren }) {
 
   useEffect(() => {
     const updateStorage = async () => {
+      setSessionStorage(
+        (await getStorageProvider("session").get()) as SessionStorage
+      );
       setStorage(await storageGetByKeys());
     };
 
@@ -60,7 +74,7 @@ export function ConfigProvider({ children }: { children: PreactChildren }) {
   }
 
   return (
-    <Config.Provider value={{ isPoppedOut, storage }}>
+    <Config.Provider value={{ isPoppedOut, sessionStorage, storage }}>
       {children}
     </Config.Provider>
   );

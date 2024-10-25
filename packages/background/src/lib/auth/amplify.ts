@@ -4,6 +4,7 @@ import {
   cognitoUserPoolsTokenProvider,
   signOut,
 } from "aws-amplify/auth/cognito";
+
 import {
   AuthConfig,
   Hub,
@@ -13,11 +14,7 @@ import {
 
 import { logDebug } from "@worm/shared";
 import { getEnvConfig } from "@worm/shared/src/config";
-import {
-  storageGetByKeys,
-  storageRemoveByKeys,
-  storageSetByKeys,
-} from "@worm/shared/src/storage";
+import { getStorageProvider } from "@worm/shared/src/storage";
 import { AppUser } from "@worm/types";
 
 type StorageAuthKey = (typeof storageAuthSuffixes)[number];
@@ -46,11 +43,12 @@ const storageAuthSuffixes = [
 ] as const;
 
 const storageAuthKeyPrefix = `CognitoIdentityServiceProvider.${userPoolClientId}`;
+const sessionStorageProvider = getStorageProvider("session");
 
 const storageInterface: KeyValueStorageInterface = {
   clear: () =>
     new Promise(async (resolve) => {
-      await storageRemoveByKeys([
+      await sessionStorageProvider.remove([
         "authAccessToken",
         "authClockDrift",
         "authIdToken",
@@ -72,13 +70,21 @@ const storageInterface: KeyValueStorageInterface = {
         return resolve(null);
       }
 
+      const getRes = await sessionStorageProvider.get([
+        "authAccessToken",
+        "authClockDrift",
+        "authIdToken",
+        "authLastAuthUser",
+        "authRefreshToken",
+      ]);
+
       const {
         authAccessToken = null,
         authClockDrift = null,
         authIdToken = null,
         authLastAuthUser = null,
         authRefreshToken = null,
-      } = await storageGetByKeys();
+      } = getRes;
 
       switch (suffix) {
         case "LastAuthUser":
@@ -109,27 +115,27 @@ const storageInterface: KeyValueStorageInterface = {
 
       switch (suffix) {
         case "LastAuthUser":
-          await storageSetByKeys({
+          await sessionStorageProvider.set({
             authLastAuthUser: value,
           });
           break;
         case "accessToken":
-          await storageSetByKeys({
+          await sessionStorageProvider.set({
             authAccessToken: value,
           });
           break;
         case "clockDrift":
-          await storageSetByKeys({
+          await sessionStorageProvider.set({
             authClockDrift: value,
           });
           break;
         case "idToken":
-          await storageSetByKeys({
+          await sessionStorageProvider.set({
             authIdToken: value,
           });
           break;
         case "refreshToken":
-          await storageSetByKeys({
+          await sessionStorageProvider.set({
             authRefreshToken: value,
           });
           break;
@@ -140,7 +146,7 @@ const storageInterface: KeyValueStorageInterface = {
   removeItem: (key: string) =>
     new Promise(async (resolve) => {
       if (key === undefined) {
-        await storageRemoveByKeys([
+        await sessionStorageProvider.remove([
           "authAccessToken",
           "authClockDrift",
           "authIdToken",
@@ -163,19 +169,19 @@ const storageInterface: KeyValueStorageInterface = {
 
       switch (suffix) {
         case "LastAuthUser":
-          await storageRemoveByKeys(["authLastAuthUser"]);
+          await sessionStorageProvider.remove(["authLastAuthUser"]);
           break;
         case "accessToken":
-          await storageRemoveByKeys(["authAccessToken"]);
+          await sessionStorageProvider.remove(["authAccessToken"]);
           break;
         case "clockDrift":
-          await storageRemoveByKeys(["authClockDrift"]);
+          await sessionStorageProvider.remove(["authClockDrift"]);
           break;
         case "idToken":
-          await storageRemoveByKeys(["authIdToken"]);
+          await sessionStorageProvider.remove(["authIdToken"]);
           break;
         case "refreshToken":
-          await storageRemoveByKeys(["authRefreshToken"]);
+          await sessionStorageProvider.remove(["authRefreshToken"]);
           break;
       }
 
@@ -222,7 +228,7 @@ Hub.listen("auth", (event) => {
   logDebug("Hub auth event", event);
 });
 
-export async function getCurrentUser(): Promise<AppUser> {
+export const getCurrentUser = async (): Promise<AppUser> => {
   const authSession = await fetchAuthSession();
   const email = authSession.tokens?.idToken?.payload.email?.toString();
 
@@ -231,8 +237,8 @@ export async function getCurrentUser(): Promise<AppUser> {
   }
 
   return { email };
-}
+};
 
-export function signUserOut() {
+export const signUserOut = () => {
   return signOut();
-}
+};

@@ -12,7 +12,7 @@ import {
 } from "@worm/shared";
 import { getApiEndpoint } from "@worm/shared/src/api";
 import { browser } from "@worm/shared/src/browser";
-import { storageSetByKeys } from "@worm/shared/src/storage";
+import { getStorageProvider } from "@worm/shared/src/storage";
 import { ApiAuthTokens, IdentificationError } from "@worm/types";
 import {
   RuntimeMessage,
@@ -22,7 +22,6 @@ import {
   WebAppMessageKindMap,
 } from "@worm/types/src/message";
 
-import "./auth/amplify";
 import { getCurrentUser, signUserOut } from "./auth/amplify";
 
 let runtimePort: browser.Runtime.Port;
@@ -163,7 +162,7 @@ export function startMessageListener() {
              * Update storage using our own keys, not Amplify's. These are
              * translated in the custom token provider.
              */
-            await storageSetByKeys({
+            await getStorageProvider("session").set({
               authAccessToken: tokens.accessToken,
               authIdToken: tokens.idToken,
               authLastAuthUser: decodeJWT(
