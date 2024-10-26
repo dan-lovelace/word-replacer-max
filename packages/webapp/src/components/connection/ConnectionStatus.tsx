@@ -1,9 +1,8 @@
+import Box from "@mui/material/Box/Box";
 import Divider from "@mui/material/Divider/Divider";
-import IconButton from "@mui/material/IconButton/IconButton";
 import Stack from "@mui/material/Stack/Stack";
 import useTheme from "@mui/material/styles/useTheme";
 import Tooltip from "@mui/material/Tooltip/Tooltip";
-import Typography from "@mui/material/Typography/Typography";
 
 import chromeLogo from "../../assets/chromeLogo";
 import firefoxLogo from "../../assets/firefoxLogo";
@@ -44,10 +43,7 @@ export default function ConnectionStatus() {
 
   return (
     <>
-      <Tooltip
-        title="Browser extension not connected"
-        sx={{ display: "block" }}
-      >
+      <Tooltip title="Browser extension not connected">
         <MaterialIcon
           sx={{
             color: palette.error.main,
@@ -59,26 +55,37 @@ export default function ConnectionStatus() {
         </MaterialIcon>
       </Tooltip>
       <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
-      <Stack direction="row" sx={{ alignItems: "center", gap: 1, pl: "5px" }}>
-        <Typography sx={{ pl: "2px" }}>Install for</Typography>
-        <Link to="https://chromewebstore.google.com/detail/word-replacer-max/gnemoflnihonmkiacnagnbnlppkamfgo">
-          <IconButton
-            title="Chrome"
-            size="small"
-            sx={{ height: 32, p: 0.5, width: 32 }}
-          >
-            {chromeLogo}
-          </IconButton>
-        </Link>
-        <Link to="https://addons.mozilla.org/en-US/firefox/addon/word-replacer-max">
-          <IconButton
-            title="Firefox"
-            size="small"
-            sx={{ height: 32, p: 0.5, width: 32 }}
-          >
-            {firefoxLogo}
-          </IconButton>
-        </Link>
+      <Stack direction="row" sx={{ alignItems: "center", gap: 2, pl: "7px" }}>
+        <Tooltip title="Get for Chrome">
+          <Box>
+            <Link
+              to="https://chromewebstore.google.com/detail/word-replacer-max/gnemoflnihonmkiacnagnbnlppkamfgo"
+              sx={{
+                color: "text.primary",
+                display: "block",
+                height: 24,
+                width: 24,
+              }}
+            >
+              {chromeLogo}
+            </Link>
+          </Box>
+        </Tooltip>
+        <Tooltip title="Get for Firefox">
+          <Box>
+            <Link
+              to="https://addons.mozilla.org/en-US/firefox/addon/word-replacer-max"
+              sx={{
+                color: "text.primary",
+                display: "block",
+                height: 24,
+                width: 24,
+              }}
+            >
+              {firefoxLogo}
+            </Link>
+          </Box>
+        </Tooltip>
       </Stack>
     </>
   );

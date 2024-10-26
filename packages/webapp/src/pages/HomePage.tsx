@@ -17,11 +17,10 @@ type StoreLinkProps = {
 
 function StoreLink({ imageSrc, text, to }: StoreLinkProps) {
   return (
-    <Link to={to}>
+    <Link tabIndex={-1} to={to}>
       <Button
         color="primary"
         size="large"
-        tabIndex={-1}
         variant="outlined"
         sx={{ py: 1, width: 1 }}
       >
@@ -58,7 +57,7 @@ export default function HomePage() {
             Make the web speak your language
           </Typography>
           <Container maxWidth="sm">
-            <Typography variant="h6" sx={{ mb: 6 }}>
+            <Typography variant="h6" sx={{ mb: 14 }}>
               A browser extension for automatically replacing text on websites.
               Visit the extension store to get started today.
             </Typography>

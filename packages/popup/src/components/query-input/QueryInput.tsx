@@ -146,23 +146,32 @@ export default function QueryInput({
       onSubmit={handleFormSubmit}
     >
       <div
-        className={cx("flex-fill border rounded-start")}
+        className="flex-fill border rounded-start"
         ref={inputContainerRef}
         style={{
           borderBottomRightRadius:
             inputHeight > INPUT_HEIGHT_BASE ? "var(--bs-border-radius)" : 0,
         }}
       >
-        <input
-          className="form-control border-0"
-          disabled={disabled}
-          enterkeyhint="enter"
-          placeholder="Search for..."
-          type="text"
-          value={inputValue}
-          onBlur={handleFormSubmit}
-          onInput={handleTextChange}
-        />
+        <div
+          className={
+            !Boolean(queries.length) ? "shadow-sm rounded" : "shadow-none"
+          }
+          style={{
+            transition: "box-shadow 150ms",
+          }}
+        >
+          <input
+            className="form-control border-0"
+            disabled={disabled}
+            enterkeyhint="enter"
+            placeholder="Search for..."
+            type="text"
+            value={inputValue}
+            onBlur={handleFormSubmit}
+            onInput={handleTextChange}
+          />
+        </div>
         <button className="visually-hidden" disabled={disabled} type="submit">
           Add
         </button>
