@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import Box from "@mui/material/Box/Box";
 import Container from "@mui/material/Container/Container";
@@ -11,17 +12,34 @@ import Link from "../components/link/Link";
 import Hero from "../containers/Hero";
 import { ROUTES } from "../lib/routes";
 
-export default function LoginSuccessPage() {
-  const [isOpen, setIsOpen] = useState(false);
+const REDIRECT_TIMEOUT_SECONDS = 12;
 
+export default function LoginSuccessPage() {
+  const [isVisible, setIsVisible] = useState(false);
+  const [_, setSecondsLeft] = useState(REDIRECT_TIMEOUT_SECONDS);
+
+  const navigate = useNavigate();
   const { palette } = useTheme();
 
   useEffect(() => {
-    setIsOpen(true);
+    setIsVisible(true);
+
+    const redirectTimer = setInterval(() => {
+      setSecondsLeft((prev) => {
+        if (prev <= 1) {
+          navigate(ROUTES.HOME, { replace: true });
+          clearInterval(redirectTimer);
+        }
+
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(redirectTimer);
   }, []);
 
   return (
-    <Grow in={isOpen}>
+    <Grow in={isVisible}>
       <Hero>
         <Stack
           maxWidth="md"
@@ -37,7 +55,7 @@ export default function LoginSuccessPage() {
             variant="h2"
             sx={{ fontWeight: "bold" }}
           >
-            Sign in success
+            Welcome Back!
           </Typography>
           <Box
             className="material-icons-sharp"
@@ -53,10 +71,17 @@ export default function LoginSuccessPage() {
               sx={{ width: { xs: 84, md: 128 } }}
             />
           </Box>
-          <Container maxWidth="xs">
-            <Typography component="h2" sx={{ fontSize: 18, mb: 5 }}>
-              You have been signed in to the extension. You may now close this
-              window or <Link to={ROUTES.HOME}>go home</Link>.
+          <Container maxWidth="sm">
+            <Typography variant="h6" sx={{ fontSize: 18, mb: 5 }}>
+              You've successfully signed in to the extension.
+            </Typography>
+            <Typography gutterBottom variant="body2">
+              Returning to homepage in a moment...
+            </Typography>
+            <Typography variant="body2">
+              <Link to={ROUTES.HOME} replace={true}>
+                Skip waiting and go now
+              </Link>
             </Typography>
           </Container>
         </Stack>

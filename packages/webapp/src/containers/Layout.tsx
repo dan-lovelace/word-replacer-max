@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box/Box";
 
-import LayoutHeader from "../components/header/LayoutHeader";
 import LayoutFooter from "../components/footer/LayoutFooter";
+import LayoutHeader from "../components/header/LayoutHeader";
 
 type LayoutProps = React.HTMLAttributes<HTMLDivElement>;
 
