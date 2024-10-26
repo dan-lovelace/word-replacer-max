@@ -9,7 +9,7 @@ declare global {
   }
 }
 
-const storage: Storage = {
+const mockSyncStorage: Storage = {
   domainList: [],
   matchers: [
     {
@@ -37,7 +37,9 @@ const storage: Storage = {
 };
 
 const browser = new MockBrowser({
-  withStorage: storage,
+  withStorage: {
+    sync: mockSyncStorage,
+  },
 });
 
 window.TEST_BROWSER = browser;

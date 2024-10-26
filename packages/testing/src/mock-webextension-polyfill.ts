@@ -10,6 +10,10 @@ type TRuntime = Partial<Browser["runtime"]>;
 
 type TStorage = Partial<Browser["storage"]>;
 
+type TStorageArea = keyof Pick<TStorage, "local" | "session" | "sync">;
+
+type TStorageInitialValues<T> = Partial<Record<TStorageArea, T>>;
+
 type TWindows = Partial<Browser["windows"]>;
 
 type Key<T> = keyof T;
@@ -21,6 +25,10 @@ type KeyMap<T> = Partial<{
 type ListenerCallback = (
   changes: Storage.StorageAreaSyncOnChangedChangesType
 ) => void;
+
+type MockBrowserProps<T> = {
+  withStorage?: TStorageInitialValues<T>;
+};
 
 function deepClone<T>(obj: T): T {
   if (obj === null || typeof obj !== "object") {
@@ -78,14 +86,14 @@ function deepEqual(obj1: any, obj2: any): boolean {
   return true;
 }
 
-class MockBrowser<StorageType> implements Partial<TBrowser> {
+class MockBrowser<T> implements Partial<TBrowser> {
   runtime: TRuntime;
 
   storage: TStorage;
 
   windows: TWindows;
 
-  constructor({ withStorage }: { withStorage?: StorageType }) {
+  constructor({ withStorage }: MockBrowserProps<T>) {
     this.runtime = new MockRuntime();
 
     const mockStorage = new MockStorage(withStorage);
@@ -113,34 +121,95 @@ class MockStorage<T> implements TStorage {
 
   _listeners: Set<ListenerCallback> = new Set();
 
-  _store: KeyMap<T> = {};
+  _store: Record<TStorageArea, KeyMap<T>> = {
+    local: {},
+    session: {},
+    sync: {},
+  };
 
   onChanged? = this._onChanged;
 
+  local?: Storage.LocalStorageArea;
+  session?: Storage.StorageArea;
   sync?: Storage.SyncStorageAreaSync;
 
-  constructor(initialValues?: T) {
+  constructor(initialValues?: TStorageInitialValues<T>) {
     if (initialValues !== undefined) {
-      this._store = initialValues;
+      this._store.local = initialValues.local ?? {};
+      this._store.session = initialValues.session ?? {};
+      this._store.sync = initialValues.sync ?? {};
     }
 
-    this.sync = {
-      MAX_ITEMS: 512,
-      MAX_WRITE_OPERATIONS_PER_HOUR: 1800,
-      MAX_WRITE_OPERATIONS_PER_MINUTE: 120,
-      QUOTA_BYTES: 102400,
-      QUOTA_BYTES_PER_ITEM: 8192,
+    this.local = this.getStorageArea("local");
 
-      clear: () =>
-        new Promise((resolve) => {
-          this._store = {};
+    this.session = this.getStorageArea("session");
+
+    this.sync = this.getStorageArea("sync");
+  }
+
+  getStorageArea(area: "local"): Storage.LocalStorageArea;
+
+  getStorageArea(area: "session"): Storage.StorageArea;
+
+  getStorageArea(area: "sync"): Storage.SyncStorageAreaSync;
+
+  getStorageArea(area: TStorageArea) {
+    const baseProps = this.getStorageAreaBase(area);
+
+    switch (area) {
+      case "local": {
+        const localArea: Storage.LocalStorageArea = {
+          QUOTA_BYTES: 5242880,
+          ...baseProps,
+        };
+
+        return localArea;
+      }
+
+      case "session": {
+        const sessionArea: Storage.StorageArea = {
+          ...baseProps,
+        };
+
+        return sessionArea;
+      }
+
+      case "sync": {
+        const syncArea: Storage.SyncStorageAreaSync = {
+          MAX_ITEMS: 512,
+          MAX_WRITE_OPERATIONS_PER_HOUR: 1800,
+          MAX_WRITE_OPERATIONS_PER_MINUTE: 120,
+          QUOTA_BYTES: 102400,
+          QUOTA_BYTES_PER_ITEM: 8192,
+          getBytesInUse: async () => 100,
+          ...baseProps,
+        };
+
+        return syncArea;
+      }
+
+      default:
+        throw new Error(`Invalid area provided: ${area}`);
+    }
+  }
+
+  /**
+   * Common properties that belong to all supported storage areas.
+   */
+  private getStorageAreaBase(area: TStorageArea): Storage.StorageArea {
+    return {
+      onChanged: this._onChanged,
+
+      clear: () => {
+        return new Promise((resolve) => {
+          this._store[area] = {};
 
           resolve();
-        }),
-      getBytesInUse: async () => 100,
+        });
+      },
       get: (keys) => {
         return new Promise((resolve) => {
-          const currentStore = deepClone(this._store);
+          const currentStore = deepClone(this._store[area]);
           const result: Record<any, any> = {};
 
           if (Array.isArray(keys)) {
@@ -158,10 +227,9 @@ class MockStorage<T> implements TStorage {
           resolve(result);
         });
       },
-      onChanged: this._onChanged,
       remove: (keys) => {
         return new Promise((resolve) => {
-          const newStore = deepClone(this._store);
+          const newStore = deepClone(this._store[area]);
 
           if (Array.isArray(keys)) {
             keys.forEach((key) => {
@@ -171,7 +239,7 @@ class MockStorage<T> implements TStorage {
             delete newStore[keys as Key<T>];
           }
 
-          this._store = newStore;
+          this._store[area] = newStore;
 
           Array.from(this._listeners).forEach((listener) => {
             listener({});
@@ -182,7 +250,7 @@ class MockStorage<T> implements TStorage {
       },
       set: (items: KeyMap<T>) => {
         return new Promise((resolve) => {
-          const newStore = deepClone(this._store);
+          const newStore = deepClone(this._store[area]);
           let isDifferent = false;
 
           (Object.keys(items) as Key<T>[]).forEach((key) => {
@@ -190,10 +258,10 @@ class MockStorage<T> implements TStorage {
 
             isDifferent =
               isDifferent === true ||
-              !deepEqual(this._store[key], newStore[key]);
+              !deepEqual(this._store[area][key], newStore[key]);
           });
 
-          this._store = newStore;
+          this._store[area] = newStore;
 
           if (isDifferent) {
             Array.from(this._listeners).forEach((listener) => {
