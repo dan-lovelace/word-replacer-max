@@ -162,6 +162,9 @@ export default function RuleRow({
     <div
       className={cx("row", disabled && "pe-none flex-fill")}
       data-testid="rule-row"
+      style={{
+        marginLeft: "-14px",
+      }}
     >
       {!disabled && (
         <div className="col-auto form-check form-switch ps-3 pe-0 pt-2">

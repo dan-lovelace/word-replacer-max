@@ -23,8 +23,10 @@ import { useMutation } from "@tanstack/react-query";
 import { logDebug } from "@worm/shared";
 import { getApiEndpoint } from "@worm/shared/src/api";
 import {
-  ApiMarketingSignupRequest, ApiMarketingSignupResponse, ApiResponse,
-  MarketingContact
+  ApiMarketingSignupRequest,
+  ApiMarketingSignupResponse,
+  ApiResponse,
+  MarketingContact,
 } from "@worm/types";
 import { ValidationErrors } from "@worm/types/src/validation";
 

@@ -1,5 +1,5 @@
 import { Fragment } from "preact";
-import { useState } from "preact/hooks";
+import { useEffect, useRef, useState } from "preact/hooks";
 import { JSXInternal } from "preact/src/jsx";
 
 import { cx, isReplacementEmpty } from "@worm/shared";
@@ -14,7 +14,7 @@ import { PreactChildren } from "../../lib/types";
 import { useToast } from "../alert/useToast";
 import Chip from "../Chip";
 
-import "./query-input.scss";
+const INPUT_HEIGHT_BASE = 78;
 
 type QueryInputProps = Pick<
   Matcher,
@@ -59,10 +59,28 @@ export default function QueryInput({
   replacement,
   onChange,
 }: QueryInputProps) {
-  const [value, setValue] = useState("");
+  const [inputHeight, setInputHeight] = useState(0);
+  const [inputValue, setInputValue] = useState("");
 
   const language = useLanguage();
+  const inputContainerRef = useRef<HTMLDivElement>(null);
   const { showToast } = useToast();
+
+  useEffect(() => {
+    if (!inputContainerRef.current) return;
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        setInputHeight(entry.contentRect.height);
+      }
+    });
+
+    resizeObserver.observe(inputContainerRef.current);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, []);
 
   const handleFormSubmit = (
     event:
@@ -71,13 +89,13 @@ export default function QueryInput({
   ) => {
     event.preventDefault();
 
-    if (!value || value.length === 0) return;
+    if (!inputValue || inputValue.length === 0) return;
 
-    if (!queries.includes(value)) {
-      onChange(identifier, "queries", [...queries, value]);
+    if (!queries.includes(inputValue)) {
+      onChange(identifier, "queries", [...queries, inputValue]);
     }
 
-    setValue("");
+    setInputValue("");
   };
 
   const handlePatternChange = (pattern: QueryPattern) => () => {
@@ -118,10 +136,8 @@ export default function QueryInput({
   const handleTextChange = (
     event: JSXInternal.TargetedInputEvent<HTMLInputElement>
   ) => {
-    setValue(event.currentTarget.value);
+    setInputValue(event.currentTarget.value);
   };
-
-  const queriesExist = Boolean(queries.length);
 
   return (
     <form
@@ -130,47 +146,46 @@ export default function QueryInput({
       onSubmit={handleFormSubmit}
     >
       <div
-        className={cx(
-          "flex-fill border rounded",
-          queriesExist && "rounded-end-0"
-        )}
+        className={cx("flex-fill border rounded-start")}
+        ref={inputContainerRef}
+        style={{
+          borderBottomRightRadius:
+            inputHeight > INPUT_HEIGHT_BASE ? "var(--bs-border-radius)" : 0,
+        }}
       >
         <input
-          className={cx(
-            "form-control border-0",
-            queriesExist && "rounded-end-0"
-          )}
+          className="form-control border-0"
           disabled={disabled}
           enterkeyhint="enter"
           placeholder="Search for..."
           type="text"
-          value={value}
+          value={inputValue}
           onBlur={handleFormSubmit}
           onInput={handleTextChange}
         />
         <button className="visually-hidden" disabled={disabled} type="submit">
           Add
         </button>
-        {queriesExist && (
-          <div className="d-flex align-items-start flex-wrap gap-1 p-1">
-            {queries.map((query, idx) => (
-              <Chip
-                key={idx}
-                disabled={disabled}
-                identifier={query}
-                onRemove={handleRemoveClick}
-              />
-            ))}
-          </div>
-        )}
+        <div className="d-flex align-items-start flex-wrap gap-1 p-1">
+          {queries.map((query, idx) => (
+            <Chip
+              key={idx}
+              disabled={disabled}
+              identifier={query}
+              onRemove={handleRemoveClick}
+            />
+          ))}
+        </div>
       </div>
       <div
         aria-label="Query Patterns"
-        className={cx(
-          "query-patterns btn-group-vertical align-self-start",
-          queriesExist && "queries-exist"
-        )}
+        className="query-patterns btn-group-vertical align-self-start"
         role="group"
+        style={{
+          height: INPUT_HEIGHT_BASE - 1,
+          marginLeft: -1,
+          marginTop: 1,
+        }}
       >
         {queryPatternMetadata.map(({ icon, title, value }, idx) => {
           const inputId = `${identifier}__${value}`;
@@ -180,7 +195,7 @@ export default function QueryInput({
               <input
                 checked={queryPatterns.includes(value)}
                 className="btn-check"
-                disabled={disabled || !queriesExist}
+                disabled={disabled}
                 id={inputId}
                 type="checkbox"
                 onClick={handlePatternChange(value)}

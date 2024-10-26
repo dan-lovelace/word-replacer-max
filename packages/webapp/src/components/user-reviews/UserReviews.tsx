@@ -1,3 +1,7 @@
+import "./UserReviews.scss";
+
+import Marquee from "react-fast-marquee";
+
 import Box from "@mui/material/Box/Box";
 import Card from "@mui/material/Card/Card";
 import CardContent from "@mui/material/CardContent/CardContent";
@@ -5,15 +9,10 @@ import Rating from "@mui/material/Rating/Rating";
 import useTheme from "@mui/material/styles/useTheme";
 import Typography from "@mui/material/Typography/Typography";
 
-import Marquee from "react-fast-marquee";
-
 import MaterialIcon from "../icon/MaterialIcon";
-
-import "./UserReviews.scss";
 
 type UserReview = {
   author: string;
-  id: number;
   rating: number;
   text: string;
 };
@@ -21,39 +20,48 @@ type UserReview = {
 const userReviews: UserReview[] = [
   {
     author: "Chrome user",
-    id: 1,
     rating: 5,
-    text: "Exactly as advertised! Better than the other extensions for this!",
+    text: "Mar 30, 2024",
   },
   {
     author: "Chrome user",
-    id: 2,
     rating: 5,
-    text: "Works exactly as advertised. Doesn't require knowledge of RegEx for case-sensitive replacement or to match whole words.",
+    text: "May 14, 2024",
   },
   {
     author: "Chrome user",
-    id: 3,
     rating: 5,
-    text: "Thanks for this awesome replacer, it's really bloody helpful.",
+    text: "Jun 18, 2024",
+  },
+  {
+    author: "Firefox user",
+    rating: 5,
+    text: "Jul 21, 2024",
   },
   {
     author: "Chrome user",
-    id: 4,
     rating: 5,
-    text: "Exactly what I needed and the fact that you can choose for it to be NOT case sensitive is even better as it saves a lot of time.",
+    text: "Jul 30, 2024",
   },
   {
-    id: 5,
-    text: "So good! Really easy to use and quite customisable!! I love it :)",
-    author: "Chrome user",
+    author: "Firefox user",
     rating: 5,
+    text: "Sep 3, 2024",
   },
   {
-    id: 6,
-    text: "Just wanted to say Word Replacer Max is awesome...",
     author: "Chrome user",
     rating: 5,
+    text: "Sep 26, 2024",
+  },
+  {
+    author: "Chrome user",
+    rating: 5,
+    text: "Oct 6, 2024",
+  },
+  {
+    author: "Chrome user",
+    rating: 5,
+    text: "Oct 14, 2024",
   },
 ];
 
@@ -70,7 +78,7 @@ export default function UserReviews() {
       >
         {userReviews.map((review, idx) => (
           <Card
-            key={`${review.id}-${idx}`}
+            key={`card-${idx}`}
             sx={{
               flex: "0 0 auto",
               mx: 1.5,
@@ -83,11 +91,25 @@ export default function UserReviews() {
             }}
           >
             <CardContent>
-              <Box sx={{ mb: 1 }}>
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              <Typography
+                color="text.secondary"
+                gutterBottom
+                variant="subtitle2"
+              >
+                {review.text}
+              </Typography>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    flex: "1 1 auto",
+                    gap: 1,
+                  }}
+                >
                   <Rating
                     icon={<MaterialIcon>star</MaterialIcon>}
-                    name={`rating-${review.id}-${idx}`}
+                    name={`rating-${idx}`}
                     readOnly
                     value={review.rating}
                   />
@@ -95,17 +117,10 @@ export default function UserReviews() {
                     {review.rating.toFixed(1)}
                   </Typography>
                 </Box>
+                <Typography color="text.secondary" variant="subtitle2">
+                  <em>{review.author}</em>
+                </Typography>
               </Box>
-              <Typography variant="body1" gutterBottom>
-                "{review.text}"
-              </Typography>
-              <Typography
-                color="text.secondary"
-                variant="subtitle2"
-                sx={{ mt: 2 }}
-              >
-                - <em>{review.author}</em>
-              </Typography>
             </CardContent>
           </Card>
         ))}

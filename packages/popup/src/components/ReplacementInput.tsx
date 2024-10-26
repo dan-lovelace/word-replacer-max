@@ -46,6 +46,9 @@ type ReplacementInputProps = Pick<
   ) => void;
 };
 
+const INPUT_BUTTON_WIDTH = 39;
+const INPUT_WIDTH_BASE = 250;
+
 const toneOptions: { label: string; value: ToneOption }[] = [
   {
     label: "Casual",
@@ -254,12 +257,10 @@ export default function ReplacementInput({
     suggestionsData.suggestions.length > 0
   );
 
-  const inputButtonWidth = 39;
-  const inputWidthBase = 248;
   const inputWidth =
-    inputWidthBase -
-    ((canSuggest ? inputButtonWidth : 0) +
-      (globalReplacementStyle?.active ? inputButtonWidth : 0));
+    INPUT_WIDTH_BASE -
+    ((canSuggest ? INPUT_BUTTON_WIDTH : 0) +
+      (globalReplacementStyle?.active ? INPUT_BUTTON_WIDTH : 0));
 
   const toneLabel =
     toneOptions.find((option) => option.value === suggestionsData?.tone)
@@ -278,7 +279,7 @@ export default function ReplacementInput({
           onBlur={handleFormSubmit}
           onInput={handleTextChange}
           style={{
-            maxWidth: inputWidth,
+            width: inputWidth,
           }}
         />
         {canSuggest && (

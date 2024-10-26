@@ -218,23 +218,11 @@ export default function Layout({ children }: LayoutProps) {
                         className={cx(
                           "dropdown-item pe-none",
                           "mb-2 mt-n2 py-2",
-                          "fs-sm fw-bold"
+                          "fw-bold"
                         )}
                       >
-                        Unlock additional features with your account
+                        You're missing out on premium features
                       </div>
-                    </li>
-                    <li>
-                      <a
-                        className="dropdown-item"
-                        href={envConfig.VITE_SSM_WEBAPP_ORIGIN}
-                        target="_blank"
-                      >
-                        <MenuItem icon="open_in_new">Learn more</MenuItem>
-                      </a>
-                    </li>
-                    <li>
-                      <hr className="dropdown-divider" />
                     </li>
                     <li>
                       <a
@@ -243,7 +231,7 @@ export default function Layout({ children }: LayoutProps) {
                         target="_blank"
                       >
                         <MenuItem icon="app_registration">
-                          Create account
+                          Create an account
                         </MenuItem>
                       </a>
                     </li>

@@ -21,7 +21,6 @@ export default function IconButton({
       className={cx(
         "material-icons-sharp",
         "btn btn-light bg-transparent border-0",
-        "px-2",
         className
       )}
       type="button"

@@ -12,7 +12,7 @@ import Link from "../components/link/Link";
 import Hero from "../containers/Hero";
 import { ROUTES } from "../lib/routes";
 
-const REDIRECT_TIMEOUT_SECONDS = 12;
+const REDIRECT_TIMEOUT_SECONDS = 18;
 
 export default function LoginSuccessPage() {
   const [isVisible, setIsVisible] = useState(false);
@@ -55,7 +55,7 @@ export default function LoginSuccessPage() {
             variant="h2"
             sx={{ fontWeight: "bold" }}
           >
-            Welcome Back!
+            Sign in success
           </Typography>
           <Box
             className="material-icons-sharp"
