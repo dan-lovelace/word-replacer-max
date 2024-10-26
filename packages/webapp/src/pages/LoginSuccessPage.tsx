@@ -58,8 +58,6 @@ export default function LoginSuccessPage() {
             Sign in success
           </Typography>
           <Box
-            className="material-icons-sharp"
-            component="span"
             sx={{
               color: palette.success.dark,
               mb: { xs: 2, md: 4 },
@@ -72,7 +70,7 @@ export default function LoginSuccessPage() {
             />
           </Box>
           <Container maxWidth="sm">
-            <Typography variant="h6" sx={{ fontSize: 18, mb: 5 }}>
+            <Typography variant="h6" sx={{ mb: 5 }}>
               You've successfully signed in to the extension.
             </Typography>
             <Typography gutterBottom variant="body2">

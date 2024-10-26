@@ -6,7 +6,10 @@ import Stack from "@mui/material/Stack/Stack";
 import useTheme from "@mui/material/styles/useTheme";
 import Typography from "@mui/material/Typography/Typography";
 
-import { PUBLIC_GITHUB_REPOSITORY_URL } from "@worm/shared/src/support";
+import {
+  MAILTO_SUPPORT_URL,
+  PUBLIC_GITHUB_REPOSITORY_URL,
+} from "@worm/shared/src/support";
 
 import githubLogo from "../../assets/githubLogo";
 import { ROUTES } from "../../lib/routes";
@@ -46,7 +49,7 @@ export default function LayoutFooter() {
                 {githubLogo}
               </Link>
               <Divider orientation="vertical" flexItem />
-              <Link to="mailto:hello@wordreplacermax.com">
+              <Link to={MAILTO_SUPPORT_URL}>
                 <Typography variant="body2">Contact</Typography>
               </Link>
               <Divider orientation="vertical" flexItem />

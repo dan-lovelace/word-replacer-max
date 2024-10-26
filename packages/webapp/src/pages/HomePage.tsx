@@ -57,7 +57,7 @@ export default function HomePage() {
             Make the web speak your language
           </Typography>
           <Container maxWidth="sm">
-            <Typography variant="h6" sx={{ mb: 14 }}>
+            <Typography variant="h6" sx={{ mb: 8 }}>
               A browser extension for automatically replacing text on websites.
               Visit the extension store to get started today.
             </Typography>
