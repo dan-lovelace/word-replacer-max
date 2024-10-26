@@ -1,4 +1,5 @@
 import Container from "@mui/material/Container/Container";
+import Divider from "@mui/material/Divider/Divider";
 import Grid2 from "@mui/material/Grid2/Grid2";
 import Typography from "@mui/material/Typography/Typography";
 
@@ -22,12 +23,12 @@ function StoreLink({ imageSrc, text, to }: StoreLinkProps) {
         size="large"
         tabIndex={-1}
         variant="outlined"
-        sx={{ width: 1 }}
+        sx={{ py: 1, width: 1 }}
       >
         <img src={imageSrc} />
         <Typography
           sx={{
-            fontSize: "1.35rem",
+            fontSize: "1.5rem",
             fontWeight: "bold",
             ml: { xs: 1, sm: 2 },
           }}
@@ -55,15 +56,26 @@ export default function HomePage() {
             Powerful text replacement to personalize your web
           </Typography>
           <Container maxWidth="sm">
-            <Typography component="h2" sx={{ fontSize: 18, mb: 5 }}>
-              A browser extension for automatically replacing words on websites.
-              Visit the extension store to get started today.
+            <Typography variant="h6" sx={{ mb: 6 }}>
+              A browser extension that replaces text automatically on any
+              website. Set it up once, enjoy it everywhere.
             </Typography>
           </Container>
+          <Typography variant="subtitle2" sx={{ color: "text.secondary" }}>
+            Choose your browser to begin
+          </Typography>
+          <Divider
+            sx={{
+              maxWidth: { xs: "calc(100% - 80px)", sm: 420 },
+              mx: "auto",
+              mb: 1.5,
+              mt: 1,
+            }}
+          />
           <Grid2 container spacing={2}>
             <Grid2
-              offset={{ xs: 3, sm: 3, md: 3 }}
-              size={{ xs: 6, sm: 6, md: 3 }}
+              offset={{ xs: 1, sm: 2, md: 2 }}
+              size={{ xs: 10, sm: 8, md: 4 }}
             >
               <StoreLink
                 imageSrc="/preload/chrome-logo.svg"
@@ -72,8 +84,8 @@ export default function HomePage() {
               />
             </Grid2>
             <Grid2
-              offset={{ xs: 3, sm: 3, md: 0 }}
-              size={{ xs: 6, sm: 6, md: 3 }}
+              offset={{ xs: 1, sm: 2, md: 0 }}
+              size={{ xs: 10, sm: 8, md: 4 }}
             >
               <StoreLink
                 imageSrc="/preload/firefox-logo.svg"
