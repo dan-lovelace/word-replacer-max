@@ -1,9 +1,9 @@
-import AddNewRule from "./AddNewRule";
+import { useConfig } from "../../store/Config";
 
 import Alert from "../Alerts";
 import RuleRow from "../rules/RuleRow";
 
-import { useConfig } from "../../store/Config";
+import AddNewRule from "./AddNewRule";
 
 export default function RuleList() {
   const {
@@ -28,13 +28,15 @@ export default function RuleList() {
 
   return (
     <>
-      <div className="row gx-2 gy-2">
+      <div className="row gx-3 gy-2">
         {matchers?.map((matcher) => (
           <div
             key={matcher.identifier}
             className="rule-row-wrapper col-12 col-xxl-6 position-relative"
           >
-            <RuleRow matcher={matcher} matchers={matchers} />
+            <div className="container-fluid gx-1">
+              <RuleRow matcher={matcher} matchers={matchers} />
+            </div>
           </div>
         ))}
       </div>
