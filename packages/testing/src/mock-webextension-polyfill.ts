@@ -23,7 +23,8 @@ type KeyMap<T> = Partial<{
 }>;
 
 type ListenerCallback = (
-  changes: Storage.StorageAreaSyncOnChangedChangesType
+  changes: Storage.StorageAreaSyncOnChangedChangesType,
+  areaName: TStorageArea
 ) => void;
 
 type MockBrowserProps<T> = {
@@ -202,7 +203,21 @@ class MockStorage<T> implements TStorage {
 
       clear: () => {
         return new Promise((resolve) => {
+          const oldValues = { ...this._store[area] };
           this._store[area] = {};
+
+          const changes: Record<string, Storage.StorageChange> = {};
+          Object.keys(oldValues).forEach((key) => {
+            changes[key] = {
+              oldValue: oldValues[key as keyof typeof oldValues],
+            };
+          });
+
+          if (Object.keys(changes).length > 0) {
+            Array.from(this._listeners).forEach((listener) => {
+              listener(changes, area);
+            });
+          }
 
           resolve();
         });
@@ -229,43 +244,60 @@ class MockStorage<T> implements TStorage {
       },
       remove: (keys) => {
         return new Promise((resolve) => {
+          const changes: Record<string, Storage.StorageChange> = {};
           const newStore = deepClone(this._store[area]);
 
           if (Array.isArray(keys)) {
             keys.forEach((key) => {
-              delete newStore[key as Key<T>];
+              if (newStore[key as Key<T>] !== undefined) {
+                changes[key] = { oldValue: newStore[key as Key<T>] };
+                delete newStore[key as Key<T>];
+              }
             });
           } else {
-            delete newStore[keys as Key<T>];
+            const key = keys as Key<T>;
+
+            if (newStore[key] !== undefined) {
+              changes[key as string] = { oldValue: newStore[key] };
+              delete newStore[key];
+            }
           }
 
           this._store[area] = newStore;
 
-          Array.from(this._listeners).forEach((listener) => {
-            listener({});
-          });
+          if (Object.keys(changes).length > 0) {
+            Array.from(this._listeners).forEach((listener) => {
+              listener(changes, area);
+            });
+          }
 
           resolve();
         });
       },
       set: (items: KeyMap<T>) => {
         return new Promise((resolve) => {
+          const changes: Record<string, { newValue: any; oldValue?: any }> = {};
           const newStore = deepClone(this._store[area]);
-          let isDifferent = false;
 
           (Object.keys(items) as Key<T>[]).forEach((key) => {
-            newStore[key] = items[key];
+            const newValue = items[key];
+            const oldValue = newStore[key];
 
-            isDifferent =
-              isDifferent === true ||
-              !deepEqual(this._store[area][key], newStore[key]);
+            if (!deepEqual(oldValue, newValue)) {
+              changes[key as string] = {
+                newValue,
+                oldValue,
+              };
+
+              newStore[key] = newValue;
+            }
           });
 
           this._store[area] = newStore;
 
-          if (isDifferent) {
+          if (Object.keys(changes).length > 0) {
             Array.from(this._listeners).forEach((listener) => {
-              listener({});
+              listener(changes, area);
             });
           }
 
