@@ -36,6 +36,8 @@ const mockSyncStorage: Record<string, any> = {
 
 const browser = new MockBrowser({
   withStorage: {
+    local: {},
+    session: {},
     sync: mockSyncStorage,
   },
 });
