@@ -4,7 +4,9 @@ import { useConfig } from "../store/Config";
 
 export default function HelpRedirect({ text = "contact support" }) {
   const {
-    storage: { preferences },
+    storage: {
+      sync: { preferences },
+    },
   } = useConfig();
 
   const handleClick = () => {

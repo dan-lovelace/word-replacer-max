@@ -111,7 +111,9 @@ function DecoratorInput({
 
 export default function ReplacementStyles() {
   const {
-    storage: { replacementStyle },
+    storage: {
+      sync: { replacementStyle },
+    },
   } = useConfig();
   const language = useLanguage();
   const { showToast } = useToast();

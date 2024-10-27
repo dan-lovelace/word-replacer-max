@@ -13,7 +13,9 @@ export default function ContactSupportLink({
   style,
 }: ContactSupportLinkProps) {
   const {
-    storage: { preferences },
+    storage: {
+      sync: { preferences },
+    },
   } = useConfig();
 
   const handleClick = () => {

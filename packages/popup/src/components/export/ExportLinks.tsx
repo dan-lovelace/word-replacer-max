@@ -15,7 +15,9 @@ import { useToast } from "../alert/useToast";
 export default function ExportLink() {
   const [isClipboardCopyAllowed, setIsClipboardCopyAllowed] = useState(false);
   const {
-    storage: { exportLinks },
+    storage: {
+      sync: { exportLinks },
+    },
   } = useConfig();
   const language = useLanguage();
   const { showToast } = useToast();

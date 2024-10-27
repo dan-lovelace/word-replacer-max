@@ -12,7 +12,9 @@ import Chip from "./Chip";
 export default function DomainInput() {
   const [value, setValue] = useState("");
   const {
-    storage: { domainList, preferences },
+    storage: {
+      sync: { domainList, preferences },
+    },
   } = useConfig();
   const { showToast } = useToast();
 

@@ -6,7 +6,9 @@ import { useConfig } from "../store/Config";
 
 export default function HomePage() {
   const {
-    storage: { preferences },
+    storage: {
+      sync: { preferences },
+    },
   } = useConfig();
 
   return (

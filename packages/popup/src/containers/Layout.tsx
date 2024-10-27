@@ -61,7 +61,9 @@ export default function Layout({ children }: LayoutProps) {
   const { currentUser } = useAuth();
   const {
     isPoppedOut,
-    storage: { preferences },
+    storage: {
+      sync: { preferences },
+    },
   } = useConfig();
   const language = useLanguage();
   const notificationMessage = useMemo(getNotificationMessage, []);

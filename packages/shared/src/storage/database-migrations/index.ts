@@ -1,16 +1,21 @@
 import { merge } from "ts-deepmerge";
 
 import { DEFAULT_REPLACEMENT_STYLE } from "@worm/shared/src/replace/lib/style";
-import { Matcher, Storage, StorageVersion, storageVersions } from "@worm/types";
+import {
+  Matcher,
+  StorageVersion,
+  storageVersions,
+  SyncStorage,
+} from "@worm/types";
 
 import { STORAGE_MATCHER_PREFIX } from "../../browser";
 import { logDebug } from "../../logging";
 import { DEFAULT_REPLACEMENT_SUGGEST } from "../../replace/lib/suggest";
 
-import { BASELINE_STORAGE_VERSION, CURRENT_STORAGE_VERSION } from "..";
+import { BASELINE_STORAGE_VERSION, CURRENT_STORAGE_VERSION } from "../";
 import { storageGet, storageSet } from "../api";
 
-export type MigrateFn = (storage: Storage) => Storage;
+export type MigrateFn = (storage: SyncStorage) => SyncStorage;
 
 export type Migrations = {
   [major: number]: { [minor: number]: { [patch: number]: MigrateFn } };
@@ -35,7 +40,7 @@ export const MIGRATIONS: Migrations = {
        * storage property and updates all existing matchers.
        */
       0: (storage) => {
-        const updatedValues: Storage = {
+        const updatedValues: SyncStorage = {
           replacementStyle: DEFAULT_REPLACEMENT_STYLE,
         };
         const merged = merge(storage, updatedValues);
@@ -57,7 +62,7 @@ export const MIGRATIONS: Migrations = {
        * property with default values.
        */
       1: (storage) => {
-        const updatedValues: Storage = {
+        const updatedValues: SyncStorage = {
           replacementSuggest: DEFAULT_REPLACEMENT_SUGGEST,
         };
         const merged = merge(storage, updatedValues);

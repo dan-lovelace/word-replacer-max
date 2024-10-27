@@ -3,31 +3,34 @@ import { useContext, useEffect, useMemo, useState } from "preact/hooks";
 
 import {
   browser,
+  convertStoredMatchers,
   POPUP_POPPED_OUT_PARAMETER_KEY,
 } from "@worm/shared/src/browser";
-import { getStorageProvider, storageGetByKeys } from "@worm/shared/src/storage";
-import { SessionStorage, Storage } from "@worm/types";
+import { Storage, StorageChange, StorageProvider } from "@worm/types";
 
+import { getUpdatedStorage } from "../lib/storage";
 import { PreactChildren } from "../lib/types";
 
 type ConfigStore = {
   isPoppedOut: boolean;
-  sessionStorage: SessionStorage;
   storage: Storage;
 };
 
 const storeDefaults: ConfigStore = {
   isPoppedOut: false,
-  sessionStorage: {
-    authAccessToken: undefined,
-    authClockDrift: undefined,
-    authIdToken: undefined,
-    authLastAuthUser: undefined,
-    authRefreshToken: undefined,
-  },
   storage: {
-    domainList: [],
-    matchers: [],
+    local: {},
+    session: {
+      authAccessToken: undefined,
+      authClockDrift: undefined,
+      authIdToken: undefined,
+      authLastAuthUser: undefined,
+      authRefreshToken: undefined,
+    },
+    sync: {
+      domainList: [],
+      matchers: [],
+    },
   },
 };
 
@@ -37,9 +40,6 @@ export const useConfig = () => useContext(Config);
 
 export function ConfigProvider({ children }: { children: PreactChildren }) {
   const [initialized, setInitialized] = useState(false);
-  const [sessionStorage, setSessionStorage] = useState<SessionStorage>(
-    storeDefaults.sessionStorage
-  );
   const [storage, setStorage] = useState<Storage>(storeDefaults.storage);
 
   const isPoppedOut = useMemo(
@@ -51,11 +51,33 @@ export function ConfigProvider({ children }: { children: PreactChildren }) {
   );
 
   useEffect(() => {
-    const updateStorage = async () => {
-      setSessionStorage(
-        (await getStorageProvider("session").get()) as SessionStorage
+    const updateStorage = async (
+      changes?: Record<string, StorageChange>,
+      areaName?: string
+    ) => {
+      if (changes === undefined) {
+        // Initial load - get all storage areas
+        const local = await browser.storage.local.get();
+        const session = await browser.storage.session.get();
+        const sync = await browser.storage.sync.get();
+
+        const syncMatchers = convertStoredMatchers(sync);
+
+        setStorage({
+          local,
+          session,
+          sync: {
+            ...sync,
+            matchers: syncMatchers,
+          },
+        });
+
+        return;
+      }
+
+      setStorage((prevStorage) =>
+        getUpdatedStorage(prevStorage, changes, areaName as StorageProvider)
       );
-      setStorage(await storageGetByKeys());
     };
 
     updateStorage().then(() => {
@@ -74,7 +96,7 @@ export function ConfigProvider({ children }: { children: PreactChildren }) {
   }
 
   return (
-    <Config.Provider value={{ isPoppedOut, sessionStorage, storage }}>
+    <Config.Provider value={{ isPoppedOut, storage }}>
       {children}
     </Config.Provider>
   );

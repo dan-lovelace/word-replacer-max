@@ -1,7 +1,7 @@
+import { Storage as BrowserStorage } from "webextension-polyfill";
 import { z } from "zod";
 
-import { ToneOption } from "./api";
-import { ReplacementSuggestion } from "./replacement";
+import { RecentSuggestions } from "./replacement";
 
 const identificationErrorMessages: Record<IdentificationErrorName, string> = {
   MissingTokens: "Update requires tokens",
@@ -42,6 +42,10 @@ export class IdentificationError extends Error {
 }
 
 type IdentificationErrorName = "MissingTokens" | "Standard" | "UserNotLoggedIn";
+
+export type LocalStorage = Partial<{
+  recentSuggestions: RecentSuggestions;
+}>;
 
 export type Matcher = {
   active: boolean;
@@ -91,14 +95,9 @@ export type ReplacementStyleOption =
   | "strikethrough"
   | "underline";
 
-export type ReplacementSuggest = Partial<{
+export type ReplacementSuggest = {
   active: boolean;
-  lastSuggestions: {
-    suggestions?: ReplacementSuggestion[];
-    tone?: ToneOption;
-  };
-  selectedTone: ToneOption;
-}>;
+};
 
 export type SchemaExport = SchemaVersion & {
   version: SchemaVersionType;
@@ -138,15 +137,36 @@ export type SignInStatusState =
   | "signingOut"
   | "unknown";
 
-export type Storage = Partial<{
-  [key in StorageKey]: StorageKeyMap[key];
-}> & {
-  storageVersion?: StorageVersion;
+export type Storage = {
+  local: LocalStorage;
+  session: SessionStorage;
+  sync: SyncStorage;
 };
 
-export type StorageKey = keyof StorageKeyMap;
+export type StorageArea = BrowserStorage.StorageArea;
 
-export type StorageKeyMap = {
+export type StorageChange = BrowserStorage.StorageChange;
+
+export type StorageChangeOf<T> = {
+  newValue?: T;
+  oldValue?: T;
+};
+
+export type SyncStorageKey = keyof SyncStorage;
+
+export type StorageProvider = keyof Pick<
+  BrowserStorage.Static,
+  "local" | "session" | "sync"
+>;
+
+export type StorageSetOptions = {
+  onError?: (message: string) => void;
+  onSuccess?: () => void;
+};
+
+export type StorageVersion = (typeof storageVersions)[number];
+
+export type SyncStorage = Partial<{
   domainList: string[];
   exportLinks: ExportLink[];
   matchers: Matcher[];
@@ -159,16 +179,7 @@ export type StorageKeyMap = {
   replacementStyle: ReplacementStyle;
   replacementSuggest: ReplacementSuggest;
   storageVersion: StorageVersion;
-};
-
-export type StorageProvider = "local" | "session" | "sync";
-
-export type StorageSetOptions = {
-  onError?: (message: string) => void;
-  onSuccess?: () => void;
-};
-
-export type StorageVersion = (typeof storageVersions)[number];
+}>;
 
 export type SystemColor =
   | "black"

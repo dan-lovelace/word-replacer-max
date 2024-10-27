@@ -1,8 +1,8 @@
 import { expect } from "@jest/globals";
 
 import {
-  matchersToStorage,
   matchersFromStorage,
+  matchersToStorage,
 } from "@worm/shared/src/browser/matchers";
 import { Matcher } from "@worm/types";
 
@@ -51,59 +51,6 @@ describe("matchersFromStorage", () => {
         queries: ["This.", "literally"],
         queryPatterns: ["case", "wholeWord"],
         replacement: "",
-      },
-    };
-
-    expect(matchersFromStorage(testStorage)).toMatchSnapshot();
-  });
-
-  it("returns legacy matchers from storage", () => {
-    const testStorage = {
-      matchers: [
-        {
-          active: true,
-          identifier: "b7fce47e-58e8-4409-adf4-08da053e713d",
-          queries: ["my jaw dropped", "I was shocked"],
-          queryPatterns: [],
-          replacement: "I was surprised",
-        },
-        {
-          active: true,
-          identifier: "34eb8c78-402e-4006-b5a9-b1b15af7a037",
-          queries: ["This.", "literally"],
-          queryPatterns: ["case", "wholeWord"],
-          replacement: "",
-        },
-      ],
-    };
-
-    expect(matchersFromStorage(testStorage)).toMatchSnapshot();
-  });
-
-  it("supports a mix of legacy and new matcher formats", () => {
-    const testStorage = {
-      matchers: [
-        {
-          active: true,
-          identifier: "b7fce47e-58e8-4409-adf4-08da053e713d",
-          queries: ["my jaw dropped", "I was shocked"],
-          queryPatterns: [],
-          replacement: "I was surprised",
-        },
-        {
-          active: true,
-          identifier: "34eb8c78-402e-4006-b5a9-b1b15af7a037",
-          queries: ["This.", "literally"],
-          queryPatterns: ["case", "wholeWord"],
-          replacement: "",
-        },
-      ],
-      matcher__1234: {
-        active: true,
-        identifier: "1234",
-        queries: ["Hello"],
-        queryPatterns: ["case", "wholeWord"],
-        replacement: "Hi",
       },
     };
 

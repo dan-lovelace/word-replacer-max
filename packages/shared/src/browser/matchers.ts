@@ -1,10 +1,4 @@
-import { ZodError } from "zod";
-
 import { Matcher } from "@worm/types";
-
-import { logDebug } from "../logging";
-import { validatedMatcher } from "../schemas";
-import { storageRemoveByKeys, storageSetByKeys } from "../storage";
 
 type StorageMatcher = Matcher & {
   sortIndex: number;
@@ -12,57 +6,32 @@ type StorageMatcher = Matcher & {
 
 export const STORAGE_MATCHER_PREFIX = "matcher__";
 
-export function matchersFromStorage(
-  allStorage: Record<string, any>
-): Matcher[] | undefined {
-  const results: Matcher[] = [];
+/**
+ * Translates a flat list of stored matchers to an array. This is a mutational
+ * operation as it removes keys from the storage object whose names begin with
+ * `matcher__`.
+ */
+export const convertStoredMatchers = (allStorage: Record<string, any>) => {
+  const storedMatchers = Object.keys(allStorage).reduce((acc, val) => {
+    const isMatcher = val.startsWith(STORAGE_MATCHER_PREFIX);
 
-  if (Object.prototype.hasOwnProperty.call(allStorage, "matchers")) {
-    /**
-     * NOTE: In this case, the user has matchers stored in a legacy format. We
-     * must convert them to the new structure and remove the old key. This
-     * should not block fetching matchers that already align to the new format
-     * if it fails for any reason, hence the try/catch.
-     */
-    try {
-      const convertedMatchers: Record<string, Matcher> = (
-        allStorage["matchers"] as Matcher[]
-      ).reduce(
-        (acc, val, idx) => ({
-          ...acc,
-          [`${STORAGE_MATCHER_PREFIX}${val.identifier}`]: {
-            ...validatedMatcher.parse(val),
-            sortIndex: idx,
-          },
-        }),
-        {} as Record<string, Matcher>
-      );
+    if (!isMatcher) return acc;
 
-      results.push(...Object.values(convertedMatchers));
+    const matcherValue = allStorage[val];
+    delete allStorage[val];
 
-      storageSetByKeys(convertedMatchers);
-      storageRemoveByKeys(["matchers"]);
-      logDebug("Legacy matchers converted successfully!");
-    } catch (e) {
-      if (e instanceof ZodError) {
-        console.error("Error parsing matcher", e);
-      } else {
-        console.error("Something went wrong", e);
-      }
-    }
-  }
+    return [...acc, matcherValue];
+  }, [] as StorageMatcher[]);
 
-  // convert stored matchers to an array and sort
-  const matchers = Object.keys(allStorage).reduce(
-    (acc, val) =>
-      val.startsWith(STORAGE_MATCHER_PREFIX) ? [...acc, allStorage[val]] : acc,
-    [] as StorageMatcher[]
+  const sorted: Matcher[] = storedMatchers.sort(
+    (a, b) => a.sortIndex - b.sortIndex
   );
-  const sorted = matchers.sort((a, b) => a.sortIndex - b.sortIndex);
 
-  results.push(...sorted);
+  return sorted.length > 0 ? sorted : undefined;
+};
 
-  return results.length > 0 ? results : undefined;
+export function matchersFromStorage(allStorage: Record<string, any>) {
+  return convertStoredMatchers(allStorage);
 }
 
 export function matchersToStorage(

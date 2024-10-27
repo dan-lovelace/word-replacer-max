@@ -13,7 +13,9 @@ import ApiUsage from "./ApiUsage";
 export default function ReplacementSuggestions() {
   const { hasAccess } = useAuth();
   const {
-    storage: { replacementSuggest },
+    storage: {
+      sync: { replacementSuggest },
+    },
   } = useConfig();
 
   const handleActiveChange = (

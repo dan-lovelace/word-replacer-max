@@ -7,7 +7,9 @@ import AddNewRule from "./AddNewRule";
 
 export default function RuleList() {
   const {
-    storage: { matchers },
+    storage: {
+      sync: { matchers },
+    },
   } = useConfig();
 
   if (!Boolean(matchers?.length)) {

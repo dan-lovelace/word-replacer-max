@@ -27,7 +27,9 @@ export default function ExportButton({
   const [isLoading, setIsLoading] = useState(false);
 
   const {
-    storage: { exportLinks, matchers },
+    storage: {
+      sync: { exportLinks, matchers },
+    },
   } = useConfig();
   const language = useLanguage();
   const selectedCount = useMemo(

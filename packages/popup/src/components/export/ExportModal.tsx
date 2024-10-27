@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "preact/hooks";
-import type { JSXInternal } from "preact/src/jsx";
+import { JSXInternal } from "preact/src/jsx";
 
 import { Matcher } from "@worm/types";
 
@@ -38,7 +38,9 @@ export default function ExportModal() {
   const [selectedRules, setSelectedRules] = useState<SelectedRule[]>();
 
   const {
-    storage: { matchers },
+    storage: {
+      sync: { matchers },
+    },
   } = useConfig();
   const hideModalButtonRef = useRef<HTMLButtonElement>(null);
 

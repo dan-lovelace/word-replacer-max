@@ -11,7 +11,9 @@ import FileInput from "../FileInput";
 
 export default function FileImport() {
   const {
-    storage: { matchers },
+    storage: {
+      sync: { matchers },
+    },
   } = useConfig();
   const language = useLanguage();
   const { showToast } = useToast();

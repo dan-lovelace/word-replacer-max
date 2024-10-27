@@ -6,10 +6,12 @@ export type ApiSuggestRequest = {
   tone: ToneOption;
 };
 
-export type ApiSuggestResponse = ApiResponse<{
+export type ApiSuggestResponse = ApiResponse<ApiSuggestResponseData>;
+
+export type ApiSuggestResponseData = {
   suggestions: ReplacementSuggestion[];
   tone: ToneOption;
-}>;
+};
 
 export type ToneOption =
   | "casual"

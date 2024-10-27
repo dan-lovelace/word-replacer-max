@@ -6,7 +6,7 @@ import {
   storageGetByKeys,
   storageSetByKeys,
 } from "@worm/shared/src/storage";
-import { Matcher, Storage } from "@worm/types";
+import { Matcher, SyncStorage } from "@worm/types";
 
 export async function initializeStorage() {
   const { storageVersion } = await storageGetByKeys(["storageVersion"]);
@@ -25,7 +25,7 @@ export async function initializeStorage() {
       "preferences",
     ]);
 
-  const initialStorage: Storage = {};
+  const initialStorage: SyncStorage = {};
 
   if (domainList === undefined) {
     initialStorage.domainList = ["docs.google.com", "github.com"];

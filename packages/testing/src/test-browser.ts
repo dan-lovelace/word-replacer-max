@@ -1,5 +1,5 @@
 import { DEFAULT_REPLACEMENT_STYLE } from "@worm/shared/src/replace/lib/style";
-import { Storage } from "@worm/types";
+import { Storage, SyncStorage } from "@worm/types";
 
 import MockBrowser from "./mock-webextension-polyfill";
 
@@ -9,7 +9,7 @@ declare global {
   }
 }
 
-const mockSyncStorage: Storage = {
+const mockSyncStorage: SyncStorage = {
   domainList: [],
   matchers: [
     {

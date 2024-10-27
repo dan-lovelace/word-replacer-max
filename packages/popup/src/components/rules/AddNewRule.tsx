@@ -14,7 +14,9 @@ type AddNewRuleProps = {
 
 export default function AddNewRule({ children, className }: AddNewRuleProps) {
   const {
-    storage: { matchers },
+    storage: {
+      sync: { matchers },
+    },
   } = useConfig();
   const { showToast } = useToast();
 

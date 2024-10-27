@@ -1,9 +1,9 @@
 import {
   Matcher,
-  Storage,
-  StorageKey,
   StorageProvider,
   StorageSetOptions,
+  SyncStorage,
+  SyncStorageKey,
 } from "@worm/types";
 
 import { browser, matchersFromStorage, matchersToStorage } from "../browser";
@@ -22,12 +22,12 @@ export function getStorageProvider(providerName: StorageProvider = "sync") {
   return browser.storage[providerName];
 }
 
-export async function storageGetByKeys<Key extends StorageKey>(keys?: Key[]) {
+export async function storageGetByKeys<T extends SyncStorageKey>(keys?: T[]) {
   // fetch all storage keys regardless of parameters; we'll filter the results
   const allStorage = await storageGet();
   const queryKeys = [...(keys ?? [])];
 
-  let results: Storage = {};
+  let results: SyncStorage = {};
 
   if (!queryKeys.length) {
     results = allStorage;
@@ -48,14 +48,14 @@ export async function storageGetByKeys<Key extends StorageKey>(keys?: Key[]) {
   return results;
 }
 
-export function storageRemoveByKeys<Key extends StorageKey | string>(
+export function storageRemoveByKeys<Key extends SyncStorageKey | string>(
   keys: Key[]
 ) {
   return storageRemove(keys);
 }
 
 export async function storageSetByKeys(
-  keys: Storage,
+  keys: SyncStorage,
   options?: StorageSetOptions
 ) {
   let storageMatchers: Record<string, Matcher> = {};

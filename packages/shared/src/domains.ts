@@ -1,14 +1,14 @@
-import { Storage } from "@worm/types";
+import { SyncStorage } from "@worm/types";
 
-function locationMatchesDomainList(domainList: Storage["domainList"]) {
+function locationMatchesDomainList(domainList: SyncStorage["domainList"]) {
   return Boolean(
     domainList?.some((domain) => window.location.hostname.includes(domain))
   );
 }
 
 export function isDomainAllowed(
-  domainList: Storage["domainList"],
-  preferences: Storage["preferences"]
+  domainList: SyncStorage["domainList"],
+  preferences: SyncStorage["preferences"]
 ) {
   if (!domainList || domainList.length === 0) {
     return true;

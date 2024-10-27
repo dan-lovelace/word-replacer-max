@@ -4,7 +4,7 @@ import {
   STYLE_ELEMENT_ID,
 } from "@worm/shared/src/replace/lib/style";
 import { storageGetByKeys } from "@worm/shared/src/storage";
-import { Storage } from "@worm/types";
+import { SyncStorage } from "@worm/types";
 
 type Cacheable<T> = {
   expires: number;
@@ -12,7 +12,7 @@ type Cacheable<T> = {
 };
 
 type RenderCache = {
-  storage: Cacheable<Storage>;
+  storage: Cacheable<SyncStorage>;
   styleElement: Cacheable<HTMLStyleElement>;
 };
 
