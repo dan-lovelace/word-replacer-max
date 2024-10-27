@@ -12,7 +12,7 @@ type TStorage = Partial<Browser["storage"]>;
 
 type TStorageArea = keyof Pick<TStorage, "local" | "session" | "sync">;
 
-type TStorageInitialValues<T> = Record<TStorageArea, T>;
+type TStorageInitialValues<T> = Partial<Record<TStorageArea, T>>;
 
 type TWindows = Partial<Browser["windows"]>;
 

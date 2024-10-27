@@ -9,23 +9,6 @@ const { colorSelect, exportModal, replacementStyles } = s;
 
 const MODAL_WAIT_PERIOD_MS = 500;
 
-const generateMatchers = () => ({
-  matcher__1234: {
-    active: true,
-    identifier: "1234",
-    queries: ["my jaw dropped", "I was shocked"],
-    queryPatterns: [],
-    replacement: "I was surprised",
-  },
-  matcher__5678: {
-    active: true,
-    identifier: "5678",
-    queries: ["This."],
-    queryPatterns: ["case", "wholeWord"],
-    replacement: " ",
-  },
-});
-
 describe("user interface", () => {
   beforeEach(() => {
     cy.visitWithStorage();
@@ -162,7 +145,6 @@ describe("with storage", () => {
     it("allows user to enable text decorators", () => {
       cy.visitWithStorage({
         sync: {
-          ...generateMatchers(),
           preferences: {
             activeTab: "options",
           },
@@ -185,7 +167,6 @@ describe("with storage", () => {
     it("allows user to disable text decorators", () => {
       cy.visitWithStorage({
         sync: {
-          ...generateMatchers(),
           preferences: {
             activeTab: "options",
           },
@@ -211,7 +192,6 @@ describe("with storage", () => {
     it("allows user to enable colors", () => {
       cy.visitWithStorage({
         sync: {
-          // ...generateMatchers(),
           preferences: {
             activeTab: "options",
           },

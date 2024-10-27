@@ -1,5 +1,3 @@
-import { merge } from "ts-deepmerge";
-
 import { STORAGE_MATCHER_PREFIX } from "@worm/shared/src/browser/matchers";
 
 import { selectors as s } from "../selectors";
@@ -45,12 +43,13 @@ Cypress.Commands.add(
 
         expect(syncSet).to.not.eq(undefined);
 
-        const params = merge(defaultStore, {});
+        const params = { ...defaultStore };
 
-        Object.keys(overrides).forEach((key) => {
-          params[key as keyof typeof params] =
-            overrides[key as keyof typeof overrides];
-        });
+        (Object.keys(overrides) as (keyof VisitWithStorageParams)[]).forEach(
+          (key) => {
+            params[key as keyof typeof params] = overrides[key];
+          }
+        );
 
         /**
          * Check to see if `sync` overrides have been provided. If so, we need
@@ -58,10 +57,11 @@ Cypress.Commands.add(
          * them.
          */
         if (Object.prototype.hasOwnProperty.call(overrides, "sync")) {
-          const storedMatchers: Record<string, any> | undefined =
+          const syncStorage: Record<string, any> | undefined =
             await browser.storage.sync?.get();
-          const keysToDelete = storedMatchers
-            ? Object.keys(storedMatchers).filter((key) =>
+
+          const keysToDelete = syncStorage
+            ? Object.keys(syncStorage).filter((key) =>
                 key.startsWith(STORAGE_MATCHER_PREFIX)
               )
             : [];
@@ -69,7 +69,7 @@ Cypress.Commands.add(
           await browser.storage.sync?.remove(keysToDelete);
         }
 
-        syncSet?.(params.sync);
+        await syncSet?.(params.sync);
       });
     });
   }
