@@ -99,6 +99,172 @@ exports[`getUpdatedStorage local area updates an existing value 1`] = `
 }
 `;
 
+exports[`getUpdatedStorage multiple storage areas handles changes across all storage areas simultaneously 1`] = `
+{
+  "local": {
+    "recentSuggestions": {
+      "apiResponseData": {
+        "suggestions": [
+          {
+            "text": "lorem",
+          },
+        ],
+        "tone": "neutral",
+      },
+      "identifier": "4567",
+      "selectedTone": "neutral",
+    },
+  },
+  "session": {
+    "authAccessToken": "ZZZZ",
+    "authClockDrift": "10",
+    "authIdToken": "XXXX",
+    "authLastAuthUser": "test@wordreplacermax.com",
+    "authRefreshToken": "XXXX",
+  },
+  "sync": {
+    "matchers": [
+      {
+        "active": true,
+        "identifier": "matcher__1234",
+        "queries": [
+          "lorem",
+        ],
+        "queryPatterns": [],
+        "replacement": "sit",
+      },
+      {
+        "active": true,
+        "identifier": "matcher__4567",
+        "queries": [
+          "dolor",
+        ],
+        "queryPatterns": [],
+        "replacement": "ipsum",
+      },
+    ],
+  },
+}
+`;
+
+exports[`getUpdatedStorage multiple storage areas handles complex matcher updates while modifying other storage areas 1`] = `
+{
+  "local": {
+    "recentSuggestions": {
+      "apiResponseData": {
+        "suggestions": [
+          {
+            "text": "lorem",
+          },
+        ],
+        "tone": "neutral",
+      },
+      "identifier": "1234",
+      "selectedTone": "professional",
+    },
+  },
+  "session": {
+    "authAccessToken": "XXXX",
+    "authClockDrift": "10",
+    "authIdToken": "XXXX",
+    "authLastAuthUser": "test-changed@wordreplacermax.com",
+    "authRefreshToken": "XXXX",
+  },
+  "sync": {
+    "matchers": [
+      {
+        "active": false,
+        "identifier": "matcher__1234",
+        "queries": [
+          "updated-lorem",
+        ],
+        "queryPatterns": [],
+        "replacement": "sit",
+      },
+      {
+        "active": true,
+        "identifier": "matcher__4567",
+        "queries": [
+          "dolor",
+        ],
+        "queryPatterns": [],
+        "replacement": "updated-ipsum",
+      },
+    ],
+  },
+}
+`;
+
+exports[`getUpdatedStorage multiple storage areas handles empty changes in some areas while updating others 1`] = `
+{
+  "local": {
+    "recentSuggestions": {
+      "matcher__1234": {
+        "apiResponseData": {
+          "suggestions": [
+            {
+              "text": "lorem",
+            },
+          ],
+          "tone": "neutral",
+        },
+        "identifier": "1234",
+        "selectedTone": "neutral",
+      },
+    },
+  },
+  "session": {
+    "authAccessToken": "ZZZZ",
+    "authClockDrift": "10",
+    "authIdToken": "XXXX",
+    "authLastAuthUser": "test@wordreplacermax.com",
+    "authRefreshToken": "XXXX",
+  },
+  "sync": {
+    "matchers": [
+      {
+        "active": true,
+        "identifier": "matcher__1234",
+        "queries": [
+          "lorem",
+        ],
+        "queryPatterns": [],
+        "replacement": "sit",
+      },
+    ],
+  },
+}
+`;
+
+exports[`getUpdatedStorage multiple storage areas handles multiple changes within each storage area 1`] = `
+{
+  "local": {
+    "new-local-key": "new-value",
+  },
+  "session": {
+    "authAccessToken": "ZZZZ",
+    "authClockDrift": "10",
+    "authLastAuthUser": "test@wordreplacermax.com",
+    "authRefreshToken": "XXXX",
+    "newSessionKey": "session-value",
+  },
+  "sync": {
+    "matchers": [
+      {
+        "active": true,
+        "identifier": "matcher__4567",
+        "queries": [
+          "dolor",
+        ],
+        "queryPatterns": [],
+        "replacement": "ipsum",
+      },
+    ],
+    "storageVersion": "2.0.0",
+  },
+}
+`;
+
 exports[`getUpdatedStorage session area adds a single value when no other keys exist 1`] = `
 {
   "local": {},

@@ -532,4 +532,236 @@ describe("getUpdatedStorage", () => {
       });
     });
   });
+
+  describe("multiple storage areas", () => {
+    it("handles changes across all storage areas simultaneously", () => {
+      const prevStorage: Storage = {
+        local: {
+          recentSuggestions: generateRecentSuggestions(),
+        },
+        session: generateSessionStorage(),
+        sync: {
+          matchers: [TEST_MATCHER_1],
+        },
+      };
+
+      const oldLocalValue = defaultRecentSuggestions[TEST_MATCHER_IDENTIFIER_1];
+      const withLocalChanges = getUpdatedStorage(
+        prevStorage,
+        {
+          recentSuggestions: {
+            newValue: {
+              ...oldLocalValue,
+              identifier: "4567",
+            },
+            oldValue: oldLocalValue,
+          },
+        },
+        "local"
+      );
+
+      const finalResult = getUpdatedStorage(
+        getUpdatedStorage(
+          withLocalChanges,
+          {
+            authAccessToken: {
+              newValue: "ZZZZ",
+              oldValue: "XXXX",
+            },
+          },
+          "session"
+        ),
+        {
+          [TEST_MATCHER_IDENTIFIER_2]: {
+            newValue: TEST_MATCHER_2,
+            oldValue: undefined,
+          },
+        },
+        "sync"
+      );
+
+      expect(finalResult).toMatchSnapshot();
+    });
+
+    it("handles multiple changes within each storage area", () => {
+      const prevStorage: Storage = {
+        local: {
+          recentSuggestions: generateRecentSuggestions(),
+        },
+        session: generateSessionStorage(),
+        sync: {
+          matchers: [TEST_MATCHER_1],
+          storageVersion: "1.0.0",
+        },
+      };
+
+      const withLocalChanges = getUpdatedStorage(
+        prevStorage,
+        {
+          recentSuggestions: {
+            newValue: undefined,
+            oldValue: generateRecentSuggestions(),
+          },
+          "new-local-key": {
+            newValue: "new-value",
+            oldValue: undefined,
+          },
+        },
+        "local"
+      );
+
+      const withSessionChanges = getUpdatedStorage(
+        withLocalChanges,
+        {
+          authAccessToken: {
+            newValue: "ZZZZ",
+            oldValue: "XXXX",
+          },
+          authIdToken: {
+            newValue: undefined,
+            oldValue: "XXXX",
+          },
+          newSessionKey: {
+            newValue: "session-value",
+            oldValue: undefined,
+          },
+        },
+        "session"
+      );
+
+      const finalResult = getUpdatedStorage(
+        withSessionChanges,
+        {
+          [TEST_MATCHER_IDENTIFIER_1]: {
+            newValue: undefined,
+            oldValue: TEST_MATCHER_1,
+          },
+          [TEST_MATCHER_IDENTIFIER_2]: {
+            newValue: TEST_MATCHER_2,
+            oldValue: undefined,
+          },
+          storageVersion: {
+            newValue: "2.0.0",
+            oldValue: "1.0.0",
+          },
+        },
+        "sync"
+      );
+
+      expect(finalResult).toMatchSnapshot();
+    });
+
+    it("handles empty changes in some areas while updating others", () => {
+      const prevStorage: Storage = {
+        local: {
+          recentSuggestions: generateRecentSuggestions(),
+        },
+        session: generateSessionStorage(),
+        sync: {
+          matchers: [TEST_MATCHER_1],
+        },
+      };
+
+      const withLocalChanges = getUpdatedStorage(
+        prevStorage,
+        {
+          someKey: {
+            newValue: undefined,
+            oldValue: undefined,
+          },
+        },
+        "local"
+      );
+
+      const withSessionChanges = getUpdatedStorage(
+        withLocalChanges,
+        {
+          authAccessToken: {
+            newValue: "ZZZZ",
+            oldValue: "XXXX",
+          },
+        },
+        "session"
+      );
+
+      const finalResult = getUpdatedStorage(
+        withSessionChanges,
+        {
+          anotherKey: {
+            newValue: undefined,
+            oldValue: undefined,
+          },
+        },
+        "sync"
+      );
+
+      expect(finalResult).toMatchSnapshot();
+    });
+
+    it("handles complex matcher updates while modifying other storage areas", () => {
+      const prevStorage: Storage = {
+        local: {
+          recentSuggestions: generateRecentSuggestions(),
+        },
+        session: generateSessionStorage(),
+        sync: {
+          matchers: [TEST_MATCHER_1, TEST_MATCHER_2],
+        },
+      };
+
+      const oldLocalValue = defaultRecentSuggestions[TEST_MATCHER_IDENTIFIER_1];
+      const withLocalChanges = getUpdatedStorage(
+        prevStorage,
+        {
+          recentSuggestions: {
+            newValue: {
+              ...oldLocalValue,
+              selectedTone: "professional",
+            },
+            oldValue: oldLocalValue,
+          },
+        },
+        "local"
+      );
+
+      const withSessionChanges = getUpdatedStorage(
+        withLocalChanges,
+        {
+          authLastAuthUser: {
+            newValue: "test-changed@wordreplacermax.com",
+            oldValue: "test@wordreplacermax.com",
+          },
+        },
+        "session"
+      );
+
+      const updatedMatcher1 = {
+        ...TEST_MATCHER_1,
+        active: false,
+        queries: ["updated-lorem"],
+      };
+
+      const updatedMatcher2 = {
+        ...TEST_MATCHER_2,
+        replacement: "updated-ipsum",
+      };
+
+      const finalResult = getUpdatedStorage(
+        withSessionChanges,
+        {
+          [TEST_MATCHER_IDENTIFIER_1]: {
+            newValue: updatedMatcher1,
+            oldValue: TEST_MATCHER_1,
+          },
+          [TEST_MATCHER_IDENTIFIER_2]: {
+            newValue: updatedMatcher2,
+            oldValue: TEST_MATCHER_2,
+          },
+        },
+        "sync"
+      );
+
+      expect(finalResult).toMatchSnapshot();
+    });
+  });
 });
