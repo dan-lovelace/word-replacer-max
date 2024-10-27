@@ -211,7 +211,7 @@ describe("with storage", () => {
     it("allows user to enable colors", () => {
       cy.visitWithStorage({
         sync: {
-          ...generateMatchers(),
+          // ...generateMatchers(),
           preferences: {
             activeTab: "options",
           },
