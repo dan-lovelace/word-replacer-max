@@ -6,7 +6,7 @@ import { ApiSuggestResponseData, ToneOption } from "./api";
  * responses so we can remember the results so users don't need to re-generate
  * them after closing the popup.
  */
-export type RecentSuggestions = {
+export type RecentSuggestions = Partial<{
   [key: string]: Pick<Matcher, "identifier"> & {
     /**
      * Raw response data from the `POST:suggest` endpoint.
@@ -22,7 +22,7 @@ export type RecentSuggestions = {
      */
     selectedTone: ToneOption;
   };
-};
+}>;
 
 export type ReplacementSuggestion = {
   text: string;

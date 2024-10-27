@@ -36,7 +36,9 @@ export default function RuleRow({
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
 
   const {
-    storage: { preferences },
+    storage: {
+      sync: { preferences },
+    },
   } = useConfig();
   const language = useLanguage();
   const confirmingDeleteRef = useRef<boolean>();

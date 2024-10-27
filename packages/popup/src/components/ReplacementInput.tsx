@@ -9,7 +9,7 @@ import { useMutation } from "@tanstack/react-query";
 import { isReplacementEmpty } from "@worm/shared";
 import { getApiEndpoint } from "@worm/shared/src/api";
 import { DEFAULT_TONE_OPTION } from "@worm/shared/src/replace/lib/suggest";
-import { storageSetByKeys } from "@worm/shared/src/storage";
+import { getStorageProvider, storageSetByKeys } from "@worm/shared/src/storage";
 import {
   ApiResponse,
   ApiSuggestRequest,
@@ -94,11 +94,14 @@ export default function ReplacementInput({
 
   const { hasAccess } = useAuth();
   const {
-    sessionStorage: { authAccessToken },
     storage: {
-      matchers,
-      replacementStyle: globalReplacementStyle,
-      replacementSuggest,
+      local: { recentSuggestions },
+      session: { authAccessToken },
+      sync: {
+        matchers,
+        replacementStyle: globalReplacementStyle,
+        replacementSuggest,
+      },
     },
   } = useConfig();
   const language = useLanguage();
@@ -157,7 +160,8 @@ export default function ReplacementInput({
   const handleReplacementSuggestClick = () => {
     const suggestRequest: ApiSuggestRequest = {
       queries,
-      tone: replacementSuggest?.selectedTone ?? DEFAULT_TONE_OPTION,
+      tone:
+        recentSuggestions?.[identifier]?.selectedTone ?? DEFAULT_TONE_OPTION,
     };
 
     invokeSuggest(suggestRequest, {
@@ -188,20 +192,16 @@ export default function ReplacementInput({
           });
         }
 
-        const newReplacementSuggest = Object.assign({}, replacementSuggest);
+        const newRecentSuggestions = {
+          ...recentSuggestions,
+          [identifier]: {
+            ...recentSuggestions?.[identifier],
+            apiResponseData: response.data,
+          },
+        };
 
-        if (!newReplacementSuggest.lastSuggestions) {
-          newReplacementSuggest.lastSuggestions = {
-            suggestions: [],
-          };
-        }
-
-        newReplacementSuggest.lastSuggestions.suggestions =
-          response.data?.suggestions ?? [];
-        newReplacementSuggest.lastSuggestions.tone = response.data?.tone;
-
-        storageSetByKeys({
-          replacementSuggest: newReplacementSuggest,
+        getStorageProvider("local").set({
+          recentSuggestions: newRecentSuggestions,
         });
       },
     });
@@ -221,13 +221,16 @@ export default function ReplacementInput({
   const handleToneChange = (
     event: JSXInternal.TargetedEvent<HTMLSelectElement, Event>
   ) => {
-    const newReplacementSuggest = Object.assign({}, replacementSuggest);
+    const newRecentSuggestions = {
+      ...recentSuggestions,
+      [identifier]: {
+        ...recentSuggestions?.[identifier],
+        selectedTone: event.currentTarget.value,
+      },
+    };
 
-    newReplacementSuggest.selectedTone = event.currentTarget
-      .value as ToneOption;
-
-    storageSetByKeys({
-      replacementSuggest: newReplacementSuggest,
+    getStorageProvider("local").set({
+      recentSuggestions: newRecentSuggestions,
     });
   };
 
@@ -250,7 +253,7 @@ export default function ReplacementInput({
     replacementSuggest?.active && hasAccess("api:InvokeSuggest");
   const suggestionsData =
     (suggestResponse && suggestResponse.data?.data) ||
-    replacementSuggest?.lastSuggestions;
+    recentSuggestions?.[identifier]?.apiResponseData;
   const suggestionsExist = !!(
     suggestionsData &&
     suggestionsData.suggestions &&
@@ -312,7 +315,10 @@ export default function ReplacementInput({
                     <select
                       className="form-select"
                       id="tone-select"
-                      value={replacementSuggest.selectedTone}
+                      value={
+                        recentSuggestions?.[identifier]?.selectedTone ??
+                        DEFAULT_TONE_OPTION
+                      }
                       onChange={handleToneChange}
                     >
                       <option disabled>Suggestion style</option>
