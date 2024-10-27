@@ -47,7 +47,7 @@ After following the dependency installation instructions above, use the
 For version 2:
 
 ```
-yarn start:2
+NODE_ENV=development yarn start:2
 ```
 
 File changes can be seen in real-time and may require the extension to be
