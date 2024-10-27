@@ -1,3 +1,3 @@
-import { DeepPartial, Storage } from "@worm/types";
+import { DeepPartial, StorageProvider } from "@worm/types";
 
-export type VisitWithStorageParams = DeepPartial<Storage>;
+export type VisitWithStorageParams = DeepPartial<Record<StorageProvider, any>>;

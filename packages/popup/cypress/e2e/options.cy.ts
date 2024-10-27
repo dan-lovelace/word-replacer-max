@@ -9,6 +9,23 @@ const { colorSelect, exportModal, replacementStyles } = s;
 
 const MODAL_WAIT_PERIOD_MS = 500;
 
+const generateMatchers = () => ({
+  matcher__1234: {
+    active: true,
+    identifier: "1234",
+    queries: ["my jaw dropped", "I was shocked"],
+    queryPatterns: [],
+    replacement: "I was surprised",
+  },
+  matcher__5678: {
+    active: true,
+    identifier: "5678",
+    queries: ["This."],
+    queryPatterns: ["case", "wholeWord"],
+    replacement: " ",
+  },
+});
+
 describe("user interface", () => {
   beforeEach(() => {
     cy.visitWithStorage();
@@ -144,12 +161,15 @@ describe("with storage", () => {
   describe("styled replacements", () => {
     it("allows user to enable text decorators", () => {
       cy.visitWithStorage({
-        preferences: {
-          activeTab: "options",
-        },
-        replacementStyle: {
-          active: true,
-          options: ["backgroundColor"],
+        sync: {
+          ...generateMatchers(),
+          preferences: {
+            activeTab: "options",
+          },
+          replacementStyle: {
+            active: true,
+            options: ["backgroundColor"],
+          },
         },
       });
       replacementStyles.textDecorators.boldButton().click();
@@ -164,12 +184,15 @@ describe("with storage", () => {
 
     it("allows user to disable text decorators", () => {
       cy.visitWithStorage({
-        preferences: {
-          activeTab: "options",
-        },
-        replacementStyle: {
-          active: true,
-          options: ["backgroundColor", "bold"],
+        sync: {
+          ...generateMatchers(),
+          preferences: {
+            activeTab: "options",
+          },
+          replacementStyle: {
+            active: true,
+            options: ["backgroundColor", "bold"],
+          },
         },
       });
       replacementStyles.textDecorators.boldButton().click();
@@ -187,12 +210,15 @@ describe("with storage", () => {
 
     it("allows user to enable colors", () => {
       cy.visitWithStorage({
-        preferences: {
-          activeTab: "options",
-        },
-        replacementStyle: {
-          active: true,
-          options: ["backgroundColor"],
+        sync: {
+          ...generateMatchers(),
+          preferences: {
+            activeTab: "options",
+          },
+          replacementStyle: {
+            active: true,
+            options: ["backgroundColor"],
+          },
         },
       });
       replacementStyles.colorInputs.colorCheckbox().click();
@@ -207,12 +233,14 @@ describe("with storage", () => {
 
     it("allows user to disable colors", () => {
       cy.visitWithStorage({
-        preferences: {
-          activeTab: "options",
-        },
-        replacementStyle: {
-          active: true,
-          options: ["backgroundColor"],
+        sync: {
+          preferences: {
+            activeTab: "options",
+          },
+          replacementStyle: {
+            active: true,
+            options: ["backgroundColor"],
+          },
         },
       });
       replacementStyles.colorInputs.backgroundColorCheckbox().click();
@@ -232,12 +260,14 @@ describe("with storage", () => {
 
     it("allows user to choose a system color", () => {
       cy.visitWithStorage({
-        preferences: {
-          activeTab: "options",
-        },
-        replacementStyle: {
-          active: true,
-          options: ["backgroundColor"],
+        sync: {
+          preferences: {
+            activeTab: "options",
+          },
+          replacementStyle: {
+            active: true,
+            options: ["backgroundColor"],
+          },
         },
       });
 
@@ -266,12 +296,14 @@ describe("with storage", () => {
 
     it("allows user to choose a custom color", () => {
       cy.visitWithStorage({
-        preferences: {
-          activeTab: "options",
-        },
-        replacementStyle: {
-          active: true,
-          options: ["backgroundColor"],
+        sync: {
+          preferences: {
+            activeTab: "options",
+          },
+          replacementStyle: {
+            active: true,
+            options: ["backgroundColor"],
+          },
         },
       });
 

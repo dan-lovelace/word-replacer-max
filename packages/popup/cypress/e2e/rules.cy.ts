@@ -10,7 +10,15 @@ describe("tab", () => {
 
     it("allows user to add new rule when zero exist", () => {
       cy.visitWithStorage({
-        matchers: [],
+        sync: {
+          domainList: [],
+          preferences: {
+            activeTab: "rules",
+            domainListEffect: "deny",
+            extensionEnabled: true,
+            focusRule: "",
+          },
+        },
       });
 
       s.ruleRows().should("have.length", 0);
