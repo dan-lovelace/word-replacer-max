@@ -1,4 +1,5 @@
 import { STORAGE_MATCHER_PREFIX } from "@worm/shared/src/browser/matchers";
+import { deepClone } from "@worm/shared/src/objects";
 
 import { selectors as s } from "../selectors";
 import { VisitWithStorageParams } from "../types";
@@ -6,6 +7,8 @@ import { VisitWithStorageParams } from "../types";
 const baseUrl = "http://localhost:5173/popup.html";
 
 const defaultStore: VisitWithStorageParams = {
+  local: {},
+  session: {},
   sync: {
     domainList: [],
     matcher__1234: {
@@ -39,15 +42,15 @@ Cypress.Commands.add(
         s.homePage().should("be.visible");
 
         const browser = $window.TEST_BROWSER;
-        const syncSet = browser.storage?.sync?.set;
+        const storageSync = browser.storage.sync;
 
-        expect(syncSet).to.not.eq(undefined);
+        expect(storageSync).to.not.eq(undefined);
 
-        const params = { ...defaultStore };
+        const store = deepClone(defaultStore);
 
         (Object.keys(overrides) as (keyof VisitWithStorageParams)[]).forEach(
           (key) => {
-            params[key as keyof typeof params] = overrides[key];
+            store[key as keyof typeof store] = overrides[key];
           }
         );
 
@@ -58,7 +61,7 @@ Cypress.Commands.add(
          */
         if (Object.prototype.hasOwnProperty.call(overrides, "sync")) {
           const syncStorage: Record<string, any> | undefined =
-            await browser.storage.sync?.get();
+            await storageSync?.get();
 
           const keysToDelete = syncStorage
             ? Object.keys(syncStorage).filter((key) =>
@@ -66,10 +69,12 @@ Cypress.Commands.add(
               )
             : [];
 
-          await browser.storage.sync?.remove(keysToDelete);
+          await storageSync?.remove(keysToDelete);
         }
 
-        await syncSet?.(params.sync);
+        await browser.storage.local?.set(store.local);
+        await browser.storage.session?.set(store.session);
+        await storageSync?.set(store.sync);
       });
     });
   }
