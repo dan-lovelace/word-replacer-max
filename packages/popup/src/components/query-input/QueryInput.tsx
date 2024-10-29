@@ -154,15 +154,18 @@ export default function QueryInput({
         }}
       >
         <div
-          className={
-            !Boolean(queries.length) ? "shadow-sm rounded" : "shadow-none"
-          }
           style={{
-            transition: "box-shadow 150ms",
+            borderRadius: "var(--bs-border-radius) 0 0 var(--bs-border-radius)",
+            outlineColor: Boolean(queries.length)
+              ? "transparent"
+              : "var(--bs-border-color)",
+            outlineStyle: "solid",
+            outlineWidth: 1,
+            transition: "outline 150ms",
           }}
         >
           <input
-            className="form-control border-0"
+            className="form-control border-0 rounded-end-0"
             disabled={disabled}
             enterkeyhint="enter"
             placeholder="Search for..."

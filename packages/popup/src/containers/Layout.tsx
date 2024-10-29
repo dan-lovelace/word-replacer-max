@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from "preact/hooks";
+import { useEffect, useMemo } from "preact/hooks";
 
 import { cx } from "@worm/shared";
 import {
@@ -12,9 +12,11 @@ import { PopupTab } from "@worm/types";
 
 import { useToast } from "../components/alert/useToast";
 import Button from "../components/button/Button";
-import IconButton from "../components/button/IconButton";
-import DropdownMenu from "../components/menu/DropdownMenu";
+import IconButton, { IconButtonProps } from "../components/button/IconButton";
+import DropdownButton from "../components/menu/DropdownButton";
+import DropdownMenuContainer from "../components/menu/DropdownMenuContainer";
 import MenuItem from "../components/menu/MenuItem";
+import MenuItemContainer from "../components/menu/MenuItemContainer";
 import { useLanguage } from "../lib/language";
 import { getNotificationMessage } from "../lib/routes";
 import { PreactChildren } from "../lib/types";
@@ -67,11 +69,10 @@ export default function Layout({ children }: LayoutProps) {
   } = useConfig();
   const language = useLanguage();
   const notificationMessage = useMemo(getNotificationMessage, []);
-  const layoutRef = useRef<HTMLDivElement>(null);
   const { showToast } = useToast();
 
   useEffect(() => {
-    layoutRef.current?.classList[isPoppedOut ? "add" : "remove"](
+    document.documentElement.classList[isPoppedOut ? "add" : "remove"](
       "layout__expanded"
     );
   }, [isPoppedOut]);
@@ -118,7 +119,7 @@ export default function Layout({ children }: LayoutProps) {
   };
 
   return (
-    <div className="layout" ref={layoutRef}>
+    <div className="layout">
       <div className="d-flex flex-column h-100">
         {notificationMessage && (
           <div className="alert alert-info d-flex gap-2 rounded-0" role="alert">
@@ -173,109 +174,89 @@ export default function Layout({ children }: LayoutProps) {
             )}
           </ul>
           <div className="d-flex align-items-center justify-content-center px-2">
-            <div className="dropdown">
-              <IconButton
-                aria-expanded={false}
-                className={cx(!currentUser && "text-primary")}
-                data-bs-toggle="dropdown"
-                icon={currentUser ? "account_circle" : "person"}
-                style={{
+            <DropdownButton<IconButtonProps>
+              buttonProps={{
+                className: cx(!currentUser && "text-primary"),
+                icon: currentUser ? "account_circle" : "person",
+                style: {
                   transition: "color 150ms",
-                }}
-              />
-              <DropdownMenu>
-                {currentUser ? (
-                  <>
-                    <li onClick={(e) => e.stopPropagation()}>
-                      <div
-                        aria-disabled={true}
-                        className="dropdown-item pe-none"
-                      >
-                        <div className="fs-sm">Signed in as</div>
-                        <div className="fw-bold text-truncate">
-                          <code>{currentUser.email}</code>
+                },
+              }}
+              Component={IconButton}
+              menuContent={
+                <>
+                  {currentUser ? (
+                    <>
+                      <MenuItemContainer className="border-bottom">
+                        <div>
+                          <div className="fs-sm">Signed in as</div>
+                          <div className="fw-bold text-truncate">
+                            <code>{currentUser.email}</code>
+                          </div>
                         </div>
-                      </div>
-                    </li>
-                    <li>
-                      <hr className="dropdown-divider" />
-                    </li>
-                    <li>
-                      <Button
-                        className="dropdown-item"
-                        onClick={handleSignOutClick}
-                      >
-                        <MenuItem icon="logout">Sign out</MenuItem>
-                      </Button>
-                    </li>
-                  </>
-                ) : (
-                  <>
-                    <li
-                      className="bg-warning"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <div
-                        aria-disabled={true}
-                        className={cx(
-                          "dropdown-item pe-none",
-                          "mb-2 mt-n2 py-2",
-                          "fw-bold"
-                        )}
-                      >
+                      </MenuItemContainer>
+                      <DropdownMenuContainer>
+                        <MenuItem
+                          startIcon="logout"
+                          onClick={handleSignOutClick}
+                        >
+                          Sign out
+                        </MenuItem>
+                      </DropdownMenuContainer>
+                    </>
+                  ) : (
+                    <>
+                      <MenuItemContainer className="border-bottom bg-warning fw-bold">
                         You're missing out on premium features
-                      </div>
-                    </li>
-                    <li>
-                      <a
-                        className="dropdown-item"
-                        href={`${envConfig.VITE_SSM_WEBAPP_ORIGIN}/signup`}
-                        target="_blank"
-                      >
-                        <MenuItem icon="app_registration">
+                      </MenuItemContainer>
+                      <DropdownMenuContainer>
+                        <MenuItem
+                          linkProps={{
+                            href: `${envConfig.VITE_SSM_WEBAPP_ORIGIN}/signup`,
+                            target: "_blank",
+                          }}
+                          startIcon="app_registration"
+                        >
                           Create an account
                         </MenuItem>
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        className="dropdown-item"
-                        href={`${envConfig.VITE_SSM_WEBAPP_ORIGIN}/login`}
-                        target="_blank"
-                      >
-                        <MenuItem icon="login">Log in</MenuItem>
-                      </a>
-                    </li>
-                  </>
-                )}
-              </DropdownMenu>
-            </div>
+                        <MenuItem
+                          linkProps={{
+                            href: `${envConfig.VITE_SSM_WEBAPP_ORIGIN}/login`,
+                            target: "_blank",
+                          }}
+                          startIcon="login"
+                        >
+                          Log in
+                        </MenuItem>
+                      </DropdownMenuContainer>
+                    </>
+                  )}
+                </>
+              }
+            />
             {!isPoppedOut && (
-              <div className="dropdown">
-                <IconButton
-                  aria-expanded={false}
-                  data-bs-toggle="dropdown"
-                  icon="more_vert"
-                />
-                <DropdownMenu>
-                  <li>
-                    <Button
-                      className="dropdown-item"
+              <DropdownButton<IconButtonProps>
+                buttonProps={{
+                  icon: "more_vert",
+                }}
+                Component={IconButton}
+                menuContent={
+                  <DropdownMenuContainer>
+                    <MenuItem
+                      startIcon="add"
                       onClick={handlePopoutClick(false)}
                     >
-                      <MenuItem icon="add">Open in tab</MenuItem>
-                    </Button>
-                  </li>
-                  <li>
-                    <Button
-                      className="dropdown-item"
+                      Open in tab
+                    </MenuItem>
+                    <MenuItem
+                      startIcon="open_in_new"
                       onClick={handlePopoutClick(true)}
                     >
-                      <MenuItem icon="open_in_new">Open as popup</MenuItem>
-                    </Button>
-                  </li>
-                </DropdownMenu>
-              </div>
+                      Open as popup
+                    </MenuItem>
+                  </DropdownMenuContainer>
+                }
+              />
             )}
           </div>
         </div>

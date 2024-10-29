@@ -13,7 +13,7 @@ import { useConfig } from "../../store/Config";
 
 import { useToast } from "../alert/useToast";
 import QueryInput from "../query-input/QueryInput";
-import ReplacementInput from "../ReplacementInput";
+import ReplacementInput from "../replacement-input/ReplacementInput";
 
 type RuleRowProps = {
   matcher: Matcher;

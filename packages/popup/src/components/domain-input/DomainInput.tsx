@@ -4,22 +4,54 @@ import { JSXInternal } from "preact/src/jsx";
 import { storageSetByKeys } from "@worm/shared/src/storage";
 import { DomainEffect } from "@worm/types";
 
-import { useConfig } from "../store/Config";
+import { useBrowserTabs } from "../../lib/hooks/use-browser-tabs";
+import { useConfig } from "../../store/Config";
 
-import { useToast } from "./alert/useToast";
-import Chip from "./Chip";
+import { useToast } from "../alert/useToast";
+import Button from "../button/Button";
+import Chip from "../Chip";
 
 export default function DomainInput() {
   const [value, setValue] = useState("");
+
+  const { currentHostname } = useBrowserTabs();
   const {
     storage: {
       sync: { domainList, preferences },
     },
   } = useConfig();
-  const { showToast } = useToast();
+  const { showRefreshToast, showToast } = useToast();
+
+  const addNewDomain = (hostname?: string) => {
+    if (!hostname || hostname.length === 0) return;
+
+    if (!domainList?.includes(hostname)) {
+      storageSetByKeys(
+        {
+          domainList: [...(domainList || []), hostname],
+        },
+        {
+          onError: (message) => {
+            showToast({
+              message,
+              options: { severity: "danger" },
+            });
+          },
+          onSuccess: () => {
+            showRefreshToast(hostname === currentHostname);
+          },
+        }
+      );
+    }
+  };
+
+  const handleAddCurrentClick = () => {
+    addNewDomain(currentHostname);
+  };
 
   const handleEffectChange = (effect: DomainEffect) => () => {
     const newPreferences = Object.assign({}, preferences);
+
     newPreferences.domainListEffect = effect;
 
     storageSetByKeys({
@@ -33,24 +65,10 @@ export default function DomainInput() {
       | JSXInternal.TargetedFocusEvent<HTMLInputElement>
   ) => {
     event.preventDefault();
+
     if (!value || value.length === 0) return;
 
-    if (!domainList?.includes(value)) {
-      storageSetByKeys(
-        {
-          domainList: [...(domainList || []), value],
-        },
-        {
-          onError: (message) => {
-            showToast({
-              message,
-              options: { severity: "danger" },
-            });
-          },
-        }
-      );
-    }
-
+    addNewDomain(value);
     setValue("");
   };
 
@@ -58,6 +76,8 @@ export default function DomainInput() {
     storageSetByKeys({
       domainList: domainList?.filter((d) => d !== domain),
     });
+
+    showRefreshToast(domain === currentHostname);
   };
 
   const handleTextChange = (
@@ -101,7 +121,7 @@ export default function DomainInput() {
           </div>
         </div>
       </div>
-      <div className="row">
+      <div className="row mb-2">
         <div className="col-12 col-lg-8">
           <form
             className="position-relative flex-fill"
@@ -134,6 +154,19 @@ export default function DomainInput() {
           </form>
         </div>
       </div>
+      {currentHostname && !domainList?.includes(currentHostname) && (
+        <div className="row">
+          <div className="col-12 col-lg-8">
+            <Button
+              className="btn btn-outline-secondary btn-sm"
+              startIcon="add"
+              onClick={handleAddCurrentClick}
+            >
+              {currentHostname}
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

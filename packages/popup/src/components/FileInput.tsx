@@ -1,13 +1,13 @@
 import { useMemo } from "preact/hooks";
-import type { JSXInternal } from "preact/src/jsx";
+import { JSXInternal } from "preact/src/jsx";
 
 import { POPUP_ROUTES } from "@worm/shared/src/browser";
 
 import { useLanguage } from "../lib/language";
 import {
   CAN_UPLOAD_PARAMETER,
-  NOTIFY_PARAMETER,
   canUploadDirect,
+  NOTIFY_PARAMETER,
 } from "../lib/routes";
 
 type FileUploadProps = {
@@ -18,7 +18,7 @@ const WRAPPER_CLASSNAME = "btn btn-outline-secondary";
 
 function Content() {
   return (
-    <span className="d-flex align-items-center gap-1">
+    <span className="d-flex align-items-center gap-2">
       <i className="material-icons-sharp fs-sm">download</i>
       Import from file
     </span>

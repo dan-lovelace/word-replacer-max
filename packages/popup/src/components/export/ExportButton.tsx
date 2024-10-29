@@ -11,8 +11,8 @@ import { SelectedRule } from "../../lib/types";
 import { useConfig } from "../../store/Config";
 
 import { useToast } from "../alert/useToast";
-import Button from "../button/Button";
-import DropdownMenu from "../menu/DropdownMenu";
+import DropdownButton from "../menu/DropdownButton";
+import DropdownMenuContainer from "../menu/DropdownMenuContainer";
 import MenuItem from "../menu/MenuItem";
 
 type ExportButtonProps = {
@@ -162,16 +162,9 @@ export default function ExportButton({
   };
 
   return (
-    <div className="dropdown">
-      <Button
-        aria-expanded={false}
-        className="btn btn-primary"
-        data-bs-toggle="dropdown"
-        data-testid="export-modal-dropdown-button"
-        disabled={selectedCount === 0 || isLoading}
-        id="export-modal-dropdown-button"
-      >
-        {isLoading ? (
+    <DropdownButton
+      buttonProps={{
+        children: isLoading ? (
           <>
             <span
               className="spinner-border spinner-border-sm me-1"
@@ -188,34 +181,29 @@ export default function ExportButton({
               ? `${selectedCount} rule${selectedCount > 1 ? "s" : ""}`
               : "selected"}
           </>
-        )}
-      </Button>
-      <DropdownMenu
-        aria-labelledby="export-modal-dropdown-button"
-        className="dropdown-menu shadow"
-        data-testid="export-modal-dropdown-menu"
-      >
-        <li>
-          <button
-            className="dropdown-item"
-            data-testid="export-modal-dropdown-menu-create-link-button"
-            type="button"
+        ),
+        className: "btn btn-primary",
+        disabled: isLoading || selectedCount === 0,
+        "data-testid": "export-modal-dropdown-button",
+      }}
+      menuContent={
+        <DropdownMenuContainer>
+          <MenuItem
+            startIcon="link"
             onClick={handleExportLink}
+            data-testid="export-modal-dropdown-menu-create-link-button"
           >
-            <MenuItem icon="link">Create shareable link</MenuItem>
-          </button>
-        </li>
-        <li>
-          <button
-            className="dropdown-item"
-            data-testid="export-modal-dropdown-menu-create-file-button"
-            type="button"
+            Create shareable link
+          </MenuItem>
+          <MenuItem
+            startIcon="download"
             onClick={handleExportFile}
+            data-testid="export-modal-dropdown-menu-create-file-button"
           >
-            <MenuItem icon="download">Download file locally</MenuItem>
-          </button>
-        </li>
-      </DropdownMenu>
-    </div>
+            Download file locally
+          </MenuItem>
+        </DropdownMenuContainer>
+      }
+    />
   );
 }

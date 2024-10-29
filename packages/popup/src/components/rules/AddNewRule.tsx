@@ -49,13 +49,13 @@ export default function AddNewRule({ children, className }: AddNewRuleProps) {
   return (
     <button
       className={className ?? "btn btn-secondary btn-sm"}
-      data-testid="add-new-rule-button"
       onClick={handleNewRuleClick}
+      data-testid="add-new-rule-button"
     >
       <span className="d-flex align-items-center">
         {children ?? (
           <>
-            <i className="material-icons-sharp me-1 fs-6">add</i> New rule
+            <i className="material-icons-sharp me-2 fs-6">add</i> New rule
           </>
         )}
       </span>

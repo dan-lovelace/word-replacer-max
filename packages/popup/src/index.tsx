@@ -1,8 +1,11 @@
+import "@worm/shared/vite-env.d.ts";
+import "./style/index.scss";
+import "material-icons/iconfont/sharp.scss";
+
 import { render } from "preact";
-import { LocationProvider, Router, Route } from "preact-iso";
+import { LocationProvider, Route, Router } from "preact-iso";
 
 import { POPUP_ROUTES } from "@worm/shared/src/browser";
-import "@worm/shared/vite-env.d.ts";
 
 import ToastContainer from "./components/alert/ToastContainer";
 import Layout from "./containers/Layout";
@@ -11,9 +14,6 @@ import NotFoundPage from "./pages/NotFound";
 import { AuthProvider } from "./store/Auth";
 import { ConfigProvider } from "./store/Config";
 import { QueryProvider } from "./store/Query";
-
-import "./style/index.scss";
-import "material-icons/iconfont/sharp.scss";
 
 export function App() {
   return (

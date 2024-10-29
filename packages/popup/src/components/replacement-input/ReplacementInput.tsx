@@ -1,5 +1,5 @@
 import { Ref } from "preact";
-import { useState } from "preact/hooks";
+import { useMemo, useState } from "preact/hooks";
 import { JSXInternal } from "preact/src/jsx";
 
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
@@ -19,15 +19,18 @@ import {
   ToneOption,
 } from "@worm/types";
 
-import { useLanguage } from "../lib/language";
-import { useAuth } from "../store/Auth";
-import { useConfig } from "../store/Config";
+import magicWand from "../../icons/magic-wand";
+import { useLanguage } from "../../lib/language";
+import { useAuth } from "../../store/Auth";
+import { useConfig } from "../../store/Config";
 
-import { useToast } from "./alert/useToast";
-import Button from "./button/Button";
-import IconButton from "./button/IconButton";
-import DropdownMenu from "./menu/DropdownMenu";
-import MenuItem from "./menu/MenuItem";
+import { useToast } from "../alert/useToast";
+import Button from "../button/Button";
+import IconButton from "../button/IconButton";
+import DropdownButton from "../menu/DropdownButton";
+import DropdownMenuContainer from "../menu/DropdownMenuContainer";
+import MenuItem from "../menu/MenuItem";
+import MenuItemContainer from "../menu/MenuItemContainer";
 
 type ReplacementInputProps = Pick<
   Matcher,
@@ -46,7 +49,7 @@ type ReplacementInputProps = Pick<
   ) => void;
 };
 
-const INPUT_BUTTON_WIDTH = 39;
+const INPUT_BUTTON_WIDTH = 31;
 const INPUT_WIDTH_BASE = 250;
 
 const toneOptions: { label: string; value: ToneOption }[] = [
@@ -97,15 +100,11 @@ export default function ReplacementInput({
     storage: {
       local: { recentSuggestions },
       session: { authAccessToken },
-      sync: {
-        matchers,
-        replacementStyle: globalReplacementStyle,
-        replacementSuggest,
-      },
+      sync: { matchers, replacementStyle, replacementSuggest },
     },
   } = useConfig();
   const language = useLanguage();
-  const { showToast } = useToast();
+  const { showRefreshToast, showToast } = useToast();
 
   const {
     data: suggestResponse,
@@ -145,12 +144,9 @@ export default function ReplacementInput({
       newMatchers[matcherIdx].useGlobalReplacementStyle
     );
 
-    if (active && Boolean(queries.length) && !isReplacementEmpty(replacement)) {
-      showToast({
-        message: language.rules.REFRESH_REQUIRED,
-        options: { showRefresh: true },
-      });
-    }
+    showRefreshToast(
+      active && Boolean(queries.length) && !isReplacementEmpty(replacement)
+    );
 
     storageSetByKeys({
       matchers: newMatchers,
@@ -239,38 +235,46 @@ export default function ReplacementInput({
 
     if (updatedValue === replacement) return;
 
-    if (active && Boolean(queries.length)) {
-      showToast({
-        message: language.rules.REFRESH_REQUIRED,
-        options: { showRefresh: true },
-      });
-    }
+    showRefreshToast(active && Boolean(queries.length));
 
     onChange(identifier, "replacement", updatedValue);
   };
 
+  const { suggestionsData, suggestionsExist, toneLabel } = useMemo(() => {
+    const suggestionsData =
+      // Most recent API response
+      suggestResponse?.data?.data ??
+      // Last response from storage
+      recentSuggestions?.[identifier]?.apiResponseData;
+
+    const suggestionsExist = !!(
+      suggestionsData &&
+      suggestionsData.suggestions &&
+      suggestionsData.suggestions.length > 0
+    );
+
+    const toneLabel =
+      toneOptions.find((option) => option.value === suggestionsData?.tone)
+        ?.label ?? "";
+
+    return { suggestionsData, suggestionsExist, toneLabel };
+  }, [recentSuggestions, suggestResponse]);
+
   const canSuggest =
     replacementSuggest?.active && hasAccess("api:InvokeSuggest");
-  const suggestionsData =
-    (suggestResponse && suggestResponse.data?.data) ||
-    recentSuggestions?.[identifier]?.apiResponseData;
-  const suggestionsExist = !!(
-    suggestionsData &&
-    suggestionsData.suggestions &&
-    suggestionsData.suggestions.length > 0
-  );
-
   const inputWidth =
     INPUT_WIDTH_BASE -
     ((canSuggest ? INPUT_BUTTON_WIDTH : 0) +
-      (globalReplacementStyle?.active ? INPUT_BUTTON_WIDTH : 0));
+      (replacementStyle?.active ? INPUT_BUTTON_WIDTH : 0));
 
-  const toneLabel =
-    toneOptions.find((option) => option.value === suggestionsData?.tone)
-      ?.label ?? "";
+  const isGenerateReplacementsDisabled = disabled || !Boolean(queries.length);
 
   return (
-    <form className="flex-fill border rounded" onSubmit={handleFormSubmit}>
+    <form
+      className="flex-fill border rounded"
+      onSubmit={handleFormSubmit}
+      data-testid="replacement-input-form"
+    >
       <div className="input-group" role="group">
         <input
           className="form-control border-0"
@@ -284,125 +288,119 @@ export default function ReplacementInput({
           style={{
             width: inputWidth,
           }}
+          data-testid="replacement-text-input"
         />
         {canSuggest && (
-          <>
-            <IconButton
-              aria-expanded={false}
-              data-bs-toggle="dropdown"
-              data-testid="generate-suggestions-button"
-              icon={
-                <span className="d-flex align-items-center">
-                  <img
-                    alt="magic wand"
-                    src="/assets/img/wand-icon.png"
-                    style={{ width: 16 }}
-                  />
-                </span>
-              }
-            />
-            <DropdownMenu minWidth={320}>
-              <div onClick={(e) => e.stopPropagation()}>
-                <div
-                  aria-disabled={true}
-                  className="d-flex flex-column gap-2 pb-2 px-3"
-                >
-                  <div className="fw-bold">Get suggestions</div>
-                  <div className="input-group" role="group">
+          <DropdownButton
+            Component={IconButton}
+            noFlip
+            buttonProps={{
+              className: "px-1",
+              disabled: isGenerateReplacementsDisabled,
+              disabledTooltip: "Add search terms to get suggestions",
+              icon: magicWand,
+              title: "Get Suggestions",
+              style: {
+                opacity: isGenerateReplacementsDisabled ? 0.6 : 1,
+              },
+              "aria-label": "Suggestions dropdown toggle",
+              "data-testid": "suggestions-dropdown-toggle",
+            }}
+            menuContent={
+              <>
+                <MenuItemContainer data-testid="suggestions-configuration">
+                  <div className="flex-fill">
+                    <div className="fw-bold mb-1">Get suggestions</div>
                     <label className="visually-hidden" for="tone-select">
                       Suggestion style
                     </label>
-                    <select
-                      className="form-select"
-                      id="tone-select"
-                      value={
-                        recentSuggestions?.[identifier]?.selectedTone ??
-                        DEFAULT_TONE_OPTION
-                      }
-                      onChange={handleToneChange}
-                    >
-                      <option disabled>Suggestion style</option>
-                      {toneOptions.map(({ label, value }) => (
-                        <option key={value} value={value}>
-                          {label}
-                        </option>
-                      ))}
-                    </select>
-                    <Button
-                      className="btn btn-primary btn-sm"
-                      disabled={isSuggestLoading}
-                      onClick={handleReplacementSuggestClick}
-                    >
-                      Generate
-                    </Button>
-                  </div>
-                </div>
-              </div>
-              {suggestionsExist && (
-                <>
-                  <div onClick={(e) => e.stopPropagation()}>
-                    <li>
-                      <hr className="dropdown-divider my-0" />
-                    </li>
-                    <li>
-                      <div
-                        aria-disabled={true}
-                        className="dropdown-item fw-medium py-2 pe-none"
-                        data-testid="suggestions-tone-label"
+                    <div className="input-group" role="group">
+                      <select
+                        className="form-select"
+                        id="tone-select"
+                        value={
+                          recentSuggestions?.[identifier]?.selectedTone ??
+                          DEFAULT_TONE_OPTION
+                        }
+                        onChange={handleToneChange}
+                        data-testid="tone-select"
                       >
-                        {toneLabel} alternatives
-                      </div>
-                    </li>
-                  </div>
-                  <div data-testid="suggestions-list">
-                    {suggestionsData.suggestions?.map((suggestion, idx) => (
-                      <li key={idx}>
-                        <Button
-                          className="dropdown-item"
-                          onClick={handleSuggestionClick(suggestion.text)}
-                        >
-                          <MenuItem
-                            icon={
-                              replacement === suggestion.text
-                                ? "radio_button_checked"
-                                : "radio_button_unchecked"
-                            }
+                        <option disabled>Suggestion style</option>
+                        {toneOptions.map(({ label, value }) => (
+                          <option
+                            key={`tone-${value}`}
+                            value={value}
+                            data-testid="tone-option"
                           >
-                            {suggestion.text}
-                          </MenuItem>
-                        </Button>
-                      </li>
-                    ))}
+                            {label}
+                          </option>
+                        ))}
+                      </select>
+                      <Button
+                        className="btn btn-primary btn-sm"
+                        disabled={isSuggestLoading}
+                        onClick={handleReplacementSuggestClick}
+                        data-testid="generate-suggestions-button"
+                      >
+                        Generate
+                      </Button>
+                    </div>
                   </div>
-                </>
-              )}
-            </DropdownMenu>
-          </>
+                </MenuItemContainer>
+                {suggestionsExist && (
+                  <DropdownMenuContainer
+                    className="border-top"
+                    data-testid="suggestions-results"
+                  >
+                    <MenuItemContainer data-testid="suggestions-tone-label">
+                      {toneLabel} alternatives
+                    </MenuItemContainer>
+                    <div data-testid="suggestions-list">
+                      {suggestionsData?.suggestions?.map(({ text }, idx) => (
+                        <MenuItem
+                          key={`suggestion-${idx}`}
+                          startIcon={
+                            replacement === text
+                              ? "radio_button_checked"
+                              : "radio_button_unchecked"
+                          }
+                          onClick={handleSuggestionClick(text)}
+                          data-testid="suggestions-list-item"
+                        >
+                          {text}
+                        </MenuItem>
+                      ))}
+                    </div>
+                  </DropdownMenuContainer>
+                )}
+              </>
+            }
+          />
         )}
-        {globalReplacementStyle?.active && (
-          <Button
-            className="btn btn-outline-secondary border-0 bg-transparent text-secondary"
-            data-testid="replacement-style-button"
+        {replacementStyle?.active && (
+          <IconButton
+            className="px-2"
             disabled={disabled}
+            icon={
+              useGlobalReplacementStyle
+                ? "format_color_text"
+                : "format_color_reset"
+            }
+            iconProps={{
+              className: "text-secondary fs-6",
+            }}
             title={
               useGlobalReplacementStyle
                 ? "Replacement Style Enabled"
                 : "Replacement Style Disabled"
             }
             onClick={handleReplacementStyleChange}
-          >
-            <span className="d-flex align-items-center">
-              <span className="material-icons-sharp fs-6">
-                {useGlobalReplacementStyle
-                  ? "format_color_text"
-                  : "format_color_reset"}
-              </span>
-            </span>
-          </Button>
+            data-testid="replacement-style-button"
+          />
         )}
       </div>
       <Button className="visually-hidden" disabled={disabled} type="submit">
-        Add
+        Save
       </Button>
     </form>
   );

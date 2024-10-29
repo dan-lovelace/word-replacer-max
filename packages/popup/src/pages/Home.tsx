@@ -1,4 +1,4 @@
-import DomainInput from "../components/DomainInput";
+import DomainInput from "../components/domain-input/DomainInput";
 import RuleList from "../components/rules/RuleList";
 import Support from "../components/Support";
 import Options from "../containers/Options";

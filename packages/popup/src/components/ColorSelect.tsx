@@ -5,7 +5,9 @@ import { cx } from "@worm/shared";
 import { systemColors } from "@worm/shared/src/replace/lib/style";
 import { SystemColor } from "@worm/types";
 
-import Button from "./button/Button";
+import DropdownButton from "./menu/DropdownButton";
+import DropdownMenuContainer from "./menu/DropdownMenuContainer";
+import MenuItem from "./menu/MenuItem";
 
 interface ColorSelectProps extends JSXInternal.HTMLAttributes<HTMLDivElement> {
   name: string;
@@ -44,49 +46,49 @@ export default function ColorSelect({
       data-testid="color-select"
       {...rest}
     >
-      <div className="dropdown">
-        <Button
-          aria-expanded={false}
-          className="btn btn-outline-primary rounded-end-0 h-100"
-          data-bs-toggle="dropdown"
-          data-testid="color-select-dropdown-button"
-          id={`dropdown-button-${name}`}
-        >
-          <div
-            className="border rounded"
-            style={{
-              backgroundColor: selectedColor,
-              height: 20,
-              width: 40,
-            }}
-          />
-        </Button>
-        <ul
-          aria-labelledby={`dropdown-button-${name}`}
-          className="dropdown-menu shadow"
-          data-testid="color-select-dropdown-menu"
-          style={{ minWidth: "unset" }}
-        >
-          {(Object.keys(systemColors) as SystemColor[]).map((color, index) => (
-            <li key={index}>
-              <Button
-                className="dropdown-item text-center"
-                data-testid="color-select-dropdown-menu-option"
-                onClick={() => handleColorSelect(systemColors[color])}
-              >
-                <span
-                  className="border rounded"
-                  style={{
-                    backgroundColor: systemColors[color],
-                    height: 20,
-                    width: 40,
-                  }}
-                />
-              </Button>
-            </li>
-          ))}
-        </ul>
-      </div>
+      <DropdownButton
+        className="d-flex"
+        minWidth="unset"
+        placement="bottom-start"
+        buttonProps={{
+          className: "btn btn-outline-primary rounded-end-0 h-100",
+          children: (
+            <div
+              className="border rounded"
+              style={{
+                backgroundColor: selectedColor,
+                height: 20,
+                width: 40,
+              }}
+            />
+          ),
+          "data-testid": "color-select-dropdown-button",
+        }}
+        menuContent={
+          <DropdownMenuContainer>
+            {(Object.keys(systemColors) as SystemColor[]).map(
+              (color, index) => (
+                <MenuItem
+                  className="text-center"
+                  dense
+                  key={color}
+                  onClick={() => handleColorSelect(systemColors[color])}
+                  data-testid="color-select-dropdown-menu-option"
+                >
+                  <span
+                    className="border rounded"
+                    style={{
+                      backgroundColor: systemColors[color],
+                      height: 20,
+                      width: 40,
+                    }}
+                  />
+                </MenuItem>
+              )
+            )}
+          </DropdownMenuContainer>
+        }
+      />
       <input
         className="form-control"
         data-testid="color-select-custom-input"
