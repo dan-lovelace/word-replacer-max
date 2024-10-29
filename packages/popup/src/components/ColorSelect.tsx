@@ -65,7 +65,7 @@ export default function ColorSelect({
           "data-testid": "color-select-dropdown-button",
         }}
         menuContent={
-          <DropdownMenuContainer>
+          <DropdownMenuContainer data-testid="color-select-dropdown-menu">
             {(Object.keys(systemColors) as SystemColor[]).map(
               (color, index) => (
                 <MenuItem

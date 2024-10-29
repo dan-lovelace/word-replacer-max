@@ -187,7 +187,7 @@ export default function ExportButton({
         "data-testid": "export-modal-dropdown-button",
       }}
       menuContent={
-        <DropdownMenuContainer>
+        <DropdownMenuContainer data-testid="export-modal-dropdown-menu">
           <MenuItem
             startIcon="link"
             onClick={handleExportLink}
