@@ -1,6 +1,4 @@
-// test-reporter.ts
 import fs from "fs";
-import path from "path";
 
 interface AssertionResult {
   ancestorTitles: string[];
@@ -132,8 +130,12 @@ function createMarkdownSummary(summary: TestSummary): string {
   const status = summary.numFailedTests === 0 ? "✅ PASSED" : "❌ FAILED";
   markdown += `### Status: ${status}\n\n`;
 
-  // Create both tables with HTML layout
-  markdown += '<table><tr><td width="50%" valign="top">\n\n';
+  // Create both tables with HTML layout and headers
+  markdown += "<table><tr>\n";
+
+  // Headers
+  markdown += '<td width="50%" valign="top">\n\n';
+  markdown += `### 🧪 Test Results\n\n`;
 
   // Test Summary table
   markdown += `| Metric | Count |\n`;
@@ -148,6 +150,7 @@ function createMarkdownSummary(summary: TestSummary): string {
   markdown += `| Duration | ${duration}s |\n\n`;
 
   markdown += '</td><td width="50%" valign="top">\n\n';
+  markdown += `### 📸 Snapshot Results\n\n`;
 
   // Snapshot summary
   if (summary.snapshotData.total > 0) {

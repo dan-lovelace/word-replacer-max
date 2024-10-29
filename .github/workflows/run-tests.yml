@@ -39,7 +39,7 @@ jobs:
           browser: chrome
           project: packages/popup
           start: yarn workspace @worm/popup dev
-          summary-title: Cypress Summary - `@worm/popup`
+          summary-title: Cypress Summary - @worm/popup
 
       - name: Upload Popup Cypress failures
         uses: actions/upload-artifact@v4
@@ -54,7 +54,7 @@ jobs:
         with:
           browser: chrome
           project: packages/shared
-          summary-title: Cypress Summary - `@worm/shared`
+          summary-title: Cypress Summary - @worm/shared
 
       - name: Upload Shared Cypress failures
         uses: actions/upload-artifact@v4
