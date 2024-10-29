@@ -126,13 +126,16 @@ function createMarkdownSummary(summary: TestSummary): string {
   ).toFixed(2);
   const duration = (summary.duration / 1000).toFixed(2);
 
-  let markdown = `## Test Results Summary\n\n`;
+  let markdown = `## Jest Summary\n\n`;
 
   // Status badge
   const status = summary.numFailedTests === 0 ? "✅ PASSED" : "❌ FAILED";
   markdown += `### Status: ${status}\n\n`;
 
-  // Summary table
+  // Create both tables with HTML layout
+  markdown += '<table><tr><td width="50%" valign="top">\n\n';
+
+  // Test Summary table
   markdown += `| Metric | Count |\n`;
   markdown += `|--------|-------|\n`;
   markdown += `| Test Suites | ${summary.numTestSuites} |\n`;
@@ -144,9 +147,10 @@ function createMarkdownSummary(summary: TestSummary): string {
   markdown += `| Pass Rate | ${passRate}% |\n`;
   markdown += `| Duration | ${duration}s |\n\n`;
 
+  markdown += '</td><td width="50%" valign="top">\n\n';
+
   // Snapshot summary
   if (summary.snapshotData.total > 0) {
-    markdown += `### Snapshots\n\n`;
     markdown += `| Metric | Count |\n`;
     markdown += `|--------|-------|\n`;
     markdown += `| Total | ${summary.snapshotData.total} |\n`;
@@ -154,7 +158,11 @@ function createMarkdownSummary(summary: TestSummary): string {
     markdown += `| Updated | ${summary.snapshotData.updated} |\n`;
     markdown += `| Added | ${summary.snapshotData.added} |\n`;
     markdown += `| Removed | ${summary.snapshotData.filesRemoved} |\n\n`;
+  } else {
+    markdown += "*No snapshots in this test run*\n\n";
   }
+
+  markdown += "</td></tr></table>\n\n";
 
   // Failed tests details
   if (summary.failedTestDetails.length > 0) {
@@ -195,5 +203,6 @@ try {
     "Error processing test results:",
     error instanceof Error ? error.message : "Unknown error"
   );
+
   process.exit(1);
 }
