@@ -4,6 +4,7 @@ run-name: "${{ github.workflow }} - Mode: test"
 on:
   pull_request:
     paths:
+      - .github/workflows/run-tests.yml
       - packages/**
 
 jobs:
@@ -28,7 +29,7 @@ jobs:
         run: yarn test:jest --json --outputFile=jest-results.json
 
       - name: Generate Jest report
-        run: npx tsx .github/scripts/test-reporter.ts jest-results.json
+        run: yarn tsx .github/scripts/test-reporter.ts jest-results.json
         if: always()
 
       - name: Run Popup Cypress tests

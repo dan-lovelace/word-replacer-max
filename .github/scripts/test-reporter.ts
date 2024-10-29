@@ -172,30 +172,28 @@ function createMarkdownSummary(summary: TestSummary): string {
 }
 
 // Main execution
-if (require.main === module) {
-  const args = process.argv.slice(2);
-  const resultsFile = args[0];
+const args = process.argv.slice(2);
+const resultsFile = args[0];
 
-  if (!resultsFile) {
-    console.error("Please provide the path to jest results json file");
-    process.exit(1);
+if (!resultsFile) {
+  console.error("Please provide the path to jest results json file");
+  process.exit(1);
+}
+
+try {
+  const summary = generateTestSummary(resultsFile);
+  const markdown = createMarkdownSummary(summary);
+
+  // Write to GITHUB_STEP_SUMMARY if running in GitHub Actions
+  if (process.env.GITHUB_STEP_SUMMARY) {
+    fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, markdown);
+  } else {
+    console.log(markdown);
   }
-
-  try {
-    const summary = generateTestSummary(resultsFile);
-    const markdown = createMarkdownSummary(summary);
-
-    // Write to GITHUB_STEP_SUMMARY if running in GitHub Actions
-    if (process.env.GITHUB_STEP_SUMMARY) {
-      fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, markdown);
-    } else {
-      console.log(markdown);
-    }
-  } catch (error) {
-    console.error(
-      "Error processing test results:",
-      error instanceof Error ? error.message : "Unknown error"
-    );
-    process.exit(1);
-  }
+} catch (error) {
+  console.error(
+    "Error processing test results:",
+    error instanceof Error ? error.message : "Unknown error"
+  );
+  process.exit(1);
 }
