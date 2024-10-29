@@ -20,16 +20,42 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: "yarn"
+          cache: yarn
       - run: yarn install
-      - run: yarn test
-      - uses: cypress-io/github-action@v6
+
+      - name: Run Jest tests
+        id: jest
+        run: yarn test:jest --json --outputFile=jest-results.json
+
+      - name: Generate Jest report
+        run: npx tsx .github/scripts/test-reporter.ts jest-results.json
+        if: always()
+
+      - name: Run Popup Cypress tests
+        uses: cypress-io/github-action@v6
+        id: popup-cypress
         with:
           browser: chrome
           project: packages/popup
           start: yarn workspace @worm/popup dev
-      - uses: actions/upload-artifact@v4
+
+      - name: Upload Popup Cypress failures
+        uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: cypress-screenshots
+          name: popup-cypress-screenshots
           path: packages/popup/cypress/screenshots
+
+      - name: Run Shared Cypress tests
+        uses: cypress-io/github-action@v6
+        id: shared-cypress
+        with:
+          browser: chrome
+          project: packages/shared
+
+      - name: Upload Shared Cypress failures
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: shared-cypress-screenshots
+          path: packages/shared/cypress/screenshots
