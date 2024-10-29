@@ -1,4 +1,5 @@
 import {
+  LocalStorage,
   Matcher,
   StorageProvider,
   StorageSetOptions,
@@ -61,19 +62,44 @@ export async function storageSetByKeys(
   let storageMatchers: Record<string, Matcher> = {};
 
   if (Object.prototype.hasOwnProperty.call(keys, "matchers")) {
+    const { matchers } = keys;
+
     /**
-     * NOTE: Matchers are being set. We need to save them to storage in a flat
+     * Matchers are being set. We need to save them to storage in a flat
      * structure to allow users to save the maximum amount of data using the
-     * `sync` method.
+     * `sync` storage area.
      *
      * See: https://github.com/dan-lovelace/word-replacer-max/issues/4
      */
-    storageMatchers = matchersToStorage(keys.matchers);
+    storageMatchers = matchersToStorage(matchers);
+
+    /**
+     * Clean up orphaned matchers from `local` storage.
+     */
+    const matchersMap = new Set<string>(
+      matchers?.map((matcher) => matcher.identifier)
+    );
+
+    const localStorage = getStorageProvider("local");
+    const { recentSuggestions } = (await localStorage.get()) as LocalStorage;
+
+    if (recentSuggestions) {
+      Object.keys(recentSuggestions).forEach((key) => {
+        if (!matchersMap.has(key)) {
+          delete recentSuggestions[key];
+        }
+      });
+
+      await localStorage.set({
+        recentSuggestions,
+      });
+    }
+
     delete keys.matchers;
   }
 
   try {
-    const data = await storageSet({
+    await storageSet({
       ...keys,
       ...storageMatchers,
     });
@@ -81,8 +107,6 @@ export async function storageSetByKeys(
     if (typeof options?.onSuccess === "function") {
       options.onSuccess();
     }
-
-    return data;
   } catch (error: unknown) {
     logDebug("Something went wrong updating storage", error);
 

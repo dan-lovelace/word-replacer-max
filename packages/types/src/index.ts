@@ -70,6 +70,11 @@ export type MatcherReplaceProps = Pick<
 >;
 
 /**
+ * A Matcher as stored in the `sync` storage area.
+ */
+export type MatcherInSync = Record<string, Matcher>;
+
+/**
  * PCRE case modes for use in regex replacements.
  */
 export type PCRECaseMode = "lower" | "title" | "upper" | null;

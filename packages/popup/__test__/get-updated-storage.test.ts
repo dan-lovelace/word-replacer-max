@@ -3,10 +3,14 @@ import { merge } from "ts-deepmerge";
 import { expect } from "@jest/globals";
 
 import { getUpdatedStorage } from "@worm/popup/src/lib/storage";
-import { Matcher, SessionStorage, Storage, StorageProvider } from "@worm/types";
+import {
+  Matcher,
+  MatcherInSync,
+  SessionStorage,
+  Storage,
+  StorageProvider,
+} from "@worm/types";
 import { RecentSuggestions } from "@worm/types/src/replacement";
-
-type StoredMatchers = Record<string, Matcher>;
 
 jest.mock("@worm/shared/src/config/values", () => ({
   VITE_API_ORIGIN: "https://dev-api.wordreplacermax.com",
@@ -40,7 +44,7 @@ const generateAppMatchers = (overrides: Matcher[] = []) => [
   ...overrides,
 ];
 
-const defaultStoredMatchers: StoredMatchers = {
+const defaultStoredMatchers: MatcherInSync = {
   [TEST_MATCHER_IDENTIFIER_1]: {
     active: true,
     identifier: TEST_MATCHER_IDENTIFIER_1,
@@ -57,7 +61,7 @@ const defaultStoredMatchers: StoredMatchers = {
   },
 };
 
-const generateStoredMatchers = (overrides: StoredMatchers = {}) =>
+const generateStoredMatchers = (overrides: MatcherInSync = {}) =>
   merge(defaultStoredMatchers, overrides);
 
 const defaultRecentSuggestions: RecentSuggestions = {
