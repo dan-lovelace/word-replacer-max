@@ -36,7 +36,7 @@ export default function DropdownButton<T>({
   menuContent,
   minWidth = 300,
   noFlip = false,
-  offset: offsetDistance = 4,
+  offset: offsetDistance = 5,
   placement = "bottom-end",
 }: DropdownButtonProps<T>) {
   const [isOpen, setIsOpen] = useState(false);
@@ -74,11 +74,12 @@ export default function DropdownButton<T>({
 
       {isOpen && (
         <div
-          className="bg-white border rounded shadow overflow-hidden z-3"
+          className="bg-white rounded shadow overflow-hidden z-3"
           ref={refs.setFloating}
           style={{
             left: x ?? 0,
             minWidth,
+            outline: "1px solid var(--bs-border-color)",
             position: strategy,
             top: y ?? 0,
           }}
