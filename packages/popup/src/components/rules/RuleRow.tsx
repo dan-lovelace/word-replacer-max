@@ -170,7 +170,10 @@ export default function RuleRow({
       }}
     >
       {!disabled && (
-        <div className="col-auto form-check form-switch ps-3 pe-0 pt-2">
+        <div
+          className="col-auto form-check form-switch pe-0 pt-2"
+          style={{ paddingLeft: 11 }}
+        >
           <input
             checked={active}
             className="form-check-input m-0"
@@ -201,7 +204,7 @@ export default function RuleRow({
         />
       </div>
       <div className="col-auto px-0" style={{ paddingTop: 11 }}>
-        <MaterialIcon name="swap_horiz" />
+        <MaterialIcon className="pe-none" name="swap_horiz" />
       </div>
       <div className="col-auto">
         <ReplacementInput

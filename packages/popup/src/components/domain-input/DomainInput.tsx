@@ -133,11 +133,6 @@ export default function DomainInput() {
                 </label>
               </div>
             </div>
-            <div className="fs-sm">
-              {preferences?.domainListEffect === "deny"
-                ? lang.LIST_EFFECT_BLOCKLIST_DESCRIPTION
-                : lang.LIST_EFFECT_ALLOWLIST_DESCRIPTION}
-            </div>
           </div>
         </div>
       </div>
@@ -150,17 +145,15 @@ export default function DomainInput() {
           >
             <div className="pb-2">
               {Boolean(domainList?.length) ? (
-                <>
-                  <div className="d-flex align-items-start flex-wrap gap-1">
-                    {domainList?.map((domain, idx) => (
-                      <Chip
-                        key={`domain-${idx}`}
-                        identifier={domain}
-                        onRemove={handleRemoveClick}
-                      />
-                    ))}
-                  </div>
-                </>
+                <div className="d-flex align-items-start flex-wrap gap-1">
+                  {domainList?.map((domain, idx) => (
+                    <Chip
+                      key={`domain-${idx}`}
+                      identifier={domain}
+                      onRemove={handleRemoveClick}
+                    />
+                  ))}
+                </div>
               ) : (
                 <Alert
                   title={lang.EMPTY_DOMAINS_LIST_ALERT_TITLE}

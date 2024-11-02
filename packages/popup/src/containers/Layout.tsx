@@ -133,10 +133,7 @@ export default function Layout({ children }: LayoutProps) {
           </div>
         )}
         <div className="d-flex w-100">
-          <div
-            className="d-flex align-items-center justify-content-center border-bottom"
-            style={{ paddingLeft: 5 }}
-          >
+          <div className="d-flex align-items-center justify-content-center border-bottom">
             <IconButton
               className={cx(
                 "px-3",
