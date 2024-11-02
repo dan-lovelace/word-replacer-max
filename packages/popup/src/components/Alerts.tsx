@@ -1,9 +1,11 @@
+import { ComponentProps } from "preact";
+
 import { cx } from "@worm/shared";
 import { PopupAlertSeverity } from "@worm/types";
 
 import { PreactChildren } from "../lib/types";
 
-type AlertProps = {
+type AlertProps = ComponentProps<"div"> & {
   children: PreactChildren;
   className?: string;
   severity?: PopupAlertSeverity;
@@ -12,13 +14,14 @@ type AlertProps = {
 
 export default function Alert({
   children,
-  className,
   severity = "info",
   title,
+  ...rest
 }: AlertProps) {
   return (
     <div
-      className={cx("alert m-0", `alert-${severity}`, className)}
+      {...rest}
+      className={cx("alert m-0", `alert-${severity}`, rest.className)}
       role="alert"
     >
       {title && <div className="alert-heading fw-bold">{title}</div>}
