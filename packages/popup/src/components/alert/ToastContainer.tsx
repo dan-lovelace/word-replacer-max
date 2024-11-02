@@ -4,13 +4,16 @@ import { cx, TOAST_MESSAGE_DURATION_DEFAULT_MS } from "@worm/shared";
 import { browser } from "@worm/shared/src/browser";
 import { PopupAlertSeverity } from "@worm/types";
 import {
-  ShowToastMessageOptions, WebAppMessage, WebAppMessageKind
+  ShowToastMessageOptions,
+  WebAppMessage,
+  WebAppMessageKind,
 } from "@worm/types/src/message";
 
 import { useConfig } from "../../store/Config";
 
 import Button from "../button/Button";
 import ContactSupportLink from "../button/ContactSupportLink";
+import MaterialIcon from "../icon/MaterialIcon";
 
 const severityIconMap: Record<PopupAlertSeverity, string> = {
   danger: "warning",
@@ -104,11 +107,11 @@ export default function ToastContainer() {
     >
       <div className="toast-body d-flex align-items-center">
         {options?.severity && (
-          <span
-            className={`material-icons-sharp fs-6 text-${options.severity} me-2`}
-          >
-            {severityIconMap[options.severity]}
-          </span>
+          <MaterialIcon
+            className={`text-${options.severity} me-2`}
+            name={severityIconMap[options.severity]}
+            size="sm"
+          />
         )}
         <div className="d-flex align-items-center gap-1">
           {message}

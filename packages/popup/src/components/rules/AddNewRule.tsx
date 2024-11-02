@@ -6,6 +6,7 @@ import { PreactChildren } from "../../lib/types";
 import { useConfig } from "../../store/Config";
 
 import { useToast } from "../alert/useToast";
+import MaterialIcon from "../icon/MaterialIcon";
 
 type AddNewRuleProps = {
   children?: PreactChildren;
@@ -55,7 +56,8 @@ export default function AddNewRule({ children, className }: AddNewRuleProps) {
       <span className="d-flex align-items-center">
         {children ?? (
           <>
-            <i className="material-icons-sharp me-2 fs-6">add</i> New rule
+            <MaterialIcon className="me-2" name="add" />
+            New rule
           </>
         )}
       </span>

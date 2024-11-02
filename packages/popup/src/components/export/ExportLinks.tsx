@@ -11,6 +11,7 @@ import { useLanguage } from "../../lib/language";
 import { useConfig } from "../../store/Config";
 
 import { useToast } from "../alert/useToast";
+import MaterialIcon from "../icon/MaterialIcon";
 
 export default function ExportLink() {
   const [isClipboardCopyAllowed, setIsClipboardCopyAllowed] = useState(false);
@@ -103,9 +104,11 @@ export default function ExportLink() {
                 </Button>
               </div>
               <Tooltip title={`Created ${formatUnixTimestamp(identifier)}`}>
-                <span className="material-icons-sharp text-body-tertiary">
-                  calendar_month
-                </span>
+                <MaterialIcon
+                  className="text-body-tertiary"
+                  name="calendar_month"
+                  size="lg"
+                />
               </Tooltip>
             </div>
           </div>

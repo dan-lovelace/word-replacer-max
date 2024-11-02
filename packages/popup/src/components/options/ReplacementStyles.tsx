@@ -11,6 +11,7 @@ import { useConfig } from "../../store/Config";
 
 import { useToast } from "../alert/useToast";
 import ColorSelect from "../ColorSelect";
+import MaterialIcon from "../icon/MaterialIcon";
 import Slide from "../transition/Slide";
 
 function ColorInput({
@@ -103,7 +104,7 @@ function DecoratorInput({
         for={id}
         title={title}
       >
-        <span className="material-icons-sharp fs-6">{icon}</span>
+        <MaterialIcon name={icon} size="sm" />
       </label>
     </>
   );
@@ -188,7 +189,7 @@ export default function ReplacementStyles() {
   };
 
   return (
-    <>
+    <div className="replacement-styles">
       <div
         className="form-check form-switch ps-0 d-flex align-items-center gap-2"
         data-testid="replacement-styles-input-wrapper"
@@ -212,9 +213,8 @@ export default function ReplacementStyles() {
       <Slide isOpen={!isActive}>
         <Indented data-testid="replacement-styles-description">
           <p className="fs-sm">
-            Apply styles like bold, underline, and background color to all
-            replaced text. Styles may be turned off for individual replacements
-            as needed.
+            Apply styles like bold, underline, and background color to replaced
+            text. Styles may be turned off for individual rules as needed.
           </p>
         </Indented>
       </Slide>
@@ -289,6 +289,6 @@ export default function ReplacementStyles() {
           </div>
         </Indented>
       </Slide>
-    </>
+    </div>
   );
 }

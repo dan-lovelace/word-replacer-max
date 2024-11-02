@@ -3,6 +3,7 @@ import { useMemo } from "preact/hooks";
 
 import { cx } from "@worm/shared";
 
+import MaterialIcon from "../icon/MaterialIcon";
 import Tooltip from "../Tooltip";
 
 export type ButtonProps = ComponentProps<"button"> & {
@@ -25,9 +26,7 @@ export default function Button({
         {...rest}
       >
         <span className="d-flex align-items-center gap-2">
-          {startIcon && (
-            <span className="material-icons-sharp fs-5">{startIcon}</span>
-          )}
+          {startIcon && <MaterialIcon name={startIcon} />}
           {children}
         </span>
       </button>

@@ -1,3 +1,5 @@
+import { useMemo } from "preact/hooks";
+
 import axios, { AxiosRequestConfig } from "axios";
 
 import { useQuery } from "@tanstack/react-query";
@@ -11,6 +13,7 @@ import { useConfig } from "../../store/Config";
 
 import Alert from "../Alerts";
 import ContactSupportLink from "../button/ContactSupportLink";
+import MaterialIcon from "../icon/MaterialIcon";
 import Tooltip from "../Tooltip";
 
 export default function ApiUsage() {
@@ -72,6 +75,16 @@ export default function ApiUsage() {
   const usagePercent = Math.ceil((count / threshold) * 100);
   const isWarning = Boolean(usagePercent > 80);
 
+  const barColor = useMemo(() => {
+    if (usagePercent === 100) {
+      return "bg-danger";
+    } else if (usagePercent >= 80) {
+      return "bg-warning";
+    }
+
+    return "bg-info";
+  }, [usagePercent]);
+
   return (
     <div data-testid="api-usage">
       <div className="mb-1">
@@ -80,12 +93,7 @@ export default function ApiUsage() {
             Usage: {count} / {threshold}
           </span>
           <Tooltip title={`In the last ${period.value} ${period.interval}`}>
-            <span
-              className="material-icons-sharp text-body-tertiary text-secondary"
-              style={{ fontSize: 16 }}
-            >
-              info
-            </span>
+            <MaterialIcon className="text-secondary" name="info" size="sm" />
           </Tooltip>
         </div>
         <div
@@ -102,20 +110,28 @@ export default function ApiUsage() {
             }}
           >
             <div
-              className={cx(
-                "progress-bar",
-                isWarning ? "bg-warning" : "bg-success"
-              )}
+              className={cx("progress-bar", barColor)}
               style={{ width: `${usagePercent}%` }}
             />
           </div>
         </div>
       </div>
-      <div className="d-flex align-items-center gap-1 fs-sm">
+      <div
+        className={cx(
+          "d-flex align-items-center",
+          "fs-xs text-secondary text-nowrap",
+          isWarning ? "opacity-1" : "opacity-0"
+        )}
+        style={{
+          transition: "opacity 150ms",
+        }}
+      >
         <span>Need additional credits?</span>
-        <ContactSupportLink className="text-decoration-none">
+        &nbsp;
+        <ContactSupportLink className="text-decoration-none fs-xs">
           Contact support
         </ContactSupportLink>
+        &nbsp;
         <span>and we'll extend your limit.</span>
       </div>
     </div>

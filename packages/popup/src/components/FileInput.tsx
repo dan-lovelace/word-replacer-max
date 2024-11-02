@@ -10,6 +10,8 @@ import {
   NOTIFY_PARAMETER,
 } from "../lib/routes";
 
+import MaterialIcon from "./icon/MaterialIcon";
+
 type FileUploadProps = {
   onChange: (event: JSXInternal.TargetedInputEvent<HTMLInputElement>) => void;
 };
@@ -19,7 +21,7 @@ const WRAPPER_CLASSNAME = "btn btn-outline-secondary";
 function Content() {
   return (
     <span className="d-flex align-items-center gap-2">
-      <i className="material-icons-sharp fs-sm">download</i>
+      <MaterialIcon name="download" />
       Import from file
     </span>
   );

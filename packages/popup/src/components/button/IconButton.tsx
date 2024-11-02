@@ -1,11 +1,9 @@
-import { ComponentProps } from "preact";
 import { useMemo } from "preact/hooks";
 import { JSXInternal } from "preact/src/jsx";
 
 import { cx } from "@worm/shared";
 
-import { PreactChildren } from "../../lib/types";
-
+import MaterialIcon, { MaterialIconProps } from "../icon/MaterialIcon";
 import Tooltip from "../Tooltip";
 
 export type IconButtonProps = Omit<
@@ -13,8 +11,8 @@ export type IconButtonProps = Omit<
   "icon"
 > & {
   disabledTooltip?: string;
-  icon: PreactChildren;
-  iconProps?: ComponentProps<"span">;
+  icon: MaterialIconProps["name"];
+  iconProps?: Omit<MaterialIconProps, "name">;
 };
 
 export default function IconButton({
@@ -31,14 +29,14 @@ export default function IconButton({
         type="button"
         {...rest}
       >
-        <span
+        <MaterialIcon
           className={cx(
-            "d-flex align-items-center justify-content-center material-icons-sharp",
+            "d-flex align-items-center justify-content-center",
             iconProps?.className
           )}
-        >
-          {icon}
-        </span>
+          name={icon}
+          size={iconProps?.size ?? "lg"}
+        />
       </button>
     ),
     [className, icon, rest]

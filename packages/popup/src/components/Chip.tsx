@@ -1,6 +1,7 @@
 import { cx } from "@worm/shared";
 
 import Button from "./button/Button";
+import MaterialIcon from "./icon/MaterialIcon";
 
 type ChipProps = {
   disabled?: boolean;
@@ -30,7 +31,7 @@ export default function Chip({
         onClick={onRemove(identifier)}
       >
         <span className="d-flex align-items-center">
-          <i className="material-icons-sharp fs-6">close</i>
+          <MaterialIcon name="close" size="sm" />
         </span>
       </Button>
     </span>

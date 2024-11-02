@@ -388,6 +388,7 @@ export default function ReplacementInput({
             }
             iconProps={{
               className: "text-secondary fs-6",
+              size: "sm",
             }}
             title={
               useGlobalReplacementStyle

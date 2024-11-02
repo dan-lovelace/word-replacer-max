@@ -12,6 +12,7 @@ import { useLanguage } from "../../lib/language";
 import { useConfig } from "../../store/Config";
 
 import { useToast } from "../alert/useToast";
+import MaterialIcon from "../icon/MaterialIcon";
 import QueryInput from "../query-input/QueryInput";
 import ReplacementInput from "../replacement-input/ReplacementInput";
 
@@ -199,8 +200,8 @@ export default function RuleRow({
           onChange={handleMatcherInputChange}
         />
       </div>
-      <div className="col-auto pt-2 px-0">
-        <i className="material-icons-sharp">swap_horiz</i>
+      <div className="col-auto px-0" style={{ paddingTop: 11 }}>
+        <MaterialIcon name="swap_horiz" />
       </div>
       <div className="col-auto">
         <ReplacementInput
@@ -229,9 +230,11 @@ export default function RuleRow({
             onClick={handleDeleteClick}
           >
             <span data-dismiss="delete" className="d-flex align-items-center">
-              <span data-dismiss="delete" className="material-icons-sharp fs-6">
-                {isConfirmingDelete ? "delete" : "close"}
-              </span>
+              <MaterialIcon
+                name={isConfirmingDelete ? "delete" : "close"}
+                size="sm"
+                data-dismiss="delete"
+              />
             </span>
           </button>
         </div>

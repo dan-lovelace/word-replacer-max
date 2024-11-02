@@ -6,6 +6,8 @@ import { JSXInternal } from "preact/src/jsx";
 
 import { cx } from "@worm/shared";
 
+import MaterialIcon from "../icon/MaterialIcon";
+
 import { useDropdown } from "./hooks/use-dropdown";
 import MenuItemContainer from "./MenuItemContainer";
 
@@ -48,9 +50,7 @@ export default function MenuItem({
           onClick={handleClick}
         >
           <span className="d-flex align-items-center gap-3">
-            {startIcon !== undefined && (
-              <span className="material-icons-sharp fs-5">{startIcon}</span>
-            )}
+            {startIcon !== undefined && <MaterialIcon name={startIcon} />}
             {props.children}
           </span>
         </button>
