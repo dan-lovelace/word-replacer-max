@@ -16,8 +16,8 @@ export default function LoginCallbackPage() {
   const [oauthCode, setOauthCode] = useState<string>();
 
   const { setSignInStatus } = useAuthProvider();
-  const { isLoading: isLoadingAuthTokens, refetch: fetchAuthTokens } =
-    useAuthTokens(oauthCode);
+  const { isPending: isLoadingAuthTokens, mutate: fetchAuthTokens } =
+    useAuthTokens();
   const { connectionStatus, sendMessage } = useConnectionProvider();
   const navigate = useNavigate();
   const { showToast } = useToast();
@@ -45,23 +45,31 @@ export default function LoginCallbackPage() {
     if (connectionStatus !== "connected" || !oauthCode) return;
 
     async function getTokens() {
+      if (!oauthCode) return;
+
       setSignInStatus("signingIn");
 
-      const result = await fetchAuthTokens();
+      fetchAuthTokens(
+        { code: oauthCode },
+        {
+          onError({ response }) {
+            const message =
+              response?.data.error?.details ??
+              "Something went wrong fetching tokens";
 
-      if (result.isError) {
-        showToast(`Error getting tokens: ${result.error.message}`, "danger");
-      }
+            showToast(`Error getting tokens: ${message}`, "danger");
+          },
+          onSuccess({ data: response }) {
+            const successMessage = createWebAppMessage(
+              "authUpdateTokens",
+              response?.data
+            );
+            sendMessage(successMessage);
 
-      if (result.isSuccess) {
-        const successMessage = createWebAppMessage(
-          "authUpdateTokens",
-          result.data
-        );
-        sendMessage(successMessage);
-
-        handleLoginSuccess();
-      }
+            handleLoginSuccess();
+          },
+        }
+      );
     }
 
     getTokens();
