@@ -135,7 +135,7 @@ function createMarkdownSummary(summary: TestSummary): string {
 
   // Headers
   markdown += '<td width="50%" valign="top">\n\n';
-  markdown += `### 🧪 Test Results\n\n`;
+  markdown += `### 🧪 Tests\n\n`;
 
   // Test Summary table
   markdown += `| Metric | Count |\n`;
@@ -150,7 +150,7 @@ function createMarkdownSummary(summary: TestSummary): string {
   markdown += `| Duration | ${duration}s |\n\n`;
 
   markdown += '</td><td width="50%" valign="top">\n\n';
-  markdown += `### 📸 Snapshot Results\n\n`;
+  markdown += `### 📸 Snapshots\n\n`;
 
   // Snapshot summary
   if (summary.snapshotData.total > 0) {
