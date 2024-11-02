@@ -134,8 +134,8 @@ export default function Layout({ children }: LayoutProps) {
         )}
         <div className="d-flex w-100">
           <div
-            className="d-flex align-items-center justify-content-center"
-            style={{ paddingLeft: 4 }}
+            className="d-flex align-items-center justify-content-center border-bottom"
+            style={{ paddingLeft: 5 }}
           >
             <IconButton
               className={cx(
@@ -143,6 +143,11 @@ export default function Layout({ children }: LayoutProps) {
                 preferences?.extensionEnabled ? "text-success" : "text-danger"
               )}
               icon="power_settings_new"
+              iconProps={{
+                style: {
+                  marginTop: 2,
+                },
+              }}
               title="Toggle Extension On/Off"
               onClick={handleExtensionEnabledClick}
             />
@@ -173,7 +178,7 @@ export default function Layout({ children }: LayoutProps) {
                 )
             )}
           </ul>
-          <div className="d-flex align-items-center justify-content-center px-2">
+          <div className="d-flex align-items-center justify-content-center border-bottom px-2">
             <DropdownButton<IconButtonProps>
               buttonProps={{
                 className: cx(!currentUser && "text-primary"),

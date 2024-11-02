@@ -17,6 +17,7 @@ export default function MaterialIcon({
   className,
   name,
   size = "md",
+  ...rest
 }: MaterialIconProps) {
   const sizeClassName = useMemo(() => {
     switch (size) {
@@ -32,7 +33,10 @@ export default function MaterialIcon({
   }, [size]);
 
   return (
-    <span className={cx("material-icons-sharp", sizeClassName, className)}>
+    <span
+      {...rest}
+      className={cx("material-icons-sharp", sizeClassName, className)}
+    >
       {name}
     </span>
   );

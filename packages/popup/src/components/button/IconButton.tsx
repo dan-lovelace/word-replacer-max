@@ -12,7 +12,7 @@ export type IconButtonProps = Omit<
 > & {
   disabledTooltip?: string;
   icon: MaterialIconProps["name"];
-  iconProps?: Omit<MaterialIconProps, "name">;
+  iconProps?: Omit<MaterialIconProps, "default" | "name">;
 };
 
 export default function IconButton({
@@ -36,6 +36,7 @@ export default function IconButton({
           )}
           name={icon}
           size={iconProps?.size ?? "lg"}
+          {...iconProps}
         />
       </button>
     ),
