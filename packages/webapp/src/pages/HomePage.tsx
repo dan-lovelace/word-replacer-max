@@ -7,6 +7,7 @@ import Typography from "@mui/material/Typography/Typography";
 import Button from "../components/button/Button";
 import NewsletterSignup from "../components/form/NewsletterSignup";
 import Link from "../components/link/Link";
+import UserReviews from "../components/user-reviews/UserReviews";
 import Hero from "../containers/Hero";
 
 type StoreLinkProps = {
@@ -112,6 +113,10 @@ export default function HomePage() {
           </Grid2>
         </Container>
       </Hero>
+
+      <Container>
+        <UserReviews />
+      </Container>
 
       <Hero>
         <Container sx={{ pb: 8 }}>
