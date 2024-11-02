@@ -38,7 +38,7 @@ export default function ReplacementSuggestions() {
   }
 
   return (
-    <>
+    <div className="replacement-suggestions">
       <div
         className="form-check form-switch ps-0 d-flex align-items-center gap-2"
         data-testid="replacement-suggestions-input-wrapper"
@@ -62,8 +62,8 @@ export default function ReplacementSuggestions() {
       <Slide isOpen={!isActive}>
         <Indented data-testid="replacement-suggestions-description">
           <p className="fs-sm">
-            Use the power of generative AI to suggest replacements for your
-            searches.
+            Looking for the right words? Get AI suggestions in your preferred
+            style.
           </p>
         </Indented>
       </Slide>
@@ -71,11 +71,11 @@ export default function ReplacementSuggestions() {
         <Indented
           className="py-1"
           data-testid="replacement-suggestions-options"
-          style={{ height: 63 }}
+          style={{ height: 56 }}
         >
           <ApiUsage />
         </Indented>
       </Slide>
-    </>
+    </div>
   );
 }

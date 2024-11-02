@@ -13,7 +13,7 @@ html {
     body,
     #app,
     .layout {
-      height: 100%; // !important
+      height: 100% !important;
     }
   }
 }
@@ -47,7 +47,11 @@ input[type="text"] {
 }
 
 .fs-sm {
-  font-size: 0.85rem;
+  font-size: 0.84rem; // specific value to avoid border stacking issues
+}
+
+.fs-xs {
+  font-size: 0.76rem; // specific value to avoid border stacking issues
 }
 
 .z-toast {

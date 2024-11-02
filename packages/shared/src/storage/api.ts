@@ -14,6 +14,8 @@ const {
   storage: { sync },
 } = browser;
 
+const localStorageProvider = getStorageProvider("local");
+
 export const storageClear = sync.clear;
 export const storageGet = sync.get;
 export const storageRemove = sync.remove;
@@ -76,21 +78,18 @@ export async function storageSetByKeys(
     /**
      * Clean up orphaned matchers from `local` storage.
      */
-    const matchersMap = new Set<string>(
-      matchers?.map((matcher) => matcher.identifier)
-    );
-
-    const localStorage = getStorageProvider("local");
-    const { recentSuggestions } = (await localStorage.get()) as LocalStorage;
+    const matchersSet = new Set(matchers?.map((matcher) => matcher.identifier));
+    const { recentSuggestions } =
+      (await localStorageProvider.get()) as LocalStorage;
 
     if (recentSuggestions) {
       Object.keys(recentSuggestions).forEach((key) => {
-        if (!matchersMap.has(key)) {
+        if (!matchersSet.has(key)) {
           delete recentSuggestions[key];
         }
       });
 
-      await localStorage.set({
+      await localStorageProvider.set({
         recentSuggestions,
       });
     }
