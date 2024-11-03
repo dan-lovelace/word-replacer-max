@@ -1,6 +1,7 @@
+import { useLanguage } from "../../lib/language";
 import { useConfig } from "../../store/Config";
 
-import Alert from "../Alerts";
+import Alert, { ALERT_SIZES } from "../Alerts";
 import RuleRow from "../rules/RuleRow";
 
 import AddNewRule from "./AddNewRule";
@@ -11,17 +12,23 @@ export default function RuleList() {
       sync: { matchers },
     },
   } = useConfig();
+  const { rules: lang } = useLanguage();
 
   if (!Boolean(matchers?.length)) {
     return (
       <div className="row">
         <div className="col-12 col-lg-8 col-xxl-6">
-          <Alert title="No rules">
-            Your rules list is empty.{" "}
-            <AddNewRule className="btn btn-link alert-link p-0 mx-1">
-              Click here
-            </AddNewRule>{" "}
-            to create your first replacement.
+          <Alert
+            title={lang.EMPTY_RULES_LIST_ALERT_TITLE}
+            style={{ maxWidth: ALERT_SIZES.sm }}
+          >
+            {lang.EMPTY_RULES_LIST_ALERT_BODY}
+            <div className="mt-3">
+              <AddNewRule
+                className="btn btn-primary btn-sm"
+                text="Create new rule"
+              />
+            </div>
           </Alert>
         </div>
       </div>

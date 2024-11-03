@@ -11,9 +11,14 @@ import MaterialIcon from "../icon/MaterialIcon";
 type AddNewRuleProps = {
   children?: PreactChildren;
   className?: string;
+  text?: string;
 };
 
-export default function AddNewRule({ children, className }: AddNewRuleProps) {
+export default function AddNewRule({
+  children,
+  className,
+  text = "New rule",
+}: AddNewRuleProps) {
   const {
     storage: {
       sync: { matchers },
@@ -56,8 +61,8 @@ export default function AddNewRule({ children, className }: AddNewRuleProps) {
       <span className="d-flex align-items-center">
         {children ?? (
           <>
-            <MaterialIcon className="me-2" name="add" />
-            New rule
+            <MaterialIcon className="me-2" name="add" size="sm" />
+            {text}
           </>
         )}
       </span>

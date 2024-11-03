@@ -12,6 +12,10 @@ type AlertProps = ComponentProps<"div"> & {
   title?: string;
 };
 
+export const ALERT_SIZES = {
+  sm: 600,
+};
+
 export default function Alert({
   children,
   severity = "info",
@@ -25,7 +29,7 @@ export default function Alert({
       role="alert"
     >
       {title && <div className="alert-heading fw-bold">{title}</div>}
-      <div className="d-flex align-items-center">{children}</div>
+      <div>{children}</div>
     </div>
   );
 }

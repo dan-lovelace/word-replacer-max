@@ -73,7 +73,7 @@ const userReviews: UserReview[] = [
     rating: 5,
     text: "Oct 25, 2024",
   },
-];
+].reverse();
 
 export default function UserReviews() {
   const { palette } = useTheme();

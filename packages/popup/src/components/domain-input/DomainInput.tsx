@@ -9,9 +9,12 @@ import { useLanguage } from "../../lib/language";
 import { useConfig } from "../../store/Config";
 
 import { useToast } from "../alert/useToast";
-import Alert from "../Alerts";
+import Alert, { ALERT_SIZES } from "../Alerts";
 import Button from "../button/Button";
 import Chip from "../Chip";
+import MaterialIcon from "../icon/MaterialIcon";
+import Tooltip from "../Tooltip";
+import Slide from "../transition/Slide";
 
 export default function DomainInput() {
   const [value, setValue] = useState("");
@@ -90,61 +93,31 @@ export default function DomainInput() {
   };
 
   const { domains: lang } = language;
+  const canAddCurrentHostname = Boolean(
+    currentHostname && !domainList?.includes(currentHostname)
+  );
+  const domainsExist = Boolean(domainList?.length);
 
   return (
     <div className="container-fluid gx-0 d-flex flex-column gap-3">
       <div className="row">
         <div className="col-12 col-lg-8">
-          <div className="fw-bold fs-5 mb-1">{lang.LIST_EFFECT_QUESTION}</div>
-          <div className="d-flex flex-column gap-2">
-            <div className="form-check m-0">
-              <div>
-                <input
-                  checked={preferences?.domainListEffect === "allow"}
-                  className="form-check-input"
-                  id="allowRadio"
-                  name="allow"
-                  type="radio"
-                  onChange={handleEffectChange("allow")}
-                />
-                <label className="form-check-label" for="allowRadio">
-                  <span className="fw-medium">
-                    {lang.LIST_EFFECT_ALLOWLIST_NAME}
-                  </span>{" "}
-                  - {lang.LIST_EFFECT_ALLOWLIST_LABEL}
-                </label>
-              </div>
-            </div>
-            <div className="form-check m-0">
-              <div>
-                <input
-                  checked={preferences?.domainListEffect === "deny"}
-                  className="form-check-input"
-                  id="denyRadio"
-                  name="deny"
-                  type="radio"
-                  onChange={handleEffectChange("deny")}
-                />
-                <label className="form-check-label" for="denyRadio">
-                  <span className="fw-medium">
-                    {lang.LIST_EFFECT_BLOCKLIST_NAME}
-                  </span>{" "}
-                  - {lang.LIST_EFFECT_BLOCKLIST_LABEL}
-                </label>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="row">
-        <div className="col-12 col-lg-8">
-          <div className="fw-bold fs-5 mb-1">My Domains</div>
+          <div className="fw-bold fs-5 mb-1">{lang.DOMAINS_LIST_HEADING}</div>
           <form
             className="position-relative flex-fill"
             onSubmit={handleFormSubmit}
           >
             <div className="pb-2">
-              {Boolean(domainList?.length) ? (
+              <Slide isOpen={!domainsExist}>
+                <Alert
+                  title={lang.EMPTY_DOMAINS_LIST_ALERT_TITLE}
+                  style={{ maxWidth: ALERT_SIZES.sm }}
+                  severity="success"
+                >
+                  {lang.EMPTY_DOMAINS_LIST_ALERT_BODY}
+                </Alert>
+              </Slide>
+              {domainsExist && (
                 <div className="d-flex align-items-start flex-wrap gap-1">
                   {domainList?.map((domain, idx) => (
                     <Chip
@@ -154,14 +127,6 @@ export default function DomainInput() {
                     />
                   ))}
                 </div>
-              ) : (
-                <Alert
-                  title={lang.EMPTY_DOMAINS_LIST_ALERT_TITLE}
-                  style={{ maxWidth: 600 }}
-                  severity="success"
-                >
-                  {lang.EMPTY_DOMAINS_LIST_ALERT_BODY}
-                </Alert>
               )}
             </div>
             <input
@@ -179,15 +144,82 @@ export default function DomainInput() {
             </button>
           </form>
 
-          {currentHostname && !domainList?.includes(currentHostname) && (
-            <Button
-              className="btn btn-link btn-sm mt-2 text-decoration-none"
-              startIcon="language"
-              onClick={handleAddCurrentClick}
-            >
-              Add current ({currentHostname})
-            </Button>
-          )}
+          <Button
+            className="btn btn-link btn-sm mt-1 text-decoration-none"
+            disabled={!canAddCurrentHostname}
+            startIcon="language"
+            onClick={handleAddCurrentClick}
+            style={{
+              opacity: canAddCurrentHostname ? 1 : 0,
+              transition: "opacity 90ms ease-in",
+            }}
+          >
+            {lang.ADD_CURRENT_DOMAIN_BUTTON_TEXT} ({currentHostname})
+          </Button>
+        </div>
+      </div>
+      <div className="row">
+        <div className="col-12 col-lg-8">
+          <Slide isOpen={Boolean(domainList && domainList.length)}>
+            <div className="fw-bold fs-5">{lang.REPLACEMENT_SCOPE_HEADING}</div>
+            <div className="fs-sm mb-2">
+              {lang.REPLACEMENT_SCOPE_SUB_HEADING}
+            </div>
+            <div className="d-flex flex-column gap-2">
+              <div className="form-check d-flex align-items-center m-0">
+                <div>
+                  <input
+                    checked={preferences?.domainListEffect === "deny"}
+                    className="form-check-input"
+                    id="denyRadio"
+                    name="deny"
+                    type="radio"
+                    onChange={handleEffectChange("deny")}
+                  />
+                  <label className="form-check-label" for="denyRadio">
+                    <span className="fw-medium">
+                      {lang.LIST_EFFECT_BLOCKLIST_NAME}
+                    </span>{" "}
+                    - {lang.LIST_EFFECT_BLOCKLIST_LABEL}
+                  </label>
+                </div>
+                &nbsp;
+                <Tooltip title={lang.LIST_EFFECT_BLOCKLIST_DESCRIPTION}>
+                  <MaterialIcon
+                    className="text-body-tertiary"
+                    name="info"
+                    size="sm"
+                  />
+                </Tooltip>
+              </div>
+              <div className="form-check d-flex align-items-center m-0">
+                <div>
+                  <input
+                    checked={preferences?.domainListEffect === "allow"}
+                    className="form-check-input"
+                    id="allowRadio"
+                    name="allow"
+                    type="radio"
+                    onChange={handleEffectChange("allow")}
+                  />
+                  <label className="form-check-label" for="allowRadio">
+                    <span className="fw-medium">
+                      {lang.LIST_EFFECT_ALLOWLIST_NAME}
+                    </span>{" "}
+                    - {lang.LIST_EFFECT_ALLOWLIST_LABEL}
+                  </label>
+                </div>
+                &nbsp;
+                <Tooltip title={lang.LIST_EFFECT_ALLOWLIST_DESCRIPTION}>
+                  <MaterialIcon
+                    className="text-body-tertiary"
+                    name="info"
+                    size="sm"
+                  />
+                </Tooltip>
+              </div>
+            </div>
+          </Slide>
         </div>
       </div>
     </div>

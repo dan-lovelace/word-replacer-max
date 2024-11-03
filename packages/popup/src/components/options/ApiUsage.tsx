@@ -16,6 +16,8 @@ import ContactSupportLink from "../button/ContactSupportLink";
 import MaterialIcon from "../icon/MaterialIcon";
 import Tooltip from "../Tooltip";
 
+const PROGRESS_BAR_WIDTH_PX = 220;
+
 export default function ApiUsage() {
   const {
     storage: {
@@ -77,28 +79,35 @@ export default function ApiUsage() {
 
   const barColor = useMemo(() => {
     if (usagePercent === 100) {
-      return "bg-danger";
+      return "bg-danger-subtle";
     } else if (usagePercent >= 80) {
-      return "bg-warning";
+      return "bg-warning-subtle";
     }
 
-    return "bg-info";
+    return "bg-success-subtle";
   }, [usagePercent]);
 
   return (
     <div data-testid="api-usage">
       <div className="mb-1">
-        <div className="d-flex align-items-center gap-1 fs-sm">
-          <span>
+        <div
+          className="d-flex align-items-center gap-1 fs-sm"
+          style={{ maxWidth: PROGRESS_BAR_WIDTH_PX }}
+        >
+          <span className="flex-fill">
             Usage: {count} / {threshold}
           </span>
           <Tooltip title={`In the last ${period.value} ${period.interval}`}>
-            <MaterialIcon className="text-secondary" name="info" size="sm" />
+            <MaterialIcon
+              className="text-body-tertiary"
+              name="info"
+              size="sm"
+            />
           </Tooltip>
         </div>
         <div
           className="d-flex align-items-center gap-2"
-          style={{ maxWidth: 220 }}
+          style={{ maxWidth: PROGRESS_BAR_WIDTH_PX }}
         >
           <div
             aria-label="Replacement suggestion usage"
@@ -120,7 +129,7 @@ export default function ApiUsage() {
         className={cx(
           "d-flex align-items-center",
           "fs-xs text-secondary text-nowrap",
-          isWarning ? "opacity-1" : "opacity-0"
+          isWarning ? "opacity-1" : "opacity-0 pe-none"
         )}
         style={{
           transition: "opacity 150ms",

@@ -215,8 +215,8 @@ export default function Layout({ children }: LayoutProps) {
                     </>
                   ) : (
                     <>
-                      <MenuItemContainer className="border-bottom bg-warning fw-bold">
-                        You're missing out on premium features
+                      <MenuItemContainer className="bg-primary-subtle fw-bold">
+                        Sign in to get more
                       </MenuItemContainer>
                       <DropdownMenuContainer>
                         <MenuItem
