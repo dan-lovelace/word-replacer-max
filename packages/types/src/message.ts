@@ -1,4 +1,4 @@
-import { AppUser, PopupAlertSeverity, WebAppPingResponse } from ".";
+import { AppUser, PopupAlertSeverity, WebAppPingResponse } from "./";
 import { ApiAuthTokens } from "./api";
 
 export interface BaseMessage<T extends string, K extends Record<T, unknown>>
@@ -30,6 +30,8 @@ export type RuntimeMessageKind = keyof RuntimeMessageKindMap;
 export type RuntimeMessageKindMap = {
   currentUserRequest: undefined;
   currentUserResponse: ErrorableMessage<AppUser>;
+  forceRefreshTokensRequest: undefined;
+  forceRefreshTokensResponse: ErrorableMessage<{ success: boolean }>;
   signOut: undefined;
 };
 

@@ -13,6 +13,13 @@ export default {
         "You have exceeded your usage limit for this period. Check the Options page for more details.",
     },
   },
+  auth: {
+    TERMS_ACCEPTANCE_REQUIRED_MESSAGE: "Please review and accept our latest",
+    TERMS_ACCEPTANCE_REQUIRED_LINK_TEXT: "Terms and Conditions",
+    TERMS_ACCEPTANCE_ACCEPT_BUTTON_TEXT: "Accept",
+    TERMS_ACCEPTANCE_GENERAL_ERROR_MESSAGE:
+      "Something went wrong accepting terms",
+  },
   domains: {
     ADD_DOMAIN_FORM_INPUT_PLACEHOLDER: "Enter a domain (e.g., example.com)",
     ADD_DOMAIN_FORM_SUBMIT_BUTTON_TEXT: "Add",

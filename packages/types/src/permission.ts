@@ -1,10 +1,7 @@
 type PolicyName = "member" | "systemAdmin";
 
-type TermsVersion = "1.0.0";
-
 export type TermsAcceptance = {
   acceptedOn: string;
-  acceptedVersion: TermsVersion;
 };
 
 export type TokenClaims = {

@@ -1,5 +1,9 @@
 import { ApiResponse } from "./";
 
+export type ApiAcceptTermsRequest = undefined;
+
+export type ApiAcceptTermsResponse = ApiResponse<undefined>;
+
 export type ApiAuthTokensRequest = {
   code: string;
 };

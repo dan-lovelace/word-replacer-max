@@ -97,6 +97,30 @@ export function startConnectListener() {
             break;
           }
 
+          case "forceRefreshTokensRequest": {
+            try {
+              await getCurrentUser(true);
+
+              const responseMessage = createRuntimeMessage(
+                "forceRefreshTokensResponse",
+                {
+                  data: { success: true },
+                }
+              );
+              runtimePort.postMessage({ data: responseMessage });
+            } catch (error) {
+              const responseMessage = createRuntimeMessage(
+                "forceRefreshTokensResponse",
+                {
+                  error: getError(error),
+                }
+              );
+              runtimePort.postMessage({ data: responseMessage });
+            }
+
+            break;
+          }
+
           case "signOut": {
             await signUserOut();
 

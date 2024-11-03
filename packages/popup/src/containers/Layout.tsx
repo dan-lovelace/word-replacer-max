@@ -20,6 +20,7 @@ import DropdownButton from "../components/menu/DropdownButton";
 import DropdownMenuContainer from "../components/menu/DropdownMenuContainer";
 import MenuItem from "../components/menu/MenuItem";
 import MenuItemContainer from "../components/menu/MenuItemContainer";
+import TermsAcceptance from "../components/terms/TermsAcceptance";
 import { useLanguage } from "../lib/language";
 import { getNotificationMessage } from "../lib/routes";
 import { PreactChildren } from "../lib/types";
@@ -135,6 +136,7 @@ export default function Layout({ children }: LayoutProps) {
             </div>
           </div>
         )}
+        <TermsAcceptance />
         <div className="d-flex w-100">
           <div className="d-flex align-items-center justify-content-center border-bottom">
             <IconButton

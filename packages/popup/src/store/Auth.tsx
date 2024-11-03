@@ -11,7 +11,11 @@ import {
 
 import { createRuntimeMessage } from "@worm/shared";
 import { browser } from "@worm/shared/src/browser";
-import { canAccess, JWT_GROUPS_KEY } from "@worm/shared/src/permission";
+import {
+  getJWTCustomAttributes,
+  groupsHavePermission,
+  JWT_GROUPS_KEY,
+} from "@worm/shared/src/permission";
 import { AppUser } from "@worm/types";
 import { RuntimeMessage, RuntimeMessageKind } from "@worm/types/src/message";
 import { UserGroups, UserPermission } from "@worm/types/src/permission";
@@ -43,8 +47,15 @@ export function AuthProvider({ children }: { children: PreactChildren }) {
    * Construct the current user object.
    */
   const currentUser = useMemo<AppUser>(() => {
-    return authLastAuthUser !== undefined ? { email: authLastAuthUser } : false;
-  }, [authLastAuthUser]);
+    if (authLastAuthUser === undefined) return false;
+
+    const customAttributes = getJWTCustomAttributes(authIdToken);
+
+    return {
+      email: authLastAuthUser,
+      termsAcceptance: customAttributes?.terms_acceptance,
+    };
+  }, [authIdToken, authLastAuthUser]);
 
   const { refetch: fetchCurrentUser } = useQuery<AppUser, Error, AppUser>({
     queryKey: ["getCurrentUser"],
@@ -76,7 +87,9 @@ export function AuthProvider({ children }: { children: PreactChildren }) {
         const messageHandler = (event: RuntimeMessage<RuntimeMessageKind>) => {
           switch (event.data.kind) {
             case "currentUserResponse": {
-              doResolve(event.data.details?.data ?? false);
+              const currentUser = event.data.details?.data as AppUser;
+
+              doResolve(currentUser ?? false);
               break;
             }
 
@@ -108,7 +121,7 @@ export function AuthProvider({ children }: { children: PreactChildren }) {
       return false;
     }
 
-    return canAccess(groups as UserGroups, permission);
+    return groupsHavePermission(groups as UserGroups, permission);
   };
 
   return (

@@ -1,6 +1,7 @@
 import { Storage as BrowserStorage } from "webextension-polyfill";
 import { z } from "zod";
 
+import { TermsAcceptance } from "./permission";
 import { RecentSuggestions } from "./replacement";
 
 const identificationErrorMessages: Record<IdentificationErrorName, string> = {
@@ -16,6 +17,7 @@ export const storageVersions = ["1.0.0", "1.1.0", "1.1.1"] as const;
 export type AppUser =
   | {
       email: string;
+      termsAcceptance?: TermsAcceptance;
     }
   | false;
 
@@ -79,7 +81,7 @@ export type MatcherInSync = Record<string, Matcher>;
  */
 export type PCRECaseMode = "lower" | "title" | "upper" | null;
 
-export type PopupAlertSeverity = "danger" | "info" | "success";
+export type PopupAlertSeverity = "danger" | "info" | "success" | "warning";
 
 export type PopupTab = "domains" | "options" | "rules" | "support";
 
