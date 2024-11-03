@@ -50,7 +50,7 @@ export default function ColorSelect({
         className="d-flex"
         minWidth="unset"
         placement="bottom-start"
-        buttonProps={{
+        componentProps={{
           className: "btn btn-outline-primary rounded-end-0 h-100",
           children: (
             <div

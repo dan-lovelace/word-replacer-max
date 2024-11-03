@@ -163,7 +163,7 @@ export default function ExportButton({
 
   return (
     <DropdownButton
-      buttonProps={{
+      componentProps={{
         children: isLoading ? (
           <>
             <span

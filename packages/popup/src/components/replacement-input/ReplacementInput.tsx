@@ -6,7 +6,7 @@ import axios, { AxiosError, AxiosRequestConfig } from "axios";
 
 import { useMutation } from "@tanstack/react-query";
 
-import { isReplacementEmpty } from "@worm/shared";
+import { cx, isReplacementEmpty } from "@worm/shared";
 import { getApiEndpoint } from "@worm/shared/src/api";
 import { DEFAULT_TONE_OPTION } from "@worm/shared/src/replace/lib/suggest";
 import { getStorageProvider, storageSetByKeys } from "@worm/shared/src/storage";
@@ -26,7 +26,7 @@ import { useConfig } from "../../store/Config";
 
 import { useToast } from "../alert/useToast";
 import Button from "../button/Button";
-import IconButton from "../button/IconButton";
+import IconButton, { ICON_BUTTON_BASE_CLASS } from "../button/IconButton";
 import DropdownButton from "../menu/DropdownButton";
 import DropdownMenuContainer from "../menu/DropdownMenuContainer";
 import MenuItem from "../menu/MenuItem";
@@ -292,10 +292,11 @@ export default function ReplacementInput({
         />
         {canSuggest && (
           <DropdownButton
-            Component={IconButton}
             noFlip
-            buttonProps={{
-              className: "px-1",
+            offset={3}
+            Component={IconButton}
+            componentProps={{
+              className: cx(ICON_BUTTON_BASE_CLASS, "rounded-0 px-1"),
               disabled: isGenerateReplacementsDisabled,
               disabledTooltip: "Add search terms to get suggestions",
               icon: magicWand,
@@ -379,7 +380,7 @@ export default function ReplacementInput({
         )}
         {replacementStyle?.active && (
           <IconButton
-            className="px-2"
+            className={cx(ICON_BUTTON_BASE_CLASS, "px-2")}
             disabled={disabled}
             icon={
               useGlobalReplacementStyle
@@ -387,7 +388,7 @@ export default function ReplacementInput({
                 : "format_color_reset"
             }
             iconProps={{
-              className: "text-secondary fs-6",
+              className: "text-secondary",
               size: "sm",
             }}
             title={

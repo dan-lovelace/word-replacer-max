@@ -12,7 +12,10 @@ import { PopupTab } from "@worm/types";
 
 import { useToast } from "../components/alert/useToast";
 import Button from "../components/button/Button";
-import IconButton, { IconButtonProps } from "../components/button/IconButton";
+import IconButton, {
+  ICON_BUTTON_BASE_CLASS,
+  IconButtonProps,
+} from "../components/button/IconButton";
 import DropdownButton from "../components/menu/DropdownButton";
 import DropdownMenuContainer from "../components/menu/DropdownMenuContainer";
 import MenuItem from "../components/menu/MenuItem";
@@ -136,6 +139,7 @@ export default function Layout({ children }: LayoutProps) {
           <div className="d-flex align-items-center justify-content-center border-bottom">
             <IconButton
               className={cx(
+                ICON_BUTTON_BASE_CLASS,
                 "px-3",
                 preferences?.extensionEnabled ? "text-success" : "text-danger"
               )}
@@ -177,8 +181,11 @@ export default function Layout({ children }: LayoutProps) {
           </ul>
           <div className="d-flex align-items-center justify-content-center border-bottom px-2">
             <DropdownButton<IconButtonProps>
-              buttonProps={{
-                className: cx(!currentUser && "text-primary"),
+              componentProps={{
+                className: cx(
+                  ICON_BUTTON_BASE_CLASS,
+                  !currentUser && "text-primary"
+                ),
                 icon: currentUser ? "account_circle" : "person",
                 style: {
                   transition: "color 150ms",
@@ -238,7 +245,7 @@ export default function Layout({ children }: LayoutProps) {
             />
             {!isPoppedOut && (
               <DropdownButton<IconButtonProps>
-                buttonProps={{
+                componentProps={{
                   icon: "more_vert",
                 }}
                 Component={IconButton}

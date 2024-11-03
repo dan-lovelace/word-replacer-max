@@ -6,7 +6,7 @@ export default (
     <img
       alt="magic wand"
       src="/assets/img/wand-icon.png"
-      style={{ marginTop: 2, width: "100%" }}
+      style={{ width: "100%" }}
     />
   </div>
 );

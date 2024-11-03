@@ -12,6 +12,7 @@ import { useLanguage } from "../../lib/language";
 import { useConfig } from "../../store/Config";
 
 import { useToast } from "../alert/useToast";
+import IconButton from "../button/IconButton";
 import MaterialIcon from "../icon/MaterialIcon";
 import QueryInput from "../query-input/QueryInput";
 import ReplacementInput from "../replacement-input/ReplacementInput";
@@ -220,26 +221,22 @@ export default function RuleRow({
       </div>
       {!disabled && (
         <div className="rule-row-actions col-auto ps-0">
-          <button
+          <IconButton
             data-dismiss="delete"
             className={cx(
-              "btn",
+              "btn px-2",
               isConfirmingDelete
                 ? "btn-danger"
                 : "btn-light bg-transparent border-0"
             )}
+            icon={isConfirmingDelete ? "delete" : "close"}
+            iconProps={{
+              size: "sm",
+            }}
             title={isConfirmingDelete ? "Confirm" : "Delete Rule"}
             onBlur={() => clickawayListener(new MouseEvent(""))}
             onClick={handleDeleteClick}
-          >
-            <span data-dismiss="delete" className="d-flex align-items-center">
-              <MaterialIcon
-                name={isConfirmingDelete ? "delete" : "close"}
-                size="sm"
-                data-dismiss="delete"
-              />
-            </span>
-          </button>
+          />
         </div>
       )}
     </div>

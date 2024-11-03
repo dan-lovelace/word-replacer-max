@@ -19,9 +19,9 @@ import Button from "../button/Button";
 import { DropdownContext } from "./hooks/use-dropdown";
 
 type DropdownButtonProps<T> = {
-  buttonProps?: T;
   className?: string;
   Component?: FC<T>;
+  componentProps?: T;
   menuContent: PreactChildren;
   minWidth?: string | number;
   noFlip?: boolean;
@@ -31,8 +31,8 @@ type DropdownButtonProps<T> = {
 
 export default function DropdownButton<T>({
   className,
-  buttonProps,
   Component = Button,
+  componentProps,
   menuContent,
   minWidth = 300,
   noFlip = false,
@@ -63,9 +63,13 @@ export default function DropdownButton<T>({
 
   return (
     <div className={cx("wrm-dropdown-button", className)}>
-      <div ref={refs.setReference} {...getReferenceProps()}>
+      <div
+        className="d-flex h-100"
+        ref={refs.setReference}
+        {...getReferenceProps()}
+      >
         <MemoizedComponent
-          {...(buttonProps as T)}
+          {...(componentProps as T)}
           onClick={toggleDropdown}
           aria-expanded={isOpen}
           aria-haspopup="true"

@@ -24,7 +24,7 @@ export default function Chip({
     >
       {identifier}
       <Button
-        className="bg-transparent border-0 px-0 mx-1 text-body-tertiary"
+        className="btn btn-light bg-transparent border-0 px-0 py-0 mx-1 text-body-tertiary"
         disabled={disabled}
         title="Remove search query"
         type="button"

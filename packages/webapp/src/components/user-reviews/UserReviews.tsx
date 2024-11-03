@@ -41,6 +41,11 @@ const userReviews: UserReview[] = [
   {
     author: "Chrome user",
     rating: 5,
+    text: "Jul 25, 2024",
+  },
+  {
+    author: "Chrome user",
+    rating: 5,
     text: "Jul 30, 2024",
   },
   {
@@ -63,6 +68,11 @@ const userReviews: UserReview[] = [
     rating: 5,
     text: "Oct 14, 2024",
   },
+  {
+    author: "Chrome user",
+    rating: 5,
+    text: "Oct 25, 2024",
+  },
 ];
 
 export default function UserReviews() {
@@ -84,7 +94,7 @@ export default function UserReviews() {
               mx: 1.5,
               my: 2,
               transition: "scale 0.3s",
-              width: { xs: 300, md: 380 },
+              width: 300,
               "&:hover": {
                 scale: 1.075,
               },

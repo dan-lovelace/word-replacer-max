@@ -15,6 +15,8 @@ export type IconButtonProps = Omit<
   iconProps?: Omit<MaterialIconProps, "default" | "name">;
 };
 
+export const ICON_BUTTON_BASE_CLASS = "btn btn-light bg-transparent";
+
 export default function IconButton({
   className,
   icon,
@@ -25,18 +27,18 @@ export default function IconButton({
   const button = useMemo(
     () => (
       <button
-        className={cx("btn btn-light bg-transparent border-0", className)}
+        className={cx("border-0", className ?? ICON_BUTTON_BASE_CLASS)}
         type="button"
         {...rest}
       >
         <MaterialIcon
+          {...iconProps}
           className={cx(
             "d-flex align-items-center justify-content-center",
             iconProps?.className
           )}
           name={icon}
           size={iconProps?.size ?? "lg"}
-          {...iconProps}
         />
       </button>
     ),
