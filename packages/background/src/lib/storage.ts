@@ -28,7 +28,7 @@ export async function initializeStorage() {
   const initialStorage: SyncStorage = {};
 
   if (domainList === undefined) {
-    initialStorage.domainList = ["docs.google.com", "github.com"];
+    initialStorage.domainList = [];
   }
 
   if (exportLinks === undefined) {
@@ -40,17 +40,17 @@ export async function initializeStorage() {
       {
         active: true,
         identifier: uuidv4(),
-        queries: ["my jaw dropped", "I was shocked"],
+        queries: ["awesome", "amazing", "insane"],
         queryPatterns: [],
-        replacement: "I was surprised",
+        replacement: "wonderful",
         useGlobalReplacementStyle: true,
       },
       {
         active: true,
         identifier: uuidv4(),
-        queries: ["This."],
-        queryPatterns: ["case", "wholeWord"],
-        replacement: " ",
+        queries: ["color"],
+        queryPatterns: ["wholeWord"],
+        replacement: "colour",
         useGlobalReplacementStyle: true,
       },
     ];
