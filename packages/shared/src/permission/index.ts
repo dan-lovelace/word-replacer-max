@@ -1,12 +1,26 @@
+import { z } from "zod";
+
 import {
   UserGroups,
   UserPermission,
+  UserPoolCustomAttributes,
   UserRolePermission,
   UserRolePolicy,
 } from "@worm/types/src/permission";
 
+export const CustomAttributesSchema = z
+  .object({
+    terms_acceptance: z.object({
+      acceptedOn: z.string(),
+      acceptedVersion: z.literal("1.0.0"),
+    }),
+  })
+  .strict() satisfies z.ZodType<UserPoolCustomAttributes>;
+
+export type CustomAttributes = z.infer<typeof CustomAttributesSchema>;
+
 const rolePolicies: UserRolePolicy = {
-  member: ["api:InvokeWhoAmI", "api:InvokeSuggest"],
+  member: ["api:InvokeAcceptTerms", "api:InvokeWhoAmI", "api:InvokeSuggest"],
   systemAdmin: [],
 };
 
