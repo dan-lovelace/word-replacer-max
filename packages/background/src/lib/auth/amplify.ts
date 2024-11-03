@@ -228,12 +228,12 @@ Hub.listen("auth", (event) => {
   logDebug("Hub auth event", event);
 });
 
-export const getCurrentUser = async (): Promise<AppUser> => {
-  const authSession = await fetchAuthSession();
+export const getCurrentUser = async (forceRefresh: boolean = false) => {
+  const authSession = await fetchAuthSession({ forceRefresh });
   const email = authSession.tokens?.idToken?.payload.email?.toString();
 
   if (!email) {
-    return false;
+    return undefined;
   }
 
   return { email };

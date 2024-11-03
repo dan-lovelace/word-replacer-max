@@ -1,9 +1,4 @@
-import {
-  AuthError,
-  decodeJWT,
-  fetchAuthSession,
-  signOut,
-} from "aws-amplify/auth";
+import { AuthError, decodeJWT, signOut } from "aws-amplify/auth";
 
 import {
   createRuntimeMessage,
@@ -175,7 +170,7 @@ export function startMessageListener() {
              * Now that storage is updated, ensure fetching the Amplify session
              * succeeds.
              */
-            await fetchAuthSession();
+            await getCurrentUser();
 
             sendTabMessage("authTokensResponse", {
               data: {
@@ -196,9 +191,8 @@ export function startMessageListener() {
 
         case "authUserRequest": {
           try {
-            const authSession = await fetchAuthSession();
-            const email =
-              authSession.tokens?.idToken?.payload.email?.toString();
+            const currentUser = await getCurrentUser();
+            const email = currentUser?.email?.toString();
 
             if (!email) {
               throw new IdentificationError("UserNotLoggedIn");
