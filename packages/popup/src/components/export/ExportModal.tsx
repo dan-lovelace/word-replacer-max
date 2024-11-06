@@ -23,7 +23,7 @@ function refineMatchers(
         (selected) => selected.identifier === matcher.identifier
       ) ?? -1;
 
-    if (selectedRules && selectedIdx > -1) {
+    if (selectedRules && selectedRules[selectedIdx]) {
       isSelected = selectedRules[selectedIdx].isSelected;
     }
 
@@ -74,9 +74,12 @@ export default function ExportModal() {
           (matcher) => matcher.identifier === identifier
         ) ?? -1;
 
-      if (!selectedRules || selectedIdx < 0) return;
+      const newSelected = [...(selectedRules ?? [])];
 
-      const newSelected = [...selectedRules];
+      if (!selectedRules || selectedIdx < 0 || !newSelected[selectedIdx]) {
+        return;
+      }
+
       newSelected[selectedIdx].isSelected = checked;
 
       setSelectedRules(newSelected);

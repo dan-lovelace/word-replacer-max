@@ -138,7 +138,7 @@ export default function ReplacementInput({
       (matcher) => matcher.identifier === identifier
     );
 
-    if (matcherIdx < 0) return;
+    if (!newMatchers[matcherIdx]) return;
 
     newMatchers[matcherIdx].useGlobalReplacementStyle = !Boolean(
       newMatchers[matcherIdx].useGlobalReplacementStyle
@@ -261,7 +261,7 @@ export default function ReplacementInput({
   }, [recentSuggestions, suggestResponse]);
 
   const canSuggest =
-    replacementSuggest?.active && hasAccess("api:InvokeSuggest");
+    replacementSuggest?.active && hasAccess("api:post:Suggest");
   const inputWidth =
     INPUT_WIDTH_BASE -
     ((canSuggest ? INPUT_BUTTON_WIDTH : 0) +

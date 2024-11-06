@@ -24,11 +24,11 @@ export default function FileImport() {
     const input = event.target as HTMLInputElement;
     const { files } = input;
 
-    if (!files || files.length !== 1) {
+    if (!files || files.length > 1 || !files[0]) {
       return;
     }
 
-    const [file] = files;
+    const file = files[0];
     const fileReader = new FileReader();
 
     fileReader.onloadend = async () => {

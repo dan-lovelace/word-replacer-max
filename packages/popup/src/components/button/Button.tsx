@@ -3,12 +3,13 @@ import { useMemo } from "preact/hooks";
 
 import { cx } from "@worm/shared";
 
-import MaterialIcon from "../icon/MaterialIcon";
+import MaterialIcon, { MaterialIconProps } from "../icon/MaterialIcon";
 import Tooltip from "../Tooltip";
 
 export type ButtonProps = ComponentProps<"button"> & {
   disabledTooltip?: string;
   startIcon?: string;
+  startIconSize?: MaterialIconProps["size"];
 };
 
 export default function Button({
@@ -16,6 +17,7 @@ export default function Button({
   className,
   disabledTooltip,
   startIcon,
+  startIconSize = "md",
   ...rest
 }: ButtonProps) {
   const button = useMemo(
@@ -26,7 +28,7 @@ export default function Button({
         {...rest}
       >
         <span className="d-flex align-items-center gap-2">
-          {startIcon && <MaterialIcon name={startIcon} />}
+          {startIcon && <MaterialIcon name={startIcon} size={startIconSize} />}
           {children}
         </span>
       </button>

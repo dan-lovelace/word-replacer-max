@@ -93,7 +93,9 @@ export default function RuleRow({
       (matcher) => matcher.identifier === identifier
     );
 
-    if (matcherIdx < 0) return;
+    if (!newMatchers[matcherIdx]) {
+      return;
+    }
 
     newMatchers[matcherIdx].active = !newMatchers[matcherIdx].active;
 
@@ -119,7 +121,9 @@ export default function RuleRow({
       (matcher) => matcher.identifier === identifier
     );
 
-    if (matcherIdx < 0) return;
+    if (!newMatchers[matcherIdx]) {
+      return;
+    }
 
     newMatchers[matcherIdx][key] = newValue;
 

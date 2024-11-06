@@ -16,9 +16,10 @@ import ContactSupportLink from "../button/ContactSupportLink";
 import MaterialIcon from "../icon/MaterialIcon";
 
 const severityIconMap: Record<PopupAlertSeverity, string> = {
-  danger: "warning",
+  danger: "error",
   info: "info",
   success: "check",
+  warning: "warning",
 };
 
 export default function ToastContainer() {
@@ -86,7 +87,7 @@ export default function ToastContainer() {
       currentWindow: true,
     });
 
-    browser.tabs.reload(tabs[0].id);
+    browser.tabs.reload(tabs[0]?.id);
   };
 
   return (

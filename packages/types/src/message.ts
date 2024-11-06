@@ -9,6 +9,10 @@ export interface BaseMessage<T extends string, K extends Record<T, unknown>>
   };
 }
 
+export interface ISuccessful {
+  success: boolean;
+}
+
 export type ErrorableMessage<T> = {
   data?: T;
   error?: {
@@ -31,7 +35,7 @@ export type RuntimeMessageKindMap = {
   currentUserRequest: undefined;
   currentUserResponse: ErrorableMessage<AppUser>;
   forceRefreshTokensRequest: undefined;
-  forceRefreshTokensResponse: ErrorableMessage<{ success: boolean }>;
+  forceRefreshTokensResponse: ErrorableMessage<ISuccessful>;
   signOut: undefined;
 };
 

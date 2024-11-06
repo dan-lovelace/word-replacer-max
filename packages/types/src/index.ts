@@ -17,9 +17,10 @@ export const storageVersions = ["1.0.0", "1.1.0", "1.1.1"] as const;
 export type AppUser =
   | {
       email: string;
+      emailVerified: boolean;
       termsAcceptance?: TermsAcceptance;
     }
-  | false;
+  | undefined;
 
 export type DeepPartial<T> = T extends object
   ? {
@@ -83,7 +84,7 @@ export type PCRECaseMode = "lower" | "title" | "upper" | null;
 
 export type PopupAlertSeverity = "danger" | "info" | "success" | "warning";
 
-export type PopupTab = "domains" | "options" | "rules" | "support";
+export type PopupTab = "account" | "domains" | "options" | "rules" | "support";
 
 export type QueryPattern = (typeof queryPatterns)[number];
 

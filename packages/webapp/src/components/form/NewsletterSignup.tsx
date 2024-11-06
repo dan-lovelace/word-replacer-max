@@ -42,7 +42,7 @@ const DEFAULT_FORM_DATA: MarketingContact = {
 
 const useMarketingSignup = () =>
   useMutation<
-    AxiosRequestConfig<ApiMarketingSignupResponse>,
+    AxiosRequestConfig<ApiMarketingSignupRequest>,
     AxiosError<ApiResponse<ApiMarketingSignupResponse>>,
     ApiMarketingSignupRequest
   >({

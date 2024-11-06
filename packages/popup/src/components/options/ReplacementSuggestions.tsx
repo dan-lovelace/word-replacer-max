@@ -33,7 +33,7 @@ export default function ReplacementSuggestions() {
   const inputId = "replacement-suggestion-enabled-checkbox";
   const isActive = Boolean(replacementSuggest?.active);
 
-  if (!hasAccess("api:InvokeSuggest")) {
+  if (!hasAccess("api:post:Suggest")) {
     return <></>;
   }
 

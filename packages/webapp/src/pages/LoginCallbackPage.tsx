@@ -12,6 +12,8 @@ import { useToast } from "../lib/toast/ToastProvider";
 
 const CODE_PARAMETER_NAME = "code";
 
+const ERROR_PARAMETER_NAME = "error_description";
+
 export default function LoginCallbackPage() {
   const [oauthCode, setOauthCode] = useState<string>();
 
@@ -25,7 +27,9 @@ export default function LoginCallbackPage() {
   useEffect(() => {
     function init() {
       const url = new URL(window.location.href);
+
       const queryCode = url.searchParams.get(CODE_PARAMETER_NAME)?.trim();
+      const queryError = url.searchParams.get(ERROR_PARAMETER_NAME)?.trim();
 
       if (queryCode) {
         /**
@@ -35,6 +39,11 @@ export default function LoginCallbackPage() {
         window.history.replaceState({}, "", url);
 
         setOauthCode(queryCode);
+      }
+
+      if (queryError) {
+        navigate(ROUTES.HOME);
+        showToast(queryError, "danger");
       }
     }
 

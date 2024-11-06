@@ -26,6 +26,7 @@ export const API_ROUTES = {
   "GET:authWhoAmI": "/auth/whoami",
   "GET:healthCheck": "/",
   "POST:authAcceptTerms": "/auth/accept-terms",
+  "POST:authDeleteAccount": "/auth/delete-account",
   "POST:authTokens": "/auth/tokens",
   "POST:marketingSignup": "/marketing/signup",
   "POST:share": "/share",

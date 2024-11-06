@@ -17,7 +17,7 @@ import {
   WebAppMessageKindMap,
 } from "@worm/types/src/message";
 
-import { getCurrentUser, signUserOut } from "./auth/amplify";
+import { getAuthTokens, getCurrentUser, signUserOut } from "./auth/session";
 
 let runtimePort: browser.Runtime.Port;
 
@@ -99,7 +99,7 @@ export function startConnectListener() {
 
           case "forceRefreshTokensRequest": {
             try {
-              await getCurrentUser(true);
+              await getAuthTokens(true); // forceful fetch to get latest
 
               const responseMessage = createRuntimeMessage(
                 "forceRefreshTokensResponse",
@@ -216,14 +216,13 @@ export function startMessageListener() {
         case "authUserRequest": {
           try {
             const currentUser = await getCurrentUser();
-            const email = currentUser?.email?.toString();
 
-            if (!email) {
+            if (!currentUser) {
               throw new IdentificationError("UserNotLoggedIn");
             }
 
             sendTabMessage("authUserResponse", {
-              data: { email },
+              data: currentUser,
             });
           } catch (error) {
             if (

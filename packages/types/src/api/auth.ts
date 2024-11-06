@@ -1,8 +1,12 @@
 import { ApiResponse } from "./";
 
-export type ApiAcceptTermsRequest = undefined;
+export type ApiAuthAcceptTermsRequest = undefined;
 
-export type ApiAcceptTermsResponse = ApiResponse<undefined>;
+export type ApiAuthAcceptTermsResponse = ApiResponse<undefined>;
+
+export type ApiAuthDeleteAccountRequest = undefined;
+
+export type ApiAuthDeleteAccountResponse = ApiResponse<undefined>;
 
 export type ApiAuthTokensRequest = {
   code: string;

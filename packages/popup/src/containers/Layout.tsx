@@ -81,6 +81,15 @@ export default function Layout({ children }: LayoutProps) {
     );
   }, [isPoppedOut]);
 
+  const handleAccountClick = () => {
+    const newPreferences = Object.assign({}, preferences);
+    newPreferences.activeTab = "account";
+
+    storageSetByKeys({
+      preferences: newPreferences,
+    });
+  };
+
   const handleExtensionEnabledClick = () => {
     const newPreferences = Object.assign({}, preferences);
     const newEnabled = !Boolean(newPreferences?.extensionEnabled);
@@ -207,6 +216,12 @@ export default function Layout({ children }: LayoutProps) {
                         </div>
                       </MenuItemContainer>
                       <DropdownMenuContainer>
+                        <MenuItem
+                          startIcon="settings"
+                          onClick={handleAccountClick}
+                        >
+                          Account
+                        </MenuItem>
                         <MenuItem
                           startIcon="logout"
                           onClick={handleSignOutClick}

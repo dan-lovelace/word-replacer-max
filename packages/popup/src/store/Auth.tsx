@@ -12,7 +12,7 @@ import {
 import { createRuntimeMessage } from "@worm/shared";
 import { browser } from "@worm/shared/src/browser";
 import {
-  getJWTCustomAttributes,
+  getJWTAppUser,
   groupsHavePermission,
   JWT_GROUPS_KEY,
 } from "@worm/shared/src/permission";
@@ -47,13 +47,16 @@ export function AuthProvider({ children }: { children: PreactChildren }) {
    * Construct the current user object.
    */
   const currentUser = useMemo<AppUser>(() => {
-    if (authLastAuthUser === undefined) return false;
+    if (authLastAuthUser === undefined) {
+      return undefined;
+    }
 
-    const customAttributes = getJWTCustomAttributes(authIdToken);
+    const jwtAppUser = getJWTAppUser(authIdToken);
 
     return {
       email: authLastAuthUser,
-      termsAcceptance: customAttributes?.terms_acceptance,
+      emailVerified: Boolean(jwtAppUser?.emailVerified),
+      termsAcceptance: jwtAppUser?.termsAcceptance,
     };
   }, [authIdToken, authLastAuthUser]);
 
@@ -75,7 +78,7 @@ export function AuthProvider({ children }: { children: PreactChildren }) {
             new Date().getTime() - responsePollStarted >
             responsePollLengthMs
           ) {
-            doResolve(false);
+            doResolve(undefined);
           }
         }, responsePollIntervalMs);
 
@@ -89,12 +92,12 @@ export function AuthProvider({ children }: { children: PreactChildren }) {
             case "currentUserResponse": {
               const currentUser = event.data.details?.data as AppUser;
 
-              doResolve(currentUser ?? false);
+              doResolve(currentUser);
               break;
             }
 
             default:
-              doResolve(false);
+              doResolve(undefined);
           }
         };
 

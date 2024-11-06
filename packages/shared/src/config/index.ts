@@ -1,12 +1,8 @@
 import { ViteEnvConfig } from "@worm/types/src/config";
 
-import values from "./values";
+import { assert } from "../assert";
 
-function assert(condition: unknown, message?: string): asserts condition {
-  if (!condition) {
-    throw new Error(message || "Assertion failed");
-  }
-}
+import values from "./values";
 
 export function getEnvConfig(): Required<ViteEnvConfig> {
   assert(values.VITE_API_ORIGIN, "VITE_API_ORIGIN is required");

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Box from "@mui/material/Box/Box";
@@ -16,23 +16,26 @@ const REDIRECT_TIMEOUT_SECONDS = 18;
 
 export default function LoginSuccessPage() {
   const [isVisible, setIsVisible] = useState(false);
-  const [_, setSecondsLeft] = useState(REDIRECT_TIMEOUT_SECONDS);
+  const [secondsLeft, setSecondsLeft] = useState(REDIRECT_TIMEOUT_SECONDS);
 
   const navigate = useNavigate();
+  const secondsLeftRef = useRef<number>();
   const { palette } = useTheme();
+
+  secondsLeftRef.current = secondsLeft;
 
   useEffect(() => {
     setIsVisible(true);
 
     const redirectTimer = setInterval(() => {
-      setSecondsLeft((prev) => {
-        if (prev <= 1) {
-          navigate(ROUTES.HOME, { replace: true });
-          clearInterval(redirectTimer);
-        }
+      if (!secondsLeftRef.current) return;
 
-        return prev - 1;
-      });
+      if (secondsLeftRef.current <= 1) {
+        clearInterval(redirectTimer);
+        navigate(ROUTES.HOME, { replace: true });
+      }
+
+      setSecondsLeft(secondsLeftRef.current - 1);
     }, 1000);
 
     return () => clearInterval(redirectTimer);
