@@ -8,7 +8,6 @@ import {
   SyncStorage,
 } from "@worm/types";
 
-import { assert } from "../../assert";
 import { STORAGE_MATCHER_PREFIX } from "../../browser";
 import { logDebug } from "../../logging";
 import { DEFAULT_REPLACEMENT_SUGGEST } from "../../replace/lib/suggest";
@@ -83,9 +82,6 @@ async function fetchStorageVersion() {
 function isVersionGreaterThan(a: StorageVersion, b: StorageVersion): boolean {
   const [aMajor, aMinor, aPatch] = a.split(".").map(Number);
   const [bMajor, bMinor, bPatch] = b.split(".").map(Number);
-
-  assert(aMajor && aMinor && aPatch, "Invalid 'a' version");
-  assert(bMajor && bMinor && bPatch, "Invalid 'b' version");
 
   if (aMajor > bMajor) return true;
   if (aMajor < bMajor) return false;
