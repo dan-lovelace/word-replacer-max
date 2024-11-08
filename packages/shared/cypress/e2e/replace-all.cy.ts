@@ -316,6 +316,92 @@ describe("replaceAll", () => {
         s.target().should("have.text", "Lorem sit dolor");
       });
     });
+
+    it("preserves Vue comment markers and prevents content duplication", () => {
+      cy.visitMock({
+        bodyContents: `
+          <div id="app">
+            <span class="document-title__headline" data-testid="target">
+              <!--[--><!--[-->Darum kann Merz den Kanzler nicht stürzen<!--]--><!--]-->
+            </span>
+          </div>
+        `,
+      });
+
+      // First replacement
+      cy.document().then((document) => {
+        replaceAll(
+          [
+            {
+              active: true,
+              identifier: "ABCD-1234",
+              queries: ["Merz"],
+              queryPatterns: [],
+              replacement: "Lorem",
+              useGlobalReplacementStyle: true,
+            },
+          ],
+          undefined,
+          document
+        );
+
+        // Verify initial replacement worked and structure is preserved
+        cy.get('[data-testid="target"]').should(($el) => {
+          const html = $el.html();
+
+          // Check Vue comment markers are present
+          expect(html).to.include("<!--[-->");
+          expect(html).to.include("<!--]-->");
+
+          // Check replacement happened once
+          expect($el.find("[data-is-replaced]")).to.have.length(1);
+
+          // Check text appears exactly once
+          expect($el.text().match("Lorem")).to.have.length(1);
+        });
+
+        // Simulate Vue hydration by forcing a re-render
+        cy.get('[data-testid="target"]').then(($el) => {
+          const el = $el[0];
+          const html = el.innerHTML;
+          el.innerHTML = "";
+          el.innerHTML = html;
+
+          // Run replacement again as mutation observer would
+          replaceAll(
+            [
+              {
+                active: true,
+                identifier: "ABCD-1234",
+                queries: ["Merz"],
+                queryPatterns: [],
+                replacement: "Lorem",
+                useGlobalReplacementStyle: true,
+              },
+            ],
+            undefined,
+            document
+          );
+
+          // Verify no duplication occurred
+          cy.get('[data-testid="target"]').should(($el) => {
+            // Should still only have one replacement
+            expect($el.find("[data-is-replaced]")).to.have.length(1);
+
+            // Text should only appear once
+            expect($el.text().match("Lorem")).to.have.length(1);
+
+            // Structure should be preserved
+            const html = $el.html();
+            expect(html).to.include("<!--[-->");
+            expect(html).to.include("<!--]-->");
+            expect(html).to.not.include(
+              "den Kanzler nicht stürzen<!--]-->den Kanzler nicht stürzen"
+            );
+          });
+        });
+      });
+    });
   });
 
   describe("'regex' query pattern only", () => {

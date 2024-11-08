@@ -126,4 +126,9 @@ export type SystemColor =
   | "white"
   | "yellow";
 
+export type VueNodeInfo = {
+  commentMarkers: Comment[];
+  isVueManaged: boolean;
+};
+
 export * from "./api";
