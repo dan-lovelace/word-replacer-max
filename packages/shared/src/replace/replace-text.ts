@@ -1,8 +1,10 @@
 import { Matcher, MatcherReplaceProps, ReplacementStyle } from "@worm/types";
 
 import {
-  CONTENTS_PROPERTY, getSortedQueryPatterns, isReplacementEmpty,
-  REPLACEMENT_WRAPPER_ELEMENT
+  CONTENTS_PROPERTY,
+  getSortedQueryPatterns,
+  isReplacementEmpty,
+  REPLACEMENT_WRAPPER_ELEMENT,
 } from "./lib";
 import { getReplacementHTML, replaceTextNode } from "./lib/dom";
 import { getRegexFlags, patternRegex, regExpReplace } from "./lib/regex";

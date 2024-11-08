@@ -201,6 +201,11 @@ export type SystemColor =
   | "white"
   | "yellow";
 
+export type VueNodeInfo = {
+  commentMarkers: Comment[];
+  isVueManaged: boolean;
+};
+
 export type WebAppPingResponse = boolean;
 
 export * from "./api";
