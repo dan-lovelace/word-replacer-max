@@ -4,37 +4,75 @@ import "material-icons/iconfont/sharp.scss";
 
 import { render } from "preact";
 import { LocationProvider, Route, Router } from "preact-iso";
+import { useEffect, useState } from "preact/hooks";
 
 import { POPUP_ROUTES } from "@worm/shared/src/browser";
+import { storageSetByKeys } from "@worm/shared/src/storage";
 
 import ToastContainer from "./components/alert/ToastContainer";
 import Layout from "./containers/Layout";
 import HomePage from "./pages/Home";
 import NotFoundPage from "./pages/NotFound";
 import { AuthProvider } from "./store/Auth";
-import { ConfigProvider } from "./store/Config";
+import { ConfigProvider, useConfig } from "./store/Config";
 import { QueryProvider } from "./store/Query";
 
 export function App() {
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  const {
+    storage: {
+      sync: { preferences },
+    },
+  } = useConfig();
+
+  useEffect(() => {
+    async function initialize() {
+      /**
+       * Always redirect away from the Account tab when loading the app.
+       */
+      if (preferences?.activeTab === "account") {
+        const newPreferences = Object.assign({}, preferences);
+
+        newPreferences.activeTab = "rules";
+
+        await storageSetByKeys({
+          preferences: newPreferences,
+        });
+      }
+
+      setIsInitialized(true);
+    }
+
+    initialize();
+  }, []);
+
+  if (!isInitialized) {
+    return <></>;
+  }
+
   return (
     <>
-      <ConfigProvider>
-        <QueryProvider>
-          <AuthProvider>
-            <LocationProvider>
-              <Layout>
-                <Router>
-                  <Route path={POPUP_ROUTES.HOME} component={HomePage} />
-                  <Route default component={NotFoundPage} />
-                </Router>
-              </Layout>
-              <ToastContainer />
-            </LocationProvider>
-          </AuthProvider>
-        </QueryProvider>
-      </ConfigProvider>
+      <QueryProvider>
+        <AuthProvider>
+          <LocationProvider>
+            <Layout>
+              <Router>
+                <Route path={POPUP_ROUTES.HOME} component={HomePage} />
+                <Route default component={NotFoundPage} />
+              </Router>
+            </Layout>
+            <ToastContainer />
+          </LocationProvider>
+        </AuthProvider>
+      </QueryProvider>
     </>
   );
 }
 
-render(<App />, document.getElementById("app") as HTMLElement);
+render(
+  <ConfigProvider>
+    <App />
+  </ConfigProvider>,
+  document.getElementById("app") as HTMLElement
+);

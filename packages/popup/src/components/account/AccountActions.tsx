@@ -119,7 +119,10 @@ export default function AccountActions() {
               </Button>
             </div>
             <div className="form-check">
-              <label for="delete-confirmation-checkbox">
+              <label
+                className="user-select-none"
+                for="delete-confirmation-checkbox"
+              >
                 {lang.ACCOUNT_ACTIONS_DELETE_ACCOUNT_CONFIRMATION_INPUT_LABEL}
               </label>
               <input
