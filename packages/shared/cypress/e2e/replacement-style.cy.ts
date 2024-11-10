@@ -4,7 +4,7 @@ import {
   DEFAULT_REPLACEMENT_STYLE,
   getStylesheet,
 } from "@worm/shared/src/replace/lib/style";
-import { ReplacementStyle } from "@worm/types";
+import { ReplacementStyle } from "@worm/types/src/replace";
 
 import { selectors as s } from "../support/selectors";
 

@@ -1,4 +1,4 @@
-import { Matcher } from "@worm/types";
+import { Matcher } from "@worm/types/src/rules";
 
 type StorageMatcher = Matcher & {
   sortIndex: number;

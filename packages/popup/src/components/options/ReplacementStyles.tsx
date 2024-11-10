@@ -3,7 +3,10 @@ import { JSXInternal } from "preact/src/jsx";
 import { cx } from "@worm/shared";
 import { DEFAULT_REPLACEMENT_STYLE } from "@worm/shared/src/replace/lib/style";
 import { storageSetByKeys } from "@worm/shared/src/storage";
-import { ReplacementStyle, ReplacementStyleOption } from "@worm/types";
+import {
+  ReplacementStyle,
+  ReplacementStyleOption,
+} from "@worm/types/src/replace";
 
 import { Indented } from "../../containers/Indented";
 import { useLanguage } from "../../lib/language";

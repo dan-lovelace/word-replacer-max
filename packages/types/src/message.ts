@@ -1,5 +1,7 @@
-import { AppUser, PopupAlertSeverity, WebAppPingResponse } from "./";
 import { ApiAuthTokens } from "./api";
+import { AppUser } from "./identity";
+import { PopupAlertSeverity } from "./popup";
+import { WebAppPingResponse } from "./web-app";
 
 export interface BaseMessage<T extends string, K extends Record<T, unknown>>
   extends MessageEvent {

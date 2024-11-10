@@ -1,4 +1,5 @@
-import { Matcher, ReplacementStyle, VueNodeInfo } from "@worm/types";
+import { ReplacementStyle, VueNodeInfo } from "@worm/types/src/replace";
+import { Matcher } from "@worm/types/src/rules";
 
 import { CONTENTS_PROPERTY, REPLACEMENT_WRAPPER_ELEMENT } from "./";
 

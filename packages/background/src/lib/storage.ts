@@ -6,7 +6,8 @@ import {
   storageGetByKeys,
   storageSetByKeys,
 } from "@worm/shared/src/storage";
-import { Matcher, SyncStorage } from "@worm/types";
+import { Matcher } from "@worm/types/src/rules";
+import { SyncStorage } from "@worm/types/src/storage";
 
 export async function initializeStorage() {
   const { storageVersion } = await storageGetByKeys(["storageVersion"]);

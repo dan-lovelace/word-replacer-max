@@ -2,7 +2,7 @@ import { fetchAuthSession } from "aws-amplify/auth";
 import { signOut } from "aws-amplify/auth/cognito";
 
 import { JWT_EMAIL_VERIFIED_KEY } from "@worm/shared/src/permission";
-import { AppUser } from "@worm/types";
+import { AppUser } from "@worm/types/src/identity";
 
 export const getAuthTokens = async (forceRefresh: boolean = false) => {
   const { tokens } = await fetchAuthSession({ forceRefresh });

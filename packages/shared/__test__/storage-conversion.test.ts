@@ -4,7 +4,7 @@ import {
   matchersFromStorage,
   matchersToStorage,
 } from "@worm/shared/src/browser/matchers";
-import { Matcher } from "@worm/types";
+import { Matcher } from "@worm/types/src/rules";
 
 jest.mock("@worm/shared/src/config/values", () => ({
   VITE_API_ORIGIN: "https://dev-api.wordreplacermax.com",

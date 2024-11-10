@@ -1,12 +1,12 @@
 import { merge } from "ts-deepmerge";
 
 import { DEFAULT_REPLACEMENT_STYLE } from "@worm/shared/src/replace/lib/style";
+import { Matcher } from "@worm/types/src/rules";
 import {
-  Matcher,
   StorageVersion,
   storageVersions,
   SyncStorage,
-} from "@worm/types";
+} from "@worm/types/src/storage";
 
 import { STORAGE_MATCHER_PREFIX } from "../../browser";
 import { logDebug } from "../../logging";

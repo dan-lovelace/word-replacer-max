@@ -1,4 +1,5 @@
-import { ReplacementStyle, SystemColor } from "@worm/types";
+import { SystemColor } from "@worm/types";
+import { ReplacementStyle } from "@worm/types/src/replace";
 
 export const systemColors: Record<SystemColor, string> = {
   /**

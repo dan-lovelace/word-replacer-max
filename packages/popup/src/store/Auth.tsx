@@ -16,7 +16,7 @@ import {
   groupsHavePermission,
   JWT_GROUPS_KEY,
 } from "@worm/shared/src/permission";
-import { AppUser } from "@worm/types";
+import { AppUser } from "@worm/types/src/identity";
 import { RuntimeMessage, RuntimeMessageKind } from "@worm/types/src/message";
 import { UserGroups, UserPermission } from "@worm/types/src/permission";
 

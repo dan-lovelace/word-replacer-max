@@ -12,7 +12,7 @@ import {
   ApiAuthDeleteAccountRequest,
   ApiAuthDeleteAccountResponse,
   ApiResponse,
-} from "@worm/types";
+} from "@worm/types/src/api";
 
 import { useLanguage } from "../../lib/language";
 import { useAuth } from "../../store/Auth";

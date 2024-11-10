@@ -3,7 +3,8 @@ import { useEffect, useRef, useState } from "preact/hooks";
 import { JSXInternal } from "preact/src/jsx";
 
 import { cx, isReplacementEmpty } from "@worm/shared";
-import { Matcher, QueryPattern } from "@worm/types";
+import { QueryPattern } from "@worm/types/src/replace";
+import { Matcher } from "@worm/types/src/rules";
 
 import caseIcon from "../../icons/case";
 import regexIcon from "../../icons/regex";

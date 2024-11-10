@@ -1,12 +1,12 @@
 import { STORAGE_MATCHER_PREFIX } from "@worm/shared/src/browser";
+import { Matcher } from "@worm/types/src/rules";
 import {
-  Matcher,
   Storage,
   StorageChange,
   StorageChangeOf,
   StorageProvider,
   SyncStorage,
-} from "@worm/types";
+} from "@worm/types/src/storage";
 
 /**
  * Converts a stored set of storage data to a shape expected by the rest of the

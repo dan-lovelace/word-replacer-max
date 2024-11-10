@@ -1,8 +1,8 @@
 import { expect } from "@jest/globals";
 
 import { getStorageProvider, storageSetByKeys } from "@worm/shared/src/storage";
-import { LocalStorage, Matcher, MatcherInSync } from "@worm/types";
-import { RecentSuggestions } from "@worm/types/src/replacement";
+import { Matcher, MatcherInSync } from "@worm/types/src/rules";
+import { LocalStorage, RecentSuggestions } from "@worm/types/src/storage";
 
 import { matchersFromStorage } from "../src/browser";
 

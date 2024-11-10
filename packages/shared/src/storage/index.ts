@@ -1,4 +1,4 @@
-import { StorageVersion } from "@worm/types";
+import { StorageVersion } from "@worm/types/src/storage";
 
 /**
  * The storage version from which all others are based. This should be the

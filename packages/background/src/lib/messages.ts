@@ -8,7 +8,8 @@ import {
 import { getApiEndpoint } from "@worm/shared/src/api";
 import { browser } from "@worm/shared/src/browser";
 import { getStorageProvider } from "@worm/shared/src/storage";
-import { ApiAuthTokens, IdentificationError } from "@worm/types";
+import { ApiAuthTokens } from "@worm/types/src/api";
+import { IdentificationError } from "@worm/types/src/identity";
 import {
   RuntimeMessage,
   RuntimeMessageKind,

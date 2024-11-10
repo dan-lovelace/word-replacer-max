@@ -1,7 +1,7 @@
 import { decodeJWT, JWT } from "aws-amplify/auth";
 import { z } from "zod";
 
-import { AppUser } from "@worm/types";
+import { AppUser } from "@worm/types/src/identity";
 import {
   TermsAcceptance,
   UserGroups,

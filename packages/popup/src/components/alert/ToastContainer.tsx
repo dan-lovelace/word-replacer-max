@@ -2,12 +2,12 @@ import { useEffect, useRef, useState } from "preact/hooks";
 
 import { cx, TOAST_MESSAGE_DURATION_DEFAULT_MS } from "@worm/shared";
 import { browser } from "@worm/shared/src/browser";
-import { PopupAlertSeverity } from "@worm/types";
 import {
   ShowToastMessageOptions,
   WebAppMessage,
   WebAppMessageKind,
 } from "@worm/types/src/message";
+import { PopupAlertSeverity } from "@worm/types/src/popup";
 
 import { useConfig } from "../../store/Config";
 

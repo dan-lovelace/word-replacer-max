@@ -2,7 +2,7 @@ import { useEffect, useState } from "preact/hooks";
 
 import { formatUnixTimestamp } from "@worm/shared";
 import { storageSetByKeys } from "@worm/shared/src/storage";
-import { ExportLink as ExportLinkType } from "@worm/types";
+import { ExportLink as ExportLinkType } from "@worm/types/src/popup";
 
 import Button from "../../components/button/Button";
 import Tooltip from "../../components/Tooltip";

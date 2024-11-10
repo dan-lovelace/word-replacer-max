@@ -8,7 +8,7 @@ import {
 } from "@worm/shared/src/browser";
 import { getEnvConfig } from "@worm/shared/src/config";
 import { storageSetByKeys } from "@worm/shared/src/storage";
-import { PopupTab } from "@worm/types";
+import { PopupTab } from "@worm/types/src/popup";
 
 import { useToast } from "../components/alert/useToast";
 import Button from "../components/button/Button";

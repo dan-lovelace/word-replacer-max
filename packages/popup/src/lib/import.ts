@@ -2,7 +2,8 @@ import { v4 as uuidv4 } from "uuid";
 
 import { getSchemaByVersion } from "@worm/shared";
 import { storageSetByKeys } from "@worm/shared/src/storage";
-import { Matcher, StorageSetOptions } from "@worm/types";
+import { Matcher } from "@worm/types/src/rules";
+import { StorageSetOptions } from "@worm/types/src/storage";
 
 export default async function importMatchers(
   fromUserInput: any,

@@ -6,7 +6,7 @@ import {
   storageRemoveByKeys,
   storageSetByKeys,
 } from "@worm/shared/src/storage";
-import { Matcher } from "@worm/types";
+import { Matcher } from "@worm/types/src/rules";
 
 import { useLanguage } from "../../lib/language";
 import { useConfig } from "../../store/Config";

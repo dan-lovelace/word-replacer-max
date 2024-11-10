@@ -6,7 +6,11 @@ import {
   convertStoredMatchers,
   POPUP_POPPED_OUT_PARAMETER_KEY,
 } from "@worm/shared/src/browser";
-import { Storage, StorageChange, StorageProvider } from "@worm/types";
+import {
+  Storage,
+  StorageChange,
+  StorageProvider,
+} from "@worm/types/src/storage";
 
 import { getUpdatedStorage } from "../lib/storage";
 import { PreactChildren } from "../lib/types";

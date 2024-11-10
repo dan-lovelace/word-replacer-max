@@ -1,6 +1,6 @@
 import { ComponentChildren } from "preact";
 
-import { Matcher } from "@worm/types";
+import { Matcher } from "@worm/types/src/rules";
 
 export type PreactChildren = ComponentChildren;
 

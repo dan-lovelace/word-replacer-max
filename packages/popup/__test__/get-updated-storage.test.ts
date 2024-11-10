@@ -3,14 +3,13 @@ import { merge } from "ts-deepmerge";
 import { expect } from "@jest/globals";
 
 import { getUpdatedStorage } from "@worm/popup/src/lib/storage";
+import { Matcher, MatcherInSync } from "@worm/types/src/rules";
 import {
-  Matcher,
-  MatcherInSync,
+  RecentSuggestions,
   SessionStorage,
   Storage,
   StorageProvider,
-} from "@worm/types";
-import { RecentSuggestions } from "@worm/types/src/replacement";
+} from "@worm/types/src/storage";
 
 jest.mock("@worm/shared/src/config/values", () => ({
   VITE_API_ORIGIN: "https://dev-api.wordreplacermax.com",

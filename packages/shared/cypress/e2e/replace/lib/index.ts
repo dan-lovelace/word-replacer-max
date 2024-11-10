@@ -1,5 +1,5 @@
 import { findText, replaceText } from "@worm/shared/src/replace";
-import { QueryPattern, ReplacementStyle } from "@worm/types";
+import { QueryPattern, ReplacementStyle } from "@worm/types/src/replace";
 
 /**
  * Utility function to reduce code duplication.

@@ -1,4 +1,5 @@
-import { Matcher, MatcherReplaceProps, ReplacementStyle } from "@worm/types";
+import { ReplacementStyle } from "@worm/types/src/replace";
+import { MatcherReplaceProps } from "@worm/types/src/rules";
 
 import {
   CONTENTS_PROPERTY,

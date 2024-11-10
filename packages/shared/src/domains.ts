@@ -1,4 +1,4 @@
-import { SyncStorage } from "@worm/types";
+import { SyncStorage } from "@worm/types/src/storage";
 
 function locationMatchesDomainList(domainList: SyncStorage["domainList"]) {
   return Boolean(

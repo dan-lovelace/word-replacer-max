@@ -2,6 +2,13 @@
 
 type OAuthResponseType = "code" | "token";
 
+export const environments = ["development", "production"] as const;
+
+/**
+ * Deployment environments.
+ */
+export type Environment = (typeof environments)[number];
+
 export type SsmAuthConfig = {
   readonly SSM_USER_POOL_HOSTED_UI_QUERY: string;
   readonly SSM_USER_POOL_CLIENT_ID: string;

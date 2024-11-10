@@ -4,7 +4,7 @@ import {
   STYLE_ELEMENT_ID,
 } from "@worm/shared/src/replace/lib/style";
 import { storageGetByKeys } from "@worm/shared/src/storage";
-import { SyncStorage } from "@worm/types";
+import { SyncStorage } from "@worm/types/src/storage";
 
 type Cacheable<T> = {
   expires: number;

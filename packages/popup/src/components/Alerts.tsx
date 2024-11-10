@@ -1,7 +1,7 @@
 import { ComponentProps } from "preact";
 
 import { cx } from "@worm/shared";
-import { PopupAlertSeverity } from "@worm/types";
+import { PopupAlertSeverity } from "@worm/types/src/popup";
 
 import { PreactChildren } from "../lib/types";
 

@@ -1,4 +1,4 @@
-import { QueryPattern } from "@worm/types";
+import { QueryPattern } from "@worm/types/src/replace";
 
 import { CONTENTS_PROPERTY } from "./lib";
 import { nodeNameBlocklist } from "./lib/dom";

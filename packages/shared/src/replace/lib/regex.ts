@@ -1,9 +1,9 @@
 import {
-  MatcherReplaceProps,
   PCRECaseMode,
   QueryPattern,
   ReplacementStyle,
-} from "@worm/types";
+} from "@worm/types/src/replace";
+import { MatcherReplaceProps } from "@worm/types/src/rules";
 
 import { getReplacementHTML } from "./dom";
 

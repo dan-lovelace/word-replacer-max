@@ -1,11 +1,11 @@
+import { Matcher } from "@worm/types/src/rules";
 import {
   LocalStorage,
-  Matcher,
   StorageProvider,
   StorageSetOptions,
   SyncStorage,
   SyncStorageKey,
-} from "@worm/types";
+} from "@worm/types/src/storage";
 
 import { browser, matchersFromStorage, matchersToStorage } from "../browser";
 import { logDebug } from "../logging";

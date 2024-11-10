@@ -1,4 +1,5 @@
-import { Matcher, QueryPattern } from "@worm/types";
+import { QueryPattern } from "@worm/types/src/replace";
+import { Matcher } from "@worm/types/src/rules";
 
 export const CONTENTS_PROPERTY = "textContent";
 

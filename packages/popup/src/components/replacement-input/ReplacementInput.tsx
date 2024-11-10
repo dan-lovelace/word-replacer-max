@@ -14,10 +14,10 @@ import {
   ApiResponse,
   ApiSuggestRequest,
   ApiSuggestResponse,
-  Matcher,
-  PopupAlertSeverity,
   ToneOption,
-} from "@worm/types";
+} from "@worm/types/src/api";
+import { PopupAlertSeverity } from "@worm/types/src/popup";
+import { Matcher } from "@worm/types/src/rules";
 
 import magicWand from "../../icons/magic-wand";
 import { useLanguage } from "../../lib/language";

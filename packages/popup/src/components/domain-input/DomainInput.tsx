@@ -2,7 +2,7 @@ import { useState } from "preact/hooks";
 import { JSXInternal } from "preact/src/jsx";
 
 import { storageSetByKeys } from "@worm/shared/src/storage";
-import { DomainEffect } from "@worm/types";
+import { DomainEffect } from "@worm/types/src/popup";
 
 import { useBrowserTabs } from "../../lib/hooks/use-browser-tabs";
 import { useLanguage } from "../../lib/language";

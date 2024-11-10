@@ -4,7 +4,8 @@ import { Dropdown } from "bootstrap";
 
 import { getApiEndpoint } from "@worm/shared/src/api";
 import { storageSetByKeys } from "@worm/shared/src/storage";
-import { ApiShareRequest, ApiShareResponse, SchemaExport } from "@worm/types";
+import { ApiShareRequest, ApiShareResponse } from "@worm/types/src/api";
+import { SchemaExport } from "@worm/types/src/storage";
 
 import { useLanguage } from "../../lib/language";
 import { SelectedRule } from "../../lib/types";

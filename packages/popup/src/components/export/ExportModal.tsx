@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "preact/hooks";
 import { JSXInternal } from "preact/src/jsx";
 
-import { Matcher } from "@worm/types";
+import { Matcher } from "@worm/types/src/rules";
 
 import { SelectedRule } from "../../lib/types";
 import { useConfig } from "../../store/Config";
