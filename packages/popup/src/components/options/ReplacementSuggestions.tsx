@@ -71,7 +71,7 @@ export default function ReplacementSuggestions() {
         <Indented
           className="py-1"
           data-testid="replacement-suggestions-options"
-          style={{ height: 56 }}
+          style={{ minHeight: 56 }}
         >
           <ApiUsage />
         </Indented>

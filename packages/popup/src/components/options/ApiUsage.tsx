@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { cx } from "@worm/shared";
 import { getApiEndpoint } from "@worm/shared/src/api";
-import { ApiAccountUsageResponse, ApiResponse } from "@worm/types";
+import { ApiAccountUsageResponse, ApiResponse } from "@worm/types/src/api";
 
 import { useLanguage } from "../../lib/language";
 import { useConfig } from "../../store/Config";
@@ -125,24 +125,22 @@ export default function ApiUsage() {
           </div>
         </div>
       </div>
-      <div
-        className={cx(
-          "d-flex align-items-center",
-          "fs-xs text-secondary text-nowrap",
-          isWarning ? "opacity-1" : "opacity-0 pe-none"
-        )}
-        style={{
-          transition: "opacity 150ms",
-        }}
-      >
-        <span>Need additional credits?</span>
-        &nbsp;
-        <ContactSupportLink className="text-decoration-none fs-xs">
-          Contact support
-        </ContactSupportLink>
-        &nbsp;
-        <span>and we'll extend your limit.</span>
-      </div>
+      {isWarning && (
+        <div
+          className={cx(
+            "d-flex align-items-center",
+            "fs-xs text-secondary text-nowrap"
+          )}
+        >
+          <span>Need additional credits?</span>
+          &nbsp;
+          <ContactSupportLink className="text-decoration-none fs-xs">
+            Contact support
+          </ContactSupportLink>
+          &nbsp;
+          <span>and we'll extend your limit.</span>
+        </div>
+      )}
     </div>
   );
 }
