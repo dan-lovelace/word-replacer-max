@@ -53,6 +53,22 @@ NODE_ENV=development yarn start:2
 File changes can be seen in real-time and may require the extension to be
 reloaded.
 
+## Running tests
+
+To run all tests:
+
+1. Start the Popup development server in test mode
+   ```sh
+   VITE_MODE=test yarn workspace @worm/popup dev
+   ```
+1. Use the "test all" command
+   ```sh
+   yarn test:all
+   ```
+
+See the individual `test:*` commands in `package.json` to run specific types of
+tests.
+
 # Packaging
 
 1. Bump the version in `package.json`
