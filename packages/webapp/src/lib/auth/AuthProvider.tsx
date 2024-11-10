@@ -1,6 +1,6 @@
 import { createContext, useContext, useState } from "react";
 
-import { SignInStatusState } from "@worm/types";
+import { SignInStatusState } from "@worm/types/src/identity";
 
 type AppUser = {
   email: string;

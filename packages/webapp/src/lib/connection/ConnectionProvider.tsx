@@ -7,7 +7,7 @@ import {
   elementIdentifiers,
   isWebAppMessagingAllowed,
 } from "@worm/shared";
-import { IdentificationError, WebAppPingResponse } from "@worm/types";
+import { IdentificationError } from "@worm/types/src/identity";
 import {
   ShowToastMessageOptions,
   WebAppMessage,
@@ -15,6 +15,7 @@ import {
   WebAppMessageKind,
   WebAppMessageKindMap,
 } from "@worm/types/src/message";
+import { WebAppPingResponse } from "@worm/types/src/web-app";
 
 import { useAuthProvider } from "../auth/AuthProvider";
 import { useToast } from "../toast/ToastProvider";

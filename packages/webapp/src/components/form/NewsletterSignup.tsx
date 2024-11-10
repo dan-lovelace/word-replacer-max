@@ -27,7 +27,7 @@ import {
   ApiMarketingSignupResponse,
   ApiResponse,
   MarketingContact,
-} from "@worm/types";
+} from "@worm/types/src/api";
 import { ValidationErrors } from "@worm/types/src/validation";
 
 import { getReCaptchaToken } from "../../lib/form/recaptcha";

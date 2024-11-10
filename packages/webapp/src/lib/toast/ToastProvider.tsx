@@ -1,9 +1,9 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, ReactNode, useContext, useState } from "react";
 
 import MuiAlert, { AlertColor, AlertProps } from "@mui/material/Alert/Alert";
 import Snackbar from "@mui/material/Snackbar/Snackbar";
 
-import { PopupAlertSeverity } from "@worm/types";
+import { PopupAlertSeverity } from "@worm/types/src/popup";
 
 type ToastContextProps = {
   showToast: (message: string, severity?: PopupAlertSeverity) => void;

@@ -7,7 +7,7 @@ import {
   ApiAuthTokensRequest,
   ApiAuthTokensResponse,
   ApiResponse,
-} from "@worm/types";
+} from "@worm/types/src/api";
 
 export const useAuthTokens = (
   options?: Partial<

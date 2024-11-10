@@ -1,4 +1,4 @@
-import { ApiResponse } from "..";
+import { ApiResponse } from "./";
 
 export type ApiMarketingSignupRequest = {
   contact: MarketingContact;

@@ -1,5 +1,7 @@
-import { ApiResponse, Matcher } from "../";
-import { ReplacementSuggestion } from "../replacement";
+import { ReplacementSuggestion } from "../replace";
+import { Matcher } from "../rules";
+
+import { ApiResponse } from "./";
 
 export type ApiSuggestRequest = {
   queries: Matcher["queries"];

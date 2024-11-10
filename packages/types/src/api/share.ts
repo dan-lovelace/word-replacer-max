@@ -1,4 +1,6 @@
-import { ApiResponse, Matcher } from "..";
+import { Matcher } from "../rules";
+
+import { ApiResponse } from "./";
 
 export type ApiShareRequest = {
   matchers: ApiShareRequestMatcher[];
