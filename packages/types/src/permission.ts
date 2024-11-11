@@ -1,3 +1,5 @@
+import { ApiAuthTokens } from "./api";
+
 type PolicyName = "member__2024_11_03" | "systemAdmin__2024_11_03";
 
 export type TermsAcceptance = {
@@ -28,3 +30,5 @@ export type UserPoolCustomAttributes = {
 export type UserRolePermission = Record<UserGroup, UserPermission[]>;
 
 export type UserRolePolicy = Record<PolicyName, UserPermission[]>;
+
+export type UserTokens = Omit<ApiAuthTokens, "refreshToken">;

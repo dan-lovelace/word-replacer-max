@@ -12,13 +12,11 @@ export type ApiAuthTokensRequest = {
   code: string;
 };
 
-export type ApiAuthTokens =
-  | {
-      accessToken: string;
-      idToken: string;
-      refreshToken: string;
-    }
-  | undefined;
+export type ApiAuthTokens = {
+  accessToken: string;
+  idToken: string;
+  refreshToken: string;
+};
 
 export type ApiAuthTokensResponse = ApiResponse<ApiAuthTokens>;
 

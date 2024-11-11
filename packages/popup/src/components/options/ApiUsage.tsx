@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { cx } from "@worm/shared";
 import { getApiEndpoint } from "@worm/shared/src/api";
+import { getAccessToken } from "@worm/shared/src/browser";
 import { ApiAccountUsageResponse, ApiResponse } from "@worm/types/src/api";
 
 import { useLanguage } from "../../lib/language";
@@ -37,10 +38,10 @@ export default function ApiUsage() {
   >({
     enabled: Boolean(authAccessToken),
     queryKey: ["getAccountUsage"],
-    queryFn: () =>
+    queryFn: async () =>
       axios.get(getApiEndpoint("GET:accountUsage"), {
         headers: {
-          Authorization: `Bearer ${authAccessToken}`,
+          Authorization: `Bearer ${await getAccessToken()}`,
         },
       }),
   });

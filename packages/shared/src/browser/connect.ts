@@ -7,7 +7,7 @@ import { createRuntimeMessage } from "../messaging";
 
 import { browser } from "./browser";
 
-export type ConnectMessageSender = "popup";
+export type ConnectMessageSender = string;
 
 class ConnectionManager {
   private static instance: ConnectionManager;

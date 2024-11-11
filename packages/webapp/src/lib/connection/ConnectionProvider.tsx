@@ -79,7 +79,7 @@ const useConnectionProviderValue = (
           break;
         }
 
-        case "authTokensResponse": {
+        case "authUpdateTokensResponse": {
           /**
            * Fetch the current user whenever tokens are updated.
            */

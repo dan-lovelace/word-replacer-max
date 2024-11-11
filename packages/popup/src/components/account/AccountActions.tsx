@@ -6,7 +6,7 @@ import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import { useMutation } from "@tanstack/react-query";
 
 import { getApiEndpoint } from "@worm/shared/src/api";
-import { sendConnectMessage } from "@worm/shared/src/browser";
+import { getAccessToken, sendConnectMessage } from "@worm/shared/src/browser";
 import { storageSetByKeys } from "@worm/shared/src/storage";
 import {
   ApiAuthDeleteAccountRequest,
@@ -43,10 +43,10 @@ export default function AccountActions() {
       AxiosError<ApiResponse<ApiAuthDeleteAccountResponse>>,
       ApiAuthDeleteAccountRequest
     >({
-      mutationFn: () =>
+      mutationFn: async () =>
         axios.post(getApiEndpoint("POST:authDeleteAccount"), undefined, {
           headers: {
-            Authorization: `Bearer ${authAccessToken}`,
+            Authorization: `Bearer ${await getAccessToken()}`,
           },
         }),
     });

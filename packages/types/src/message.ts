@@ -1,5 +1,6 @@
 import { ApiAuthTokens } from "./api";
 import { AppUser } from "./identity";
+import { UserTokens } from "./permission";
 import { PopupAlertSeverity } from "./popup";
 import { WebAppPingResponse } from "./web-app";
 
@@ -34,6 +35,8 @@ export type RuntimeMessageData<T extends RuntimeMessageKind> =
 export type RuntimeMessageKind = keyof RuntimeMessageKindMap;
 
 export type RuntimeMessageKindMap = {
+  authTokensRequest: undefined;
+  authTokensResponse: ErrorableMessage<UserTokens>;
   currentUserRequest: undefined;
   currentUserResponse: ErrorableMessage<AppUser>;
   forceRefreshTokensRequest: undefined;
@@ -62,11 +65,10 @@ export type WebAppMessageData<T extends WebAppMessageKind> =
 export type WebAppMessageKind = keyof WebAppMessageKindMap;
 
 export type WebAppMessageKindMap = {
-  authUpdateTokens: ApiAuthTokens;
   authSignOutRequest: undefined;
   authSignOutResponse: ErrorableMessage<boolean>;
-  authTokensRequest: undefined;
-  authTokensResponse: ErrorableMessage<Omit<ApiAuthTokens, "refreshToken">>;
+  authUpdateTokensRequest: ApiAuthTokens;
+  authUpdateTokensResponse: ErrorableMessage<UserTokens>;
   authUserRequest: undefined;
   authUserResponse: ErrorableMessage<AppUser>;
   contentInitialize: undefined;

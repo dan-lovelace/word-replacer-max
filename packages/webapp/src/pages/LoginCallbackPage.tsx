@@ -70,7 +70,7 @@ export default function LoginCallbackPage() {
           },
           onSuccess({ data: response }) {
             const successMessage = createWebAppMessage(
-              "authUpdateTokens",
+              "authUpdateTokensRequest",
               response?.data
             );
             sendMessage(successMessage);

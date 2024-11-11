@@ -5,7 +5,7 @@ import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import { useMutation } from "@tanstack/react-query";
 
 import { getApiEndpoint } from "@worm/shared/src/api";
-import { sendConnectMessage } from "@worm/shared/src/browser";
+import { getAccessToken, sendConnectMessage } from "@worm/shared/src/browser";
 import { getTermsNeedAcceptance } from "@worm/shared/src/permission";
 import { TERMS_AND_CONDITIONS_URL } from "@worm/shared/src/support";
 import { ApiResponse } from "@worm/types/src/api";
@@ -42,10 +42,10 @@ export default function TermsAcceptance() {
     AxiosError<ApiResponse<ApiAuthAcceptTermsResponse>>,
     ApiAuthAcceptTermsRequest
   >({
-    mutationFn: () =>
+    mutationFn: async () =>
       axios.post(getApiEndpoint("POST:authAcceptTerms"), undefined, {
         headers: {
-          Authorization: `Bearer ${authAccessToken}`,
+          Authorization: `Bearer ${await getAccessToken()}`,
         },
       }),
   });

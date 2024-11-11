@@ -17,6 +17,7 @@ import {
   WebAppMessageKind,
   WebAppMessageKindMap,
 } from "@worm/types/src/message";
+import { UserTokens } from "@worm/types/src/permission";
 
 import { getAuthTokens, getCurrentUser, signUserOut } from "./auth/session";
 
@@ -66,6 +67,42 @@ export function startConnectListener() {
     port.onMessage.addListener(
       async (event: RuntimeMessage<RuntimeMessageKind>) => {
         switch (event.data.kind) {
+          case "authTokensRequest": {
+            try {
+              const tokensResponse = await getAuthTokens();
+
+              // stringify tokens since Amplify methods will be lost in the response
+              const tokensData: UserTokens = {
+                accessToken: tokensResponse?.accessToken.toString() ?? "",
+                idToken: tokensResponse?.idToken?.toString() ?? "",
+              };
+
+              if (
+                !Object.prototype.hasOwnProperty.call(tokensData, "accessToken")
+              ) {
+                throw new IdentificationError();
+              }
+
+              const responseMessage = createRuntimeMessage(
+                "authTokensResponse",
+                {
+                  data: tokensData,
+                }
+              );
+              port.postMessage({ data: responseMessage });
+            } catch (error) {
+              const responseMessage = createRuntimeMessage(
+                "authTokensResponse",
+                {
+                  error: getError(error),
+                }
+              );
+              port.postMessage({ data: responseMessage });
+            }
+
+            break;
+          }
+
           case "currentUserRequest": {
             try {
               const currentUser = await getCurrentUser();
@@ -152,7 +189,7 @@ export function startMessageListener() {
           break;
         }
 
-        case "authUpdateTokens": {
+        case "authUpdateTokensRequest": {
           /**
            * Auth tokens received from auth.js script.
            */
@@ -196,7 +233,7 @@ export function startMessageListener() {
              */
             await getCurrentUser();
 
-            sendTabMessage("authTokensResponse", {
+            sendTabMessage("authUpdateTokensResponse", {
               data: {
                 accessToken: tokens.accessToken,
                 idToken: tokens.accessToken,
@@ -205,7 +242,7 @@ export function startMessageListener() {
           } catch (error) {
             logDebug(error);
 
-            sendTabMessage("authTokensResponse", {
+            sendTabMessage("authUpdateTokensResponse", {
               error: getError(error),
             });
           }

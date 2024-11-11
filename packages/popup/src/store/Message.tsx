@@ -14,9 +14,9 @@ import { useConfig } from "./Config";
 
 type MessageStore = {};
 
-const MESSAGE_SENDER: ConnectMessageSender = "popup";
+const MESSAGE_SENDER: ConnectMessageSender = "popup-store-message";
 
-const Message = createContext<MessageStore>({});
+const Message = createContext<MessageStore>({} as MessageStore);
 
 export const useMessage = () => useContext(Message);
 

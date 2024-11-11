@@ -8,6 +8,7 @@ import { useMutation } from "@tanstack/react-query";
 
 import { cx, isReplacementEmpty } from "@worm/shared";
 import { getApiEndpoint } from "@worm/shared/src/api";
+import { getAccessToken } from "@worm/shared/src/browser";
 import { DEFAULT_TONE_OPTION } from "@worm/shared/src/replace/lib/suggest";
 import { getStorageProvider, storageSetByKeys } from "@worm/shared/src/storage";
 import {
@@ -99,7 +100,6 @@ export default function ReplacementInput({
   const {
     storage: {
       local: { recentSuggestions },
-      session: { authAccessToken },
       sync: { matchers, replacementStyle, replacementSuggest },
     },
   } = useConfig();
@@ -115,10 +115,10 @@ export default function ReplacementInput({
     AxiosError<ApiResponse<ApiSuggestResponse>>,
     ApiSuggestRequest
   >({
-    mutationFn: (suggestRequest) =>
+    mutationFn: async (suggestRequest) =>
       axios.post(getApiEndpoint("POST:suggest"), suggestRequest, {
         headers: {
-          Authorization: `Bearer ${authAccessToken}`,
+          Authorization: `Bearer ${await getAccessToken()}`,
         },
       }),
   });
