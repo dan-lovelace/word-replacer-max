@@ -6,6 +6,11 @@ $tooltip-max-width: 300px;
 
 $inputHeight: 38px;
 
+@font-face {
+  font-family: Inter;
+  src: url("/assets/font/InterVariable.ttf");
+}
+
 html {
   &.layout__expanded {
     height: 100dvh;
@@ -21,6 +26,7 @@ html {
 body {
   font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
     Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+
   min-width: 800px; // this is not an arbitrary number; test changes on all browsers
 
   #app {
