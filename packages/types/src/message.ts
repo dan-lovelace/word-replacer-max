@@ -38,7 +38,8 @@ export type RuntimeMessageKindMap = {
   currentUserResponse: ErrorableMessage<AppUser>;
   forceRefreshTokensRequest: undefined;
   forceRefreshTokensResponse: ErrorableMessage<ISuccessful>;
-  signOut: undefined;
+  signOutRequest: undefined;
+  signOutResponse: ErrorableMessage<undefined>;
 };
 
 export type ShowToastMessageOptions = {

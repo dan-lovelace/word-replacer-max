@@ -68,7 +68,7 @@ export default function AccountActions() {
         });
       },
       onSuccess() {
-        sendConnectMessage("popup", "signOut");
+        sendConnectMessage("popup", "signOutRequest");
 
         const newPreferences = Object.assign({}, preferences);
         newPreferences.activeTab = "rules";

@@ -121,7 +121,7 @@ export default function Layout({ children }: LayoutProps) {
   };
 
   const handleSignOutClick = () => {
-    sendConnectMessage("popup", "signOut");
+    sendConnectMessage("popup", "signOutRequest");
   };
 
   const handleTabChange = (newTab: PopupTab) => () => {

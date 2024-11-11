@@ -20,8 +20,6 @@ import {
 
 import { getAuthTokens, getCurrentUser, signUserOut } from "./auth/session";
 
-let runtimePort: browser.Runtime.Port;
-
 function getError(error: unknown) {
   let errorMessage: string;
   let errorName: string;
@@ -64,10 +62,8 @@ async function sendTabMessage<T extends WebAppMessageKind>(
 }
 
 export function startConnectListener() {
-  browser.runtime.onConnect.addListener((connectionPort) => {
-    runtimePort = connectionPort;
-
-    runtimePort.onMessage.addListener(
+  browser.runtime.onConnect.addListener((port) => {
+    port.onMessage.addListener(
       async (event: RuntimeMessage<RuntimeMessageKind>) => {
         switch (event.data.kind) {
           case "currentUserRequest": {
@@ -84,7 +80,7 @@ export function startConnectListener() {
                   data: currentUser,
                 }
               );
-              runtimePort.postMessage({ data: responseMessage });
+              port.postMessage({ data: responseMessage });
             } catch (error) {
               const responseMessage = createRuntimeMessage(
                 "currentUserResponse",
@@ -92,7 +88,7 @@ export function startConnectListener() {
                   error: getError(error),
                 }
               );
-              runtimePort.postMessage({ data: responseMessage });
+              port.postMessage({ data: responseMessage });
             }
 
             break;
@@ -108,7 +104,7 @@ export function startConnectListener() {
                   data: { success: true },
                 }
               );
-              runtimePort.postMessage({ data: responseMessage });
+              port.postMessage({ data: responseMessage });
             } catch (error) {
               const responseMessage = createRuntimeMessage(
                 "forceRefreshTokensResponse",
@@ -116,14 +112,17 @@ export function startConnectListener() {
                   error: getError(error),
                 }
               );
-              runtimePort.postMessage({ data: responseMessage });
+              port.postMessage({ data: responseMessage });
             }
 
             break;
           }
 
-          case "signOut": {
+          case "signOutRequest": {
             await signUserOut();
+
+            const responseMessage = createRuntimeMessage("signOutResponse");
+            port.postMessage({ data: responseMessage });
 
             break;
           }
