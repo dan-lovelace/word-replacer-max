@@ -1,4 +1,10 @@
-import { Browser, Events, Storage, Windows } from "webextension-polyfill";
+import {
+  Browser,
+  Events,
+  Runtime,
+  Storage,
+  Windows,
+} from "webextension-polyfill";
 
 type TBrowser = Omit<Browser, "runtime" | "storage" | "windows"> & {
   runtime: TRuntime;
@@ -6,7 +12,25 @@ type TBrowser = Omit<Browser, "runtime" | "storage" | "windows"> & {
   windows: TWindows;
 };
 
-type TRuntime = Partial<Browser["runtime"]>;
+type TRuntime = Partial<Browser["runtime"]> & {
+  connect: (connectInfo?: TRuntimeConnectInfo) => Runtime.Port;
+  onConnect: TRuntimeConnectEvent;
+  onMessage: TRuntimeMessageEvent;
+};
+
+type TRuntimeConnectEvent = Events.Event<(port: Runtime.Port) => void>;
+
+type TRuntimeConnectInfo = {
+  name?: string;
+};
+
+type TRuntimeMessageEvent = Events.Event<TRuntimeMessageEventCallback>;
+
+type TRuntimeMessageEventCallback = (
+  message: any,
+  sender: Runtime.MessageSender,
+  sendResponse: (response?: any) => void
+) => void | true;
 
 type TStorage = Partial<Browser["storage"]>;
 
@@ -105,9 +129,122 @@ class MockBrowser<T> implements Partial<TBrowser> {
   }
 }
 
+class MockPort implements Runtime.Port {
+  name: string;
+
+  private connected: boolean;
+
+  private disconnectListeners: Set<(port: Runtime.Port) => void>;
+
+  private listeners: Set<(message: any, port: Runtime.Port) => void>;
+
+  constructor(name: string = "") {
+    this.name = name;
+    this.connected = true;
+    this.disconnectListeners = new Set();
+    this.listeners = new Set();
+  }
+
+  disconnect() {
+    this.connected = false;
+    this.disconnectListeners.forEach((listener) => listener(this));
+  }
+
+  postMessage(message: any) {
+    if (!this.connected) return;
+
+    this.listeners.forEach((listener) => listener(message, this));
+  }
+
+  get onMessage(): Events.Event<(message: any, port: Runtime.Port) => void> {
+    return {
+      addListener: (callback: (message: any, port: Runtime.Port) => void) => {
+        this.listeners.add(callback);
+      },
+      hasListener: (callback: (message: any, port: Runtime.Port) => void) => {
+        return this.listeners.has(callback);
+      },
+      hasListeners: () => this.listeners.size > 0,
+      removeListener: (
+        callback: (message: any, port: Runtime.Port) => void
+      ) => {
+        this.listeners.delete(callback);
+      },
+    };
+  }
+
+  get onDisconnect(): TRuntimeConnectEvent {
+    return {
+      addListener: (callback: (port: Runtime.Port) => void) => {
+        this.disconnectListeners.add(callback);
+      },
+      hasListener: (callback: (port: Runtime.Port) => void) => {
+        return this.disconnectListeners.has(callback);
+      },
+      hasListeners: () => this.disconnectListeners.size > 0,
+      removeListener: (callback: (port: Runtime.Port) => void) => {
+        this.disconnectListeners.delete(callback);
+      },
+    };
+  }
+}
+
 class MockRuntime implements TRuntime {
+  private connectListeners: Set<(port: Runtime.Port) => void>;
+
+  private messageListeners: Set<
+    (
+      message: any,
+      sender: Runtime.MessageSender,
+      sendResponse: (response?: any) => void
+    ) => void | boolean
+  >;
+
+  constructor() {
+    this.connectListeners = new Set();
+    this.messageListeners = new Set();
+  }
+
   getURL(path: string) {
     return `/${path}`;
+  }
+
+  connect(connectInfo?: TRuntimeConnectInfo): Runtime.Port {
+    const port = new MockPort(connectInfo?.name);
+
+    this.connectListeners.forEach((listener) => listener(port));
+
+    return port;
+  }
+
+  get onConnect(): TRuntimeConnectEvent {
+    return {
+      addListener: (callback: (port: Runtime.Port) => void) => {
+        this.connectListeners.add(callback);
+      },
+      hasListener: (callback: (port: Runtime.Port) => void) => {
+        return this.connectListeners.has(callback);
+      },
+      hasListeners: () => this.connectListeners.size > 0,
+      removeListener: (callback: (port: Runtime.Port) => void) => {
+        this.connectListeners.delete(callback);
+      },
+    };
+  }
+
+  get onMessage(): TRuntimeMessageEvent {
+    return {
+      addListener: (callback: TRuntimeMessageEventCallback) => {
+        this.messageListeners.add(callback);
+      },
+      hasListener: (callback: TRuntimeMessageEventCallback) => {
+        return this.messageListeners.has(callback);
+      },
+      hasListeners: () => this.messageListeners.size > 0,
+      removeListener: (callback: TRuntimeMessageEventCallback) => {
+        this.messageListeners.delete(callback);
+      },
+    };
   }
 }
 
