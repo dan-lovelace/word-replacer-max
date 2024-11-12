@@ -36,7 +36,7 @@ export default function DropdownButton<T>({
   menuContent,
   minWidth = 300,
   noFlip = false,
-  offset: offsetDistance = 6,
+  offset: offsetDistance = 5,
   placement = "bottom-end",
 }: DropdownButtonProps<T>) {
   const [isOpen, setIsOpen] = useState(false);

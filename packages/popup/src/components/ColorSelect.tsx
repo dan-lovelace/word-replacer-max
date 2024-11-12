@@ -49,6 +49,8 @@ export default function ColorSelect({
       <DropdownButton
         className="d-flex"
         minWidth="unset"
+        noFlip
+        offset={2}
         placement="bottom-start"
         componentProps={{
           className: "btn btn-outline-primary rounded-end-0 h-100",

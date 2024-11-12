@@ -293,7 +293,7 @@ export default function ReplacementInput({
         {canSuggest && (
           <DropdownButton
             noFlip
-            offset={3}
+            offset={2}
             Component={IconButton}
             componentProps={{
               className: cx(ICON_BUTTON_BASE_CLASS, "rounded-0 px-1"),
