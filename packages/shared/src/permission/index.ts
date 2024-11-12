@@ -24,14 +24,22 @@ export const CustomAttributesSchema = z
 export type CustomAttributes = z.infer<typeof CustomAttributesSchema>;
 
 const rolePolicies: UserRolePolicy = {
-  member__2024_11_03: [
+  systemAdmin__2024_11_03: [
     "api:post:AuthAcceptTerms",
-    "api:post:AuthDeleteAccount",
     "api:post:Suggest",
     "api:get:WhoAmI",
   ],
-  systemAdmin__2024_11_03: [
+  testMember__2024_11_10: [
     "api:post:AuthAcceptTerms",
+    "api:post:AuthDeleteAccount",
+    "api:post:AuthTestTokens",
+    "api:post:Suggest",
+    "api:get:WhoAmI",
+    "api:unlimitedUsage",
+  ],
+  member__2024_11_03: [
+    "api:post:AuthAcceptTerms",
+    "api:post:AuthDeleteAccount",
     "api:post:Suggest",
     "api:get:WhoAmI",
   ],
@@ -81,13 +89,11 @@ const getJWTCustomAttributes = (
 };
 
 const rolePermissions: UserRolePermission = {
-  Member: generatePolicy(["member__2024_11_03"]),
-  OrganizationAdmin: generatePolicy(["member__2024_11_03"]),
+  SystemAdmin: generatePolicy(["systemAdmin__2024_11_03"]),
   OrganizationModerator: generatePolicy(["member__2024_11_03"]),
-  SystemAdmin: generatePolicy([
-    "member__2024_11_03",
-    "systemAdmin__2024_11_03",
-  ]),
+  OrganizationAdmin: generatePolicy(["member__2024_11_03"]),
+  TestMember: generatePolicy(["testMember__2024_11_10"]),
+  Member: generatePolicy(["member__2024_11_03"]),
 };
 
 export const JWT_EMAIL_KEY = "email";

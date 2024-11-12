@@ -1,7 +1,7 @@
-import { selectors as s } from "../support/selectors";
+import { selectors as s } from "../../support/selectors";
 
-describe("tab", () => {
-  describe("rule list", () => {
+describe("rules", () => {
+  describe("list", () => {
     it("should render the correct number of rule rows", () => {
       cy.visitWithStorage();
 
@@ -35,7 +35,7 @@ describe("tab", () => {
     });
   });
 
-  describe("rule row", () => {
+  describe("row", () => {
     it("allows user to deactivate", () => {
       cy.visitWithStorage();
 
@@ -46,7 +46,6 @@ describe("tab", () => {
 
       cy.getBrowser().then((browser) => {
         browser.storage?.sync?.get().then((storage) => {
-          // TODO: sort order
           const matchers = Object.keys(storage)
             .filter((key) => key.startsWith("matcher__"))
             .map((key) => storage[key]);

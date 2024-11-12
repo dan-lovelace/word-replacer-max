@@ -8,6 +8,11 @@ export type ApiAuthDeleteAccountRequest = undefined;
 
 export type ApiAuthDeleteAccountResponse = ApiResponse<undefined>;
 
+export type ApiAuthTestTokensRequest = {
+  password: string;
+  username: string;
+};
+
 export type ApiAuthTokensRequest = {
   code: string;
 };

@@ -1,9 +1,11 @@
 import { join } from "node:path";
 
-import preact from "@preact/preset-vite";
 import { defineConfig, loadEnv, UserConfig } from "vite";
 
+import preact from "@preact/preset-vite";
+
 import { buildConfig } from "@worm/plugins";
+import { POPUP_DEV_SERVER_PORT } from "@worm/testing/src/popup";
 
 const productionConfig: UserConfig = {
   build: {
@@ -33,6 +35,9 @@ const testConfig: UserConfig = {
         replacement: join(__dirname, "..", "testing", "src", "test-browser.ts"),
       },
     ],
+  },
+  server: {
+    port: POPUP_DEV_SERVER_PORT,
   },
 };
 

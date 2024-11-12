@@ -1,10 +1,13 @@
+import { merge } from "ts-deepmerge";
+
 import { STORAGE_MATCHER_PREFIX } from "@worm/shared/src/browser/matchers";
 import { deepClone } from "@worm/shared/src/objects";
+import { POPUP_DEV_SERVER_PORT } from "@worm/testing/src/popup";
 
 import { selectors as s } from "../selectors";
 import { VisitWithStorageParams } from "../types";
 
-const baseUrl = "http://localhost:5173/popup.html";
+const baseUrl = `http://localhost:${POPUP_DEV_SERVER_PORT}/popup.html`;
 
 const defaultStore: VisitWithStorageParams = {
   local: {},
@@ -46,13 +49,7 @@ Cypress.Commands.add(
 
         expect(storageSync).to.not.eq(undefined);
 
-        const store = deepClone(defaultStore);
-
-        (Object.keys(overrides) as (keyof VisitWithStorageParams)[]).forEach(
-          (key) => {
-            store[key as keyof typeof store] = overrides[key];
-          }
-        );
+        const store = merge(deepClone(defaultStore), overrides);
 
         /**
          * Check to see if `sync` overrides have been provided. If so, we need

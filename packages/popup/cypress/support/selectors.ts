@@ -50,4 +50,9 @@ export const selectors = {
   },
   ruleRows: () => cy.findAllByTestId("rule-row"),
   ruleRowsFirst: () => selectors.ruleRows().first(),
+  rules: {
+    replacementSuggest: {
+      dropdownToggle: () => cy.findByTestId("suggestions-dropdown-toggle"),
+    },
+  },
 };

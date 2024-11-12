@@ -1,6 +1,6 @@
 import { TermsAcceptance } from "./permission";
 
-const identificationErrorMessages: Record<IdentificationErrorName, string> = {
+const identificationErrorMessages = {
   MissingTokens: "Update requires tokens",
   Standard: "Unable to identify user",
   UserNotLoggedIn: "User is not logged in",
@@ -14,7 +14,7 @@ export type AppUser =
     }
   | undefined;
 
-type IdentificationErrorName = "MissingTokens" | "Standard" | "UserNotLoggedIn";
+type IdentificationErrorName = keyof typeof identificationErrorMessages;
 
 export type SignInStatusState =
   | "signedIn"
