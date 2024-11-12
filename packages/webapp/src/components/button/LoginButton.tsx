@@ -2,7 +2,7 @@ import { ROUTES } from "../../lib/routes";
 
 import Link from "../link/Link";
 
-import { ButtonProps } from ".";
+import { ButtonProps } from "./";
 import Button from "./Button";
 
 type LoginButtonProps = ButtonProps & {

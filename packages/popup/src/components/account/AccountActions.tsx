@@ -30,7 +30,6 @@ export default function AccountActions() {
   const { currentUser, hasAccess } = useAuth();
   const {
     storage: {
-      session: { authAccessToken },
       sync: { preferences },
     },
   } = useConfig();

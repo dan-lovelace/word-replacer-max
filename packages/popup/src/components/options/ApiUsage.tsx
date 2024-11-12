@@ -10,7 +10,7 @@ import { getAccessToken } from "@worm/shared/src/browser";
 import { ApiAccountUsageResponse, ApiResponse } from "@worm/types/src/api";
 
 import { useLanguage } from "../../lib/language";
-import { useConfig } from "../../store/Config";
+import { useAuth } from "../../store/Auth";
 
 import Alert from "../Alerts";
 import ContactSupportLink from "../button/ContactSupportLink";
@@ -20,11 +20,7 @@ import Tooltip from "../Tooltip";
 const PROGRESS_BAR_WIDTH_PX = 220;
 
 export default function ApiUsage() {
-  const {
-    storage: {
-      session: { authAccessToken },
-    },
-  } = useConfig();
+  const { currentUser } = useAuth();
   const language = useLanguage();
 
   const {
@@ -36,7 +32,7 @@ export default function ApiUsage() {
     ApiResponse<ApiAccountUsageResponse>,
     ApiResponse<ApiAccountUsageResponse>
   >({
-    enabled: Boolean(authAccessToken),
+    enabled: Boolean(currentUser),
     queryKey: ["getAccountUsage"],
     queryFn: async () =>
       axios.get(getApiEndpoint("GET:accountUsage"), {

@@ -16,7 +16,6 @@ import {
 
 import { useLanguage } from "../../lib/language";
 import { useAuth } from "../../store/Auth";
-import { useConfig } from "../../store/Config";
 
 import { useToast } from "../alert/useToast";
 import Alert from "../Alerts";
@@ -27,13 +26,6 @@ export default function TermsAcceptance() {
   const [hasAccepted, setHasAccepted] = useState(false);
 
   const { currentUser, hasAccess } = useAuth();
-
-  const {
-    storage: {
-      session: { authAccessToken },
-    },
-  } = useConfig();
-
   const language = useLanguage();
   const { showToast } = useToast();
 
@@ -86,7 +78,7 @@ export default function TermsAcceptance() {
   return (
     <Slide isOpen={!hasAccepted}>
       <Alert
-        className="rounded-0 fs-sm"
+        className="rounded-0 fs-sm mb-1"
         severity="warning"
         style={{ padding: "10px var(--bs-alert-padding-x)" }}
       >
