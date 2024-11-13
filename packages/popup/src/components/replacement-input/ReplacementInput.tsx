@@ -9,7 +9,10 @@ import { useMutation } from "@tanstack/react-query";
 import { cx, isReplacementEmpty } from "@worm/shared";
 import { getApiEndpoint } from "@worm/shared/src/api";
 import { getAccessToken } from "@worm/shared/src/browser";
-import { DEFAULT_TONE_OPTION } from "@worm/shared/src/replace/lib/suggest";
+import {
+  DEFAULT_TONE_OPTION,
+  toneOptions,
+} from "@worm/shared/src/replace/lib/suggest";
 import { getStorageProvider, storageSetByKeys } from "@worm/shared/src/storage";
 import {
   ApiResponse,
@@ -52,37 +55,6 @@ type ReplacementInputProps = Pick<
 
 const INPUT_BUTTON_WIDTH = 31;
 const INPUT_WIDTH_BASE = 250;
-
-const toneOptions: { label: string; value: ToneOption }[] = [
-  {
-    label: "Casual",
-    value: "casual",
-  },
-  {
-    label: "Emotional",
-    value: "emotional",
-  },
-  {
-    label: "Neutral",
-    value: "neutral",
-  },
-  {
-    label: "Poetic",
-    value: "poetic",
-  },
-  {
-    label: "Professional",
-    value: "professional",
-  },
-  {
-    label: "Technical",
-    value: "technical",
-  },
-  {
-    label: "Witty",
-    value: "witty",
-  },
-];
 
 export default function ReplacementInput({
   active,
@@ -308,7 +280,7 @@ export default function ReplacementInput({
               "data-testid": "suggestions-dropdown-toggle",
             }}
             menuContent={
-              <>
+              <div data-testid="suggestions-dropdown-menu">
                 <MenuItemContainer data-testid="suggestions-configuration">
                   <div className="flex-fill">
                     <div className="fw-bold mb-1">Get suggestions</div>
@@ -349,10 +321,7 @@ export default function ReplacementInput({
                   </div>
                 </MenuItemContainer>
                 {suggestionsExist && (
-                  <DropdownMenuContainer
-                    className="border-top"
-                    data-testid="suggestions-results"
-                  >
+                  <DropdownMenuContainer className="border-top">
                     <MenuItemContainer data-testid="suggestions-tone-label">
                       {toneLabel} alternatives
                     </MenuItemContainer>
@@ -374,7 +343,7 @@ export default function ReplacementInput({
                     </div>
                   </DropdownMenuContainer>
                 )}
-              </>
+              </div>
             }
           />
         )}

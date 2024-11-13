@@ -51,7 +51,20 @@ export const selectors = {
   ruleRows: () => cy.findAllByTestId("rule-row"),
   ruleRowsFirst: () => selectors.ruleRows().first(),
   rules: {
+    list: {
+      replacementInput: () => cy.findByTestId("replacement-text-input"),
+    },
     replacementSuggest: {
+      dropdownMenu: {
+        configuration: () => cy.findByTestId("suggestions-configuration"),
+        resultsItems: () => cy.findAllByTestId("suggestions-list-item"),
+        resultsList: () => cy.findByTestId("suggestions-list"),
+        resultsTone: () => cy.findByTestId("suggestions-tone-label"),
+        root: () => cy.findByTestId("suggestions-dropdown-menu"),
+        submitButton: () => cy.findByTestId("generate-suggestions-button"),
+        toneSelectInput: () => cy.findByTestId("tone-select"),
+        toneSelectOption: () => cy.findByTestId("tone-option"),
+      },
       dropdownToggle: () => cy.findByTestId("suggestions-dropdown-toggle"),
     },
   },
