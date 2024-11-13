@@ -35,6 +35,9 @@ jobs:
       - name: Run Popup Cypress tests
         uses: cypress-io/github-action@v6
         id: popup-cypress
+        env:
+          VITE_TEST_USERNAME: ${{ secrets.CYPRESS_TEST_USERNAME }}
+          VITE_TEST_PASSWORD: ${{ secrets.CYPRESS_TEST_PASSWORD }}
         with:
           browser: chrome
           project: packages/popup
