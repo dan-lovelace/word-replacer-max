@@ -21,8 +21,6 @@ Cypress.Commands.add("appUserLogin", () => {
 
         browser.storage?.session?.set(sessionStore).then(() => {
           cache.sessionStore = sessionStore;
-
-          cy.wrap(tokens).as("authTokens");
         });
       });
     };

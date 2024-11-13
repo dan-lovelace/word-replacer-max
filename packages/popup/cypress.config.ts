@@ -17,6 +17,7 @@ const privateEnv = loadEnv("private", path.join(__dirname, "cypress"));
 
 export default defineConfig({
   e2e: {
+    requestTimeout: 12000, // account for slow replacement suggestions
     setupNodeEvents(on, cypressConfig) {
       const newConfig = Object.assign({}, cypressConfig);
 

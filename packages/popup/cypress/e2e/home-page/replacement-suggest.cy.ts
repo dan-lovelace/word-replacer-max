@@ -189,7 +189,7 @@ describe("replacement suggest", () => {
         selectors.rules.replacementSuggest.dropdownMenu.submitButton().click();
       });
 
-      cy.wait("@suggestResult").then((response) => {
+      cy.wait("@suggestResult").then(() => {
         selectors.rules.replacementSuggest.dropdownMenu
           .resultsItems()
           .first()
