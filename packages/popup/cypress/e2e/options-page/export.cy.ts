@@ -1,4 +1,4 @@
-import path from "node:path";
+import path from "path";
 
 import { ENDPOINTS } from "../../support/endpoints";
 import { selectors as s } from "../../support/selectors";

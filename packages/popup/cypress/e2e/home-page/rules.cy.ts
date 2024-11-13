@@ -1,3 +1,7 @@
+import {
+  TEST_MATCHER_ID_1,
+  TEST_MATCHER_ID_2,
+} from "../../support/generators/rules";
 import { selectors as s } from "../../support/selectors";
 
 describe("rules", () => {
@@ -12,6 +16,8 @@ describe("rules", () => {
       cy.visitWithStorage({
         sync: {
           domainList: [],
+          [TEST_MATCHER_ID_1]: undefined,
+          [TEST_MATCHER_ID_2]: undefined,
           preferences: {
             activeTab: "rules",
             domainListEffect: "deny",

@@ -1,1 +1,1 @@
-export const POPUP_DEV_SERVER_PORT = 5183;
+export const POPUP_DEV_SERVER_PORT = 5173;

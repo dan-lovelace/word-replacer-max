@@ -4,6 +4,7 @@ import { STORAGE_MATCHER_PREFIX } from "@worm/shared/src/browser/matchers";
 import { deepClone } from "@worm/shared/src/objects";
 import { POPUP_DEV_SERVER_PORT } from "@worm/testing/src/popup";
 
+import { generateMatchers } from "../generators/rules";
 import { selectors as s } from "../selectors";
 import { VisitWithStorageParams } from "../types";
 
@@ -14,26 +15,13 @@ const defaultStore: VisitWithStorageParams = {
   session: {},
   sync: {
     domainList: [],
-    matcher__1234: {
-      active: true,
-      identifier: "1234",
-      queries: ["my jaw dropped", "I was shocked"],
-      queryPatterns: [],
-      replacement: "I was surprised",
-    },
-    matcher__5678: {
-      active: true,
-      identifier: "5678",
-      queries: ["This."],
-      queryPatterns: ["case", "wholeWord"],
-      replacement: " ",
-    },
     preferences: {
       activeTab: "rules",
       domainListEffect: "deny",
       extensionEnabled: true,
       focusRule: "",
     },
+    ...generateMatchers(),
   },
 };
 
