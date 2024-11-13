@@ -55,6 +55,13 @@ reloaded.
 
 ## Running tests
 
+### Prerequisites
+
+- A file `packages/popup/cypress/.env.private` populated with testing
+  credentials - Contact the repository owner if you do not have these.
+
+### Steps
+
 To run all tests:
 
 1. Start the Popup development server in test mode
