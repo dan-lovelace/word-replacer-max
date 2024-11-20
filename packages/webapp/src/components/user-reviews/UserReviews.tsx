@@ -73,6 +73,11 @@ const userReviews: UserReview[] = [
     rating: 5,
     text: "Oct 25, 2024",
   },
+  {
+    author: "Firefox user",
+    rating: 5,
+    text: "Nov 18, 2024",
+  },
 ].reverse();
 
 export default function UserReviews() {
