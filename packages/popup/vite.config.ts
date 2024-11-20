@@ -6,6 +6,7 @@ import preact from "@preact/preset-vite";
 
 import { buildConfig } from "@worm/plugins";
 import { POPUP_DEV_SERVER_PORT } from "@worm/testing/src/popup";
+import { Environment } from "@worm/types/src/config";
 
 const productionConfig: UserConfig = {
   build: {
@@ -28,6 +29,7 @@ const testConfig: UserConfig = {
     },
   },
   plugins: [buildConfig(), preact()],
+  publicDir: join(__dirname, "..", "content", "public"),
   resolve: {
     alias: [
       {
@@ -41,7 +43,7 @@ const testConfig: UserConfig = {
   },
 };
 
-const modeConfig: Record<string, UserConfig> = {
+const modeConfig: Record<Environment, UserConfig> = {
   development: productionConfig,
   production: productionConfig,
   test: testConfig,

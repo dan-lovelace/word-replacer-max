@@ -2,7 +2,7 @@
 
 type OAuthResponseType = "code" | "token";
 
-export const environments = ["development", "production"] as const;
+export const environments = ["development", "production", "test"] as const;
 
 /**
  * Deployment environments.

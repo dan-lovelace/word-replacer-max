@@ -4,6 +4,8 @@ import { exec } from "node:child_process";
 import fs from "node:fs";
 import { join } from "node:path";
 
+import { Environment, environments } from "@worm/types/src/config";
+
 import { configureNodeEnvironment, distDir } from "./lib/config";
 import { getManifest } from "./lib/manifest";
 
@@ -23,8 +25,14 @@ function writeManifest() {
 }
 
 function main() {
-  assert(process.env.NODE_ENV, "NODE_ENV is required");
-  configureNodeEnvironment(process.env.NODE_ENV);
+  const { NODE_ENV } = process.env;
+
+  assert(
+    NODE_ENV && environments.includes(NODE_ENV as Environment),
+    `NODE_ENV must be one of: ${environments.join(", ")}`
+  );
+
+  configureNodeEnvironment(NODE_ENV);
 
   if (!fs.existsSync(distDir)) {
     fs.mkdirSync(distDir, { recursive: true });
