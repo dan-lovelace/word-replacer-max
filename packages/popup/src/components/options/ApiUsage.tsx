@@ -75,9 +75,9 @@ export default function ApiUsage() {
   const isWarning = Boolean(usagePercent > 80);
 
   const barColor = useMemo(() => {
-    if (usagePercent === 100) {
+    if (usagePercent >= 100) {
       return "bg-danger-subtle";
-    } else if (usagePercent >= 80) {
+    } else if (usagePercent >= 70) {
       return "bg-warning-subtle";
     }
 
@@ -128,6 +128,7 @@ export default function ApiUsage() {
             "d-flex align-items-center",
             "fs-xs text-secondary text-nowrap"
           )}
+          data-testid="refill-alert-message"
         >
           <span>Need additional credits?</span>
           &nbsp;

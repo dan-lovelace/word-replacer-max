@@ -22,6 +22,16 @@ export const selectors = {
   },
   homePage: () => cy.findByTestId("home-page"),
   optionsTab: () => cy.findByTestId("options-tab"),
+  options: {
+    replacementSuggest: {
+      apiUsage: {
+        refillAlertMessage: () => cy.findByTestId("refill-alert-message"),
+        root: () => cy.findByTestId("api-usage"),
+      },
+      toggleButton: () =>
+        cy.findByTestId("replacement-suggestions-toggle-button"),
+    },
+  },
   replacementStyles: {
     colorInputs: {
       backgroundColorCheckbox: () =>
@@ -59,6 +69,7 @@ export const selectors = {
         configuration: () => cy.findByTestId("suggestions-configuration"),
         resultsItems: () => cy.findAllByTestId("suggestions-list-item"),
         resultsList: () => cy.findByTestId("suggestions-list"),
+        resultsListSpinner: () => cy.findByTestId("suggestions-list-spinner"),
         resultsTone: () => cy.findByTestId("suggestions-tone-label"),
         root: () => cy.findByTestId("suggestions-dropdown-menu"),
         submitButton: () => cy.findByTestId("generate-suggestions-button"),

@@ -243,27 +243,57 @@ export default function ReplacementSuggest({
               </div>
             </div>
           </MenuItemContainer>
-          {suggestionsExist && (
-            <DropdownMenuContainer className="border-top">
-              <MenuItemContainer data-testid="suggestions-tone-label">
-                {toneLabel} alternatives
-              </MenuItemContainer>
-              <div data-testid="suggestions-list">
-                {suggestionsData?.suggestions?.map(({ text }, idx) => (
-                  <MenuItem
-                    key={`suggestion-${idx}`}
-                    startIcon={
-                      replacement === text
-                        ? "radio_button_checked"
-                        : "radio_button_unchecked"
-                    }
-                    onClick={handleSuggestionClick(text)}
-                    data-testid="suggestions-list-item"
+          {(isSuggestLoading || suggestionsExist) && (
+            <DropdownMenuContainer className="border-top position-relative">
+              {isSuggestLoading && (
+                <div
+                  style={{
+                    height: suggestionsExist ? "auto" : 60,
+                  }}
+                  data-testid="suggestions-list-spinner"
+                >
+                  <div
+                    className={cx(
+                      "mt-n1 z-3",
+                      "d-flex align-items-center justify-content-center w-100 h-100",
+                      suggestionsExist && "position-absolute"
+                    )}
+                    style={{
+                      backgroundColor: "rgba(255, 255, 255, 0.8)",
+                    }}
                   >
-                    {text}
-                  </MenuItem>
-                ))}
-              </div>
+                    <div
+                      className="spinner-border text-secondary"
+                      role="status"
+                    >
+                      <span className="visually-hidden">Loading...</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+              {suggestionsExist && (
+                <>
+                  <MenuItemContainer data-testid="suggestions-tone-label">
+                    {toneLabel} alternatives
+                  </MenuItemContainer>
+                  <div data-testid="suggestions-list">
+                    {suggestionsData?.suggestions?.map(({ text }, idx) => (
+                      <MenuItem
+                        key={`suggestion-${idx}`}
+                        startIcon={
+                          replacement === text
+                            ? "radio_button_checked"
+                            : "radio_button_unchecked"
+                        }
+                        onClick={handleSuggestionClick(text)}
+                        data-testid="suggestions-list-item"
+                      >
+                        {text}
+                      </MenuItem>
+                    ))}
+                  </div>
+                </>
+              )}
             </DropdownMenuContainer>
           )}
         </div>
