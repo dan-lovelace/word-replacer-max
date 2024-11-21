@@ -132,6 +132,10 @@ describe("replacement suggest", () => {
         selectors.rules.replacementSuggest.dropdownMenu.submitButton().click();
       });
 
+      selectors.rules.replacementSuggest.dropdownMenu
+        .resultsListSpinner()
+        .should("be.visible");
+
       cy.wait("@suggestResult").then(() => {
         selectors.rules.replacementSuggest.dropdownMenu
           .resultsList()
@@ -204,6 +208,27 @@ describe("replacement suggest", () => {
           .then((resultsItems) => {
             cy.wrap(resultsItems).should("have.length", 5);
           });
+      });
+    });
+
+    it("should make follow-up suggestions when some already exist", () => {
+      interceptSuggest();
+
+      selectors.ruleRowsFirst().within(() => {
+        selectors.rules.replacementSuggest.dropdownToggle().click();
+        selectors.rules.replacementSuggest.dropdownMenu.submitButton().click();
+      });
+
+      cy.wait("@suggestResult").then(() => {
+        selectors.rules.replacementSuggest.dropdownMenu.submitButton().click();
+
+        cy.wait("@suggestResult").then(() => {
+          selectors.rules.replacementSuggest.dropdownMenu
+            .resultsItems()
+            .then((resultsItems) => {
+              cy.wrap(resultsItems).should("have.length", 5);
+            });
+        });
       });
     });
   });
