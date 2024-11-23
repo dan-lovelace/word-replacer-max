@@ -1,8 +1,8 @@
 import DomainInput from "../components/domain-input/DomainInput";
 import RuleList from "../components/rules/RuleList";
-import Support from "../components/Support";
 import Account from "../containers/Account";
 import Options from "../containers/Options";
+import Support from "../containers/Support";
 import { useConfig } from "../store/Config";
 
 export default function HomePage() {

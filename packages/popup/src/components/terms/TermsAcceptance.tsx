@@ -77,11 +77,7 @@ export default function TermsAcceptance() {
 
   return (
     <Slide isOpen={!hasAccepted}>
-      <Alert
-        className="rounded-0 fs-sm mb-1"
-        severity="warning"
-        style={{ padding: "10px var(--bs-alert-padding-x)" }}
-      >
+      <Alert className="rounded-0 fs-sm" severity="warning">
         <div className="d-flex align-items-center">
           <div className="flex-fill text-center">
             {lang.TERMS_ACCEPTANCE_REQUIRED_MESSAGE}{" "}
@@ -96,7 +92,11 @@ export default function TermsAcceptance() {
         </div>
         <div
           className="position-absolute"
-          style={{ right: "var(--bs-alert-padding-x)", top: "0.25rem" }}
+          style={{
+            right: "var(--bs-alert-padding-x)",
+            top: "50%",
+            transform: "translateY(-50%)",
+          }}
         >
           <Button
             className="btn btn-primary btn-sm"

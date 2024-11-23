@@ -85,4 +85,14 @@ export default {
     EMPTY_RULES_LIST_ALERT_BODY: "Create a rule to start replacing text again.",
     REFRESH_REQUIRED: "You must refresh the page to see these changes.",
   },
+  support: {
+    CONTACT_SUPPORT_FORM_EMPTY_MESSAGE_ERROR: "Message is required",
+    CONTACT_SUPPORT_FORM_MESSAGE_INPUT_PLACEHOLDER:
+      "Tell us what's on your mind – questions, suggestions, or anything else you'd like to share...",
+    CONTACT_SUPPORT_FORM_SUBMIT_BUTTON_TEXT: "Send",
+    CONTACT_SUPPORT_FORM_SUCCESS_MESSAGE:
+      "Your message has been sent. We will get back to you soon!",
+    CONTACT_SUPPORT_FORM_GENERAL_ERROR:
+      "Something went wrong sending your message. Please try again.",
+  },
 };

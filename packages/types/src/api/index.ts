@@ -13,6 +13,7 @@ export const API_ROUTES = {
   "POST:authDeleteAccount": "/auth/delete-account",
   "POST:authTestTokens": "/auth/test-tokens",
   "POST:authTokens": "/auth/tokens",
+  "POST:contactSupport": "/contact/support",
   "POST:marketingSignup": "/marketing/signup",
   "POST:share": "/share",
   "POST:suggest": "/suggest",
@@ -59,6 +60,7 @@ export class ApiResponseError extends Error implements ApiError {
 }
 
 export * from "./auth";
+export * from "./contact";
 export * from "./errors";
 export * from "./event";
 export * from "./marketing";
