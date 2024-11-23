@@ -79,4 +79,16 @@ export const selectors = {
       dropdownToggle: () => cy.findByTestId("suggestions-dropdown-toggle"),
     },
   },
+  support: {
+    contactSupportForm: () => cy.findByTestId("contact-support-form"),
+    contactSupportFormMessageError: () =>
+      cy.findByTestId("contact-support-form-message-error"),
+    contactSupportFormMessageInput: () =>
+      cy.findByTestId("contact-support-form-message-input"),
+    contactSupportFormSubmitButton: () =>
+      cy.findByTestId("contact-support-form-submit-button"),
+    loggedInContactOptions: () => cy.findByTestId("logged-in-contact-options"),
+    loggedOutContactOptions: () =>
+      cy.findByTestId("logged-out-contact-options"),
+  },
 };
