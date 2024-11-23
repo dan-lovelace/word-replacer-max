@@ -7,7 +7,7 @@ import useTheme from "@mui/material/styles/useTheme";
 import Typography from "@mui/material/Typography/Typography";
 
 import {
-  MAILTO_SUPPORT_URL,
+  MAILTO_CONTACT_SUPPORT_URL,
   PUBLIC_GITHUB_REPOSITORY_URL,
 } from "@worm/shared/src/support";
 
@@ -49,7 +49,7 @@ export default function LayoutFooter() {
                 {githubLogo}
               </Link>
               <Divider orientation="vertical" flexItem />
-              <Link to={MAILTO_SUPPORT_URL}>
+              <Link to={MAILTO_CONTACT_SUPPORT_URL}>
                 <Typography variant="body2">Contact</Typography>
               </Link>
               <Divider orientation="vertical" flexItem />
