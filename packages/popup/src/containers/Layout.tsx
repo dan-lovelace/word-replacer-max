@@ -26,6 +26,7 @@ import { getNotificationMessage } from "../lib/routes";
 import { PreactChildren } from "../lib/types";
 import { useAuth } from "../store/Auth";
 import { useConfig } from "../store/Config";
+import { MESSAGE_SENDER } from "../store/Message";
 
 type LayoutProps = {
   children: PreactChildren;
@@ -123,7 +124,7 @@ export default function Layout({ children }: LayoutProps) {
   };
 
   const handleSignOutClick = () => {
-    sendConnectMessage("popup", "signOutRequest");
+    sendConnectMessage(MESSAGE_SENDER, "signOutRequest");
   };
 
   const handleTabChange = (newTab: PopupTab) => () => {

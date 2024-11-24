@@ -50,7 +50,7 @@ export default function AccountDetails() {
           </div>
         </div>
         <div>
-          <div className="fw-medium">Features</div>
+          <div className="fw-medium">Feature access</div>
           <div className="d-flex flex-column gap-1 ms-2">
             <FeatureItem
               icon="check_circle"

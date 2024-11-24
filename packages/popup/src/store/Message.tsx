@@ -1,5 +1,5 @@
 import { createContext } from "preact";
-import { useContext, useEffect } from "preact/hooks";
+import { useContext, useEffect, useRef } from "preact/hooks";
 
 import {
   connectionManager,
@@ -7,6 +7,7 @@ import {
 } from "@worm/shared/src/browser";
 import { storageSetByKeys } from "@worm/shared/src/storage";
 import { RuntimeMessage, RuntimeMessageKind } from "@worm/types/src/message";
+import { PopupTab } from "@worm/types/src/popup";
 
 import { PreactChildren } from "../lib/types";
 
@@ -14,7 +15,7 @@ import { useConfig } from "./Config";
 
 type MessageStore = {};
 
-const MESSAGE_SENDER: ConnectMessageSender = "popup-store-message";
+export const MESSAGE_SENDER: ConnectMessageSender = "popup";
 
 const Message = createContext<MessageStore>({} as MessageStore);
 
@@ -27,13 +28,15 @@ export function MessageProvider({ children }: { children: PreactChildren }) {
     },
   } = useConfig();
 
+  const activeTabRef = useRef<PopupTab | undefined>(preferences?.activeTab);
+  activeTabRef.current = preferences?.activeTab;
+
   useEffect(() => {
     const messageHandler = (event: RuntimeMessage<RuntimeMessageKind>) => {
       switch (event.data.kind) {
         case "signOutResponse": {
-          if (preferences?.activeTab === "account") {
+          if (activeTabRef.current === "account") {
             const newPreferences = Object.assign({}, preferences);
-
             newPreferences.activeTab = "rules";
 
             storageSetByKeys({
@@ -52,7 +55,7 @@ export function MessageProvider({ children }: { children: PreactChildren }) {
     return () => {
       connectionManager.removeMessageHandler(MESSAGE_SENDER, messageHandler);
     };
-  }, [preferences]);
+  }, []);
 
   return <Message.Provider value={{}}>{children}</Message.Provider>;
 }

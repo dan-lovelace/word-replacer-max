@@ -141,10 +141,11 @@ export default function Support() {
         >
           <div className="row fs-sm">
             <div className={COPY_CONTAINER_COL_CLASS}>
-              <div className="fs-5 fw-bold">Send Us a Message</div>
+              <div className="fs-5 fw-bold">Send Direct Message</div>
               <p>
-                Need help or have feedback? Send a direct message and we'll
-                respond to your registered email address within 24 hours.
+                Have feedback or need help? Send us a message! For support
+                requests, we'll respond to your registered email address within
+                24 hours.
               </p>
               <form onSubmit={handleSubmit} data-testid="contact-support-form">
                 <label
@@ -165,7 +166,7 @@ export default function Support() {
                     lang.CONTACT_SUPPORT_FORM_MESSAGE_INPUT_PLACEHOLDER
                   }
                   required
-                  rows={4}
+                  rows={6}
                   style={{ resize: "vertical" }}
                   value={formData.message}
                   onChange={handleFormChange}

@@ -17,6 +17,7 @@ import {
 import { useLanguage } from "../../lib/language";
 import { useAuth } from "../../store/Auth";
 import { useConfig } from "../../store/Config";
+import { MESSAGE_SENDER } from "../../store/Message";
 
 import { useToast } from "../alert/useToast";
 import Alert from "../Alerts";
@@ -68,7 +69,7 @@ export default function DeleteAccount({
         });
       },
       onSuccess() {
-        sendConnectMessage("popup", "signOutRequest");
+        sendConnectMessage(MESSAGE_SENDER, "signOutRequest");
 
         const newPreferences = Object.assign({}, preferences);
         newPreferences.activeTab = "rules";

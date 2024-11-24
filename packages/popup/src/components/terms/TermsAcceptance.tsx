@@ -16,6 +16,7 @@ import {
 
 import { useLanguage } from "../../lib/language";
 import { useAuth } from "../../store/Auth";
+import { MESSAGE_SENDER } from "../../store/Message";
 
 import { useToast } from "../alert/useToast";
 import Alert from "../Alerts";
@@ -59,7 +60,7 @@ export default function TermsAcceptance() {
         setHasAccepted(true);
 
         // Force-refresh tokens to pick up latest attributes
-        sendConnectMessage("popup", "forceRefreshTokensRequest");
+        sendConnectMessage(MESSAGE_SENDER, "forceRefreshTokensRequest");
       },
     });
   };
