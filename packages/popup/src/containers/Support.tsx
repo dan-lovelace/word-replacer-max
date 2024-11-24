@@ -13,6 +13,7 @@ import {
   MAILTO_CONTACT_SUPPORT_URL,
   SUBMIT_NEW_TICKET_URL,
 } from "@worm/shared/src/support";
+import { CONTACT_SUPPORT_MAXIMUM_MESSAGE_LENGTH } from "@worm/shared/src/validation/contact";
 import {
   ApiContactSupportRequest,
   ApiContactSupportResponse,
@@ -158,12 +159,13 @@ export default function Support() {
                     formErrors.message && "is-invalid"
                   )}
                   id="direct-message-input"
+                  maxLength={CONTACT_SUPPORT_MAXIMUM_MESSAGE_LENGTH}
                   name="message"
                   placeholder={
                     lang.CONTACT_SUPPORT_FORM_MESSAGE_INPUT_PLACEHOLDER
                   }
                   required
-                  rows={3}
+                  rows={4}
                   style={{ resize: "vertical" }}
                   value={formData.message}
                   onChange={handleFormChange}

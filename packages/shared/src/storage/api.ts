@@ -7,7 +7,12 @@ import {
   SyncStorageKey,
 } from "@worm/types/src/storage";
 
-import { browser, matchersFromStorage, matchersToStorage } from "../browser";
+import {
+  browser,
+  matchersFromStorage,
+  matchersToStorage,
+  STORAGE_MATCHER_PREFIX,
+} from "../browser";
 import { logDebug } from "../logging";
 
 const {
@@ -66,8 +71,25 @@ export async function storageSetByKeys(
   if (Object.prototype.hasOwnProperty.call(keys, "matchers")) {
     const { matchers } = keys;
 
+    if (!matchers || matchers.length < 1) {
+      /**
+       * Matchers are being deleted. Look up all existing matchers in the flat
+       * storage structure and remove them.
+       */
+      const allStorage = await storageGet();
+      const storedMatchers = matchersFromStorage(allStorage);
+
+      if (storedMatchers) {
+        await storageRemoveByKeys(
+          storedMatchers.map(
+            (matcher) => `${STORAGE_MATCHER_PREFIX}${matcher.identifier}`
+          )
+        );
+      }
+    }
+
     /**
-     * Matchers are being set. We need to save them to storage in a flat
+     * Matchers are being updated. We need to save them to storage in a flat
      * structure to allow users to save the maximum amount of data using the
      * `sync` storage area.
      *

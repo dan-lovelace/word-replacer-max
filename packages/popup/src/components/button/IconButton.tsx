@@ -15,7 +15,7 @@ export type IconButtonProps = Omit<
   iconProps?: Omit<MaterialIconProps, "default" | "name">;
 };
 
-export const ICON_BUTTON_BASE_CLASS = "btn btn-light bg-transparent";
+export const ICON_BUTTON_BASE_CLASS = "border-0 btn btn-light bg-transparent";
 
 export default function IconButton({
   className,
@@ -27,7 +27,7 @@ export default function IconButton({
   const button = useMemo(
     () => (
       <button
-        className={cx("border-0", className ?? ICON_BUTTON_BASE_CLASS)}
+        className={cx(className ?? ICON_BUTTON_BASE_CLASS)}
         type="button"
         {...rest}
       >

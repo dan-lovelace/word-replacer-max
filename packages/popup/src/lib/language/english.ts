@@ -1,27 +1,35 @@
 export default {
   account: {
-    ACCOUNT_ACTIONS_HEADING: "Account Actions",
-    ACCOUNT_ACTIONS_DELETE_ACCOUNT_BUTTON_TEXT: "Delete account",
-    ACCOUNT_ACTIONS_DELETE_ACCOUNT_CONFIRMATION_TITLE: "DELETE ACCOUNT",
-    ACCOUNT_ACTIONS_DELETE_ACCOUNT_CONFIRMATION_BODY:
+    DANGER_ZONE_HEADING: "Danger Zone",
+    DANGER_ZONE_DELETE_ACCOUNT_BUTTON_TEXT: "Delete account",
+    DANGER_ZONE_DELETE_ACCOUNT_CONFIRMATION_TITLE: "DELETE ACCOUNT",
+    DANGER_ZONE_DELETE_ACCOUNT_CONFIRMATION_BODY:
       "Are you sure you want to delete your account? This action cannot be undone and you will lose all your data. We recommend first backing up your rules using the export feature.",
-    ACCOUNT_ACTIONS_DELETE_ACCOUNT_CONFIRMATION_CANCEL_BUTTON_TEXT:
+    DANGER_ZONE_DELETE_ACCOUNT_CONFIRMATION_CANCEL_BUTTON_TEXT:
       "No, keep my account",
-    ACCOUNT_ACTIONS_DELETE_ACCOUNT_CONFIRMATION_INPUT_LABEL:
-      "I understand and would like to proceed with deletion",
-    ACCOUNT_ACTIONS_DELETE_ACCOUNT_CONFIRMATION_PROCEED_BUTTON_TEXT:
+    DANGER_ZONE_DELETE_ACCOUNT_CONFIRMATION_INPUT_LABEL:
+      "I understand that this action cannot be undone",
+    DANGER_ZONE_DELETE_ACCOUNT_CONFIRMATION_PROCEED_BUTTON_TEXT:
       "Delete my account forever",
+    DANGER_ZONE_DELETE_ACCOUNT_HEADING: "Delete Account",
+    DANGER_ZONE_DELETE_ACCOUNT_SUBHEADING:
+      "Delete your account and all associated data. This action cannot be undone.",
+    DANGER_ZONE_DELETE_RULES_BUTTON_TEXT: "Delete all rules",
+    DANGER_ZONE_DELETE_RULES_CONFIRMATION_TITLE: "DELETE ALL RULES",
+    DANGER_ZONE_DELETE_RULES_CONFIRMATION_BODY:
+      "Are you sure you want to delete all your rules? This action cannot be undone. We recommend first backing up your rules using the export feature.",
+    DANGER_ZONE_DELETE_RULES_CONFIRMATION_CANCEL_BUTTON_TEXT:
+      "No, keep my rules",
+    DANGER_ZONE_DELETE_RULES_CONFIRMATION_INPUT_LABEL:
+      "I understand that this action cannot be undone",
+    DANGER_ZONE_DELETE_RULES_HEADING: "Delete All Rules",
+    DANGER_ZONE_DELETE_RULES_SUBHEADING:
+      "Remove all your replacement rules while keeping your account intact.",
+    DANGER_ZONE_DELETE_RULES_SUCCESS_MESSAGE: "Your rules have been deleted.",
     ACCOUNT_DETAILS_HEADING: "Account Details",
-    ACCOUNT_DETAILS_RESEND_EMAIL_VERIFICATION_BUTTON_TEXT:
-      "Resend verification",
-    ACCOUNT_DETAILS_EMAIL_VERIFICATION_VERIFIED_TEXT: "Verified",
-    ACCOUNT_DETAILS_EMAIL_VERIFICATION_NOT_VERIFIED_TEXT: "Not verified",
     ACCOUNT_DETAILS_EMAIL_LABEL: "Email",
-    EMAIL_NOT_VERIFIED_ALERT_TITLE: "Email not verified",
-    EMAIL_NOT_VERIFIED_ALERT_BODY:
-      "Some features are not available until you verify your email address.",
     DELETE_ACCOUNT_API_RESPONSE_GENERAL_ERROR:
-      "Something went wrong deleting your account",
+      "Something went wrong deleting your account.",
   },
   api: {
     account: {

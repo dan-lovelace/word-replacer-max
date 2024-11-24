@@ -7,24 +7,23 @@ import MaterialIcon from "../icon/MaterialIcon";
 import Tooltip from "../Tooltip";
 
 type FeatureItemProps = {
+  color: PopupAlertSeverity | "secondary";
   icon: string;
   label: string;
-  severity: PopupAlertSeverity;
   tooltip?: string;
 };
 
-function FeatureItem({ icon, label, severity, tooltip }: FeatureItemProps) {
+function FeatureItem({ icon, label, color, tooltip }: FeatureItemProps) {
   return (
-    <div className="d-flex align-items-center gap-1">
-      <MaterialIcon className={`text-${severity}`} name={icon} />
+    <div className="d-flex align-items-center gap-2">
+      <MaterialIcon className={`text-${color}`} name={icon} size="lg" />
       <span>{label}</span>
       {tooltip && (
-        <div className="d-flex align-items-center gap-1 badge text-bg-secondary">
-          <span>Coming Soon</span>
-          <Tooltip title={tooltip}>
-            <MaterialIcon className="text-light" name="info" size="sm" />
-          </Tooltip>
-        </div>
+        <Tooltip title={tooltip}>
+          <span className="badge border border-info bg-info-subtle text-info-emphasis text-uppercase">
+            Coming Soon
+          </span>
+        </Tooltip>
       )}
     </div>
   );
@@ -32,12 +31,7 @@ function FeatureItem({ icon, label, severity, tooltip }: FeatureItemProps) {
 
 export default function AccountDetails() {
   const { currentUser } = useAuth();
-
   const { account: lang } = useLanguage();
-
-  if (!currentUser) {
-    return <></>;
-  }
 
   return (
     <div data-testid="account-details">
@@ -46,32 +40,32 @@ export default function AccountDetails() {
           <label className="fw-medium" for="user-email-input">
             {lang.ACCOUNT_DETAILS_EMAIL_LABEL}
           </label>
-          <div className="position-relative ms-3" style={{ maxWidth: 320 }}>
+          <div className="position-relative ms-2" style={{ maxWidth: 380 }}>
             <input
               className="form-control"
               disabled
               id="user-email-input"
-              value={currentUser.email}
+              value={currentUser?.email}
             />
           </div>
         </div>
         <div>
           <div className="fw-medium">Features</div>
-          <div className="d-flex flex-column gap-1 ms-3">
+          <div className="d-flex flex-column gap-1 ms-2">
             <FeatureItem
               icon="check_circle"
               label="AI replacement suggestions"
-              severity="success"
+              color="success"
             />
             <FeatureItem
               icon="check_circle"
               label="Priority support"
-              severity="success"
+              color="success"
             />
             <FeatureItem
               icon="cancel"
               label="Cloud sync"
-              severity="danger"
+              color="secondary"
               tooltip="Optionally sync all extension data with your Word Replacer Max account"
             />
           </div>

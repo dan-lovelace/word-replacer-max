@@ -38,6 +38,8 @@ type LayoutTab = {
   testId: string;
 };
 
+const NAV_BAR_HEIGHT = 42;
+
 const envConfig = getEnvConfig();
 
 const tabs: LayoutTab[] = [
@@ -189,23 +191,28 @@ export default function Layout({ children }: LayoutProps) {
                   </li>
                 )
             )}
-          </ul>
-          <div className="d-flex align-items-center justify-content-center border-bottom px-2">
-            <DropdownButton<IconButtonProps>
-              componentProps={{
-                className: cx(
-                  ICON_BUTTON_BASE_CLASS,
-                  !currentUser && "text-primary"
-                ),
-                icon: currentUser ? "account_circle" : "person",
-                style: {
-                  transition: "color 150ms",
-                },
-              }}
-              Component={IconButton}
-              menuContent={
-                <>
-                  {currentUser ? (
+            <li className="nav-item d-flex align-items-center justify-content-center">
+              <DropdownButton<IconButtonProps>
+                componentProps={{
+                  className: cx(
+                    "nav-link",
+                    preferences?.activeTab === "account" && "active",
+                    currentUser ? "text-body" : "text-primary"
+                  ),
+                  icon: currentUser ? "account_circle" : "person",
+                  style: {
+                    borderColor:
+                      preferences?.activeTab === "account"
+                        ? "var(--bs-nav-tabs-link-active-border-color)"
+                        : "transparent",
+                    height: NAV_BAR_HEIGHT,
+                    transition: "color 150ms",
+                  },
+                }}
+                Component={IconButton}
+                offset={2}
+                menuContent={
+                  currentUser ? (
                     <>
                       <MenuItemContainer className="border-bottom">
                         <div>
@@ -256,11 +263,13 @@ export default function Layout({ children }: LayoutProps) {
                         </MenuItem>
                       </DropdownMenuContainer>
                     </>
-                  )}
-                </>
-              }
-            />
-            {!isPoppedOut && (
+                  )
+                }
+              />
+            </li>
+          </ul>
+          {!isPoppedOut && (
+            <div className="d-flex align-items-center justify-content-center border-bottom pe-1">
               <DropdownButton<IconButtonProps>
                 componentProps={{
                   icon: "more_vert",
@@ -283,8 +292,8 @@ export default function Layout({ children }: LayoutProps) {
                   </DropdownMenuContainer>
                 }
               />
-            )}
-          </div>
+            </div>
+          )}
         </div>
         {children}
       </div>
