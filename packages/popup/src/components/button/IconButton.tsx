@@ -1,15 +1,13 @@
+import { ComponentProps } from "preact";
 import { useMemo } from "preact/hooks";
-import { JSXInternal } from "preact/src/jsx";
 
 import { cx } from "@worm/shared";
 
 import MaterialIcon, { MaterialIconProps } from "../icon/MaterialIcon";
 import Tooltip from "../Tooltip";
 
-export type IconButtonProps = Omit<
-  JSXInternal.HTMLAttributes<HTMLButtonElement>,
-  "icon"
-> & {
+export type IconButtonProps = Omit<ComponentProps<"button">, "icon"> & {
+  "data-testid"?: string;
   disabledTooltip?: string;
   icon: MaterialIconProps["name"];
   iconProps?: Omit<MaterialIconProps, "default" | "name">;

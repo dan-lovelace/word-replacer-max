@@ -98,7 +98,7 @@ export default function DeleteAccount({
   }
 
   return (
-    <div data-testid="delete-account">
+    <div data-testid="delete-account-confirmation-container">
       <Alert
         className="overflow-hidden"
         severity="danger"
@@ -111,7 +111,7 @@ export default function DeleteAccount({
             <Button
               className="btn btn-secondary"
               onClick={stopConfirmingDelete}
-              data-testid="cancel-button"
+              data-testid="delete-account-confirmation-cancel-button"
             >
               {lang.DANGER_ZONE_DELETE_ACCOUNT_CONFIRMATION_CANCEL_BUTTON_TEXT}
             </Button>
@@ -129,7 +129,7 @@ export default function DeleteAccount({
               id="delete-confirmation-checkbox"
               type="checkbox"
               onChange={handleHasConfirmedChange}
-              data-testid="confirmation-checkbox"
+              data-testid="delete-account-confirmation-checkbox"
             />
           </div>
           <Slide isOpen={hasConfirmedDelete}>
@@ -142,7 +142,7 @@ export default function DeleteAccount({
                 opacity: hasConfirmedDelete ? 1 : 0,
                 transition: "opacity 150ms",
               }}
-              data-testid="submit-confirmation-button"
+              data-testid="delete-account-confirmation-submit-button"
             >
               {lang.DANGER_ZONE_DELETE_ACCOUNT_CONFIRMATION_PROCEED_BUTTON_TEXT}
             </Button>

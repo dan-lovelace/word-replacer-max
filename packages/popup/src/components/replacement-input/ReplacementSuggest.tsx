@@ -27,7 +27,10 @@ import { useConfig } from "../../store/Config";
 
 import { useToast } from "../alert/useToast";
 import Button from "../button/Button";
-import IconButton, { ICON_BUTTON_BASE_CLASS } from "../button/IconButton";
+import IconButton, {
+  ICON_BUTTON_BASE_CLASS,
+  IconButtonProps,
+} from "../button/IconButton";
 import DropdownButton from "../menu/DropdownButton";
 import DropdownMenuContainer from "../menu/DropdownMenuContainer";
 import MenuItem from "../menu/MenuItem";
@@ -186,7 +189,7 @@ export default function ReplacementSuggest({
   const isGenerateReplacementsDisabled = disabled || !Boolean(queries.length);
 
   return (
-    <DropdownButton
+    <DropdownButton<IconButtonProps>
       noFlip
       offset={2}
       Component={IconButton}

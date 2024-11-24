@@ -21,6 +21,7 @@ export default function RuleList() {
           <Alert
             title={lang.EMPTY_RULES_LIST_ALERT_TITLE}
             style={{ maxWidth: ALERT_SIZES.sm }}
+            data-testid="empty-rules-list-alert"
           >
             {lang.EMPTY_RULES_LIST_ALERT_BODY}
             <div className="mt-3">

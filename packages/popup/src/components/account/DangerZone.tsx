@@ -31,7 +31,7 @@ export default function DangerZone() {
           <DeleteAllRules setIsConfirmingDelete={setIsConfirmingRulesDelete} />
         ) : (
           <div className="d-flex gap-4">
-            <div>
+            <div data-testid="delete-all-rules-container">
               <div className="fw-bold mb-1">
                 {lang.DANGER_ZONE_DELETE_RULES_HEADING}
               </div>
@@ -42,13 +42,13 @@ export default function DangerZone() {
                 className="btn btn-outline-danger"
                 startIcon="delete"
                 onClick={handleConfirmRulesDeleteClick}
-                data-testid="delete-rules-button"
+                data-testid="delete-all-rules-button"
               >
                 {lang.DANGER_ZONE_DELETE_RULES_BUTTON_TEXT}
               </Button>
             </div>
             <div className="border-start border-danger" />
-            <div>
+            <div data-testid="delete-account-container">
               <div className="fw-bold mb-1">
                 {lang.DANGER_ZONE_DELETE_ACCOUNT_HEADING}
               </div>

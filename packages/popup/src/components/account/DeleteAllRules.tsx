@@ -63,7 +63,7 @@ export default function DeleteAllRules({
   }
 
   return (
-    <div data-testid="delete-all-rules">
+    <div data-testid="delete-all-rules-confirmation-container">
       <Alert
         severity="danger"
         title={lang.DANGER_ZONE_DELETE_RULES_CONFIRMATION_TITLE}
@@ -75,7 +75,7 @@ export default function DeleteAllRules({
             <Button
               className="btn btn-secondary"
               onClick={stopConfirmingDelete}
-              data-testid="cancel-rules-button"
+              data-testid="delete-all-rules-confirmation-cancel-button"
             >
               {lang.DANGER_ZONE_DELETE_RULES_CONFIRMATION_CANCEL_BUTTON_TEXT}
             </Button>
@@ -93,7 +93,7 @@ export default function DeleteAllRules({
               id="delete-rules-confirmation-checkbox"
               type="checkbox"
               onChange={handleHasConfirmedRulesChange}
-              data-testid="rules-confirmation-checkbox"
+              data-testid="delete-all-rules-confirmation-checkbox"
             />
           </div>
           <Slide isOpen={hasConfirmedRulesDelete}>
@@ -105,7 +105,7 @@ export default function DeleteAllRules({
                 opacity: hasConfirmedRulesDelete ? 1 : 0,
                 transition: "opacity 150ms",
               }}
-              data-testid="submit-rules-confirmation-button"
+              data-testid="delete-all-rules-confirmation-submit-button"
             >
               {lang.DANGER_ZONE_DELETE_RULES_BUTTON_TEXT}
             </Button>

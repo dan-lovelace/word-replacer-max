@@ -209,30 +209,39 @@ export default function Layout({ children }: LayoutProps) {
                     height: NAV_BAR_HEIGHT,
                     transition: "color 150ms",
                   },
+                  "data-testid": "account-dropdown-button",
                 }}
                 Component={IconButton}
                 offset={2}
                 menuContent={
                   currentUser ? (
                     <>
-                      <MenuItemContainer className="border-bottom">
+                      <MenuItemContainer
+                        className="border-bottom"
+                        data-testid="account-dropdown-signed-in-menu-heading"
+                      >
                         <div>
                           <div className="fs-sm">Signed in as</div>
-                          <div className="fw-bold text-truncate">
+                          <div
+                            className="fw-bold text-truncate"
+                            data-testid="account-dropdown-signed-in-email"
+                          >
                             <code>{currentUser.email}</code>
                           </div>
                         </div>
                       </MenuItemContainer>
-                      <DropdownMenuContainer>
+                      <DropdownMenuContainer data-testid="account-dropdown-signed-in-menu-container">
                         <MenuItem
                           startIcon="settings"
                           onClick={handleAccountClick}
+                          data-testid="account-dropdown-account-button"
                         >
                           Account
                         </MenuItem>
                         <MenuItem
                           startIcon="logout"
                           onClick={handleSignOutClick}
+                          data-testid="account-dropdown-sign-out-button"
                         >
                           Sign out
                         </MenuItem>
@@ -240,10 +249,13 @@ export default function Layout({ children }: LayoutProps) {
                     </>
                   ) : (
                     <>
-                      <MenuItemContainer className="bg-primary-subtle fw-bold">
+                      <MenuItemContainer
+                        className="bg-primary-subtle fw-bold"
+                        data-testid="account-dropdown-signed-out-container"
+                      >
                         Sign in to get more
                       </MenuItemContainer>
-                      <DropdownMenuContainer>
+                      <DropdownMenuContainer data-testid="account-dropdown-signed-out-menu-container">
                         <MenuItem
                           linkProps={{
                             href: `${envConfig.VITE_SSM_WEBAPP_ORIGIN}/signup`,
@@ -274,6 +286,7 @@ export default function Layout({ children }: LayoutProps) {
               <DropdownButton<IconButtonProps>
                 componentProps={{
                   icon: "more_vert",
+                  "data-testid": "more-dropdown-button",
                 }}
                 Component={IconButton}
                 menuContent={
