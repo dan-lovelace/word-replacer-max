@@ -63,6 +63,14 @@ export default function DomainInput() {
     storageSetByKeys({
       preferences: newPreferences,
     });
+
+    showRefreshToast(
+      Boolean(
+        currentHostname &&
+          domainList?.includes(currentHostname) &&
+          effect === "deny"
+      )
+    );
   };
 
   const handleFormSubmit = (

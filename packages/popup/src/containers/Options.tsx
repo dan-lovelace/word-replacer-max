@@ -28,7 +28,7 @@ export default function Options() {
         </div>
         <div className="row">
           <div className={COPY_CONTAINER_COL_CLASS}>
-            <div className="fw-bold fs-5">Export Rules</div>
+            <div className="fw-bold fs-5">Rules Export</div>
             <ColumnContent>
               <div className="fs-sm mb-2">
                 Create a shareable web link or export rules to a file. Choose to
@@ -49,7 +49,7 @@ export default function Options() {
         </div>
         <div className="row">
           <div className={COPY_CONTAINER_COL_CLASS}>
-            <div className="fw-bold fs-5">Import Rules</div>
+            <div className="fw-bold fs-5">Rules Import</div>
             <ColumnContent>
               <div className="fs-sm mb-2">
                 Import new rules from a file or link to add to your current

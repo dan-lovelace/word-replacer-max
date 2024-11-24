@@ -6,7 +6,7 @@ export default {
     DANGER_ZONE_DELETE_ACCOUNT_CONFIRMATION_BODY:
       "Are you sure you want to delete your account? This action cannot be undone and you will lose all your data. We recommend first backing up your rules using the export feature.",
     DANGER_ZONE_DELETE_ACCOUNT_CONFIRMATION_CANCEL_BUTTON_TEXT:
-      "No, keep my account",
+      "Never mind, keep my account",
     DANGER_ZONE_DELETE_ACCOUNT_CONFIRMATION_INPUT_LABEL:
       "I understand that this action cannot be undone",
     DANGER_ZONE_DELETE_ACCOUNT_CONFIRMATION_PROCEED_BUTTON_TEXT:
@@ -19,7 +19,7 @@ export default {
     DANGER_ZONE_DELETE_RULES_CONFIRMATION_BODY:
       "Are you sure you want to delete all your rules? This action cannot be undone. We recommend first backing up your rules using the export feature.",
     DANGER_ZONE_DELETE_RULES_CONFIRMATION_CANCEL_BUTTON_TEXT:
-      "No, keep my rules",
+      "Never mind, keep my rules",
     DANGER_ZONE_DELETE_RULES_CONFIRMATION_INPUT_LABEL:
       "I understand that this action cannot be undone",
     DANGER_ZONE_DELETE_RULES_HEADING: "Delete All Rules",

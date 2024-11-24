@@ -61,17 +61,17 @@ export default function ReplacementSuggestions() {
       </div>
       <Slide isOpen={!isActive}>
         <Indented data-testid="replacement-suggestions-description">
-          <p className="fs-sm">
+          <div className="fs-sm">
             Looking for the right words? Get AI suggestions in your preferred
             style.
-          </p>
+          </div>
         </Indented>
       </Slide>
       <Slide isOpen={isActive}>
         <Indented
           className="py-1"
-          data-testid="replacement-suggestions-options"
           style={{ minHeight: 56 }}
+          data-testid="replacement-suggestions-options"
         >
           <ApiUsage />
         </Indented>

@@ -12,7 +12,7 @@ import { useLanguage } from "../../lib/language";
 import { useConfig } from "../../store/Config";
 
 import { useToast } from "../alert/useToast";
-import IconButton from "../button/IconButton";
+import IconButton, { ICON_BUTTON_BASE_CLASS } from "../button/IconButton";
 import MaterialIcon from "../icon/MaterialIcon";
 import QueryInput from "../query-input/QueryInput";
 import ReplacementInput from "../replacement-input/ReplacementInput";
@@ -228,10 +228,10 @@ export default function RuleRow({
           <IconButton
             data-dismiss="delete"
             className={cx(
-              "btn px-2",
+              "px-2",
               isConfirmingDelete
-                ? "btn-danger"
-                : "btn-light bg-transparent border-0"
+                ? "btn btn-danger border-0"
+                : ICON_BUTTON_BASE_CLASS
             )}
             icon={isConfirmingDelete ? "delete" : "close"}
             iconProps={{

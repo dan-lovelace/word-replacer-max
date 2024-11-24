@@ -215,10 +215,10 @@ export default function ReplacementStyles() {
       </div>
       <Slide isOpen={!isActive}>
         <Indented data-testid="replacement-styles-description">
-          <p className="fs-sm">
+          <div className="fs-sm">
             Apply styles like bold, underline, and background color to replaced
             text. Styles may be turned off for individual rules as needed.
-          </p>
+          </div>
         </Indented>
       </Slide>
       <Slide isOpen={isActive}>

@@ -35,15 +35,19 @@ function EmailGitHub() {
     <div data-testid="email-github-container">
       <div className="mb-2">
         <div className="fw-medium">Email</div>
-        <a href={MAILTO_CONTACT_SUPPORT_URL} target="_blank">
-          {CONTACT_SUPPORT_EMAIL}
-        </a>
+        <div className="ms-2">
+          <a href={MAILTO_CONTACT_SUPPORT_URL} target="_blank">
+            {CONTACT_SUPPORT_EMAIL}
+          </a>
+        </div>
       </div>
       <div>
         <div className="fw-medium">GitHub</div>
-        <a href={SUBMIT_NEW_TICKET_URL} target="_blank">
-          Create a new issue
-        </a>
+        <div className="ms-2">
+          <a href={SUBMIT_NEW_TICKET_URL} target="_blank">
+            Create a new issue
+          </a>
+        </div>
       </div>
     </div>
   );
