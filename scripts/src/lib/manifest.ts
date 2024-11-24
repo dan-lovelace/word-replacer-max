@@ -3,7 +3,10 @@ import { readFileSync } from "node:fs";
 
 import { PUBLIC_GITHUB_REPOSITORY_URL } from "@worm/shared/src/support";
 import {
-  Manifest, ManifestBase, ManifestV2, ManifestV3
+  Manifest,
+  ManifestBase,
+  ManifestV2,
+  ManifestV3,
 } from "@worm/types/src/manifest";
 
 import { configureNodeEnvironment } from "./config";
@@ -24,7 +27,7 @@ const commonProps: ManifestBase = {
 
 const manifestV2Base: ManifestV2 = {
   ...commonProps,
-  author: "dan@logicnow.io",
+  author: "dan@wordreplacermax.com",
   background: {
     scripts: ["background.js"],
   },
@@ -33,7 +36,7 @@ const manifestV2Base: ManifestV2 = {
   },
   browser_specific_settings: {
     gecko: {
-      id: "addon@logicnow.io",
+      id: "addon@wordreplacermax.com",
       strict_min_version: "1.0",
     },
   },
@@ -47,7 +50,7 @@ const manifestV3Base: ManifestV3 = {
     default_popup: "popup.html",
   },
   author: {
-    email: "dan@logicnow.io",
+    email: "dan@wordreplacermax.com",
   },
   background: {
     service_worker: "background.js",

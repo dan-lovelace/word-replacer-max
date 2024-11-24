@@ -29,7 +29,7 @@ export default function LayoutFooter() {
         >
           <Grid2 size={{ xs: 12, md: 6 }}>
             <Typography variant="body2">
-              Copyright &copy; 2024 Logic Now LLC, All rights reserved
+              Copyright &copy; 2024 Word Replacer Max, LLC, All rights reserved
             </Typography>
           </Grid2>
           <Grid2 size={{ xs: 12, md: 6 }}>

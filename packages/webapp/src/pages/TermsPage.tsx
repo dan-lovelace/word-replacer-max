@@ -62,8 +62,7 @@ export default function TermsPage() {
           <p>
             <strong>Company</strong> (referred to as either &quot;the
             Company&quot;, &quot;We&quot;, &quot;Us&quot; or &quot;Our&quot; in
-            this Agreement) refers to Logic Now LLC, 280 E 1st Ave, Broomfield,
-            CO 80020.
+            this Agreement) refers to Word Replacer Max, LLC.
           </p>
         </li>
         <li>
