@@ -1,15 +1,20 @@
 import { JSXInternal } from "preact/src/jsx";
 
-import { storageSetByKeys } from "@worm/shared";
+import { cx } from "@worm/shared";
 import { DEFAULT_REPLACEMENT_STYLE } from "@worm/shared/src/replace/lib/style";
-import { ReplacementStyle, ReplacementStyleOption } from "@worm/types";
+import { storageSetByKeys } from "@worm/shared/src/storage";
+import {
+  ReplacementStyle,
+  ReplacementStyleOption,
+} from "@worm/types/src/replace";
 
-import cx from "../../lib/classnames";
+import { Indented } from "../../containers/Indented";
 import { useLanguage } from "../../lib/language";
 import { useConfig } from "../../store/Config";
 
 import { useToast } from "../alert/useToast";
 import ColorSelect from "../ColorSelect";
+import MaterialIcon from "../icon/MaterialIcon";
 import Slide from "../transition/Slide";
 
 function ColorInput({
@@ -102,27 +107,17 @@ function DecoratorInput({
         for={id}
         title={title}
       >
-        <span className="material-icons-sharp fs-6">{icon}</span>
+        <MaterialIcon name={icon} size="sm" />
       </label>
     </>
   );
 }
 
-function IndentedContent({
-  children,
-  className,
-  ...rest
-}: JSXInternal.HTMLAttributes<HTMLDivElement>) {
-  return (
-    <div className={className} style={{ marginLeft: "2.5rem" }} {...rest}>
-      {children}
-    </div>
-  );
-}
-
 export default function ReplacementStyles() {
   const {
-    storage: { replacementStyle },
+    storage: {
+      sync: { replacementStyle },
+    },
   } = useConfig();
   const language = useLanguage();
   const { showToast } = useToast();
@@ -197,7 +192,7 @@ export default function ReplacementStyles() {
   };
 
   return (
-    <>
+    <div className="replacement-styles">
       <div
         className="form-check form-switch ps-0 d-flex align-items-center gap-2"
         data-testid="replacement-styles-input-wrapper"
@@ -212,26 +207,22 @@ export default function ReplacementStyles() {
           onChange={handleActiveChange}
         />
         <label
-          className="form-check-label user-select-none"
+          className="form-check-label user-select-none fw-medium"
           for="highlight-enabled-checkbox"
         >
           Styled replacements
         </label>
       </div>
       <Slide isOpen={!isActive}>
-        <IndentedContent data-testid="replacement-styles-description">
-          <p className="fs-sm">
-            Apply styles like bold, underline, and background color to all
-            replaced text. Styles may be turned off for individual replacements
-            as needed.
-          </p>
-        </IndentedContent>
+        <Indented data-testid="replacement-styles-description">
+          <div className="fs-sm">
+            Apply styles like bold, underline, and background color to replaced
+            text. Styles may be turned off for individual rules as needed.
+          </div>
+        </Indented>
       </Slide>
       <Slide isOpen={isActive}>
-        <IndentedContent
-          className="py-1"
-          data-testid="replacement-styles-options"
-        >
+        <Indented className="py-1" data-testid="replacement-styles-options">
           <div
             aria-label="Text Decorators"
             className="btn-group my-2"
@@ -299,8 +290,8 @@ export default function ReplacementStyles() {
               </div>
             </div>
           </div>
-        </IndentedContent>
+        </Indented>
       </Slide>
-    </>
+    </div>
   );
 }

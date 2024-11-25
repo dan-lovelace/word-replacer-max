@@ -1,11 +1,8 @@
 import { z } from "zod";
 
-import type {
-  Matcher,
-  QueryPattern,
-  SchemaVersion1,
-  SchemaVersionMapper,
-} from "@worm/types";
+import { QueryPattern } from "@worm/types/src/replace";
+import { Matcher } from "@worm/types/src/rules";
+import { SchemaVersion1, SchemaVersionMapper } from "@worm/types/src/storage";
 
 export const validatedMatcher: z.ZodType<Matcher> = z.lazy(() =>
   z.object({

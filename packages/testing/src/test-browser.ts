@@ -1,5 +1,5 @@
 import { DEFAULT_REPLACEMENT_STYLE } from "@worm/shared/src/replace/lib/style";
-import { Storage } from "@worm/types";
+import { Storage } from "@worm/types/src/storage";
 
 import MockBrowser from "./mock-webextension-polyfill";
 
@@ -9,24 +9,22 @@ declare global {
   }
 }
 
-const storage: Storage = {
+const mockSyncStorage: Record<string, any> = {
   domainList: [],
-  matchers: [
-    {
-      active: true,
-      identifier: "1234",
-      queries: ["my jaw dropped", "I was shocked"],
-      queryPatterns: [],
-      replacement: "I was surprised",
-    },
-    {
-      active: true,
-      identifier: "5678",
-      queries: ["This."],
-      queryPatterns: ["case", "wholeWord"],
-      replacement: " ",
-    },
-  ],
+  matcher__1234: {
+    active: true,
+    identifier: "1234",
+    queries: ["my jaw dropped", "I was shocked"],
+    queryPatterns: [],
+    replacement: "I was surprised",
+  },
+  matcher__5678: {
+    active: true,
+    identifier: "5678",
+    queries: ["This."],
+    queryPatterns: ["case", "wholeWord"],
+    replacement: " ",
+  },
   preferences: {
     activeTab: "rules",
     domainListEffect: "deny",
@@ -37,7 +35,9 @@ const storage: Storage = {
 };
 
 const browser = new MockBrowser({
-  withStorage: storage,
+  withStorage: {
+    sync: mockSyncStorage,
+  },
 });
 
 window.TEST_BROWSER = browser;

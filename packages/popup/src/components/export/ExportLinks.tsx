@@ -1,20 +1,24 @@
 import { useEffect, useState } from "preact/hooks";
 
-import { formatUnixTimestamp, storageSetByKeys } from "@worm/shared";
-import { ExportLink as ExportLinkType } from "@worm/types";
+import { formatUnixTimestamp } from "@worm/shared";
+import { storageSetByKeys } from "@worm/shared/src/storage";
+import { ExportLink as ExportLinkType } from "@worm/types/src/popup";
 
 import Button from "../../components/button/Button";
 import Tooltip from "../../components/Tooltip";
-import { copyToClipboard, canWriteToClipboard } from "../../lib/clipboard";
+import { canWriteToClipboard, copyToClipboard } from "../../lib/clipboard";
 import { useLanguage } from "../../lib/language";
 import { useConfig } from "../../store/Config";
 
 import { useToast } from "../alert/useToast";
+import MaterialIcon from "../icon/MaterialIcon";
 
 export default function ExportLink() {
   const [isClipboardCopyAllowed, setIsClipboardCopyAllowed] = useState(false);
   const {
-    storage: { exportLinks },
+    storage: {
+      sync: { exportLinks },
+    },
   } = useConfig();
   const language = useLanguage();
   const { showToast } = useToast();
@@ -100,9 +104,11 @@ export default function ExportLink() {
                 </Button>
               </div>
               <Tooltip title={`Created ${formatUnixTimestamp(identifier)}`}>
-                <span className="material-icons-sharp text-body-tertiary">
-                  calendar_month
-                </span>
+                <MaterialIcon
+                  className="text-body-tertiary"
+                  name="calendar_month"
+                  size="lg"
+                />
               </Tooltip>
             </div>
           </div>

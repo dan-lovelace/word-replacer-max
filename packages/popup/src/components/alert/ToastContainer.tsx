@@ -1,25 +1,25 @@
 import { useEffect, useRef, useState } from "preact/hooks";
 
-import { storageSetByKeys } from "@worm/shared";
+import { cx, TOAST_MESSAGE_DURATION_DEFAULT_MS } from "@worm/shared";
 import { browser } from "@worm/shared/src/browser";
-import { PopupAlertSeverity } from "@worm/types";
+import {
+  ShowToastMessageOptions,
+  WebAppMessage,
+  WebAppMessageKind,
+} from "@worm/types/src/message";
+import { PopupAlertSeverity } from "@worm/types/src/popup";
 
-import cx from "../../lib/classnames";
 import { useConfig } from "../../store/Config";
 
 import Button from "../button/Button";
-
-import {
-  DURATION_DEFAULT_MS,
-  ShowToastMessageOptions,
-  ToastMessage,
-  ToastMessageKind,
-} from ".";
+import ContactSupportLink from "../button/ContactSupportLink";
+import MaterialIcon from "../icon/MaterialIcon";
 
 const severityIconMap: Record<PopupAlertSeverity, string> = {
-  danger: "warning",
+  danger: "error",
   info: "info",
   success: "check",
+  warning: "warning",
 };
 
 export default function ToastContainer() {
@@ -28,19 +28,18 @@ export default function ToastContainer() {
   const [options, setOptions] = useState<ShowToastMessageOptions["options"]>();
   const [updatedAt, setUpdatedAt] = useState<Date>();
 
-  const {
-    isPoppedOut,
-    storage: { preferences },
-  } = useConfig();
+  const { isPoppedOut } = useConfig();
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const toastRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    const handleMessage = (event: ToastMessage<ToastMessageKind>) => {
+    const handleMessage = (event: WebAppMessage<WebAppMessageKind>) => {
       if (event.data.kind !== "showToastMessage") return;
 
-      setMessage(String(event.data.details?.message));
-      setOptions(event.data.details?.options);
+      const eventDetails = event.data.details as ShowToastMessageOptions;
+
+      setMessage(String(eventDetails.message));
+      setOptions(eventDetails.options);
       setUpdatedAt(new Date());
       setIsOpen(true);
     };
@@ -65,7 +64,7 @@ export default function ToastContainer() {
 
     timeoutRef.current = setTimeout(() => {
       closeToast();
-    }, DURATION_DEFAULT_MS);
+    }, TOAST_MESSAGE_DURATION_DEFAULT_MS);
 
     return () => {
       if (timeoutRef.current) {
@@ -82,20 +81,13 @@ export default function ToastContainer() {
     }
   };
 
-  const handleContactSupportClick = () => {
-    const newPreferences = Object.assign({}, preferences);
-    newPreferences.activeTab = "support";
-
-    storageSetByKeys({ preferences: newPreferences });
-  };
-
   const handleRefreshClick = async () => {
     const tabs = await browser.tabs.query({
       active: true,
       currentWindow: true,
     });
 
-    browser.tabs.reload(tabs[0].id);
+    browser.tabs.reload(tabs[0]?.id);
   };
 
   return (
@@ -116,23 +108,18 @@ export default function ToastContainer() {
     >
       <div className="toast-body d-flex align-items-center">
         {options?.severity && (
-          <span
-            className={`material-icons-sharp fs-6 text-${options.severity} me-2`}
-          >
-            {severityIconMap[options.severity]}
-          </span>
+          <MaterialIcon
+            className={`text-${options.severity} me-2`}
+            name={severityIconMap[options.severity]}
+            size="sm"
+          />
         )}
         <div className="d-flex align-items-center gap-1">
           {message}
           {options?.showContactSupport && (
             <div className="d-flex align-items-center gap-1">
               <span>Please</span>
-              <Button
-                className="btn btn-link btn-sm p-0 text-nowrap"
-                onClick={handleContactSupportClick}
-              >
-                contact support
-              </Button>
+              <ContactSupportLink>contact support</ContactSupportLink>
             </div>
           )}
           {!isPoppedOut && options?.showRefresh && (

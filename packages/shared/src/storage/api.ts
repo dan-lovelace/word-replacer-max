@@ -1,30 +1,41 @@
+import { Matcher } from "@worm/types/src/rules";
 import {
-  Matcher,
-  Storage,
-  StorageKey,
+  LocalStorage,
+  StorageProvider,
   StorageSetOptions,
-  StorageVersion,
-} from "@worm/types";
+  SyncStorage,
+  SyncStorageKey,
+} from "@worm/types/src/storage";
 
-import { browser } from "../browser";
+import {
+  browser,
+  matchersFromStorage,
+  matchersToStorage,
+  STORAGE_MATCHER_PREFIX,
+} from "../browser";
 import { logDebug } from "../logging";
-import { matchersFromStorage, matchersToStorage } from "../matchers";
 
 const {
   storage: { sync },
 } = browser;
+
+const localStorageProvider = getStorageProvider("local");
 
 export const storageClear = sync.clear;
 export const storageGet = sync.get;
 export const storageRemove = sync.remove;
 export const storageSet = sync.set;
 
-export async function storageGetByKeys<Key extends StorageKey>(keys?: Key[]) {
+export function getStorageProvider(providerName: StorageProvider = "sync") {
+  return browser.storage[providerName];
+}
+
+export async function storageGetByKeys<T extends SyncStorageKey>(keys?: T[]) {
   // fetch all storage keys regardless of parameters; we'll filter the results
   const allStorage = await storageGet();
   const queryKeys = [...(keys ?? [])];
 
-  let results: Storage = {};
+  let results: SyncStorage = {};
 
   if (!queryKeys.length) {
     results = allStorage;
@@ -45,32 +56,71 @@ export async function storageGetByKeys<Key extends StorageKey>(keys?: Key[]) {
   return results;
 }
 
-export function storageRemoveByKeys<Key extends StorageKey | string>(
+export function storageRemoveByKeys<Key extends SyncStorageKey | string>(
   keys: Key[]
 ) {
   return storageRemove(keys);
 }
 
 export async function storageSetByKeys(
-  keys: Storage,
+  keys: SyncStorage,
   options?: StorageSetOptions
 ) {
   let storageMatchers: Record<string, Matcher> = {};
 
   if (Object.prototype.hasOwnProperty.call(keys, "matchers")) {
+    const { matchers } = keys;
+
+    if (!matchers || matchers.length < 1) {
+      /**
+       * Matchers are being deleted. Look up all existing matchers in the flat
+       * storage structure and remove them.
+       */
+      const allStorage = await storageGet();
+      const storedMatchers = matchersFromStorage(allStorage);
+
+      if (storedMatchers) {
+        await storageRemoveByKeys(
+          storedMatchers.map(
+            (matcher) => `${STORAGE_MATCHER_PREFIX}${matcher.identifier}`
+          )
+        );
+      }
+    }
+
     /**
-     * NOTE: Matchers are being set. We need to save them to storage in a flat
+     * Matchers are being updated. We need to save them to storage in a flat
      * structure to allow users to save the maximum amount of data using the
-     * `sync` method.
+     * `sync` storage area.
      *
      * See: https://github.com/dan-lovelace/word-replacer-max/issues/4
      */
-    storageMatchers = matchersToStorage(keys.matchers);
+    storageMatchers = matchersToStorage(matchers);
+
+    /**
+     * Clean up orphaned matchers from `local` storage.
+     */
+    const matchersSet = new Set(matchers?.map((matcher) => matcher.identifier));
+    const { recentSuggestions } =
+      (await localStorageProvider.get()) as LocalStorage;
+
+    if (recentSuggestions) {
+      Object.keys(recentSuggestions).forEach((key) => {
+        if (!matchersSet.has(key)) {
+          delete recentSuggestions[key];
+        }
+      });
+
+      await localStorageProvider.set({
+        recentSuggestions,
+      });
+    }
+
     delete keys.matchers;
   }
 
   try {
-    const data = await storageSet({
+    await storageSet({
       ...keys,
       ...storageMatchers,
     });
@@ -78,8 +128,6 @@ export async function storageSetByKeys(
     if (typeof options?.onSuccess === "function") {
       options.onSuccess();
     }
-
-    return data;
   } catch (error: unknown) {
     logDebug("Something went wrong updating storage", error);
 

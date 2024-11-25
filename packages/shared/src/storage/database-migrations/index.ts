@@ -1,15 +1,21 @@
 import { merge } from "ts-deepmerge";
 
 import { DEFAULT_REPLACEMENT_STYLE } from "@worm/shared/src/replace/lib/style";
-import { Matcher, Storage, StorageVersion, storageVersions } from "@worm/types";
+import { Matcher } from "@worm/types/src/rules";
+import {
+  StorageVersion,
+  storageVersions,
+  SyncStorage,
+} from "@worm/types/src/storage";
 
+import { STORAGE_MATCHER_PREFIX } from "../../browser";
 import { logDebug } from "../../logging";
-import { STORAGE_MATCHER_PREFIX } from "../../matchers";
+import { DEFAULT_REPLACEMENT_SUGGEST } from "../../replace/lib/suggest";
 
 import { BASELINE_STORAGE_VERSION, CURRENT_STORAGE_VERSION } from "../";
 import { storageGet, storageSet } from "../api";
 
-export type MigrateFn = (storage: Storage) => Storage;
+export type MigrateFn = (storage: SyncStorage) => SyncStorage;
 
 export type Migrations = {
   [major: number]: { [minor: number]: { [patch: number]: MigrateFn } };
@@ -34,7 +40,7 @@ export const MIGRATIONS: Migrations = {
        * storage property and updates all existing matchers.
        */
       0: (storage) => {
-        const updatedValues: Storage = {
+        const updatedValues: SyncStorage = {
           replacementStyle: DEFAULT_REPLACEMENT_STYLE,
         };
         const merged = merge(storage, updatedValues);
@@ -50,12 +56,19 @@ export const MIGRATIONS: Migrations = {
         return merged;
       },
       /**
-       * **1.1.1** - PLACEHOLDER
+       * **1.1.1** - Replacement suggestions
        *
-       * This was put in place to assist with the migration system tests. It
-       * may be replaced/removed by the next necessary migration.
+       * Initializes replacement suggestions by creating a new storage
+       * property with default values.
        */
-      1: (storage) => storage,
+      1: (storage) => {
+        const updatedValues: SyncStorage = {
+          replacementSuggest: DEFAULT_REPLACEMENT_SUGGEST,
+        };
+        const merged = merge(storage, updatedValues);
+
+        return merged;
+      },
     },
   },
 };
@@ -85,7 +98,8 @@ function isVersionGreaterThan(a: StorageVersion, b: StorageVersion): boolean {
  *
  * @remarks
  * Pay attention closely to any changes because this has the potential to mess
- * up real users' storage.
+ * up real users' storage. Write new tests for any changes and DO NOT update
+ * old migration snapshots.
  */
 export async function migrate(
   migrations: Migrations,

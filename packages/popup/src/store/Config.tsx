@@ -3,11 +3,16 @@ import { useContext, useEffect, useMemo, useState } from "preact/hooks";
 
 import {
   browser,
+  convertStoredMatchers,
   POPUP_POPPED_OUT_PARAMETER_KEY,
-  storageGetByKeys,
-} from "@worm/shared";
-import { Storage } from "@worm/types";
+} from "@worm/shared/src/browser";
+import {
+  Storage,
+  StorageChange,
+  StorageProvider,
+} from "@worm/types/src/storage";
 
+import { getUpdatedStorage } from "../lib/storage";
 import { PreactChildren } from "../lib/types";
 
 type ConfigStore = {
@@ -18,8 +23,18 @@ type ConfigStore = {
 const storeDefaults: ConfigStore = {
   isPoppedOut: false,
   storage: {
-    domainList: [],
-    matchers: [],
+    local: {},
+    session: {
+      authAccessToken: undefined,
+      authClockDrift: undefined,
+      authIdToken: undefined,
+      authLastAuthUser: undefined,
+      authRefreshToken: undefined,
+    },
+    sync: {
+      domainList: [],
+      matchers: [],
+    },
   },
 };
 
@@ -40,8 +55,33 @@ export function ConfigProvider({ children }: { children: PreactChildren }) {
   );
 
   useEffect(() => {
-    const updateStorage = async () => {
-      setStorage(await storageGetByKeys());
+    const updateStorage = async (
+      changes?: Record<string, StorageChange>,
+      areaName?: string
+    ) => {
+      if (changes === undefined) {
+        // Initial load - get all storage areas
+        const local = await browser.storage.local.get();
+        const session = await browser.storage.session.get();
+        const sync = await browser.storage.sync.get();
+
+        const syncMatchers = convertStoredMatchers(sync);
+
+        setStorage({
+          local,
+          session,
+          sync: {
+            ...sync,
+            matchers: syncMatchers,
+          },
+        });
+
+        return;
+      }
+
+      setStorage((prevStorage) =>
+        getUpdatedStorage(prevStorage, changes, areaName as StorageProvider)
+      );
     };
 
     updateStorage().then(() => {

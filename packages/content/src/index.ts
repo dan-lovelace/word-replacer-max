@@ -1,6 +1,9 @@
-import { runStorageMigrations } from "@worm/shared";
+import "@worm/shared/vite-env.d.ts";
 
-import { renderContent, startContentListeners } from "./lib";
+import { runStorageMigrations } from "@worm/shared/src/storage";
+
+import { startContentListeners } from "./lib/listeners";
+import { renderContent } from "./lib/render";
 
 document.addEventListener("readystatechange", () => {
   renderContent("document state change");

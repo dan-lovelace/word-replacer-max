@@ -1,11 +1,19 @@
-import cx from "../lib/classnames";
+import { cx } from "@worm/shared";
+
+import Button from "./button/Button";
+import MaterialIcon from "./icon/MaterialIcon";
 
 type ChipProps = {
+  disabled?: boolean;
   identifier: string;
   onRemove: (identifier: string) => () => void;
 };
 
-export default function Chip({ identifier, onRemove }: ChipProps) {
+export default function Chip({
+  disabled = false,
+  identifier,
+  onRemove,
+}: ChipProps) {
   return (
     <span
       className={cx(
@@ -15,16 +23,17 @@ export default function Chip({ identifier, onRemove }: ChipProps) {
       )}
     >
       {identifier}
-      <button
-        className="bg-transparent border-0 px-0 mx-1 text-body-tertiary"
+      <Button
+        className="btn btn-light bg-transparent border-0 px-0 py-0 mx-1 text-body-tertiary"
+        disabled={disabled}
         title="Remove search query"
         type="button"
         onClick={onRemove(identifier)}
       >
         <span className="d-flex align-items-center">
-          <i className="material-icons-sharp fs-6">close</i>
+          <MaterialIcon name="close" size="sm" />
         </span>
-      </button>
+      </Button>
     </span>
   );
 }

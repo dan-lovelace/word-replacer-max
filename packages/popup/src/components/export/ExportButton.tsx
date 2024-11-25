@@ -2,15 +2,19 @@ import { useMemo, useState } from "preact/hooks";
 
 import { Dropdown } from "bootstrap";
 
-import { logDebug, storageSetByKeys } from "@worm/shared";
-import { ApiShareRequest, ApiShareResponse, SchemaExport } from "@worm/types";
+import { getApiEndpoint } from "@worm/shared/src/api";
+import { storageSetByKeys } from "@worm/shared/src/storage";
+import { ApiShareRequest, ApiShareResponse } from "@worm/types/src/api";
+import { SchemaExport } from "@worm/types/src/storage";
 
 import { useLanguage } from "../../lib/language";
 import { SelectedRule } from "../../lib/types";
 import { useConfig } from "../../store/Config";
 
 import { useToast } from "../alert/useToast";
-import Button from "../button/Button";
+import DropdownButton from "../menu/DropdownButton";
+import DropdownMenuContainer from "../menu/DropdownMenuContainer";
+import MenuItem from "../menu/MenuItem";
 
 type ExportButtonProps = {
   selectedRules?: SelectedRule[];
@@ -24,7 +28,9 @@ export default function ExportButton({
   const [isLoading, setIsLoading] = useState(false);
 
   const {
-    storage: { exportLinks, matchers },
+    storage: {
+      sync: { exportLinks, matchers },
+    },
   } = useConfig();
   const language = useLanguage();
   const selectedCount = useMemo(
@@ -89,7 +95,7 @@ export default function ExportButton({
 
     closeDropdown();
     setIsLoading(true);
-    const result = await fetch(`${import.meta.env.VITE_API_ORIGIN}/share`, {
+    const result = await fetch(getApiEndpoint("POST:share"), {
       method: "POST",
       body: JSON.stringify(requestBody),
     })
@@ -100,10 +106,8 @@ export default function ExportButton({
     const json: ApiShareResponse = await result.json();
 
     if (!result.ok) {
-      logDebug(json.error?.value);
-
       return showToast({
-        message: json.error?.message ?? JSON.stringify(json),
+        message: JSON.stringify(json),
         options: { severity: "danger" },
       });
     }
@@ -112,10 +116,10 @@ export default function ExportButton({
      * NOTE: Backwards compatibility handler between API changes. This may be
      * removed later.
      */
+    // @ts-ignore
     let responseUrl = json.data?.value?.url;
 
     if (!responseUrl) {
-      // @ts-ignore
       responseUrl = json.data?.url;
     }
 
@@ -159,16 +163,9 @@ export default function ExportButton({
   };
 
   return (
-    <div className="dropdown">
-      <Button
-        aria-expanded={false}
-        className="btn btn-primary"
-        data-bs-toggle="dropdown"
-        data-testid="export-modal-dropdown-button"
-        disabled={selectedCount === 0 || isLoading}
-        id="export-modal-dropdown-button"
-      >
-        {isLoading ? (
+    <DropdownButton
+      componentProps={{
+        children: isLoading ? (
           <>
             <span
               className="spinner-border spinner-border-sm me-1"
@@ -185,43 +182,29 @@ export default function ExportButton({
               ? `${selectedCount} rule${selectedCount > 1 ? "s" : ""}`
               : "selected"}
           </>
-        )}
-      </Button>
-      <ul
-        aria-labelledby="export-modal-dropdown-button"
-        className="dropdown-menu shadow"
-        data-testid="export-modal-dropdown-menu"
-      >
-        <li>
-          <button
-            className="dropdown-item"
-            data-testid="export-modal-dropdown-menu-create-link-button"
-            type="button"
+        ),
+        className: "btn btn-primary",
+        disabled: isLoading || selectedCount === 0,
+        "data-testid": "export-modal-dropdown-button",
+      }}
+      menuContent={
+        <DropdownMenuContainer data-testid="export-modal-dropdown-menu">
+          <MenuItem
+            startIcon="link"
             onClick={handleExportLink}
+            data-testid="export-modal-dropdown-menu-create-link-button"
           >
-            <span className="d-flex align-items-center gap-3">
-              <span className="material-icons-sharp">link</span> Create
-              shareable link
-            </span>
-          </button>
-        </li>
-        <li>
-          <hr className="dropdown-divider" />
-        </li>
-        <li>
-          <button
-            className="dropdown-item"
-            data-testid="export-modal-dropdown-menu-create-file-button"
-            type="button"
+            Create shareable link
+          </MenuItem>
+          <MenuItem
+            startIcon="download"
             onClick={handleExportFile}
+            data-testid="export-modal-dropdown-menu-create-file-button"
           >
-            <span className="d-flex align-items-center gap-3">
-              <span className="material-icons-sharp">download</span> Download
-              file locally
-            </span>
-          </button>
-        </li>
-      </ul>
-    </div>
+            Download file locally
+          </MenuItem>
+        </DropdownMenuContainer>
+      }
+    />
   );
 }

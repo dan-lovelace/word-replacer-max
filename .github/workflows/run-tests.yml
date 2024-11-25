@@ -1,44 +1,67 @@
 name: Run all tests
-run-name:
-  "${{ github.workflow }} - Environment: ${{ inputs.environment || 'test' }}"
+run-name: "${{ github.workflow }} - Mode: test"
 
 on:
   pull_request:
     paths:
+      - .github/workflows/run-tests.yml
       - packages/**
-  workflow_dispatch:
-    inputs:
-      environment:
-        default: test
-        description: "Which .env config to use"
-        required: true
-        type: choice
-        options:
-          - development
-          - production
-          - test
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     env:
-      VITE_MODE: ${{ inputs.environment }}
+      VITE_MODE: test
 
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 18
-          cache: "yarn"
+          node-version: 20
+          cache: yarn
       - run: yarn install
-      - run: yarn test
-      - uses: cypress-io/github-action@v6
+
+      - name: Run Jest tests
+        id: jest
+        run: yarn test:jest --json --outputFile=jest-results.json
+
+      - name: Generate Jest report
+        run: yarn tsx .github/scripts/test-reporter.ts jest-results.json
+        if: always()
+
+      - name: Run Popup Cypress tests
+        uses: cypress-io/github-action@v6
+        id: popup-cypress
+        env:
+          VITE_TEST_USERNAME: ${{ secrets.CYPRESS_TEST_USERNAME }}
+          VITE_TEST_PASSWORD: ${{ secrets.CYPRESS_TEST_PASSWORD }}
         with:
           browser: chrome
           project: packages/popup
           start: yarn workspace @worm/popup dev
-      - uses: actions/upload-artifact@v4
+          summary-title: Cypress Summary - @worm/popup
+
+      - name: Upload Popup Cypress failures
+        uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: cypress-screenshots
+          name: popup-cypress-screenshots
           path: packages/popup/cypress/screenshots
+
+      - name: Run Shared Cypress tests
+        uses: cypress-io/github-action@v6
+        id: shared-cypress
+        with:
+          browser: chrome
+          project: packages/shared
+          summary-title: Cypress Summary - @worm/shared
+
+      - name: Upload Shared Cypress failures
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: shared-cypress-screenshots
+          path: packages/shared/cypress/screenshots

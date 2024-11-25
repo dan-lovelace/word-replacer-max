@@ -1,8 +1,8 @@
-import { VNode } from "preact";
+import { ComponentChildren } from "preact";
 
-import { Matcher } from "@worm/types";
+import { Matcher } from "@worm/types/src/rules";
 
-export type PreactChildren = (string | VNode) | (string | VNode)[] | false;
+export type PreactChildren = ComponentChildren;
 
 export type SelectedRule = Matcher & {
   isSelected: boolean;

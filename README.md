@@ -18,6 +18,16 @@ To get started, you'll need:
 
 ## Instructions
 
+## Configure environment
+
+Set your desired target environment using `NODE_ENV`:
+
+```
+export NODE_ENV=development
+```
+
+### Steps
+
 1. Install dependencies
    ```
    yarn install
@@ -37,11 +47,34 @@ After following the dependency installation instructions above, use the
 For version 2:
 
 ```
-yarn start:2
+NODE_ENV=development yarn start:2
 ```
 
 File changes can be seen in real-time and may require the extension to be
 reloaded.
+
+## Running tests
+
+### Prerequisites
+
+- A file `packages/popup/cypress/.env.private` populated with testing
+  credentials - Contact the repository owner if you do not have these.
+
+### Steps
+
+To run all tests:
+
+1. Start the Popup development server in test mode
+   ```sh
+   VITE_MODE=test yarn workspace @worm/popup dev
+   ```
+1. Use the "test all" command
+   ```sh
+   yarn test:all
+   ```
+
+See the individual `test:*` commands in `package.json` to run specific types of
+tests.
 
 # Packaging
 

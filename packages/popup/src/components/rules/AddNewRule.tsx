@@ -1,20 +1,28 @@
 import { v4 as uuidv4 } from "uuid";
 
-import { storageSetByKeys } from "@worm/shared";
+import { storageSetByKeys } from "@worm/shared/src/storage";
 
 import { PreactChildren } from "../../lib/types";
 import { useConfig } from "../../store/Config";
 
 import { useToast } from "../alert/useToast";
+import MaterialIcon from "../icon/MaterialIcon";
 
 type AddNewRuleProps = {
   children?: PreactChildren;
   className?: string;
+  text?: string;
 };
 
-export default function AddNewRule({ children, className }: AddNewRuleProps) {
+export default function AddNewRule({
+  children,
+  className,
+  text = "New rule",
+}: AddNewRuleProps) {
   const {
-    storage: { matchers },
+    storage: {
+      sync: { matchers },
+    },
   } = useConfig();
   const { showToast } = useToast();
 
@@ -47,13 +55,14 @@ export default function AddNewRule({ children, className }: AddNewRuleProps) {
   return (
     <button
       className={className ?? "btn btn-secondary btn-sm"}
-      data-testid="add-new-rule-button"
       onClick={handleNewRuleClick}
+      data-testid="add-new-rule-button"
     >
       <span className="d-flex align-items-center">
         {children ?? (
           <>
-            <i className="material-icons-sharp me-1 fs-6">add</i> New rule
+            <MaterialIcon className="me-2" name="add" size="sm" />
+            {text}
           </>
         )}
       </span>

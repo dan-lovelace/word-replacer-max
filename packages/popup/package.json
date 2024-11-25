@@ -5,15 +5,19 @@
   "main": "src/main.ts",
   "type": "module",
   "scripts": {
-    "build": "tsc && vite build",
+    "build": "tsc && yarn vite:tsx build --mode ${NODE_ENV:-production}",
     "cypress:open": "cypress open --e2e --browser chrome",
     "cypress:run": "cypress run",
-    "dev": "vite --host --mode ${VITE_MODE:-test}",
-    "start": "yarn build --watch --mode development",
-    "test": "if [ \"$CI\" != \"true\" ]; then yarn run cypress:run; fi"
+    "dev": "yarn vite:tsx --host --mode ${VITE_MODE:-development}",
+    "start": ": ${NODE_ENV:=development} && yarn build --watch",
+    "test": "if [ \"$CI\" != \"true\" ]; then yarn run cypress:run; fi",
+    "vite:tsx": "NODE_OPTIONS='--import tsx' vite"
   },
   "dependencies": {
+    "@floating-ui/react": "^0.26.25",
+    "@floating-ui/react-dom": "^2.1.2",
     "@popperjs/core": "^2.11.8",
+    "@tanstack/react-query": "^5.53.1",
     "@worm/shared": "*",
     "bootstrap": "5.3.2",
     "material-icons": "^1.13.12",

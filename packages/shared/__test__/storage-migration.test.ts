@@ -8,6 +8,10 @@ import {
   storageSet,
 } from "@worm/shared/src/storage";
 
+jest.mock("@worm/shared/src/config/values", () => ({
+  VITE_API_ORIGIN: "https://dev-api.wordreplacermax.com",
+}));
+
 describe("runStorageMigrations", () => {
   beforeEach(async () => {
     await storageClear();

@@ -1,12 +1,8 @@
 import { v4 as uuidv4 } from "uuid";
 
-import {
-  browser,
-  popoutExtension,
-  storageGetByKeys,
-  storageSetByKeys,
-} from "@worm/shared";
-import { QueryPattern } from "@worm/types";
+import { browser, popoutExtension } from "@worm/shared/src/browser";
+import { storageGetByKeys, storageSetByKeys } from "@worm/shared/src/storage";
+import { QueryPattern } from "@worm/types/src/replace";
 
 const ADD_NEW_RULE_ID = "add-new-rule";
 
@@ -85,7 +81,7 @@ export function startContextMenuListener() {
         try {
           browser.action.openPopup();
         } catch (err) {
-          popoutExtension();
+          popoutExtension(true);
         }
 
         break;

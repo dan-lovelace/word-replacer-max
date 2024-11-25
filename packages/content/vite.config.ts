@@ -1,16 +1,16 @@
-import { basename, dirname, join } from "path";
+import { basename, dirname, join } from "node:path";
 
 import { defineConfig } from "vite";
 
-const outDir = join(__dirname, "..", "..", "dist");
+import { buildConfig } from "@worm/plugins";
 
 export default defineConfig(({ mode }) => ({
   build: {
-    minify: mode === "production",
-    outDir,
     rollupOptions: {
       input: ["src/index.ts"],
       output: {
+        assetFileNames: "[name].[ext]",
+        chunkFileNames: "[name].js",
         entryFileNames: (chunkInfo) => {
           switch (chunkInfo.name) {
             case "index":
@@ -33,9 +33,8 @@ export default defineConfig(({ mode }) => ({
               );
           }
         },
-        chunkFileNames: "[name].js",
-        assetFileNames: "[name].[ext]",
       },
     },
   },
+  plugins: [buildConfig()],
 }));

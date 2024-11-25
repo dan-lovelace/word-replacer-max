@@ -1,12 +1,15 @@
-import DomainInput from "../components/DomainInput";
+import DomainInput from "../components/domain-input/DomainInput";
 import RuleList from "../components/rules/RuleList";
-import Support from "../components/Support";
+import Account from "../containers/Account";
 import Options from "../containers/Options";
+import Support from "../containers/Support";
 import { useConfig } from "../store/Config";
 
 export default function HomePage() {
   const {
-    storage: { preferences },
+    storage: {
+      sync: { preferences },
+    },
   } = useConfig();
 
   return (
@@ -14,6 +17,7 @@ export default function HomePage() {
       className="container-fluid py-2 flex-fill overflow-y-auto"
       data-testid="home-page"
     >
+      {preferences?.activeTab === "account" && <Account />}
       {preferences?.activeTab === "domains" && <DomainInput />}
       {preferences?.activeTab === "options" && <Options />}
       {preferences?.activeTab === "rules" && <RuleList />}

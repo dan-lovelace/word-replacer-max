@@ -1,14 +1,16 @@
 import { useMemo } from "preact/hooks";
-import type { JSXInternal } from "preact/src/jsx";
+import { JSXInternal } from "preact/src/jsx";
 
-import { POPUP_ROUTES } from "@worm/shared";
+import { POPUP_ROUTES } from "@worm/shared/src/browser";
 
 import { useLanguage } from "../lib/language";
 import {
   CAN_UPLOAD_PARAMETER,
-  NOTIFY_PARAMETER,
   canUploadDirect,
+  NOTIFY_PARAMETER,
 } from "../lib/routes";
+
+import MaterialIcon from "./icon/MaterialIcon";
 
 type FileUploadProps = {
   onChange: (event: JSXInternal.TargetedInputEvent<HTMLInputElement>) => void;
@@ -18,8 +20,8 @@ const WRAPPER_CLASSNAME = "btn btn-outline-secondary";
 
 function Content() {
   return (
-    <span className="d-flex align-items-center gap-1">
-      <i className="material-icons-sharp fs-sm">download</i>
+    <span className="d-flex align-items-center gap-2">
+      <MaterialIcon name="download" />
       Import from file
     </span>
   );

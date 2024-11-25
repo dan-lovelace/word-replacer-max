@@ -1,19 +1,21 @@
 import { useCallback, useEffect, useRef, useState } from "preact/hooks";
 
+import { cx } from "@worm/shared";
+import { STORAGE_MATCHER_PREFIX } from "@worm/shared/src/browser";
 import {
-  STORAGE_MATCHER_PREFIX,
   storageRemoveByKeys,
   storageSetByKeys,
-} from "@worm/shared";
-import { Matcher } from "@worm/types";
+} from "@worm/shared/src/storage";
+import { Matcher } from "@worm/types/src/rules";
 
-import cx from "../../lib/classnames";
 import { useLanguage } from "../../lib/language";
 import { useConfig } from "../../store/Config";
 
 import { useToast } from "../alert/useToast";
-import QueryInput from "../QueryInput";
-import ReplacementInput from "../ReplacementInput";
+import IconButton, { ICON_BUTTON_BASE_CLASS } from "../button/IconButton";
+import MaterialIcon from "../icon/MaterialIcon";
+import QueryInput from "../query-input/QueryInput";
+import ReplacementInput from "../replacement-input/ReplacementInput";
 
 type RuleRowProps = {
   matcher: Matcher;
@@ -36,7 +38,9 @@ export default function RuleRow({
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
 
   const {
-    storage: { preferences },
+    storage: {
+      sync: { preferences },
+    },
   } = useConfig();
   const language = useLanguage();
   const confirmingDeleteRef = useRef<boolean>();
@@ -89,7 +93,9 @@ export default function RuleRow({
       (matcher) => matcher.identifier === identifier
     );
 
-    if (matcherIdx < 0) return;
+    if (!newMatchers[matcherIdx]) {
+      return;
+    }
 
     newMatchers[matcherIdx].active = !newMatchers[matcherIdx].active;
 
@@ -115,7 +121,9 @@ export default function RuleRow({
       (matcher) => matcher.identifier === identifier
     );
 
-    if (matcherIdx < 0) return;
+    if (!newMatchers[matcherIdx]) {
+      return;
+    }
 
     newMatchers[matcherIdx][key] = newValue;
 
@@ -162,9 +170,15 @@ export default function RuleRow({
     <div
       className={cx("row", disabled && "pe-none flex-fill")}
       data-testid="rule-row"
+      style={{
+        marginLeft: "-14px",
+      }}
     >
       {!disabled && (
-        <div className="col-auto form-check form-switch ps-3 pe-0 pt-2">
+        <div
+          className="col-auto form-check form-switch pe-0 pt-2"
+          style={{ paddingLeft: 11 }}
+        >
           <input
             checked={active}
             className="form-check-input m-0"
@@ -194,8 +208,8 @@ export default function RuleRow({
           onChange={handleMatcherInputChange}
         />
       </div>
-      <div className="col-auto pt-2 px-0">
-        <i className="material-icons-sharp">swap_horiz</i>
+      <div className="col-auto px-0" style={{ paddingTop: 11 }}>
+        <MaterialIcon className="pe-none" name="swap_horiz" />
       </div>
       <div className="col-auto">
         <ReplacementInput
@@ -211,24 +225,22 @@ export default function RuleRow({
       </div>
       {!disabled && (
         <div className="rule-row-actions col-auto ps-0">
-          <button
+          <IconButton
             data-dismiss="delete"
             className={cx(
-              "btn",
+              "px-2",
               isConfirmingDelete
-                ? "btn-danger"
-                : "btn-light bg-transparent border-0"
+                ? "btn btn-danger border-0"
+                : ICON_BUTTON_BASE_CLASS
             )}
+            icon={isConfirmingDelete ? "delete" : "close"}
+            iconProps={{
+              size: "sm",
+            }}
             title={isConfirmingDelete ? "Confirm" : "Delete Rule"}
             onBlur={() => clickawayListener(new MouseEvent(""))}
             onClick={handleDeleteClick}
-          >
-            <span data-dismiss="delete" className="d-flex align-items-center">
-              <span data-dismiss="delete" className="material-icons-sharp fs-6">
-                {isConfirmingDelete ? "delete" : "close"}
-              </span>
-            </span>
-          </button>
+          />
         </div>
       )}
     </div>

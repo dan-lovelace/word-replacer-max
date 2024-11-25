@@ -1,9 +1,6 @@
-import { Matcher } from "..";
+import { Matcher } from "../rules";
 
-interface ResponseField<T> {
-  message: string;
-  value?: T;
-}
+import { ApiResponse } from "./";
 
 export type ApiShareRequest = {
   matchers: ApiShareRequestMatcher[];
@@ -11,16 +8,9 @@ export type ApiShareRequest = {
 
 export type ApiShareRequestMatcher = Omit<Matcher, "identifier">;
 
-export type ApiShareResponse = ApiResponse<ApiShareResponseData>;
-
-export type ApiShareResponseData = {
+export type ApiShareResponse = ApiResponse<{
   url: string;
-};
-
-export type ApiResponse<DataType> = {
-  data?: ResponseField<DataType>;
-  error?: ResponseField<DataType>;
-};
+}>;
 
 export type ShareRequest = {
   matchers: Matcher[];

@@ -1,6 +1,6 @@
-import { StorageVersion } from "@worm/types";
+import { StorageVersion } from "@worm/types/src/storage";
 
-import { CURRENT_STORAGE_VERSION } from ".";
+import { CURRENT_STORAGE_VERSION } from "./";
 import { migrate, MIGRATIONS } from "./database-migrations";
 
 export async function runStorageMigrations(

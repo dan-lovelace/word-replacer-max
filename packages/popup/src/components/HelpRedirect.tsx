@@ -1,10 +1,12 @@
-import { storageSetByKeys } from "@worm/shared";
+import { storageSetByKeys } from "@worm/shared/src/storage";
 
 import { useConfig } from "../store/Config";
 
 export default function HelpRedirect({ text = "contact support" }) {
   const {
-    storage: { preferences },
+    storage: {
+      sync: { preferences },
+    },
   } = useConfig();
 
   const handleClick = () => {

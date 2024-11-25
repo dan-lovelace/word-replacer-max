@@ -1,4 +1,5 @@
-import { Matcher, ReplacementStyle } from "@worm/types";
+import { ReplacementStyle } from "@worm/types/src/replace";
+import { Matcher } from "@worm/types/src/rules";
 
 import { logDebug } from "../logging";
 

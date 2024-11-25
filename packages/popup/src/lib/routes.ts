@@ -1,4 +1,4 @@
-import { isFirefox } from "@worm/shared";
+import { isFirefox } from "@worm/shared/src/browser";
 
 export const CAN_UPLOAD_PARAMETER = "u";
 export const NOTIFY_PARAMETER = "msg";

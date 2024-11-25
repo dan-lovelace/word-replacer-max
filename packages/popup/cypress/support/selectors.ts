@@ -1,4 +1,33 @@
 export const selectors = {
+  account: {
+    container: () => cy.findByTestId("account-container"),
+    dangerZone: {
+      deleteAccountButton: () => cy.findByTestId("delete-account-button"),
+      deleteAccountConfirmationAlert: () =>
+        cy.findByTestId("delete-account-confirmation-alert"),
+      deleteAccountConfirmationCancelButton: () =>
+        cy.findByTestId("delete-account-confirmation-cancel-button"),
+      deleteAccountConfirmationCheckbox: () =>
+        cy.findByTestId("delete-account-confirmation-checkbox"),
+      deleteAccountConfirmationContainer: () =>
+        cy.findByTestId("delete-account-confirmation-container"),
+      deleteAccountContainer: () => cy.findByTestId("delete-account-container"),
+      deleteAllRulesButton: () => cy.findByTestId("delete-all-rules-button"),
+      deleteAllRulesConfirmationAlert: () =>
+        cy.findByTestId("delete-all-rules-confirmation-alert"),
+      deleteAllRulesConfirmationCancelButton: () =>
+        cy.findByTestId("delete-all-rules-confirmation-cancel-button"),
+      deleteAllRulesConfirmationCheckbox: () =>
+        cy.findByTestId("delete-all-rules-confirmation-checkbox"),
+      deleteAllRulesConfirmationContainer: () =>
+        cy.findByTestId("delete-all-rules-confirmation-container"),
+      deleteAllRulesConfirmationSubmitButton: () =>
+        cy.findByTestId("delete-all-rules-confirmation-submit-button"),
+      deleteAllRulesContainer: () =>
+        cy.findByTestId("delete-all-rules-container"),
+      root: () => cy.findByTestId("danger-zone"),
+    },
+  },
   addNewRuleButton: () => cy.findByTestId("add-new-rule-button"),
   colorSelect: {
     dropdownButton: () => cy.findByTestId("color-select-dropdown-button"),
@@ -21,7 +50,40 @@ export const selectors = {
     exportLinks: () => cy.findByTestId("export-links"),
   },
   homePage: () => cy.findByTestId("home-page"),
+  layout: {
+    accountDropdownAccountButton: () =>
+      cy.findByTestId("account-dropdown-account-button"),
+    accountDropdownButton: () => cy.findByTestId("account-dropdown-button"),
+    accountDropdownSignedInEmail: () =>
+      cy.findByTestId("account-dropdown-signed-in-email"),
+    accountDropdownSignedInMenuContainer: () =>
+      cy.findByTestId("account-dropdown-signed-in-menu-container"),
+    accountDropdownSignedInMenuHeading: () =>
+      cy.findByTestId("account-dropdown-signed-in-menu-heading"),
+    accountDropdownSignedOutContainer: () =>
+      cy.findByTestId("account-dropdown-signed-out-container"),
+    accountDropdownSignedOutMenuContainer: () =>
+      cy.findByTestId("account-dropdown-signed-out-menu-container"),
+    accountDropdownSignOutButton: () =>
+      cy.findByTestId("account-dropdown-sign-out-button"),
+    tabs: {
+      domains: () => cy.findByTestId("domains-tab"),
+      options: () => cy.findByTestId("options-tab"),
+      rules: () => cy.findByTestId("rules-tab"),
+      support: () => cy.findByTestId("support-tab"),
+    },
+  },
   optionsTab: () => cy.findByTestId("options-tab"),
+  options: {
+    replacementSuggest: {
+      apiUsage: {
+        refillAlertMessage: () => cy.findByTestId("refill-alert-message"),
+        root: () => cy.findByTestId("api-usage"),
+      },
+      toggleButton: () =>
+        cy.findByTestId("replacement-suggestions-toggle-button"),
+    },
+  },
   replacementStyles: {
     colorInputs: {
       backgroundColorCheckbox: () =>
@@ -50,4 +112,36 @@ export const selectors = {
   },
   ruleRows: () => cy.findAllByTestId("rule-row"),
   ruleRowsFirst: () => selectors.ruleRows().first(),
+  rules: {
+    list: {
+      emptyRulesListAlert: () => cy.findByTestId("empty-rules-list-alert"),
+      replacementInput: () => cy.findByTestId("replacement-text-input"),
+    },
+    replacementSuggest: {
+      dropdownMenu: {
+        configuration: () => cy.findByTestId("suggestions-configuration"),
+        resultsItems: () => cy.findAllByTestId("suggestions-list-item"),
+        resultsList: () => cy.findByTestId("suggestions-list"),
+        resultsListSpinner: () => cy.findByTestId("suggestions-list-spinner"),
+        resultsTone: () => cy.findByTestId("suggestions-tone-label"),
+        root: () => cy.findByTestId("suggestions-dropdown-menu"),
+        submitButton: () => cy.findByTestId("generate-suggestions-button"),
+        toneSelectInput: () => cy.findByTestId("tone-select"),
+        toneSelectOption: () => cy.findByTestId("tone-option"),
+      },
+      dropdownToggle: () => cy.findByTestId("suggestions-dropdown-toggle"),
+    },
+  },
+  support: {
+    contactSupportForm: () => cy.findByTestId("contact-support-form"),
+    contactSupportFormMessageError: () =>
+      cy.findByTestId("contact-support-form-message-error"),
+    contactSupportFormMessageInput: () =>
+      cy.findByTestId("contact-support-form-message-input"),
+    contactSupportFormSubmitButton: () =>
+      cy.findByTestId("contact-support-form-submit-button"),
+    loggedInContactOptions: () => cy.findByTestId("logged-in-contact-options"),
+    loggedOutContactOptions: () =>
+      cy.findByTestId("logged-out-contact-options"),
+  },
 };
