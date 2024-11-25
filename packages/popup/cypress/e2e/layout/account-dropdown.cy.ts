@@ -34,15 +34,15 @@ describe("account dropdown", () => {
         .contains(Cypress.env("VITE_TEST_USERNAME"));
 
       s.layout.accountDropdownSignedInMenuContainer().within(() => {
-        cy.findByRole("button", { name: /account/i }).should("be.visible");
-        cy.findByRole("button", { name: /sign out/i }).should("be.visible");
+        s.layout.accountDropdownAccountButton().should("be.visible");
+        s.layout.accountDropdownSignOutButton().should("be.visible");
       });
     });
 
     it("should navigate to the account page", () => {
       s.layout.accountDropdownButton().click();
       s.layout.accountDropdownSignedInMenuContainer().within(() => {
-        cy.findByRole("button", { name: /account/i }).click();
+        s.layout.accountDropdownAccountButton().click();
       });
 
       s.account.container().should("be.visible");

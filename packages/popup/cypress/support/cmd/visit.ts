@@ -1,7 +1,6 @@
 import { merge } from "ts-deepmerge";
 
 import { STORAGE_MATCHER_PREFIX } from "@worm/shared/src/browser/matchers";
-import { deepClone } from "@worm/shared/src/objects";
 import { POPUP_DEV_SERVER_PORT } from "@worm/testing/src/popup";
 
 import { generateMatchers } from "../generators/rules";
@@ -37,7 +36,7 @@ Cypress.Commands.add(
 
         expect(storageSync).to.not.eq(undefined);
 
-        const store = merge(deepClone(defaultStore), overrides);
+        const store = merge(defaultStore, overrides);
 
         /**
          * Check to see if `sync` overrides have been provided. If so, we need

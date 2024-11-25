@@ -168,7 +168,7 @@ export default function DomainInput() {
       </div>
       <div className="row">
         <div className="col-12 col-lg-8">
-          <Slide isOpen={Boolean(domainList && domainList.length)}>
+          <Slide isOpen={domainsExist}>
             <div className="fw-bold fs-5">{lang.REPLACEMENT_SCOPE_HEADING}</div>
             <div className="fs-sm mb-2">
               {lang.REPLACEMENT_SCOPE_SUB_HEADING}

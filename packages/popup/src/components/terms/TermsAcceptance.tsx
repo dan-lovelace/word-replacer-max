@@ -47,7 +47,7 @@ export default function TermsAcceptance() {
     invokeAcceptTerms(undefined, {
       onError({ response }) {
         const message =
-          response?.data.error?.details ??
+          response?.data.error?.message ??
           language.auth.TERMS_ACCEPTANCE_GENERAL_ERROR_MESSAGE;
 
         showToast({

@@ -52,7 +52,7 @@ export default function ApiUsage() {
 
   if (errorResponse) {
     const message =
-      errorResponse?.error?.details ?? language.api.account.usage.GENERAL_ERROR;
+      errorResponse?.error?.message ?? language.api.account.usage.GENERAL_ERROR;
 
     return <Alert severity="danger">{message}</Alert>;
   }

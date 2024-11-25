@@ -63,7 +63,7 @@ export default function LoginCallbackPage() {
         {
           onError({ response }) {
             const message =
-              response?.data.error?.details ??
+              response?.data.error?.message ??
               "Something went wrong fetching tokens";
 
             showToast(`Error getting tokens: ${message}`, "danger");

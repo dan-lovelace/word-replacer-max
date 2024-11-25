@@ -14,7 +14,7 @@ export const selectors = {
       deleteAccountContainer: () => cy.findByTestId("delete-account-container"),
       deleteAllRulesButton: () => cy.findByTestId("delete-all-rules-button"),
       deleteAllRulesConfirmationAlert: () =>
-        cy.findByTestId("delete-rules-confirmation-alert"),
+        cy.findByTestId("delete-all-rules-confirmation-alert"),
       deleteAllRulesConfirmationCancelButton: () =>
         cy.findByTestId("delete-all-rules-confirmation-cancel-button"),
       deleteAllRulesConfirmationCheckbox: () =>
