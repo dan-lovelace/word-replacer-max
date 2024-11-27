@@ -1,8 +1,8 @@
 import { API_ROUTES } from "@worm/types/src/api";
 import { UserTokens } from "@worm/types/src/permission";
-import { SessionStorage } from "@worm/types/src/storage";
+import { LocalStorage } from "@worm/types/src/storage";
 
-const cache: Partial<{ sessionStore: SessionStorage }> = {
+const cache: Partial<{ sessionStore: LocalStorage }> = {
   sessionStore: undefined,
 };
 
@@ -13,13 +13,13 @@ Cypress.Commands.add("appUserLogin", () => {
   cy.wrap(null).then(async () => {
     const updateStorageTokens = (tokens: UserTokens) => {
       cy.getBrowser().then((browser) => {
-        const sessionStore: SessionStorage = {
+        const sessionStore: LocalStorage = {
           authAccessToken: tokens.accessToken,
           authIdToken: tokens.idToken,
           authLastAuthUser: username,
         };
 
-        browser.storage?.session?.set(sessionStore).then(() => {
+        browser.storage?.local?.set(sessionStore).then(() => {
           cache.sessionStore = sessionStore;
         });
       });
