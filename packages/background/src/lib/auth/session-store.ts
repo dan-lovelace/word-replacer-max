@@ -8,8 +8,6 @@ type StorageAuthKey = (typeof storageAuthSuffixes)[number];
 const envConfig = getEnvConfig();
 const userPoolClientId = envConfig.VITE_SSM_USER_POOL_CLIENT_ID;
 
-const sessionStorageProvider = getStorageProvider("session");
-
 /**
  * These are the suffixes of storage keys used by Amplify when getting/setting.
  * There are others not currently in use; this list is non-exhaustive:
@@ -29,6 +27,8 @@ const storageAuthSuffixes = [
 ] as const;
 
 const storageAuthKeyPrefix = `CognitoIdentityServiceProvider.${userPoolClientId}`;
+
+export const sessionStorageProvider = getStorageProvider("local");
 
 export const sessionStorageInterface: KeyValueStorageInterface = {
   clear: () =>

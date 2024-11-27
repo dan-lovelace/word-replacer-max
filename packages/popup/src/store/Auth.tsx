@@ -27,7 +27,7 @@ export const useAuth = () => useContext(Auth);
 export function AuthProvider({ children }: { children: PreactChildren }) {
   const {
     storage: {
-      session: { authIdToken, authLastAuthUser },
+      local: { authIdToken, authLastAuthUser },
     },
   } = useConfig();
 
