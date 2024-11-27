@@ -19,7 +19,7 @@ export default function PageLoader({ heading }: PageLoaderProps) {
           mx: "auto",
         }}
       >
-        <Typography variant="h4" sx={{ fontWeight: "bold" }}>
+        <Typography variant="h4" sx={{ fontWeight: 600 }}>
           {heading}
         </Typography>
         <CircularProgress size={48} />

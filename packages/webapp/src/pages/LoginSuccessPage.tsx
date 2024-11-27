@@ -56,7 +56,7 @@ export default function LoginSuccessPage() {
             component="h1"
             gutterBottom
             variant="h2"
-            sx={{ fontWeight: "bold" }}
+            sx={{ fontWeight: 600 }}
           >
             Sign in success
           </Typography>
@@ -73,8 +73,11 @@ export default function LoginSuccessPage() {
             />
           </Box>
           <Container maxWidth="sm">
-            <Typography variant="h6" sx={{ mb: 5 }}>
+            <Typography variant="h6">
               You've successfully signed in to the extension.
+            </Typography>
+            <Typography variant="h6" sx={{ mb: 5 }}>
+              You may now close this window.
             </Typography>
             <Typography gutterBottom variant="body2">
               Returning to homepage in a moment...
