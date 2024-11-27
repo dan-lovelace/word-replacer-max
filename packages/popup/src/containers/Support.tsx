@@ -13,7 +13,9 @@ import {
   MAILTO_CONTACT_SUPPORT_URL,
   SUBMIT_NEW_TICKET_URL,
 } from "@worm/shared/src/support";
-import { CONTACT_SUPPORT_MAXIMUM_MESSAGE_LENGTH } from "@worm/shared/src/validation/contact";
+import {
+  CONTACT_SUPPORT_MAXIMUM_MESSAGE_LENGTH,
+} from "@worm/shared/src/validation/contact";
 import {
   ApiContactSupportRequest,
   ApiContactSupportResponse,
@@ -35,7 +37,7 @@ function EmailGitHub() {
     <div data-testid="email-github-container">
       <div className="mb-2">
         <div className="fw-medium">Email</div>
-        <div className="ms-2">
+        <div>
           <a href={MAILTO_CONTACT_SUPPORT_URL} target="_blank">
             {CONTACT_SUPPORT_EMAIL}
           </a>
@@ -43,7 +45,7 @@ function EmailGitHub() {
       </div>
       <div>
         <div className="fw-medium">GitHub</div>
-        <div className="ms-2">
+        <div>
           <a href={SUBMIT_NEW_TICKET_URL} target="_blank">
             Create a new issue
           </a>
