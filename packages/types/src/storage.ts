@@ -12,6 +12,16 @@ export const storageVersions = ["1.0.0", "1.1.0", "1.1.1"] as const;
 
 export type LocalStorage = Partial<{
   recentSuggestions: RecentSuggestions;
+
+  /**
+   * Auth keys are mapped using their respective names from Amplify. A custom
+   * token provider exists to translate Amplify's version to our own.
+   */
+  authAccessToken: string;
+  authClockDrift: string;
+  authLastAuthUser: string;
+  authIdToken: string;
+  authRefreshToken: string;
 }>;
 
 /**
@@ -56,17 +66,7 @@ export type SchemaVersion1 = {
 
 export type SchemaVersionType = (typeof schemaVersions)[number];
 
-export type SessionStorage = Partial<{
-  /**
-   * Auth keys are mapped using their respective names from Amplify. A custom
-   * token provider exists to translate Amplify's version to our own.
-   */
-  authAccessToken: string;
-  authClockDrift: string;
-  authLastAuthUser: string;
-  authIdToken: string;
-  authRefreshToken: string;
-}>;
+export type SessionStorage = Partial<{}>;
 
 export type Storage = {
   local: LocalStorage;

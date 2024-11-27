@@ -23,14 +23,14 @@ type ConfigStore = {
 const storeDefaults: ConfigStore = {
   isPoppedOut: false,
   storage: {
-    local: {},
-    session: {
+    local: {
       authAccessToken: undefined,
       authClockDrift: undefined,
       authIdToken: undefined,
       authLastAuthUser: undefined,
       authRefreshToken: undefined,
     },
+    session: {},
     sync: {
       domainList: [],
       matchers: [],
