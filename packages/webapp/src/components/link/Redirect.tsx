@@ -16,12 +16,10 @@ export default function Redirect({ options, to }: RedirectProps) {
   useEffect(() => {
     if (options?.isExternal) {
       if (options.replace) {
-        const previousUrl = document.referrer || ROUTES.HOME;
-
-        window.history.replaceState({}, "", previousUrl);
+        window.history.replaceState({}, "", ROUTES.HOME);
       }
 
-      window.location.assign(to as string);
+      window.location.href = to as string;
     } else {
       navigate(to, options);
     }
