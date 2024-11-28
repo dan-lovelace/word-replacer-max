@@ -40,7 +40,7 @@ export default function AccountDetails() {
           <label className="fw-medium" for="user-email-input">
             {lang.ACCOUNT_DETAILS_EMAIL_LABEL}
           </label>
-          <div className="position-relative ms-2" style={{ maxWidth: 380 }}>
+          <div className="position-relative" style={{ maxWidth: 340 }}>
             <input
               className="form-control"
               disabled
@@ -51,7 +51,7 @@ export default function AccountDetails() {
         </div>
         <div>
           <div className="fw-medium">Feature access</div>
-          <div className="d-flex flex-column gap-1 ms-2">
+          <div className="d-flex flex-column gap-1">
             <FeatureItem
               icon="check_circle"
               label="AI replacement suggestions"

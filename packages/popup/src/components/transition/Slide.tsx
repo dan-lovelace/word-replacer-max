@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "preact/hooks";
+import { useEffect, useRef, useState } from "preact/hooks";
 
 import { PreactChildren } from "../../lib/types";
 
@@ -7,7 +7,8 @@ interface SlideProps {
   isOpen?: boolean;
 }
 
-const TRANSITION_DURATION_MS = 150;
+const TRANSITION_DURATION_MS = 90;
+const TRANSITION_EASING = "ease-out";
 
 export default function Slide({ isOpen, children }: SlideProps) {
   const [height, setHeight] = useState(isOpen ? "auto" : "0px");
@@ -48,7 +49,7 @@ export default function Slide({ isOpen, children }: SlideProps) {
         maxHeight: height,
         opacity: isOpen ? 1 : 0,
         overflow: isOpen ? "visible" : "hidden",
-        transition: `max-height ${TRANSITION_DURATION_MS}ms, opacity ${TRANSITION_DURATION_MS}ms`,
+        transition: `max-height ${TRANSITION_DURATION_MS}ms ${TRANSITION_EASING}, opacity ${TRANSITION_DURATION_MS}ms ${TRANSITION_EASING}`,
       }}
     >
       {children}

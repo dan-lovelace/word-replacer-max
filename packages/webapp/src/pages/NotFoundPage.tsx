@@ -23,7 +23,7 @@ export default function NotFoundPage() {
           component="h1"
           gutterBottom
           variant="h2"
-          sx={{ fontWeight: "bold" }}
+          sx={{ fontWeight: 600 }}
         >
           Page not found
         </Typography>

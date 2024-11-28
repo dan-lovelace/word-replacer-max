@@ -61,7 +61,15 @@ export default function LayoutHeader() {
               Word Replacer Max
             </Typography>
           </Stack>
-          <Stack direction="row" sx={{ alignItems: "center", gap: 1 }}>
+          <Stack
+            direction="row"
+            sx={{
+              alignItems: "center",
+              gap: 1,
+              opacity: signInStatus !== "unknown" ? 1 : 0,
+              transition: "opacity 90ms ease-out",
+            }}
+          >
             <ConnectionStatus />
             {connectionStatus === "connected" && (
               <>

@@ -52,7 +52,7 @@ export default function HomePage() {
             gutterBottom
             variant="h2"
             sx={{
-              fontWeight: "bold",
+              fontWeight: 600,
             }}
           >
             Make the web speak your language

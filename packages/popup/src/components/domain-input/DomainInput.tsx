@@ -159,7 +159,7 @@ export default function DomainInput() {
             onClick={handleAddCurrentClick}
             style={{
               opacity: canAddCurrentHostname ? 1 : 0,
-              transition: "opacity 90ms ease-in",
+              transition: "opacity 90ms ease-out",
             }}
           >
             {lang.ADD_CURRENT_DOMAIN_BUTTON_TEXT} ({currentHostname})
