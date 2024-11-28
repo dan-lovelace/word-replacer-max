@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 import Box from "@mui/material/Box/Box";
 import Divider from "@mui/material/Divider/Divider";
 import Stack from "@mui/material/Stack/Stack";
@@ -13,9 +15,20 @@ import MaterialIcon from "../icon/MaterialIcon";
 import Link from "../link/Link";
 
 export default function ConnectionStatus() {
-  const { signInStatus } = useAuthProvider();
+  const { signInStatus, setSignInStatus } = useAuthProvider();
   const { connectionStatus } = useConnectionProvider();
   const { palette } = useTheme();
+
+  useEffect(() => {
+    if (connectionStatus === "connected" || connectionStatus === "connecting") {
+      return;
+    }
+
+    /**
+     * Connection status has settled and is not connected
+     */
+    setSignInStatus("signedOut");
+  }, [connectionStatus]);
 
   if (connectionStatus === "connected") {
     return (
