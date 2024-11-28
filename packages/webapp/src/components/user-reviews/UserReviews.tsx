@@ -5,9 +5,12 @@ import Marquee from "react-fast-marquee";
 import Box from "@mui/material/Box/Box";
 import Card from "@mui/material/Card/Card";
 import CardContent from "@mui/material/CardContent/CardContent";
+import Grid2 from "@mui/material/Grid2/Grid2";
 import Rating from "@mui/material/Rating/Rating";
+import Stack from "@mui/material/Stack/Stack";
 import useTheme from "@mui/material/styles/useTheme";
 import Typography from "@mui/material/Typography/Typography";
+import useMediaQuery from "@mui/system/useMediaQuery/useMediaQuery";
 
 import MaterialIcon from "../icon/MaterialIcon";
 
@@ -81,7 +84,8 @@ const userReviews: UserReview[] = [
 ].reverse();
 
 export default function UserReviews() {
-  const { palette } = useTheme();
+  const { breakpoints, palette } = useTheme();
+  const isMobile = useMediaQuery(breakpoints.down(breakpoints.values.md));
 
   return (
     <Box id="user-reviews">
@@ -90,52 +94,56 @@ export default function UserReviews() {
         gradient
         gradientColor={palette.background.default}
         pauseOnHover
+        speed={isMobile ? 35 : 50}
       >
         {userReviews.map((review, idx) => (
           <Card
             key={`card-${idx}`}
             sx={{
               flex: "0 0 auto",
-              mx: 1.5,
+              mx: { xs: 1, md: 1.5 },
               my: 2,
               transition: "scale 0.3s",
-              width: 300,
+              width: { xs: 185, md: 300 },
               "&:hover": {
                 scale: 1.075,
               },
             }}
           >
             <CardContent>
-              <Typography
-                color="text.secondary"
-                gutterBottom
-                variant="subtitle2"
-              >
-                {review.text}
-              </Typography>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                <Box
+              <Grid2 container spacing={1}>
+                <Grid2 size={{ xs: 12, md: "grow" }}>
+                  <Typography
+                    color="text.secondary"
+                    gutterBottom
+                    variant="subtitle2"
+                  >
+                    {review.text}
+                  </Typography>
+                  <Stack direction="row" sx={{ alignItems: "center", gap: 1 }}>
+                    <Rating
+                      icon={<MaterialIcon>star</MaterialIcon>}
+                      name={`rating-${idx}`}
+                      readOnly
+                      value={review.rating}
+                    />
+                    <Typography color="text.secondary" variant="subtitle2">
+                      {review.rating.toFixed(1)}
+                    </Typography>
+                  </Stack>
+                </Grid2>
+                <Grid2
+                  size={{ xs: 12, md: "auto" }}
                   sx={{
+                    alignItems: "end",
                     display: "flex",
-                    alignItems: "center",
-                    flex: "1 1 auto",
-                    gap: 1,
                   }}
                 >
-                  <Rating
-                    icon={<MaterialIcon>star</MaterialIcon>}
-                    name={`rating-${idx}`}
-                    readOnly
-                    value={review.rating}
-                  />
                   <Typography color="text.secondary" variant="subtitle2">
-                    {review.rating.toFixed(1)}
+                    <em>{review.author}</em>
                   </Typography>
-                </Box>
-                <Typography color="text.secondary" variant="subtitle2">
-                  <em>{review.author}</em>
-                </Typography>
-              </Box>
+                </Grid2>
+              </Grid2>
             </CardContent>
           </Card>
         ))}
