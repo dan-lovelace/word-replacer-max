@@ -25,7 +25,7 @@ export default function ConnectionStatus() {
     }
 
     /**
-     * Connection status has settled and is not connected
+     * Connection status has settled and is not connected.
      */
     setSignInStatus("signedOut");
   }, [connectionStatus]);
