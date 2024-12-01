@@ -32,7 +32,7 @@ type ReplacementInputProps = Pick<
   ) => void;
 };
 
-const INPUT_BUTTON_WIDTH = 31;
+const INPUT_BUTTON_WIDTH = 32;
 const INPUT_WIDTH_BASE = 250;
 
 export default function ReplacementInput({
@@ -129,7 +129,7 @@ export default function ReplacementInput({
           }}
           data-testid="replacement-text-input"
         />
-        {canSuggest && (
+        <div className={cx(!canSuggest && "d-none")}>
           <ReplacementSuggest
             active={active}
             disabled={disabled}
@@ -140,7 +140,7 @@ export default function ReplacementInput({
             onReplacementChange={onChange}
             setValue={setValue}
           />
-        )}
+        </div>
         {replacementStyle?.active && (
           <IconButton
             className={cx(ICON_BUTTON_BASE_CLASS, "px-2")}
@@ -154,11 +154,9 @@ export default function ReplacementInput({
               className: "text-secondary",
               size: "sm",
             }}
-            title={
-              useGlobalReplacementStyle
-                ? "Replacement Style Enabled"
-                : "Replacement Style Disabled"
-            }
+            title={`Replacement style ${
+              useGlobalReplacementStyle ? "enabled" : "disabled"
+            }`}
             onClick={handleReplacementStyleChange}
             data-testid="replacement-style-button"
           />
