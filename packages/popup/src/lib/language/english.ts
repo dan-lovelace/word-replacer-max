@@ -89,8 +89,8 @@ export default {
       "Unable to pop extension out. Please disable popup blockers for this page.",
   },
   rules: {
-    EMPTY_RULES_LIST_ALERT_TITLE: "No rules",
-    EMPTY_RULES_LIST_ALERT_BODY: "Create a rule to start replacing text again.",
+    EMPTY_RULES_LIST_ALERT_TITLE: "No active rules",
+    EMPTY_RULES_LIST_ALERT_BODY: "Add a rule to start replacing text again.",
     REFRESH_REQUIRED: "You must refresh the page to see these changes.",
   },
   support: {

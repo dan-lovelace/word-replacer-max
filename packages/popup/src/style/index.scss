@@ -1,15 +1,21 @@
+/**
+ * Bootstrap configuration
+ */
 $enable-negative-margins: true;
 $primary: #025ade;
 $tooltip-max-width: 300px;
 
 @import "bootstrap/scss/bootstrap";
 
-$inputHeight: 38px;
-
+/**
+ * Self-hosted app fonts
+ */
 @font-face {
   font-family: Inter;
   src: url("/assets/font/InterVariable.ttf");
 }
+
+$inputHeight: 38px;
 
 html {
   &.layout__expanded {
