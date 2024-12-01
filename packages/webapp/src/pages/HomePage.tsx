@@ -59,12 +59,12 @@ export default function HomePage() {
               fontWeight: 600,
             }}
           >
-            Make the web speak your language
+            Your web, your words
           </Typography>
-          <Container maxWidth="sm">
-            <Typography variant="h6" sx={{ mb: 8 }}>
-              A browser extension for automatically replacing text on websites.
-              Visit the extension store to get started today.
+          <Container>
+            <Typography variant="h6" sx={{ maxWidth: 630, mb: 8, mx: "auto" }}>
+              The browser extension that lets you customize web content your
+              way. Easy to use, highly customizable, and trusted by thousands.
             </Typography>
           </Container>
           <Typography
