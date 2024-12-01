@@ -55,7 +55,9 @@ export default function ExportLink() {
       showToast({
         message:
           language.options[
-            result ? "CLIPBOARD_COPY_SUCCESS" : "CLIPBOARD_COPY_ERROR"
+            result
+              ? "SHAREABLE_LINK_CLIPBOARD_COPY_SUCCESS"
+              : "SHAREABLE_LINK_CLIPBOARD_COPY_ERROR"
           ],
         options: { severity: result ? "success" : "danger" },
       });

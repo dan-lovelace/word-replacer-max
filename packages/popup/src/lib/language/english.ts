@@ -73,8 +73,6 @@ export default {
       "Choose how you want to control which websites use your replacements.",
   },
   options: {
-    CLIPBOARD_COPY_ERROR: "Unable to copy to clipboard.",
-    CLIPBOARD_COPY_SUCCESS: "Copied to clipboard.",
     CORRUPTED_IMPORT_CONTENT: "It looks like your export file is corrupted.",
     DIRECT_UPLOAD_DISALLOWED:
       "We opened this tab for you because Firefox can't upload files directly into the extension's popup window. Feel free to import your files here and close this window when you're done.",
@@ -87,6 +85,10 @@ export default {
     LINK_IMPORT_SUCCESS: "Rules from link imported successfully.",
     POPUP_BLOCKED:
       "Unable to pop extension out. Please disable popup blockers for this page.",
+    SHAREABLE_LINK_CLIPBOARD_COPY_ERROR:
+      "Not allowed to copy link to clipboard.",
+    SHAREABLE_LINK_CLIPBOARD_COPY_SUCCESS:
+      "Shareable link copied to clipboard.",
   },
   rules: {
     EMPTY_RULES_LIST_ALERT_TITLE: "No active rules",
