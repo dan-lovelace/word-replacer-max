@@ -100,7 +100,7 @@ export default function Layout({ children }: LayoutProps) {
 
     if (!newEnabled) {
       showToast({
-        message: language.rules.REFRESH_REQUIRED,
+        message: `Extension disabled. ${language.rules.REFRESH_REQUIRED}`,
         options: { showRefresh: true },
       });
     }
