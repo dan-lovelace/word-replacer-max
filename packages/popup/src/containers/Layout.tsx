@@ -152,18 +152,26 @@ export default function Layout({ children }: LayoutProps) {
         <div className="d-flex w-100">
           <div className="d-flex align-items-center justify-content-center border-bottom">
             <IconButton
-              className={cx(
-                ICON_BUTTON_BASE_CLASS,
-                "px-3",
-                preferences?.extensionEnabled ? "text-success" : "text-danger"
-              )}
               icon="power_settings_new"
               iconProps={{
                 style: {
-                  marginTop: 2,
+                  borderRadius: "100%",
+                  boxShadow: preferences?.extensionEnabled
+                    ? "inset rgba(0, 0, 0, 0.2) 0px 0px 3px 1px"
+                    : "rgba(0, 0, 0, 0.2) 0px 0px 2px 1px",
+                  color: preferences?.extensionEnabled
+                    ? "var(--bs-green)"
+                    : "rgba(var(--bs-tertiary-color-rgb), 0.15)",
+                  padding: "5px 4px 3px",
+                  transition: "all 150ms",
                 },
               }}
-              title="Toggle Extension On/Off"
+              style={{
+                padding: "5px 12px",
+              }}
+              title={`Extension ${
+                preferences?.extensionEnabled ? "enabled" : "disabled"
+              }`}
               onClick={handleExtensionEnabledClick}
             />
           </div>
