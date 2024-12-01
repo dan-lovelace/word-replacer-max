@@ -1,3 +1,5 @@
+import { AppUser } from "../identity";
+
 import { ApiResponse } from "./";
 
 export type ApiAuthAcceptTermsRequest = undefined;
@@ -25,10 +27,10 @@ export type ApiAuthTokens = {
 
 export type ApiAuthTokensResponse = ApiResponse<ApiAuthTokens>;
 
-export type ApiAuthWhoAmI = {
-  email: string;
-  emailVerified: string;
-};
+export type ApiAuthWhoAmiIRequest = undefined;
+
+export type ApiAuthWhoAmI = AppUser;
+
 export type ApiAuthWhoAmIResponse = ApiResponse<ApiAuthWhoAmI>;
 
 export type ApiCognitoTokensResponse = {

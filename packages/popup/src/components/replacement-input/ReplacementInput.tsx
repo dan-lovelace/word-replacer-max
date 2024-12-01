@@ -32,7 +32,7 @@ type ReplacementInputProps = Pick<
   ) => void;
 };
 
-const INPUT_BUTTON_WIDTH = 32;
+const INPUT_BUTTON_WIDTH = 31;
 const INPUT_WIDTH_BASE = 250;
 
 export default function ReplacementInput({
