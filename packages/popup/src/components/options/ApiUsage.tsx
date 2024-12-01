@@ -18,6 +18,7 @@ import MaterialIcon from "../icon/MaterialIcon";
 import Tooltip from "../Tooltip";
 
 const PROGRESS_BAR_WIDTH_PX = 220;
+const WARNING_THRESHOLD = 70;
 
 export default function ApiUsage() {
   const { currentUser } = useAuth();
@@ -72,12 +73,12 @@ export default function ApiUsage() {
   } = suggestData;
 
   const usagePercent = Math.ceil((count / threshold) * 100);
-  const isWarning = Boolean(usagePercent > 80);
+  const isWarning = Boolean(usagePercent >= WARNING_THRESHOLD);
 
   const barColor = useMemo(() => {
     if (usagePercent >= 100) {
       return "bg-danger-subtle";
-    } else if (usagePercent >= 70) {
+    } else if (isWarning) {
       return "bg-warning-subtle";
     }
 
