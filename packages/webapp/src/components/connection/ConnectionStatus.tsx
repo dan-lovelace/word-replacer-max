@@ -6,6 +6,8 @@ import Stack from "@mui/material/Stack/Stack";
 import useTheme from "@mui/material/styles/useTheme";
 import Tooltip from "@mui/material/Tooltip/Tooltip";
 
+import { getEnvConfig } from "@worm/shared/src/config";
+
 import chromeLogo from "../../assets/chromeLogo";
 import firefoxLogo from "../../assets/firefoxLogo";
 import { useAuthProvider } from "../../lib/auth/AuthProvider";
@@ -13,6 +15,8 @@ import { useConnectionProvider } from "../../lib/connection/ConnectionProvider";
 
 import MaterialIcon from "../icon/MaterialIcon";
 import Link from "../link/Link";
+
+const envConfig = getEnvConfig();
 
 export default function ConnectionStatus() {
   const { signInStatus, setSignInStatus } = useAuthProvider();
@@ -72,7 +76,7 @@ export default function ConnectionStatus() {
         <Tooltip title="Get for Chrome">
           <Box>
             <Link
-              to="https://chromewebstore.google.com/detail/word-replacer-max/gnemoflnihonmkiacnagnbnlppkamfgo"
+              to={envConfig.VITE_EXTENSION_STORE_URL_CHROME}
               sx={{
                 color: "text.primary",
                 display: "block",
@@ -87,7 +91,7 @@ export default function ConnectionStatus() {
         <Tooltip title="Get for Firefox">
           <Box>
             <Link
-              to="https://addons.mozilla.org/en-US/firefox/addon/word-replacer-max"
+              to={envConfig.VITE_EXTENSION_STORE_URL_FIREFOX}
               sx={{
                 color: "text.primary",
                 display: "block",

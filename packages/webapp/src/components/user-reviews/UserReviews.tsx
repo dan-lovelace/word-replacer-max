@@ -89,6 +89,12 @@ export default function UserReviews() {
 
   return (
     <Box id="user-reviews">
+      <Typography
+        variant="h4"
+        sx={{ fontWeight: 500, mb: 2, textAlign: "center" }}
+      >
+        What our users are thinking
+      </Typography>
       <Marquee
         className="user-reviews__marquee"
         gradient
@@ -137,6 +143,7 @@ export default function UserReviews() {
                   sx={{
                     alignItems: "end",
                     display: "flex",
+                    justifyContent: "end",
                   }}
                 >
                   <Typography color="text.secondary" variant="subtitle2">

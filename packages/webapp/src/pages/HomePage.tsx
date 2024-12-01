@@ -4,6 +4,8 @@ import Grid2 from "@mui/material/Grid2/Grid2";
 import useTheme from "@mui/material/styles/useTheme";
 import Typography from "@mui/material/Typography/Typography";
 
+import { getEnvConfig } from "@worm/shared/src/config";
+
 import Button from "../components/button/Button";
 import NewsletterSignup from "../components/form/NewsletterSignup";
 import Link from "../components/link/Link";
@@ -15,6 +17,8 @@ type StoreLinkProps = {
   text: string;
   to: string;
 };
+
+const envConfig = getEnvConfig();
 
 function StoreLink({ imageSrc, text, to }: StoreLinkProps) {
   return (
@@ -97,7 +101,7 @@ export default function HomePage() {
               <StoreLink
                 imageSrc="/preload/chrome-logo.svg"
                 text="Chrome"
-                to="https://chromewebstore.google.com/detail/word-replacer-max/gnemoflnihonmkiacnagnbnlppkamfgo"
+                to={envConfig.VITE_EXTENSION_STORE_URL_CHROME}
               />
             </Grid2>
             <Grid2
@@ -107,19 +111,19 @@ export default function HomePage() {
               <StoreLink
                 imageSrc="/preload/firefox-logo.svg"
                 text="Firefox"
-                to="https://addons.mozilla.org/en-US/firefox/addon/word-replacer-max"
+                to={envConfig.VITE_EXTENSION_STORE_URL_FIREFOX}
               />
             </Grid2>
           </Grid2>
         </Container>
       </Hero>
 
-      <Container>
+      <Container sx={{ py: 4 }}>
         <UserReviews />
       </Container>
 
       <Hero>
-        <Container sx={{ pb: 8 }}>
+        <Container>
           <NewsletterSignup />
         </Container>
       </Hero>

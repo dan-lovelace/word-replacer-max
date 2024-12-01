@@ -119,7 +119,7 @@ export default function NewsletterSignup() {
   return (
     <Container disableGutters maxWidth="md" sx={{ textAlign: "center" }}>
       <Card variant="outlined">
-        <CardHeader title="Stay in the Loop" />
+        <CardHeader title="Stay in the loop" />
         <CardContent>
           <Box ref={containerRef} sx={{ position: "relative" }}>
             <Typography variant="subtitle2" sx={{ mb: 2 }}>
