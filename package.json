@@ -20,8 +20,8 @@
     "start:2": "yarn build 2 && yarn start",
     "start:3": "yarn build 3 && yarn start",
     "test:all": "yarn test:jest && yarn test:lerna",
-    "test:lerna": "lerna run test",
     "test:jest": "yarn jest",
+    "test:lerna": "lerna run test",
     "write-config": "tsx scripts/src/write-config.ts"
   },
   "engines": {
