@@ -70,7 +70,7 @@ export default function CurrentUser() {
             }}
             onClose={handleClose}
           >
-            <Box sx={{ pb: 1, px: 2.5 }}>
+            <Box sx={{ minWidth: 300, pb: 1, px: 2.5 }}>
               <Typography variant="body2">Logged in as</Typography>
               <Typography variant="subtitle2" sx={{ fontWeight: "bold" }}>
                 {appUser.email}
