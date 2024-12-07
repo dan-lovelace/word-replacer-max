@@ -146,7 +146,11 @@ export default function UserReviews() {
                     justifyContent: "end",
                   }}
                 >
-                  <Typography color="text.secondary" variant="subtitle2">
+                  <Typography
+                    color="text.secondary"
+                    variant="subtitle2"
+                    sx={{ mb: "1px" }}
+                  >
                     <em>{review.author}</em>
                   </Typography>
                 </Grid2>
