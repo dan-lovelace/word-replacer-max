@@ -16,10 +16,10 @@ type FeatureProps = {
 
 const motionVariants: Variants = {
   offscreen: {
-    y: 200,
+    scale: 0.8,
   },
   onscreen: {
-    y: 50,
+    scale: 1,
     transition: {
       type: "spring",
       bounce: 0.4,
@@ -43,7 +43,7 @@ export default function Feature({ heading, imgSrc, subheading }: FeatureProps) {
             <Typography variant="h3" sx={{ fontWeight: 500, mb: 1 }}>
               {heading}
             </Typography>
-            <Typography variant="h6" sx={{ mb: 2 }}>
+            <Typography variant="h6" sx={{ mb: 8 }}>
               {subheading}
             </Typography>
             <motion.div variants={motionVariants}>

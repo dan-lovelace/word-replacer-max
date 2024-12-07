@@ -120,32 +120,32 @@ export default function HomePage() {
         </Container>
       </Hero>
 
-      <Feature
-        heading="Personalized replacement rules"
-        imgSrc="/screens-rules.png"
-        subheading="Match by case, whole word and regular expression"
-      />
-      <Feature
-        heading="AI replacement suggestions"
-        imgSrc="/screens-ai-suggestions.png"
-        subheading="Leverage the power of AI to get replacement inspiration in your chosen style"
-      />
-      <Feature
-        heading="Flexible domain settings"
-        imgSrc="/screens-domains.png"
-        subheading="Choose where replacements occur with site-specific control"
-      />
-      <Feature
-        heading="Shareable rulesets"
-        imgSrc="/screens-share.png"
-        subheading="Share your rules with friends and teammates"
-      />
+      <Box sx={{ mb: 10 }}>
+        <Feature
+          heading="Personalized replacement rules"
+          imgSrc="/screens-rules.png"
+          subheading="Match by case, whole word and regular expression"
+        />
+        <Feature
+          heading="Flexible domain settings"
+          imgSrc="/screens-domains.png"
+          subheading="Choose where replacements occur with site-specific control"
+        />
+        <Feature
+          heading="Shareable rulesets"
+          imgSrc="/screens-share.png"
+          subheading="Share your rules with friends and teammates"
+        />
+        <Feature
+          heading="AI replacement suggestions"
+          imgSrc="/screens-ai-suggestions.png"
+          subheading="Leverage the power of AI to get replacement inspiration in your chosen style"
+        />
+      </Box>
 
-      <Hero>
-        <Container>
-          <UserReviews />
-        </Container>
-      </Hero>
+      <Container>
+        <UserReviews />
+      </Container>
 
       <Hero>
         <Container>
