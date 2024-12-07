@@ -1,7 +1,6 @@
 import { motion, Variants } from "motion/react";
 
 import Box from "@mui/material/Box/Box";
-import teal from "@mui/material/colors/teal";
 import Stack from "@mui/material/Stack/Stack";
 import useTheme from "@mui/material/styles/useTheme";
 import Typography from "@mui/material/Typography/Typography";
@@ -9,6 +8,7 @@ import Typography from "@mui/material/Typography/Typography";
 import Hero from "../../containers/Hero";
 
 type FeatureProps = {
+  color: string;
   heading: string;
   imgSrc: string;
   subheading: string;
@@ -28,7 +28,12 @@ const motionVariants: Variants = {
   },
 };
 
-export default function Feature({ heading, imgSrc, subheading }: FeatureProps) {
+export default function Feature({
+  color,
+  heading,
+  imgSrc,
+  subheading,
+}: FeatureProps) {
   const { shadows } = useTheme();
 
   return (
@@ -55,7 +60,7 @@ export default function Feature({ heading, imgSrc, subheading }: FeatureProps) {
                     height: "102%",
                     left: "50%",
                     outline: "40px solid",
-                    outlineColor: teal.A700,
+                    outlineColor: color,
                     position: "absolute",
                     top: "50%",
                     transform: "translate(-50%, -50%)",
