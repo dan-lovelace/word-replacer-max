@@ -6,7 +6,7 @@ export default function PrivacyPage() {
   return (
     <Container>
       <h1>Privacy Policy</h1>
-      <p>Last updated: September 19, 2024</p>
+      <p>Last updated: December 7, 2024</p>
       <p>
         This Privacy Policy describes Our policies and procedures on the
         collection, use and disclosure of Your information when You use the
