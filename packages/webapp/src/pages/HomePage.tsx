@@ -144,7 +144,7 @@ export default function HomePage() {
               Ready to get started?
             </Typography>
             <Typography variant="h6">
-              Visit your browser's extension store
+              Visit the extension store today
             </Typography>
           </Box>
           <StoreLinks noLines />
