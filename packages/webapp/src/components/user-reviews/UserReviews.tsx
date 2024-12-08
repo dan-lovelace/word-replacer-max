@@ -81,7 +81,12 @@ const userReviews: UserReview[] = [
     rating: 5,
     text: "Nov 18, 2024",
   },
-].reverse();
+  {
+    author: "Chrome user",
+    rating: 5,
+    text: "Dec 8, 2024",
+  },
+];
 
 export default function UserReviews() {
   const { breakpoints, palette } = useTheme();
