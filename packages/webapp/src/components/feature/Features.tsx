@@ -28,6 +28,7 @@ const features = [
     subheading:
       "Leverage the power of AI to get replacement inspiration in your chosen style",
   },
+  // NOTE: Next color: "#9b5de5"
 ];
 
 export default function Features({}: FeaturesProps) {

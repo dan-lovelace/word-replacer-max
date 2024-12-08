@@ -71,6 +71,7 @@ export default function Feature({
                   component="img"
                   src={imgSrc}
                   sx={{
+                    borderRadius: 2,
                     boxShadow: shadows[10],
                     position: "relative",
                     width: 1,
