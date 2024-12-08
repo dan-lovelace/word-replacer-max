@@ -58,7 +58,9 @@ export default {
     ADD_CURRENT_DOMAIN_BUTTON_TEXT: "Add current site",
     DOMAINS_LIST_HEADING: "Domain List",
     EMPTY_DOMAINS_LIST_ALERT_TITLE: "No domains",
-    EMPTY_DOMAINS_LIST_ALERT_BODY:
+    EMPTY_DOMAINS_LIST_ALERT_BODY_ALLOW:
+      "None of your rules are being applied. To starting replacing on specific sites, add them to your domains list.",
+    EMPTY_DOMAINS_LIST_ALERT_BODY_DENY:
       "Text replacements are active on all websites. To limit replacements to specific sites, add them to your domains list.",
     LIST_EFFECT_ALLOWLIST_DESCRIPTION:
       "Word replacements will only work on the domains you list",
