@@ -1,4 +1,5 @@
-import indigo from "@mui/material/colors/indigo";
+import primaryColor from "@mui/material/colors/indigo";
+
 import type { ThemeOptions } from "@mui/material/styles/createTheme";
 
 export const muiTheme: ThemeOptions = {
@@ -28,7 +29,7 @@ export const muiTheme: ThemeOptions = {
   },
   palette: {
     mode: "dark",
-    primary: { main: indigo.A100 },
+    primary: { main: primaryColor.A100 },
   },
   typography: {
     fontFamily: [

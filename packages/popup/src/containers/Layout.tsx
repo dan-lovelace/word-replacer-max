@@ -167,7 +167,7 @@ export default function Layout({ children }: LayoutProps) {
                 },
               }}
               style={{
-                padding: "5px 12px",
+                padding: "4px 12px",
               }}
               title={`Extension ${
                 preferences?.extensionEnabled ? "enabled" : "disabled"

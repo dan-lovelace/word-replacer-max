@@ -126,6 +126,14 @@ export default function ReplacementInput({
           onInput={handleTextChange}
           style={{
             width: inputWidth,
+
+            /**
+             * FIX: When certain child classes do not exist within Bootstrap's
+             * `input-group`, the input's border radii are removed so we re-set
+             * them here.
+             */
+            borderBottomRightRadius: "var(--bs-border-radius)",
+            borderTopRightRadius: "var(--bs-border-radius)",
           }}
           data-testid="replacement-text-input"
         />
