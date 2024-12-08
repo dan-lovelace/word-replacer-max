@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 import Box from "@mui/material/Box/Box";
 import { ButtonOwnProps } from "@mui/material/Button/Button";
 import Grid2 from "@mui/material/Grid2/Grid2";
@@ -6,8 +8,8 @@ import Typography from "@mui/material/Typography/Typography";
 
 import { getEnvConfig } from "@worm/shared/src/config";
 
-import chromeLogo from "../../assets/chrome-logo.svg";
-import firefoxLogo from "../../assets/firefox-logo.svg";
+import chromeLogo from "../../assets/chromeLogo";
+import firefoxLogo from "../../assets/firefoxLogo";
 
 import Button from "../button/Button";
 import Link from "../link/Link";
@@ -15,7 +17,7 @@ import Link from "../link/Link";
 const envConfig = getEnvConfig();
 
 type StoreLinkProps = {
-  imageSrc: string;
+  image: ReactNode;
   text: string;
   to: string;
 };
@@ -25,20 +27,34 @@ type StoreLinksProps = {
   noLines?: boolean;
 };
 
-function StoreLink({ imageSrc, text, to, ...rest }: StoreLinkProps) {
+function StoreLink({ image, text, to, ...rest }: StoreLinkProps) {
   return (
     <Link tabIndex={-1} to={to}>
       <Button variant="contained" {...rest} sx={{ py: 1, width: 1 }}>
-        <img src={imageSrc} />
-        <Typography
-          sx={{
-            fontSize: "1.5rem",
-            fontWeight: "bold",
-            ml: { xs: 1, sm: 2 },
-          }}
+        <Box
+          component="span"
+          sx={{ alignItems: "center", display: "inline-flex", gap: 2 }}
         >
-          {text}
-        </Typography>
+          <Box
+            component="span"
+            sx={{
+              alignItems: "center",
+              display: "inline-flex",
+              height: 24,
+              width: 24,
+            }}
+          >
+            {image}
+          </Box>
+          <Typography
+            sx={{
+              fontSize: "1.5rem",
+              fontWeight: "bold",
+            }}
+          >
+            {text}
+          </Typography>
+        </Box>
       </Button>
     </Link>
   );
@@ -75,7 +91,7 @@ export default function StoreLinks({
       )}
       <Grid2 offset={{ xs: 1, sm: 2, md: 2 }} size={{ xs: 10, sm: 8, md: 4 }}>
         <StoreLink
-          imageSrc={chromeLogo}
+          image={chromeLogo}
           text="Chrome"
           to={envConfig.VITE_EXTENSION_STORE_URL_CHROME}
           {...buttonProps}
@@ -83,7 +99,7 @@ export default function StoreLinks({
       </Grid2>
       <Grid2 offset={{ xs: 1, sm: 2, md: 0 }} size={{ xs: 10, sm: 8, md: 4 }}>
         <StoreLink
-          imageSrc={firefoxLogo}
+          image={firefoxLogo}
           text="Firefox"
           to={envConfig.VITE_EXTENSION_STORE_URL_FIREFOX}
           {...buttonProps}
