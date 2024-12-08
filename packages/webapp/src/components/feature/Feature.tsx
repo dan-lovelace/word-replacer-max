@@ -48,16 +48,22 @@ export default function Feature({
             <Typography variant="h3" sx={{ fontWeight: 500, mb: 1 }}>
               {heading}
             </Typography>
-            <Typography variant="h6" sx={{ mb: 8 }}>
+            <Typography variant="h6" sx={{ mb: 10 }}>
               {subheading}
             </Typography>
             <motion.div variants={motionVariants}>
-              <Box sx={{ position: "relative", px: { xs: 2, sm: 4 } }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  position: "relative",
+                  px: 4,
+                }}
+              >
                 <Box
                   sx={{
                     aspectRatio: 1,
                     borderRadius: "50%",
-                    height: "102%",
+                    height: "105%",
                     left: "50%",
                     outline: "40px solid",
                     outlineColor: color,

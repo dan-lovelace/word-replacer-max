@@ -127,9 +127,9 @@ export default function HomePage() {
         </Container>
       </Hero>
 
-      <Box>
+      <Container>
         <Features />
-      </Box>
+      </Container>
 
       <Hero>
         <Container>
