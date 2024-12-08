@@ -14,8 +14,8 @@ import Hero from "../containers/Hero";
 
 export default function HomePage() {
   const [heroHeight, setHeroHeight] = useState<string>("100dvh");
-
-  const { palette } = useTheme();
+  const [isInitialized, setIsInitialized] = useState(false);
+  const [windowHeight, setWindowHeight] = useState<number>();
 
   const heroRef = useRef<HTMLDivElement>(null);
   const heroRefCurrent = heroRef.current;
@@ -24,10 +24,21 @@ export default function HomePage() {
     function resizeListener(event: UIEvent) {
       const heroHeightValue =
         heroRefCurrent?.getBoundingClientRect().height ?? -1;
-      const windowHeight = (event.currentTarget as Window).innerHeight;
+      const currentWindowHeight =
+        windowHeight ?? (event.currentTarget as Window).innerHeight;
 
-      if (windowHeight > heroHeightValue) {
-        return setHeroHeight(`${windowHeight - 80}px`);
+      if (currentWindowHeight > 0) {
+        setWindowHeight(currentWindowHeight);
+      }
+
+      const triggerHeight = currentWindowHeight - 100;
+
+      if (!isInitialized) {
+        setIsInitialized(true);
+      }
+
+      if (triggerHeight > heroHeightValue) {
+        return setHeroHeight(`${triggerHeight}px`);
       }
 
       setHeroHeight(`${Math.round(heroHeightValue)}px`);
@@ -50,6 +61,8 @@ export default function HomePage() {
           display: "flex",
           height: heroHeight,
           justifyContent: "center",
+          opacity: isInitialized ? 1 : 0,
+          transition: "opacity 40ms 140ms",
         }}
       >
         <Hero ref={heroRef}>
