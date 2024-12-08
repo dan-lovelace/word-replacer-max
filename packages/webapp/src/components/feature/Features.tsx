@@ -5,28 +5,28 @@ type FeaturesProps = {};
 const features = [
   {
     color: "#fee440",
-    heading: "Personalized replacement rules",
+    heading: "Powerful Text Replacement",
     id: "rules",
     subheading: "Match by case, whole word and regular expression",
   },
   {
     color: "#00bbf9",
-    heading: "Flexible domain settings",
+    heading: "Flexible Domain Settings",
     id: "domains",
     subheading: "Choose where replacements occur with site-specific control",
   },
   {
     color: "#f15bb5",
-    heading: "Shareable rulesets",
+    heading: "Shareable Rules",
     id: "share",
-    subheading: "Share your rules with friends and teammates",
+    subheading: "Share your replacement rules with friends and teammates",
   },
   {
     color: "#00f5d4",
-    heading: "AI replacement suggestions",
+    heading: "Inspirational AI Suggestions",
     id: "ai-suggestions",
     subheading:
-      "Leverage the power of AI to get replacement inspiration in your chosen style",
+      "Leverage the power of AI to get replacement ideas in your desired style",
   },
   // NOTE: Next color: "#9b5de5"
 ];

@@ -12,6 +12,10 @@ export function getEnvConfig(): Required<ViteEnvConfig> {
     "VITE_EXTENSION_STORE_URL_CHROME is required"
   );
   assert(
+    values.VITE_EXTENSION_STORE_URL_EDGE,
+    "VITE_EXTENSION_STORE_URL_EDGE is required"
+  );
+  assert(
     values.VITE_EXTENSION_STORE_URL_FIREFOX,
     "VITE_EXTENSION_STORE_URL_FIREFOX is required"
   );

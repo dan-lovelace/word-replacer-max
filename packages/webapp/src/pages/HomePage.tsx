@@ -87,13 +87,6 @@ export default function HomePage() {
                 today.
               </Typography>
             </Container>
-            <Typography
-              gutterBottom
-              variant="subtitle2"
-              sx={{ color: "text.secondary" }}
-            >
-              Select your browser of choice
-            </Typography>
             <StoreLinks />
           </Container>
         </Hero>
@@ -119,7 +112,7 @@ export default function HomePage() {
               Visit the extension store today
             </Typography>
           </Box>
-          <StoreLinks noLines />
+          <StoreLinks />
         </Container>
       </Hero>
 

@@ -116,7 +116,7 @@ export default function NewsletterSignup() {
 
   return (
     <Container disableGutters maxWidth="sm" sx={{ textAlign: "center" }}>
-      <Typography variant="h4" sx={{ fontWeight: 600, mb: 0.5 }}>
+      <Typography variant="h4" sx={{ fontWeight: 500, mb: 0.5 }}>
         Stay in the loop
       </Typography>
       <Box ref={containerRef} sx={{ position: "relative" }}>

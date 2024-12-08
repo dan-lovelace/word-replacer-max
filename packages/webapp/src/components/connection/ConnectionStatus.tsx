@@ -9,6 +9,7 @@ import Tooltip, { TooltipProps } from "@mui/material/Tooltip/Tooltip";
 import { getEnvConfig } from "@worm/shared/src/config";
 
 import chromeLogo from "../../assets/chromeLogo";
+import edgeLogo from "../../assets/edgeLogo";
 import firefoxLogo from "../../assets/firefoxLogo";
 import { useAuthProvider } from "../../lib/auth/AuthProvider";
 import { useConnectionProvider } from "../../lib/connection/ConnectionProvider";
@@ -92,6 +93,21 @@ export default function ConnectionStatus() {
               }}
             >
               {chromeLogo}
+            </Link>
+          </Box>
+        </Tooltip>
+        <Tooltip title="Get for Edge">
+          <Box>
+            <Link
+              to={envConfig.VITE_EXTENSION_STORE_URL_EDGE}
+              sx={{
+                color: "text.primary",
+                display: "block",
+                height: 24,
+                width: 24,
+              }}
+            >
+              {edgeLogo}
             </Link>
           </Box>
         </Tooltip>

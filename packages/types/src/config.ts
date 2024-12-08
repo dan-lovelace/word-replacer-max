@@ -29,6 +29,7 @@ export type ViteEnvConfig = {
   readonly VITE_API_ORIGIN?: string;
   readonly VITE_COPYRIGHT_YEAR?: string;
   readonly VITE_EXTENSION_STORE_URL_CHROME?: string;
+  readonly VITE_EXTENSION_STORE_URL_EDGE?: string;
   readonly VITE_EXTENSION_STORE_URL_FIREFOX?: string;
   readonly VITE_RECAPTCHA_SITE_KEY?: string;
 
