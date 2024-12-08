@@ -111,66 +111,6 @@ export default function DomainInput() {
     <div className="container-fluid gx-0 d-flex flex-column gap-3">
       <div className="row">
         <div className="col-12 col-lg-8">
-          <div className="fw-bold fs-5">{lang.REPLACEMENT_SCOPE_HEADING}</div>
-          <div className="fs-sm mb-2">{lang.REPLACEMENT_SCOPE_SUB_HEADING}</div>
-          <div className="d-flex flex-column gap-2">
-            <div className="form-check d-flex align-items-center m-0">
-              <div>
-                <input
-                  checked={isDenying}
-                  className="form-check-input"
-                  id="denyRadio"
-                  name="deny"
-                  type="radio"
-                  onChange={handleEffectChange("deny")}
-                />
-                <label className="form-check-label" for="denyRadio">
-                  <span className="fw-medium">
-                    {lang.LIST_EFFECT_BLOCKLIST_NAME}
-                  </span>{" "}
-                  - {lang.LIST_EFFECT_BLOCKLIST_LABEL}
-                </label>
-              </div>
-              &nbsp;
-              <Tooltip title={lang.LIST_EFFECT_BLOCKLIST_DESCRIPTION}>
-                <MaterialIcon
-                  className="text-body-tertiary"
-                  name="info"
-                  size="sm"
-                />
-              </Tooltip>
-            </div>
-            <div className="form-check d-flex align-items-center m-0">
-              <div>
-                <input
-                  checked={!isDenying}
-                  className="form-check-input"
-                  id="allowRadio"
-                  name="allow"
-                  type="radio"
-                  onChange={handleEffectChange("allow")}
-                />
-                <label className="form-check-label" for="allowRadio">
-                  <span className="fw-medium">
-                    {lang.LIST_EFFECT_ALLOWLIST_NAME}
-                  </span>{" "}
-                  - {lang.LIST_EFFECT_ALLOWLIST_LABEL}
-                </label>
-              </div>
-              &nbsp;
-              <Tooltip title={lang.LIST_EFFECT_ALLOWLIST_DESCRIPTION}>
-                <MaterialIcon
-                  className="text-body-tertiary"
-                  name="info"
-                  size="sm"
-                />
-              </Tooltip>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="row">
-        <div className="col-12 col-lg-8">
           <div className="fw-bold fs-5 mb-1">{lang.DOMAINS_LIST_HEADING}</div>
           <form
             className="position-relative flex-fill"
@@ -227,6 +167,66 @@ export default function DomainInput() {
           >
             {lang.ADD_CURRENT_DOMAIN_BUTTON_TEXT} ({currentHostname})
           </Button>
+        </div>
+      </div>
+      <div className="row">
+        <div className="col-12 col-lg-8">
+          <div className="fw-bold fs-5">{lang.REPLACEMENT_SCOPE_HEADING}</div>
+          <div className="fs-sm mb-2">{lang.REPLACEMENT_SCOPE_SUB_HEADING}</div>
+          <div className="d-flex flex-column gap-2">
+            <div className="form-check d-flex align-items-center m-0">
+              <div>
+                <input
+                  checked={isDenying}
+                  className="form-check-input"
+                  id="denyRadio"
+                  name="deny"
+                  type="radio"
+                  onChange={handleEffectChange("deny")}
+                />
+                <label className="form-check-label" for="denyRadio">
+                  <span className="fw-medium">
+                    {lang.LIST_EFFECT_BLOCKLIST_NAME}
+                  </span>{" "}
+                  - {lang.LIST_EFFECT_BLOCKLIST_LABEL}
+                </label>
+              </div>
+              &nbsp;
+              <Tooltip title={lang.LIST_EFFECT_BLOCKLIST_DESCRIPTION}>
+                <MaterialIcon
+                  className="text-body-tertiary"
+                  name="info"
+                  size="sm"
+                />
+              </Tooltip>
+            </div>
+            <div className="form-check d-flex align-items-center m-0">
+              <div>
+                <input
+                  checked={!isDenying}
+                  className="form-check-input"
+                  id="allowRadio"
+                  name="allow"
+                  type="radio"
+                  onChange={handleEffectChange("allow")}
+                />
+                <label className="form-check-label" for="allowRadio">
+                  <span className="fw-medium">
+                    {lang.LIST_EFFECT_ALLOWLIST_NAME}
+                  </span>{" "}
+                  - {lang.LIST_EFFECT_ALLOWLIST_LABEL}
+                </label>
+              </div>
+              &nbsp;
+              <Tooltip title={lang.LIST_EFFECT_ALLOWLIST_DESCRIPTION}>
+                <MaterialIcon
+                  className="text-body-tertiary"
+                  name="info"
+                  size="sm"
+                />
+              </Tooltip>
+            </div>
+          </div>
         </div>
       </div>
     </div>
