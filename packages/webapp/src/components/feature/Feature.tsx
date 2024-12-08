@@ -56,7 +56,7 @@ export default function Feature({
                 sx={{
                   display: "flex",
                   position: "relative",
-                  px: 4,
+                  px: { xs: 2, sm: 4 },
                 }}
               >
                 <Box

@@ -129,6 +129,7 @@ export default function NewsletterSignup() {
             label="Email"
             name="email"
             required
+            size="small"
             slotProps={{
               input: {
                 endAdornment: (

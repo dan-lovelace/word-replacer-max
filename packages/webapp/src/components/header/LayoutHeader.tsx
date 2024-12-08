@@ -5,6 +5,7 @@ import Stack from "@mui/material/Stack/Stack";
 import Toolbar from "@mui/material/Toolbar/Toolbar";
 import Typography from "@mui/material/Typography/Typography";
 
+import logo from "../../assets/wrm-logo.png";
 import { useAuthProvider } from "../../lib/auth/AuthProvider";
 import { useConnectionProvider } from "../../lib/connection/ConnectionProvider";
 import { ROUTES } from "../../lib/routes";
@@ -43,7 +44,7 @@ export default function LayoutHeader() {
                 <Box
                   component="img"
                   alt="Word Replacer Max logo"
-                  src="/logo_128.png"
+                  src={logo}
                   sx={{
                     height: 1,
                   }}

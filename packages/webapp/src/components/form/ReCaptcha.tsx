@@ -51,6 +51,7 @@ export default function ReCaptcha({
   return (
     <IconButton
       className={cx(className, "g-recaptcha")}
+      size="small"
       {...rest}
       aria-label="Google reCAPTCHA"
     >
