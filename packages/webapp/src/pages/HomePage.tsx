@@ -75,7 +75,7 @@ export default function HomePage() {
                 fontWeight: 600,
               }}
             >
-              Make the web speak your language
+              Your web, your words
             </Typography>
             <Container>
               <Typography
