@@ -1,8 +1,12 @@
 import { createContext } from "preact";
-import { useContext, useMemo } from "preact/hooks";
+import { useContext, useEffect, useMemo } from "preact/hooks";
 
 import { decodeJWT } from "aws-amplify/auth";
 
+import {
+  connectionManager,
+  ConnectMessageSender,
+} from "@worm/shared/src/browser";
 import {
   getJWTAppUser,
   groupsHavePermission,
@@ -20,6 +24,8 @@ type AuthStore = {
   hasAccess: (permission: UserPermission) => boolean;
 };
 
+export const AUTH_MESSAGE_SENDER: ConnectMessageSender = "auth-store";
+
 const Auth = createContext<AuthStore>({} as AuthStore);
 
 export const useAuth = () => useContext(Auth);
@@ -31,8 +37,15 @@ export function AuthProvider({ children }: { children: PreactChildren }) {
     },
   } = useConfig();
 
+  useEffect(() => {
+    /**
+     * Send an initial request to refresh current user in storage.
+     */
+    connectionManager.sendMessage(AUTH_MESSAGE_SENDER, "currentUserRequest");
+  }, []);
+
   /**
-   * Construct the current user object.
+   * Construct the current user object using storage values.
    */
   const currentUser = useMemo<AppUser>(() => {
     if (authLastAuthUser === undefined) {
@@ -40,12 +53,13 @@ export function AuthProvider({ children }: { children: PreactChildren }) {
     }
 
     const jwtAppUser = getJWTAppUser(authIdToken);
-
-    return {
+    const appUser: AppUser = {
       email: authLastAuthUser,
       emailVerified: Boolean(jwtAppUser?.emailVerified),
       termsAcceptance: jwtAppUser?.termsAcceptance,
     };
+
+    return appUser;
   }, [authIdToken, authLastAuthUser]);
 
   const hasAccess = (permission: UserPermission) => {

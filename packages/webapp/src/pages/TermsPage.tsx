@@ -6,7 +6,7 @@ export default function TermsPage() {
   return (
     <Container>
       <h1>Terms and Conditions</h1>
-      <p>Last updated: October 6, 2024</p>
+      <p>Last updated: December 7, 2024</p>
       <p>
         Please read these terms and conditions carefully before using Our
         Service.

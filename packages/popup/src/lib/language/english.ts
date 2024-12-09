@@ -58,7 +58,9 @@ export default {
     ADD_CURRENT_DOMAIN_BUTTON_TEXT: "Add current site",
     DOMAINS_LIST_HEADING: "Domain List",
     EMPTY_DOMAINS_LIST_ALERT_TITLE: "No domains",
-    EMPTY_DOMAINS_LIST_ALERT_BODY:
+    EMPTY_DOMAINS_LIST_ALERT_BODY_ALLOW:
+      "None of your replacements are being applied. To starting replacing on specific sites, add them to your domains list. Alternatively, change your list type to 'Blocklist' to use your rules more broadly.",
+    EMPTY_DOMAINS_LIST_ALERT_BODY_DENY:
       "Text replacements are active on all websites. To limit replacements to specific sites, add them to your domains list.",
     LIST_EFFECT_ALLOWLIST_DESCRIPTION:
       "Word replacements will only work on the domains you list",
@@ -73,8 +75,6 @@ export default {
       "Choose how you want to control which websites use your replacements.",
   },
   options: {
-    CLIPBOARD_COPY_ERROR: "Unable to copy to clipboard.",
-    CLIPBOARD_COPY_SUCCESS: "Copied to clipboard.",
     CORRUPTED_IMPORT_CONTENT: "It looks like your export file is corrupted.",
     DIRECT_UPLOAD_DISALLOWED:
       "We opened this tab for you because Firefox can't upload files directly into the extension's popup window. Feel free to import your files here and close this window when you're done.",
@@ -87,10 +87,14 @@ export default {
     LINK_IMPORT_SUCCESS: "Rules from link imported successfully.",
     POPUP_BLOCKED:
       "Unable to pop extension out. Please disable popup blockers for this page.",
+    SHAREABLE_LINK_CLIPBOARD_COPY_ERROR:
+      "Not allowed to copy link to clipboard.",
+    SHAREABLE_LINK_CLIPBOARD_COPY_SUCCESS:
+      "Shareable link copied to clipboard.",
   },
   rules: {
-    EMPTY_RULES_LIST_ALERT_TITLE: "No rules",
-    EMPTY_RULES_LIST_ALERT_BODY: "Create a rule to start replacing text again.",
+    EMPTY_RULES_LIST_ALERT_TITLE: "No active rules",
+    EMPTY_RULES_LIST_ALERT_BODY: "Add a rule to start replacing text again.",
     REFRESH_REQUIRED: "You must refresh the page to see these changes.",
   },
   support: {

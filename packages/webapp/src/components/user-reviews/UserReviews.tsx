@@ -81,7 +81,12 @@ const userReviews: UserReview[] = [
     rating: 5,
     text: "Nov 18, 2024",
   },
-].reverse();
+  {
+    author: "Chrome user",
+    rating: 5,
+    text: "Dec 8, 2024",
+  },
+];
 
 export default function UserReviews() {
   const { breakpoints, palette } = useTheme();
@@ -89,6 +94,12 @@ export default function UserReviews() {
 
   return (
     <Box id="user-reviews">
+      <Typography
+        variant="h4"
+        sx={{ fontWeight: 500, mb: 2, textAlign: "center" }}
+      >
+        What our users are thinking
+      </Typography>
       <Marquee
         className="user-reviews__marquee"
         gradient
@@ -137,9 +148,14 @@ export default function UserReviews() {
                   sx={{
                     alignItems: "end",
                     display: "flex",
+                    justifyContent: "end",
                   }}
                 >
-                  <Typography color="text.secondary" variant="subtitle2">
+                  <Typography
+                    color="text.secondary"
+                    variant="subtitle2"
+                    sx={{ mb: "1px" }}
+                  >
                     <em>{review.author}</em>
                   </Typography>
                 </Grid2>

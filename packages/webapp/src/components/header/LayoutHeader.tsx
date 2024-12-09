@@ -5,6 +5,7 @@ import Stack from "@mui/material/Stack/Stack";
 import Toolbar from "@mui/material/Toolbar/Toolbar";
 import Typography from "@mui/material/Typography/Typography";
 
+import logo from "../../assets/wrm-logo.png";
 import { useAuthProvider } from "../../lib/auth/AuthProvider";
 import { useConnectionProvider } from "../../lib/connection/ConnectionProvider";
 import { ROUTES } from "../../lib/routes";
@@ -29,11 +30,16 @@ export default function LayoutHeader() {
             gap: 2,
           }}
         >
-          <Stack
-            direction="row"
-            sx={{ alignItems: "center", flex: "1 1 auto", gap: 2 }}
-          >
-            <Link to={ROUTES.HOME}>
+          <Stack direction="row" sx={{ flex: "1 1 auto" }}>
+            <Link
+              to={ROUTES.HOME}
+              sx={{
+                alignItems: "center",
+                display: "flex",
+                color: "common.white",
+                gap: 2,
+              }}
+            >
               <Box
                 sx={{
                   height: 32,
@@ -43,23 +49,24 @@ export default function LayoutHeader() {
                 <Box
                   component="img"
                   alt="Word Replacer Max logo"
-                  src="/preload/logo_128.png"
+                  src={logo}
                   sx={{
                     height: 1,
                   }}
                 />
               </Box>
+              <Typography
+                variant="h6"
+                sx={{
+                  display: { xs: "none", md: "block" },
+                  fontWeight: "bold",
+                  marginTop: "2px",
+                  userSelect: "none",
+                }}
+              >
+                Word Replacer Max
+              </Typography>
             </Link>
-            <Typography
-              variant="h6"
-              sx={{
-                display: { xs: "none", md: "block" },
-                fontWeight: "bold",
-                userSelect: "none",
-              }}
-            >
-              Word Replacer Max
-            </Typography>
           </Stack>
           <Stack
             direction="row"

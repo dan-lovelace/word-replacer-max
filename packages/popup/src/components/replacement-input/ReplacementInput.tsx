@@ -126,10 +126,18 @@ export default function ReplacementInput({
           onInput={handleTextChange}
           style={{
             width: inputWidth,
+
+            /**
+             * FIX: When certain child classes do not exist within Bootstrap's
+             * `input-group`, the input's border radii are removed so we re-set
+             * them here.
+             */
+            borderBottomRightRadius: "var(--bs-border-radius)",
+            borderTopRightRadius: "var(--bs-border-radius)",
           }}
           data-testid="replacement-text-input"
         />
-        {canSuggest && (
+        <div className={cx(!canSuggest && "d-none")}>
           <ReplacementSuggest
             active={active}
             disabled={disabled}
@@ -140,7 +148,7 @@ export default function ReplacementInput({
             onReplacementChange={onChange}
             setValue={setValue}
           />
-        )}
+        </div>
         {replacementStyle?.active && (
           <IconButton
             className={cx(ICON_BUTTON_BASE_CLASS, "px-2")}
@@ -154,11 +162,9 @@ export default function ReplacementInput({
               className: "text-secondary",
               size: "sm",
             }}
-            title={
-              useGlobalReplacementStyle
-                ? "Replacement Style Enabled"
-                : "Replacement Style Disabled"
-            }
+            title={`Replacement style ${
+              useGlobalReplacementStyle ? "enabled" : "disabled"
+            }`}
             onClick={handleReplacementStyleChange}
             data-testid="replacement-style-button"
           />

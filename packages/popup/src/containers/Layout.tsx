@@ -100,7 +100,7 @@ export default function Layout({ children }: LayoutProps) {
 
     if (!newEnabled) {
       showToast({
-        message: language.rules.REFRESH_REQUIRED,
+        message: `Extension disabled. ${language.rules.REFRESH_REQUIRED}`,
         options: { showRefresh: true },
       });
     }
@@ -152,18 +152,26 @@ export default function Layout({ children }: LayoutProps) {
         <div className="d-flex w-100">
           <div className="d-flex align-items-center justify-content-center border-bottom">
             <IconButton
-              className={cx(
-                ICON_BUTTON_BASE_CLASS,
-                "px-3",
-                preferences?.extensionEnabled ? "text-success" : "text-danger"
-              )}
               icon="power_settings_new"
               iconProps={{
                 style: {
-                  marginTop: 2,
+                  borderRadius: "100%",
+                  boxShadow: preferences?.extensionEnabled
+                    ? "inset rgba(0, 0, 0, 0.2) 0px 0px 3px 1px"
+                    : "rgba(0, 0, 0, 0.2) 0px 0px 2px 1px",
+                  color: preferences?.extensionEnabled
+                    ? "var(--bs-green)"
+                    : "rgba(var(--bs-tertiary-color-rgb), 0.15)",
+                  padding: "5px 4px 3px",
+                  transition: "all 150ms",
                 },
               }}
-              title="Toggle Extension On/Off"
+              style={{
+                padding: "4px 12px",
+              }}
+              title={`Extension ${
+                preferences?.extensionEnabled ? "enabled" : "disabled"
+              }`}
               onClick={handleExtensionEnabledClick}
             />
           </div>
@@ -249,12 +257,25 @@ export default function Layout({ children }: LayoutProps) {
                     </>
                   ) : (
                     <>
-                      <MenuItemContainer
-                        className="bg-primary-subtle fw-bold"
+                      <div
+                        className="border-bottom"
                         data-testid="account-dropdown-signed-out-container"
                       >
-                        Sign in to get more
-                      </MenuItemContainer>
+                        <MenuItemContainer className="bg-primary-subtle fw-bold">
+                          Sign in to get more
+                        </MenuItemContainer>
+                        <div className="my-1">
+                          <MenuItem
+                            linkProps={{
+                              href: envConfig.VITE_SSM_WEBAPP_ORIGIN,
+                              target: "_blank",
+                            }}
+                            startIcon="open_in_new"
+                          >
+                            Visit homepage
+                          </MenuItem>
+                        </div>
+                      </div>
                       <DropdownMenuContainer data-testid="account-dropdown-signed-out-menu-container">
                         <MenuItem
                           linkProps={{

@@ -1,5 +1,7 @@
 import { useEffect } from "react";
 
+import IconButton from "@mui/material/IconButton/IconButton";
+
 import { cx } from "@worm/shared";
 import { getEnvConfig } from "@worm/shared/src/config";
 
@@ -47,8 +49,13 @@ export default function ReCaptcha({
   }, []);
 
   return (
-    <Button className={cx(className, "g-recaptcha")} {...rest}>
+    <IconButton
+      className={cx(className, "g-recaptcha")}
+      size="small"
+      {...rest}
+      aria-label="Google reCAPTCHA"
+    >
       {children}
-    </Button>
+    </IconButton>
   );
 }

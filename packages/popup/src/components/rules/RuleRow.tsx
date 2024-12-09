@@ -185,7 +185,7 @@ export default function RuleRow({
             data-testid="active-toggle"
             id={`active-check-${identifier}`}
             role="switch"
-            title={active ? "Rule Enabled" : "Rule Disabled"}
+            title={active ? "Rule enabled" : "Rule disabled"}
             type="checkbox"
             onChange={handleActiveChange(identifier)}
           />
@@ -237,7 +237,7 @@ export default function RuleRow({
             iconProps={{
               size: "sm",
             }}
-            title={isConfirmingDelete ? "Confirm" : "Delete Rule"}
+            title={isConfirmingDelete ? "Confirm delete rule" : "Delete rule"}
             onBlur={() => clickawayListener(new MouseEvent(""))}
             onClick={handleDeleteClick}
           />

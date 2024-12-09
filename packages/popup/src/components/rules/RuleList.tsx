@@ -25,10 +25,7 @@ export default function RuleList() {
           >
             {lang.EMPTY_RULES_LIST_ALERT_BODY}
             <div className="mt-3">
-              <AddNewRule
-                className="btn btn-primary btn-sm"
-                text="Create new rule"
-              />
+              <AddNewRule className="btn btn-primary btn-sm" text="Add rule" />
             </div>
           </Alert>
         </div>
@@ -38,7 +35,7 @@ export default function RuleList() {
 
   return (
     <>
-      <div className="row gx-3 gy-2">
+      <div className="row gx-3 gy-2" data-testid="rule-list-wrapper">
         {matchers?.map((matcher) => (
           <div
             key={matcher.identifier}
@@ -50,7 +47,11 @@ export default function RuleList() {
           </div>
         ))}
       </div>
-      <div className="ps-5 pt-2">
+      <div
+        className="pt-2"
+        style={{ paddingLeft: 43 }}
+        data-testid="rule-list-actions"
+      >
         <AddNewRule />
       </div>
     </>

@@ -12,7 +12,9 @@ describe("replacement suggest", () => {
       cy.visitWithStorage();
 
       selectors.ruleRowsFirst().within(() => {
-        selectors.rules.replacementSuggest.dropdownToggle().should("not.exist");
+        selectors.rules.replacementSuggest
+          .dropdownToggle()
+          .should("not.be.visible");
       });
     });
 
@@ -26,7 +28,9 @@ describe("replacement suggest", () => {
       });
 
       selectors.ruleRowsFirst().within(() => {
-        selectors.rules.replacementSuggest.dropdownToggle().should("not.exist");
+        selectors.rules.replacementSuggest
+          .dropdownToggle()
+          .should("not.be.visible");
       });
     });
 
@@ -40,7 +44,9 @@ describe("replacement suggest", () => {
       });
 
       selectors.ruleRowsFirst().within(() => {
-        selectors.rules.replacementSuggest.dropdownToggle().should("not.exist");
+        selectors.rules.replacementSuggest
+          .dropdownToggle()
+          .should("not.be.visible");
       });
     });
 
@@ -50,7 +56,9 @@ describe("replacement suggest", () => {
       cy.appUserLogin();
 
       selectors.ruleRowsFirst().within(() => {
-        selectors.rules.replacementSuggest.dropdownToggle().should("not.exist");
+        selectors.rules.replacementSuggest
+          .dropdownToggle()
+          .should("not.be.visible");
       });
     });
 
@@ -66,7 +74,9 @@ describe("replacement suggest", () => {
       cy.appUserLogin();
 
       selectors.ruleRowsFirst().within(() => {
-        selectors.rules.replacementSuggest.dropdownToggle().should("not.exist");
+        selectors.rules.replacementSuggest
+          .dropdownToggle()
+          .should("not.be.visible");
       });
     });
 

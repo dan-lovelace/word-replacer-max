@@ -6,8 +6,9 @@ import Stack from "@mui/material/Stack/Stack";
 import useTheme from "@mui/material/styles/useTheme";
 import Typography from "@mui/material/Typography/Typography";
 
+import { getEnvConfig } from "@worm/shared/src/config";
 import {
-  MAILTO_CONTACT_SUPPORT_URL,
+  MAILTO_CONTACT_GENERAL_EMAIL,
   PUBLIC_GITHUB_REPOSITORY_URL,
 } from "@worm/shared/src/support";
 
@@ -15,6 +16,8 @@ import githubLogo from "../../assets/githubLogo";
 import { ROUTES } from "../../lib/routes";
 
 import Link from "../link/Link";
+
+const envConfig = getEnvConfig();
 
 export default function LayoutFooter() {
   const { palette } = useTheme();
@@ -24,12 +27,17 @@ export default function LayoutFooter() {
       <Container sx={{ py: 3 }}>
         <Grid2
           container
-          spacing={2}
-          sx={{ textAlign: { xs: "center", md: "left" } }}
+          spacing={{ xs: 4, md: 2 }}
+          sx={{
+            alignItems: "center",
+            flexWrap: { xs: "wrap-reverse", md: "unset" },
+            textAlign: { xs: "center", md: "left" },
+          }}
         >
           <Grid2 size={{ xs: 12, md: 6 }}>
             <Typography variant="body2">
-              Copyright &copy; 2024 Word Replacer Max, LLC, All rights reserved
+              Copyright &copy; {envConfig.VITE_COPYRIGHT_YEAR} Word Replacer
+              Max, LLC, All rights reserved
             </Typography>
           </Grid2>
           <Grid2 size={{ xs: 12, md: 6 }}>
@@ -49,7 +57,7 @@ export default function LayoutFooter() {
                 {githubLogo}
               </Link>
               <Divider orientation="vertical" flexItem />
-              <Link to={MAILTO_CONTACT_SUPPORT_URL}>
+              <Link to={MAILTO_CONTACT_GENERAL_EMAIL}>
                 <Typography variant="body2">Contact</Typography>
               </Link>
               <Divider orientation="vertical" flexItem />

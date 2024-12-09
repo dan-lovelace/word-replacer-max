@@ -36,17 +36,17 @@ const queryPatternMetadata: {
 }[] = [
   {
     icon: caseIcon,
-    title: "Match Case",
+    title: "Match case",
     value: "case",
   },
   {
     icon: wholeWordIcon,
-    title: "Match Whole Word",
+    title: "Match whole word",
     value: "wholeWord",
   },
   {
     icon: regexIcon,
-    title: "Use Regular Expression",
+    title: "Use regular expression",
     value: "regex",
   },
 ];
