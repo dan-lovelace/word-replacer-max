@@ -142,5 +142,13 @@ export async function getManifest(version: number): Promise<Manifest> {
       ];
   }
 
+  /**
+   * Validate resolved manifest.
+   */
+  assert(
+    !manifestBase.permissions?.includes("tabs"),
+    "Manifest permissions may not contain 'tabs' because the extension will prompt for browsing history access"
+  );
+
   return manifestBase;
 }
