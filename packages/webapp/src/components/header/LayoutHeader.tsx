@@ -60,7 +60,6 @@ export default function LayoutHeader() {
                 sx={{
                   display: { xs: "none", md: "block" },
                   fontWeight: "bold",
-                  marginTop: "2px",
                   userSelect: "none",
                 }}
               >
