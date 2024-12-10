@@ -21,7 +21,7 @@ const commonProps: ManifestBase = {
   },
   manifest_version: 0,
   name: "Word Replacer Max",
-  permissions: ["contextMenus", "storage", "tabs"],
+  permissions: ["activeTab", "contextMenus", "storage"],
   version: "",
 };
 
@@ -141,6 +141,14 @@ export async function getManifest(version: number): Promise<Manifest> {
         apiOrigin,
       ];
   }
+
+  /**
+   * Validate resolved manifest.
+   */
+  assert(
+    !manifestBase.permissions?.includes("tabs"),
+    "Manifest permissions may not contain 'tabs' because the extension will prompt for browsing history access"
+  );
 
   return manifestBase;
 }
