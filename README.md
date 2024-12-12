@@ -4,10 +4,10 @@ A browser extension for replacing text on webpages.
 
 ## Available for [<img alt="chrome logo" src="./assets/chrome_logo.svg" /> Chrome](https://chromewebstore.google.com/detail/word-replacer-max/gnemoflnihonmkiacnagnbnlppkamfgo) and [<img alt="firefox logo" src="./assets/firefox_logo.svg" /> Firefox](https://addons.mozilla.org/en-US/firefox/addon/word-replacer-max)
 
-<img alt="replace words and phrases" src="./assets/word-replacer-max-store-page-1.png" style="max-width: 100%; width: 410px"></img>
-<img alt="flexible domain settings" src="./assets/word-replacer-max-store-page-2.png" style="max-width: 100%; width: 410px"></img>
-<img alt="ruleset sharing" src="./assets/word-replacer-max-store-page-3.png" style="max-width: 100%; width: 410px"></img>
-<img alt="highlight and replace" src="./assets/word-replacer-max-store-page-4.png" style="max-width: 100%; width: 410px"></img>
+<img alt="replace words and phrases" src="./assets/store-page-1.png" style="max-width: 100%; width: 410px"></img>
+<img alt="flexible domain settings" src="./assets/store-page-2.png" style="max-width: 100%; width: 410px"></img>
+<img alt="ruleset sharing" src="./assets/store-page-3.png" style="max-width: 100%; width: 410px"></img>
+<img alt="highlight and replace" src="./assets/store-page-5.png" style="max-width: 100%; width: 410px"></img>
 
 # Building locally
 
