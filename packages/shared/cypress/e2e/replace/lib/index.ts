@@ -1,4 +1,5 @@
 import { findText, replaceText } from "@worm/shared/src/replace";
+import { DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE } from "@worm/shared/src/replace/lib/style";
 import { QueryPattern, ReplacementStyle } from "@worm/types/src/replace";
 
 /**
@@ -16,7 +17,11 @@ export function searchAndReplace(
   replaceText(
     results[0],
     query,
-    { queryPatterns, replacement, useGlobalReplacementStyle: true },
+    {
+      queryPatterns,
+      replacement,
+      useGlobalReplacementStyle: DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE,
+    },
     replacementStyle
   );
 }

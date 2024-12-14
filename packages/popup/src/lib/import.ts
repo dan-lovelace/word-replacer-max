@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 
 import { getSchemaByVersion, parseDelimitedString } from "@worm/shared";
+import { DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE } from "@worm/shared/src/replace/lib/style";
 import { storageSetByKeys } from "@worm/shared/src/storage";
 import { Matcher } from "@worm/types/src/rules";
 import { StorageSetOptions } from "@worm/types/src/storage";
@@ -34,6 +35,7 @@ export function importMatchersCSV(
     queries,
     queryPatterns: [],
     replacement: "",
+    useGlobalReplacementStyle: DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE,
   }));
 
   return storageSetByKeys(

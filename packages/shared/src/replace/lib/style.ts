@@ -1,5 +1,6 @@
 import { SystemColor } from "@worm/types";
 import { ReplacementStyle } from "@worm/types/src/replace";
+import { Matcher } from "@worm/types/src/rules";
 
 export const systemColors: Record<SystemColor, string> = {
   /**
@@ -27,6 +28,9 @@ export const DEFAULT_REPLACEMENT_STYLE: ReplacementStyle = {
   color: systemColors.red,
   options: ["backgroundColor"],
 };
+
+export const DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE: Matcher["useGlobalReplacementStyle"] =
+  true;
 
 export const STYLE_ELEMENT_ID = "wrm-style";
 

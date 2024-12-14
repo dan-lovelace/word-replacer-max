@@ -26,3 +26,7 @@ export type MatcherReplaceProps = Pick<
  * A Matcher as stored in the `sync` storage area.
  */
 export type MatcherInSync = Record<string, Matcher>;
+
+export type StorageMatcher = Matcher & {
+  sortIndex?: number;
+};
