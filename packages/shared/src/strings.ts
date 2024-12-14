@@ -33,5 +33,10 @@ export function parseDelimitedString(input: string) {
   }
 
   // clean up quotes from the items
-  return items.map((item) => item.replace(/^"(.*)"$/, "$1"));
+  const unquoted = items.map((item) => item.replace(/^"(.*)"$/, "$1"));
+
+  // clean up empty queries
+  const filtered = unquoted.filter(Boolean);
+
+  return filtered;
 }
