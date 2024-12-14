@@ -21,7 +21,7 @@ const commonProps: ManifestBase = {
   },
   manifest_version: 0,
   name: "Word Replacer Max",
-  permissions: ["activeTab", "contextMenus", "storage"],
+  permissions: ["contextMenus", "storage"],
   version: "",
 };
 
