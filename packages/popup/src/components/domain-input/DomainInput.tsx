@@ -4,29 +4,25 @@ import { JSXInternal } from "preact/src/jsx";
 import { storageSetByKeys } from "@worm/shared/src/storage";
 import { DomainEffect } from "@worm/types/src/popup";
 
-import { useBrowserTabs } from "../../lib/hooks/use-browser-tabs";
 import { useLanguage } from "../../lib/language";
 import { useConfig } from "../../store/Config";
 
 import { useToast } from "../alert/useToast";
 import Alert, { ALERT_SIZES } from "../Alerts";
-import Button from "../button/Button";
 import Chip from "../Chip";
 import MaterialIcon from "../icon/MaterialIcon";
 import Tooltip from "../Tooltip";
-import Slide from "../transition/Slide";
 
 export default function DomainInput() {
   const [value, setValue] = useState("");
 
-  const { currentHostname } = useBrowserTabs();
   const {
     storage: {
       sync: { domainList, preferences },
     },
   } = useConfig();
   const language = useLanguage();
-  const { showRefreshToast, showToast } = useToast();
+  const { showToast } = useToast();
 
   const addNewDomain = (hostname?: string) => {
     if (!hostname || hostname.length === 0) return;
@@ -43,16 +39,9 @@ export default function DomainInput() {
               options: { severity: "danger" },
             });
           },
-          onSuccess: () => {
-            showRefreshToast(hostname === currentHostname);
-          },
         }
       );
     }
-  };
-
-  const handleAddCurrentClick = () => {
-    addNewDomain(currentHostname);
   };
 
   const handleEffectChange = (effect: DomainEffect) => () => {
@@ -63,14 +52,6 @@ export default function DomainInput() {
     storageSetByKeys({
       preferences: newPreferences,
     });
-
-    showRefreshToast(
-      Boolean(
-        currentHostname &&
-          domainList?.includes(currentHostname) &&
-          effect === "deny"
-      )
-    );
   };
 
   const handleFormSubmit = (
@@ -90,8 +71,6 @@ export default function DomainInput() {
     storageSetByKeys({
       domainList: domainList?.filter((d) => d !== domain),
     });
-
-    showRefreshToast(domain === currentHostname);
   };
 
   const handleTextChange = (
@@ -101,9 +80,6 @@ export default function DomainInput() {
   };
 
   const { domains: lang } = language;
-  const canAddCurrentHostname = Boolean(
-    currentHostname && !domainList?.includes(currentHostname)
-  );
   const domainsExist = Boolean(domainList?.length);
   const isDenying = preferences?.domainListEffect === "deny";
 
@@ -117,7 +93,7 @@ export default function DomainInput() {
             onSubmit={handleFormSubmit}
           >
             <div className="pb-2">
-              <Slide isOpen={!domainsExist}>
+              {!domainsExist && (
                 <Alert
                   title={lang.EMPTY_DOMAINS_LIST_ALERT_TITLE}
                   style={{ maxWidth: ALERT_SIZES.sm, transition: "all 90ms" }}
@@ -127,7 +103,7 @@ export default function DomainInput() {
                     ? lang.EMPTY_DOMAINS_LIST_ALERT_BODY_DENY
                     : lang.EMPTY_DOMAINS_LIST_ALERT_BODY_ALLOW}
                 </Alert>
-              </Slide>
+              )}
               {domainsExist && (
                 <div className="d-flex align-items-start flex-wrap gap-1">
                   {domainList?.map((domain, idx) => (
@@ -154,19 +130,6 @@ export default function DomainInput() {
               {lang.ADD_DOMAIN_FORM_SUBMIT_BUTTON_TEXT}
             </button>
           </form>
-
-          <Button
-            className="btn btn-link btn-sm mt-1 text-decoration-none"
-            disabled={!canAddCurrentHostname}
-            startIcon="language"
-            onClick={handleAddCurrentClick}
-            style={{
-              opacity: canAddCurrentHostname ? 1 : 0,
-              transition: "opacity 90ms ease-out",
-            }}
-          >
-            {lang.ADD_CURRENT_DOMAIN_BUTTON_TEXT} ({currentHostname})
-          </Button>
         </div>
       </div>
       <div className="row">
