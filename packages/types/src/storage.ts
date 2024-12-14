@@ -4,7 +4,7 @@ import { z } from "zod";
 import { ApiSuggestResponseData, ToneOption } from "./api";
 import { DomainEffect, ExportLink, PopupTab } from "./popup";
 import { ReplacementStyle, ReplacementSuggest } from "./replace";
-import { Matcher } from "./rules";
+import { Matcher, StorageMatcher } from "./rules";
 
 export const schemaVersions = [1] as const;
 
@@ -100,7 +100,7 @@ export type StorageVersion = (typeof storageVersions)[number];
 export type SyncStorage = Partial<{
   domainList: string[];
   exportLinks: ExportLink[];
-  matchers: Matcher[];
+  matchers: StorageMatcher[];
   preferences: {
     activeTab: PopupTab;
     domainListEffect: DomainEffect;

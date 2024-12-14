@@ -8,6 +8,8 @@ import {
   storageSet,
 } from "@worm/shared/src/storage";
 
+import { DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE } from "../src/replace/lib/style";
+
 jest.mock("@worm/shared/src/config/values", () => ({
   VITE_API_ORIGIN: "https://dev-api.wordreplacermax.com",
 }));
@@ -55,7 +57,7 @@ describe("runStorageMigrations", () => {
         queries: ["my jaw dropped", "I was shocked"],
         queryPatterns: [],
         replacement: "I was surprised",
-        useGlobalReplacementStyle: true,
+        useGlobalReplacementStyle: DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE,
       },
       preferences: {
         activeTab: "rules",

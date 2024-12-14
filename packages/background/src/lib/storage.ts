@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 
+import { DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE } from "@worm/shared/src/replace/lib/style";
 import {
   BASELINE_STORAGE_VERSION,
   runStorageMigrations,
@@ -44,7 +45,7 @@ export async function initializeStorage() {
         queries: ["awesome", "amazing", "insane"],
         queryPatterns: [],
         replacement: "wonderful",
-        useGlobalReplacementStyle: true,
+        useGlobalReplacementStyle: DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE,
       },
       {
         active: true,
@@ -52,7 +53,7 @@ export async function initializeStorage() {
         queries: ["color"],
         queryPatterns: ["wholeWord"],
         replacement: "colour",
-        useGlobalReplacementStyle: true,
+        useGlobalReplacementStyle: DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE,
       },
     ];
 

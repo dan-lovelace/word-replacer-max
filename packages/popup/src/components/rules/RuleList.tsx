@@ -1,3 +1,8 @@
+import { useMemo } from "preact/hooks";
+
+import { sortMatchers } from "@worm/shared/src/browser";
+import { StorageMatcher } from "@worm/types/src/rules";
+
 import { useLanguage } from "../../lib/language";
 import { useConfig } from "../../store/Config";
 
@@ -33,16 +38,21 @@ export default function RuleList() {
     );
   }
 
+  const sortedMatchers: StorageMatcher[] | undefined = useMemo(
+    () => sortMatchers(matchers),
+    [matchers]
+  );
+
   return (
     <>
       <div className="row gx-3 gy-2" data-testid="rule-list-wrapper">
-        {matchers?.map((matcher) => (
+        {sortedMatchers?.map((matcher) => (
           <div
             key={matcher.identifier}
             className="rule-row-wrapper col-12 col-xxl-6 position-relative"
           >
             <div className="container-fluid gx-1">
-              <RuleRow matcher={matcher} matchers={matchers} />
+              <RuleRow matcher={matcher} matchers={sortedMatchers} />
             </div>
           </div>
         ))}

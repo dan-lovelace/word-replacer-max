@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 
 import { browser, popoutExtension } from "@worm/shared/src/browser";
+import { DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE } from "@worm/shared/src/replace/lib/style";
 import { storageGetByKeys, storageSetByKeys } from "@worm/shared/src/storage";
 import { QueryPattern } from "@worm/types/src/replace";
 
@@ -62,7 +63,7 @@ export function startContextMenuListener() {
             queries,
             queryPatterns,
             replacement,
-            useGlobalReplacementStyle: true,
+            useGlobalReplacementStyle: DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE,
           });
           newPreferences.focusRule = identifier;
         }

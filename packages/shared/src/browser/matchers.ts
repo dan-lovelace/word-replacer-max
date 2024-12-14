@@ -1,8 +1,4 @@
-import { Matcher } from "@worm/types/src/rules";
-
-type StorageMatcher = Matcher & {
-  sortIndex: number;
-};
+import { Matcher, StorageMatcher } from "@worm/types/src/rules";
 
 export const STORAGE_MATCHER_PREFIX = "matcher__";
 
@@ -12,22 +8,23 @@ export const STORAGE_MATCHER_PREFIX = "matcher__";
  * `matcher__`.
  */
 export const convertStoredMatchers = (allStorage: Record<string, any>) => {
-  const storedMatchers = Object.keys(allStorage).reduce((acc, val) => {
-    const isMatcher = val.startsWith(STORAGE_MATCHER_PREFIX);
+  const storedMatchers: StorageMatcher[] = Object.keys(allStorage).reduce(
+    (acc, val) => {
+      const isMatcher = val.startsWith(STORAGE_MATCHER_PREFIX);
 
-    if (!isMatcher) return acc;
+      if (!isMatcher) return acc;
 
-    const matcherValue = allStorage[val];
-    delete allStorage[val];
+      const matcherValue = allStorage[val];
+      delete allStorage[val];
 
-    return [...acc, matcherValue];
-  }, [] as StorageMatcher[]);
-
-  const sorted: Matcher[] = storedMatchers.sort(
-    (a, b) => a.sortIndex - b.sortIndex
+      return [...acc, matcherValue];
+    },
+    [] as StorageMatcher[]
   );
 
-  return sorted.length > 0 ? sorted : undefined;
+  const sorted = sortMatchers(storedMatchers);
+
+  return sorted && sorted.length > 0 ? sorted : undefined;
 };
 
 export function matchersFromStorage(allStorage: Record<string, any>) {
@@ -51,4 +48,8 @@ export function matchersToStorage(
     }),
     {} as Record<string, StorageMatcher>
   );
+}
+
+export function sortMatchers(matchers: StorageMatcher[] | undefined) {
+  return matchers?.sort((a, b) => (a.sortIndex ?? 0) - (b.sortIndex ?? 0));
 }

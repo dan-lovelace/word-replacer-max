@@ -6,6 +6,8 @@ import {
 } from "@worm/shared/src/browser/matchers";
 import { Matcher } from "@worm/types/src/rules";
 
+import { DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE } from "../src/replace/lib/style";
+
 jest.mock("@worm/shared/src/config/values", () => ({
   VITE_API_ORIGIN: "https://dev-api.wordreplacermax.com",
 }));
@@ -18,7 +20,7 @@ describe("matchersToStorage", () => {
       queries: ["my jaw dropped", "I was shocked"],
       queryPatterns: [],
       replacement: "I was surprised",
-      useGlobalReplacementStyle: true,
+      useGlobalReplacementStyle: DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE,
     },
     {
       active: true,
@@ -26,7 +28,7 @@ describe("matchersToStorage", () => {
       queries: ["This.", "literally"],
       queryPatterns: ["case", "wholeWord"],
       replacement: "",
-      useGlobalReplacementStyle: true,
+      useGlobalReplacementStyle: DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE,
     },
   ];
 
@@ -108,7 +110,7 @@ describe("matchersFromStorage", () => {
       queries: ["Hello"],
       queryPatterns: ["case", "wholeWord"],
       replacement: "Hi",
-      useGlobalReplacementStyle: true,
+      useGlobalReplacementStyle: DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE,
     };
 
     const testStorage = {

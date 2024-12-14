@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 
+import { DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE } from "@worm/shared/src/replace/lib/style";
 import { storageSetByKeys } from "@worm/shared/src/storage";
 
 import { PreactChildren } from "../../lib/types";
@@ -37,7 +38,7 @@ export default function AddNewRule({
             queries: [],
             queryPatterns: [],
             replacement: "",
-            useGlobalReplacementStyle: true,
+            useGlobalReplacementStyle: DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE,
           },
         ],
       },

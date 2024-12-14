@@ -1,6 +1,9 @@
 import { merge } from "ts-deepmerge";
 
-import { DEFAULT_REPLACEMENT_STYLE } from "@worm/shared/src/replace/lib/style";
+import {
+  DEFAULT_REPLACEMENT_STYLE,
+  DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE,
+} from "@worm/shared/src/replace/lib/style";
 import { Matcher } from "@worm/types/src/rules";
 import {
   StorageVersion,
@@ -49,7 +52,8 @@ export const MIGRATIONS: Migrations = {
           if (key.startsWith(STORAGE_MATCHER_PREFIX)) {
             const matcher = merged[key as keyof typeof merged] as Matcher;
 
-            matcher.useGlobalReplacementStyle = true;
+            matcher.useGlobalReplacementStyle =
+              DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE;
           }
         }
 
