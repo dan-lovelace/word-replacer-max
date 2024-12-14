@@ -96,6 +96,8 @@ export default {
     EMPTY_RULES_LIST_ALERT_TITLE: "No active rules",
     EMPTY_RULES_LIST_ALERT_BODY: "Add a rule to start replacing text again.",
     REFRESH_REQUIRED: "You must refresh the page to see these changes.",
+    RULES_CLIPBOARD_PASTE_ERROR:
+      "Error pasting rules. Please check your browser's security settings.",
   },
   support: {
     CONTACT_SUPPORT_FORM_EMPTY_MESSAGE_ERROR: "Message is required",

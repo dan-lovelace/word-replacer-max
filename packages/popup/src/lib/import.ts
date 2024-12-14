@@ -1,11 +1,50 @@
 import { v4 as uuidv4 } from "uuid";
 
-import { getSchemaByVersion } from "@worm/shared";
+import { getSchemaByVersion, parseDelimitedString } from "@worm/shared";
 import { storageSetByKeys } from "@worm/shared/src/storage";
 import { Matcher } from "@worm/types/src/rules";
 import { StorageSetOptions } from "@worm/types/src/storage";
 
-export default async function importMatchers(
+export function importMatchersCSV(
+  fromUserInput: string | ArrayBuffer | null,
+  currentMatchers: Matcher[] | undefined,
+  options: StorageSetOptions
+) {
+  const csvData = fromUserInput?.toString();
+  const rows = csvData
+    ?.split("\n")
+    .map((row) => row.trim())
+    .filter(Boolean);
+
+  if (!rows || !rows.length) return;
+
+  const queriesToAdd = [];
+
+  for (const row of rows) {
+    const parsed = parseDelimitedString(row);
+
+    if (parsed.length > 0) {
+      queriesToAdd.push(parsed);
+    }
+  }
+
+  const newMatchers: Matcher[] = queriesToAdd.map((queries) => ({
+    active: true,
+    identifier: uuidv4(),
+    queries,
+    queryPatterns: [],
+    replacement: "",
+  }));
+
+  return storageSetByKeys(
+    {
+      matchers: [...(currentMatchers ?? []), ...newMatchers],
+    },
+    options
+  );
+}
+
+export async function importMatchersJSON(
   fromUserInput: any,
   currentMatchers: Matcher[] | undefined,
   options: StorageSetOptions

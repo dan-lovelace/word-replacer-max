@@ -1,3 +1,5 @@
+import { QUERY_PASTE_DELIMITER } from "@worm/shared/src/strings";
+
 import {
   TEST_MATCHER_ID_1,
   TEST_MATCHER_ID_2,
@@ -58,6 +60,60 @@ describe("rules", () => {
 
           cy.wrap(matchers?.[0]).should("have.property", "active", false);
           cy.wrap(matchers?.[1]).should("have.property", "active", true);
+        });
+      });
+    });
+
+    describe("query input", () => {
+      describe("paste", () => {
+        const navigateAndPaste = (pasteValue: string, holdShift = false) => {
+          cy.visitWithStorage();
+
+          s.addNewRuleButton().click();
+
+          s.ruleRows()
+            .last()
+            .within(() => {
+              s.rules.queryInput
+                .input()
+                .focus()
+                .paste(pasteValue, { holdShift });
+            });
+        };
+
+        it("does not add queries when no delimiters exist", () => {
+          navigateAndPaste("lorem");
+
+          s.ruleRows()
+            .last()
+            .within(() => {
+              s.rules.queryInput.chips().should("have.length", 0);
+            });
+        });
+
+        it("does not add queries when a delimiter exists and the shift key is held", () => {
+          navigateAndPaste(`lorem${QUERY_PASTE_DELIMITER}ipsum`, true);
+
+          s.ruleRows()
+            .last()
+            .within(() => {
+              s.rules.queryInput.chips().should("have.length", 0);
+            });
+        });
+
+        it("adds queries when a delimiter exists", () => {
+          navigateAndPaste(`lorem${QUERY_PASTE_DELIMITER}ipsum`);
+
+          s.ruleRows()
+            .last()
+            .within(() => {
+              s.rules.queryInput.chips().then((chips) => {
+                expect(chips.length).to.eq(2);
+
+                cy.contains("lorem");
+                cy.contains("ipsum");
+              });
+            });
         });
       });
     });

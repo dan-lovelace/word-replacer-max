@@ -1,8 +1,8 @@
 import type { JSXInternal } from "preact/src/jsx";
 
-import { logDebug } from "@worm/shared";
+import { getFileExtension, logDebug } from "@worm/shared";
 
-import importMatchers from "../../lib/import";
+import { importMatchersCSV, importMatchersJSON } from "../../lib/import";
 import { useLanguage } from "../../lib/language";
 import { useConfig } from "../../store/Config";
 
@@ -33,11 +33,29 @@ export default function FileImport() {
 
     fileReader.onloadend = async () => {
       const { result } = fileReader;
+      const extension = getFileExtension(file);
+
+      if (extension === "csv") {
+        return importMatchersCSV(result, matchers, {
+          onError(message) {
+            showToast({
+              message,
+              options: { severity: "danger" },
+            });
+          },
+          onSuccess() {
+            showToast({
+              message: language.options.FILE_IMPORT_SUCCESS,
+              options: { severity: "success" },
+            });
+          },
+        });
+      }
 
       try {
         const parsedJson = JSON.parse(String(result));
 
-        importMatchers(parsedJson, matchers, {
+        importMatchersJSON(parsedJson, matchers, {
           onError: (message) => {
             showToast({
               message,
