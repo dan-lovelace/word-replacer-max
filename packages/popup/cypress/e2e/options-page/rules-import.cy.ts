@@ -7,7 +7,7 @@ describe("rules import", () => {
   });
 
   it("should add rules from a csv file", () => {
-    cy.fixture("rules-import.csv", null).as("rulesImport");
+    cy.fixture("rules-import.csv").as("rulesImport");
     s.options.rulesImport.label().selectFile("@rulesImport");
 
     s.layout.tabs.rules().click();

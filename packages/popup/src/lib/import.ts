@@ -16,9 +16,9 @@ export function importMatchersCSV(
     .map((row) => row.trim())
     .filter(Boolean);
 
-  const queriesToAdd = [];
-
   if (!rows || !rows.length) return;
+
+  const queriesToAdd = [];
 
   for (const row of rows) {
     const parsed = parseDelimitedString(row);
