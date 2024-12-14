@@ -3,7 +3,7 @@ import { JSXInternal } from "preact/src/jsx";
 
 import { logDebug } from "@worm/shared";
 
-import importMatchers from "../../lib/import";
+import { importMatchersJSON } from "../../lib/import";
 import { useLanguage } from "../../lib/language";
 import { useConfig } from "../../store/Config";
 
@@ -61,7 +61,7 @@ export default function LinkImport({ setIsImportingLink }: LinkImportProps) {
         throw new Error(message);
       }
 
-      importMatchers(json, matchers, {
+      importMatchersJSON(json, matchers, {
         onSuccess: () => {
           setImportLink("");
           setIsImportingLink(false);

@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "preact/hooks";
 import { JSXInternal } from "preact/src/jsx";
 
 import { cx, isReplacementEmpty } from "@worm/shared";
+import { QUERY_PASTE_DELIMITER } from "@worm/shared/src/strings";
 import { QueryPattern } from "@worm/types/src/replace";
 import { Matcher } from "@worm/types/src/rules";
 
@@ -62,6 +63,7 @@ export default function QueryInput({
 }: QueryInputProps) {
   const [inputHeight, setInputHeight] = useState(0);
   const [inputValue, setInputValue] = useState("");
+  const [isShiftHeld, setIsShiftHeld] = useState(false);
 
   const language = useLanguage();
   const inputContainerRef = useRef<HTMLDivElement>(null);
@@ -83,6 +85,28 @@ export default function QueryInput({
     };
   }, []);
 
+  useEffect(() => {
+    const keyDownListener = ({ key }: KeyboardEvent) => {
+      if (key !== "Shift") return;
+
+      setIsShiftHeld(true);
+    };
+
+    const keyUpListener = ({ key }: KeyboardEvent) => {
+      if (key !== "Shift") return;
+
+      setIsShiftHeld(false);
+    };
+
+    document.documentElement.addEventListener("keydown", keyDownListener);
+    document.documentElement.addEventListener("keyup", keyUpListener);
+
+    return () => {
+      document.documentElement.removeEventListener("keydown", keyDownListener);
+      document.documentElement.removeEventListener("keyup", keyUpListener);
+    };
+  }, []);
+
   const handleFormSubmit = (
     event:
       | JSXInternal.TargetedSubmitEvent<HTMLFormElement>
@@ -96,6 +120,39 @@ export default function QueryInput({
       onChange(identifier, "queries", [...queries, inputValue]);
     }
 
+    setInputValue("");
+  };
+
+  const handlePaste = (
+    event: JSXInternal.TargetedClipboardEvent<HTMLInputElement>
+  ) => {
+    const { clipboardData } = event;
+
+    if (!clipboardData) {
+      return showToast({
+        message: language.rules.RULES_CLIPBOARD_PASTE_ERROR,
+        options: { severity: "danger" },
+      });
+    }
+
+    const pasteText = clipboardData.getData("text");
+    const parsed = pasteText
+      .split(QUERY_PASTE_DELIMITER)
+      .map((line) => line.trim())
+      .filter(Boolean);
+
+    if (parsed.length < 2 || isShiftHeld) {
+      /**
+       * Ignore custom paste handling if no newlines exist or Shift is held.
+       */
+      return;
+    }
+
+    event.preventDefault();
+
+    const newQueries = parsed.filter((query) => !queries.includes(query));
+
+    onChange(identifier, "queries", [...queries, ...newQueries]);
     setInputValue("");
   };
 
@@ -145,6 +202,7 @@ export default function QueryInput({
       className="d-flex flex-fill"
       id="query-input"
       onSubmit={handleFormSubmit}
+      data-testid="query-input"
     >
       <div
         className="flex-fill border rounded-start"
@@ -174,18 +232,21 @@ export default function QueryInput({
             value={inputValue}
             onBlur={handleFormSubmit}
             onInput={handleTextChange}
+            onPaste={handlePaste}
+            data-testid="query-input__input"
           />
         </div>
         <button className="visually-hidden" disabled={disabled} type="submit">
           Add
         </button>
         <div className="d-flex align-items-start flex-wrap gap-1 p-1">
-          {queries.map((query, idx) => (
+          {queries.map((query) => (
             <Chip
-              key={idx}
+              key={query}
               disabled={disabled}
               identifier={query}
               onRemove={handleRemoveClick}
+              data-testid="query-input__chip"
             />
           ))}
         </div>

@@ -7,7 +7,7 @@ const { exportModal } = s;
 
 const MODAL_WAIT_PERIOD_MS = 500;
 
-describe("export", () => {
+describe("rules export", () => {
   beforeEach(() => {
     cy.visitWithStorage();
     s.optionsTab().click();

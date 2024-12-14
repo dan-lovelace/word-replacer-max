@@ -9,9 +9,13 @@ import { VisitWithStorageParams } from "./types";
 
 declare global {
   namespace Cypress {
-    interface Chainable {
+    interface Chainable<Subject = any> {
       appUserLogin(): Chainable<void>;
       getBrowser(): Chainable<TestBrowser<Storage>>;
+      paste(
+        value: string,
+        options?: Partial<{ holdShift: boolean }>
+      ): Chainable<Subject>;
       visitWithStorage(params?: VisitWithStorageParams): Chainable<void>;
     }
 

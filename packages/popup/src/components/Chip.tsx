@@ -1,9 +1,11 @@
+import { ComponentProps } from "preact";
+
 import { cx } from "@worm/shared";
 
 import Button from "./button/Button";
 import MaterialIcon from "./icon/MaterialIcon";
 
-type ChipProps = {
+type ChipProps = ComponentProps<"span"> & {
   disabled?: boolean;
   identifier: string;
   onRemove: (identifier: string) => () => void;
@@ -13,6 +15,7 @@ export default function Chip({
   disabled = false,
   identifier,
   onRemove,
+  ...rest
 }: ChipProps) {
   return (
     <span
@@ -21,6 +24,7 @@ export default function Chip({
         "d-flex align-items-center flex-fill-0 pe-0",
         "fs-6 text-bg-light text-start text-wrap"
       )}
+      {...rest}
     >
       {identifier}
       <Button

@@ -430,7 +430,7 @@ class MockStorage<T> implements TStorage {
             }
           });
 
-          this._store[area] = newStore;
+          this._store[area] = deepClone(newStore);
 
           if (Object.keys(changes).length > 0) {
             Array.from(this._listeners).forEach((listener) => {

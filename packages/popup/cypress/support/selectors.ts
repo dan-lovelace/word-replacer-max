@@ -83,6 +83,11 @@ export const selectors = {
       toggleButton: () =>
         cy.findByTestId("replacement-suggestions-toggle-button"),
     },
+    rulesImport: {
+      input: () => cy.findByTestId("file-input__input"),
+      label: () => cy.findByTestId("file-input__label"),
+      uploadRedirect: () => cy.findByTestId("file-input__upload-redirect"),
+    },
   },
   replacementStyles: {
     colorInputs: {
@@ -116,6 +121,11 @@ export const selectors = {
     list: {
       emptyRulesListAlert: () => cy.findByTestId("empty-rules-list-alert"),
       replacementInput: () => cy.findByTestId("replacement-text-input"),
+    },
+    queryInput: {
+      chips: () => cy.findAllByTestId("query-input__chip"),
+      input: () => cy.findByTestId("query-input__input"),
+      root: () => cy.findByTestId("query-input"),
     },
     replacementSuggest: {
       dropdownMenu: {
