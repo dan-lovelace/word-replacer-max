@@ -97,7 +97,7 @@ export default function DomainInput() {
                 <Alert
                   title={lang.EMPTY_DOMAINS_LIST_ALERT_TITLE}
                   style={{ maxWidth: ALERT_SIZES.sm, transition: "all 90ms" }}
-                  severity={isDenying ? "success" : "warning"}
+                  severity={isDenying ? "info" : "warning"}
                 >
                   {isDenying
                     ? lang.EMPTY_DOMAINS_LIST_ALERT_BODY_DENY
