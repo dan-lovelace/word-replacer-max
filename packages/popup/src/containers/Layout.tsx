@@ -264,17 +264,6 @@ export default function Layout({ children }: LayoutProps) {
                         <MenuItemContainer className="bg-primary-subtle fw-bold">
                           Sign in to get more
                         </MenuItemContainer>
-                        <div className="my-1">
-                          <MenuItem
-                            linkProps={{
-                              href: envConfig.VITE_SSM_WEBAPP_ORIGIN,
-                              target: "_blank",
-                            }}
-                            startIcon="open_in_new"
-                          >
-                            Visit homepage
-                          </MenuItem>
-                        </div>
                       </div>
                       <DropdownMenuContainer data-testid="account-dropdown-signed-out-menu-container">
                         <MenuItem
@@ -294,6 +283,17 @@ export default function Layout({ children }: LayoutProps) {
                           startIcon="login"
                         >
                           Log in
+                        </MenuItem>
+                      </DropdownMenuContainer>
+                      <DropdownMenuContainer className="border-top">
+                        <MenuItem
+                          linkProps={{
+                            href: envConfig.VITE_SSM_WEBAPP_ORIGIN,
+                            target: "_blank",
+                          }}
+                          startIcon="open_in_new"
+                        >
+                          Visit homepage
                         </MenuItem>
                       </DropdownMenuContainer>
                     </>
