@@ -25,7 +25,7 @@
     "@worm/testing": "*",
     "@worm/types": "*",
     "archiver": "^6.0.1",
-    "lerna": "^8.0.2",
+    "lerna": "^8.1.9",
     "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
     "tsx": "^4.17.0",
