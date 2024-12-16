@@ -15,7 +15,7 @@
     "axios": "^1.7.7",
     "uuid": "^11.0.3",
     "webextension-polyfill": "^0.10.0",
-    "zod": "^3.23.8"
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "@types/archiver": "^6.0.2",
