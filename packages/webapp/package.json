@@ -31,6 +31,6 @@
     "@worm/plugins": "*",
     "@worm/testing": "*",
     "@worm/types": "*",
-    "sass": "^1.70.0"
+    "sass": "^1.83.0"
   }
 }
