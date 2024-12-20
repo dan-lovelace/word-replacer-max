@@ -34,6 +34,7 @@ export default function Slide({
   useEffect(() => {
     if (!isOpen) {
       setIsTransitioning(true);
+
       return;
     }
 
@@ -54,6 +55,7 @@ export default function Slide({
     }
 
     setIsTransitioning(true);
+
     const timeoutId = setTimeout(() => {
       setHeight("auto");
       setIsTransitioning(false);
