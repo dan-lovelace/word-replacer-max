@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "preact/hooks";
+import { useEffect, useMemo, useRef, useState } from "preact/hooks";
 
 import { PreactChildren } from "../../lib/types";
 
@@ -80,11 +80,13 @@ export default function Slide({
     setHeight(isOpen ? `${contentRef.current.scrollHeight}px` : "0px");
   };
 
-  const getTransitionStyle = () => {
-    if (!isTransitioning) return "none";
-
-    return `max-height ${TRANSITION_DURATION_MS}ms ${TRANSITION_EASING}, opacity ${TRANSITION_DURATION_MS}ms ${TRANSITION_EASING}`;
-  };
+  const transitionStyle = useMemo(
+    () =>
+      isTransitioning
+        ? `max-height ${TRANSITION_DURATION_MS}ms ${TRANSITION_EASING}, opacity ${TRANSITION_DURATION_MS}ms ${TRANSITION_EASING}`
+        : "none",
+    [isTransitioning]
+  );
 
   return (
     <div
@@ -94,7 +96,7 @@ export default function Slide({
         maxHeight: height,
         opacity: isOpen ? 1 : 0,
         overflow: "hidden",
-        transition: getTransitionStyle(),
+        transition: transitionStyle,
       }}
     >
       {children}
