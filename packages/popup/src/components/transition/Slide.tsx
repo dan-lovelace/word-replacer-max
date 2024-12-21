@@ -1,12 +1,13 @@
+import { ComponentProps } from "preact";
 import { useEffect, useMemo, useRef, useState } from "preact/hooks";
 
 import { PreactChildren } from "../../lib/types";
 
-interface SlideProps {
+type SlideProps = ComponentProps<"div"> & {
   children: PreactChildren;
   disableEnter?: boolean;
   isOpen?: boolean;
-}
+};
 
 const TRANSITION_DURATION_MS = 90;
 const TRANSITION_EASING = "ease-out";
@@ -15,6 +16,7 @@ export default function Slide({
   children,
   disableEnter = false,
   isOpen,
+  ...rest
 }: SlideProps) {
   const [height, setHeight] = useState(isOpen ? "auto" : "0px");
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -98,6 +100,7 @@ export default function Slide({
         overflow: "hidden",
         transition: transitionStyle,
       }}
+      {...rest}
     >
       {children}
     </div>

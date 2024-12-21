@@ -173,6 +173,7 @@ export default function Layout({ children }: LayoutProps) {
                 preferences?.extensionEnabled ? "enabled" : "disabled"
               }`}
               onClick={handleExtensionEnabledClick}
+              data-testid="extension-enabled-toggle-button"
             />
           </div>
           <ul className="nav nav-tabs flex-fill">

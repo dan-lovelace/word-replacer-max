@@ -48,7 +48,11 @@ export default function DisabledBanner() {
   };
 
   return (
-    <Slide disableEnter isOpen={isDisabledMessage}>
+    <Slide
+      disableEnter
+      isOpen={isDisabledMessage}
+      data-testid="disabled-banner"
+    >
       <div
         className="alert alert-danger d-flex align-items-center justify-content-center gap-1 rounded-0 mb-0 py-1 fs-sm"
         role="alert"
@@ -57,6 +61,7 @@ export default function DisabledBanner() {
         <Button
           className="btn btn-link text-decoration-none fs-sm p-0"
           onClick={handleEnableClick}
+          data-testid="enable-button"
         >
           {language.layout.DISABLED_BANNER_ENABLE_BUTTON_TEXT}
         </Button>
