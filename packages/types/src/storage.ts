@@ -101,13 +101,15 @@ export type SyncStorage = Partial<{
   domainList: string[];
   exportLinks: ExportLink[];
   matchers: StorageMatcher[];
-  preferences: {
-    activeTab: PopupTab;
-    domainListEffect: DomainEffect;
-    extensionEnabled: boolean;
-    focusRule: Matcher["identifier"];
-  };
+  preferences: SyncStoragePreferences;
   replacementStyle: ReplacementStyle;
   replacementSuggest: ReplacementSuggest;
   storageVersion: StorageVersion;
 }>;
+
+export type SyncStoragePreferences = {
+  activeTab: PopupTab;
+  domainListEffect: DomainEffect;
+  extensionEnabled: boolean;
+  focusRule: Matcher["identifier"];
+};

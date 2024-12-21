@@ -23,10 +23,9 @@ const features = [
   },
   {
     color: "#00f5d4",
-    heading: "Inspirational AI Suggestions",
-    id: "ai-suggestions",
-    subheading:
-      "Leverage the power of AI to get replacement ideas in your desired style",
+    heading: "Replacement Suggestions",
+    id: "suggestions",
+    subheading: "Get replacement recommendations when you need inspiration",
   },
   // NOTE: Next color: "#9b5de5"
 ];

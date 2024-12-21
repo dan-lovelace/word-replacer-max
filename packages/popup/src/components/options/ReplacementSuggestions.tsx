@@ -62,8 +62,8 @@ export default function ReplacementSuggestions() {
       <Slide isOpen={!isActive}>
         <Indented data-testid="replacement-suggestions-description">
           <div className="fs-sm">
-            Looking for the right words? Get AI suggestions in your preferred
-            style.
+            Need help finding the right words? Get replacement recommendations
+            in your preferred style.
           </div>
         </Indented>
       </Slide>
