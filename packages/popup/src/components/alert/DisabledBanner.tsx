@@ -48,24 +48,25 @@ export default function DisabledBanner() {
   };
 
   return (
-    <Slide
-      disableEnter
-      isOpen={isDisabledMessage}
+    <div
+      style={{ height: isDisabledMessage ? 32 : "auto" }}
       data-testid="disabled-banner"
     >
-      <div
-        className="alert alert-danger d-flex align-items-center justify-content-center gap-1 rounded-0 mb-0 py-1 fs-sm"
-        role="alert"
-      >
-        {language.layout.DISABLED_BANNER_BODY}
-        <Button
-          className="btn btn-link text-decoration-none fs-sm p-0"
-          onClick={handleEnableClick}
-          data-testid="enable-button"
+      <Slide disableEnter isOpen={isDisabledMessage}>
+        <div
+          className="alert alert-danger d-flex align-items-center justify-content-center gap-1 rounded-0 mb-0 py-1 fs-sm"
+          role="alert"
         >
-          {language.layout.DISABLED_BANNER_ENABLE_BUTTON_TEXT}
-        </Button>
-      </div>
-    </Slide>
+          {language.layout.DISABLED_BANNER_BODY}
+          <Button
+            className="btn btn-link text-decoration-none fs-sm p-0"
+            onClick={handleEnableClick}
+            data-testid="enable-button"
+          >
+            {language.layout.DISABLED_BANNER_ENABLE_BUTTON_TEXT}
+          </Button>
+        </div>
+      </Slide>
+    </div>
   );
 }
