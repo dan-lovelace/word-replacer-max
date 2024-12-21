@@ -162,7 +162,7 @@ export default function Layout({ children }: LayoutProps) {
                   color: preferences?.extensionEnabled
                     ? "var(--bs-green)"
                     : "rgba(var(--bs-tertiary-color-rgb), 0.15)",
-                  padding: "5px 4px 3px",
+                  padding: "3px 4px",
                   transition: "all 150ms",
                 },
               }}
