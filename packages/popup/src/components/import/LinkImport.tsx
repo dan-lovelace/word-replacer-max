@@ -1,4 +1,4 @@
-import { StateUpdater, useState } from "preact/hooks";
+import { Dispatch, StateUpdater, useState } from "preact/hooks";
 import { JSXInternal } from "preact/src/jsx";
 
 import { logDebug } from "@worm/shared";
@@ -11,7 +11,7 @@ import { useToast } from "../alert/useToast";
 import Button from "../button/Button";
 
 type LinkImportProps = {
-  setIsImportingLink: StateUpdater<boolean>;
+  setIsImportingLink: Dispatch<StateUpdater<boolean>>;
 };
 
 export default function LinkImport({ setIsImportingLink }: LinkImportProps) {

@@ -32,7 +32,7 @@ export function getStorageProvider(providerName: StorageProvider = "sync") {
 
 export async function storageGetByKeys<T extends SyncStorageKey>(keys?: T[]) {
   // fetch all storage keys regardless of parameters; we'll filter the results
-  const allStorage = await storageGet();
+  const allStorage = (await storageGet()) as SyncStorage;
   const queryKeys = [...(keys ?? [])];
 
   let results: SyncStorage = {};

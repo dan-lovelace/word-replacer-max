@@ -64,226 +64,220 @@ async function sendTabMessage<T extends WebAppMessageKind>(
 
 export function startConnectListener() {
   browser.runtime.onConnect.addListener((port) => {
-    port.onMessage.addListener(
-      async (event: RuntimeMessage<RuntimeMessageKind>) => {
-        switch (event.data.kind) {
-          case "authTokensRequest": {
-            try {
-              const tokensResponse = await getAuthTokens();
+    port.onMessage.addListener(async (message) => {
+      const event = message as RuntimeMessage<RuntimeMessageKind>;
 
-              // stringify tokens since Amplify methods will be lost in the response
-              const tokensData: UserTokens = {
-                accessToken: tokensResponse?.accessToken.toString() ?? "",
-                idToken: tokensResponse?.idToken?.toString() ?? "",
-              };
+      switch (event.data.kind) {
+        case "authTokensRequest": {
+          try {
+            const tokensResponse = await getAuthTokens();
 
-              if (
-                !Object.prototype.hasOwnProperty.call(tokensData, "accessToken")
-              ) {
-                throw new IdentificationError();
-              }
+            // stringify tokens since Amplify methods will be lost in the response
+            const tokensData: UserTokens = {
+              accessToken: tokensResponse?.accessToken.toString() ?? "",
+              idToken: tokensResponse?.idToken?.toString() ?? "",
+            };
 
-              const responseMessage = createRuntimeMessage(
-                "authTokensResponse",
-                {
-                  data: tokensData,
-                }
-              );
-              port.postMessage({ data: responseMessage });
-            } catch (error) {
-              const responseMessage = createRuntimeMessage(
-                "authTokensResponse",
-                {
-                  error: getError(error),
-                }
-              );
-              port.postMessage({ data: responseMessage });
+            if (
+              !Object.prototype.hasOwnProperty.call(tokensData, "accessToken")
+            ) {
+              throw new IdentificationError();
             }
 
-            break;
-          }
-
-          case "currentUserRequest": {
-            try {
-              const currentUser = await getCurrentUser();
-
-              if (currentUser === undefined) {
-                throw new IdentificationError("UserNotLoggedIn");
-              }
-
-              const responseMessage = createRuntimeMessage(
-                "currentUserResponse",
-                {
-                  data: currentUser,
-                }
-              );
-              port.postMessage({ data: responseMessage });
-            } catch (error) {
-              const responseMessage = createRuntimeMessage(
-                "currentUserResponse",
-                {
-                  error: getError(error),
-                }
-              );
-              port.postMessage({ data: responseMessage });
-            }
-
-            break;
-          }
-
-          case "forceRefreshTokensRequest": {
-            try {
-              await getAuthTokens(true); // forceful fetch to get latest
-
-              const responseMessage = createRuntimeMessage(
-                "forceRefreshTokensResponse",
-                {
-                  data: { success: true },
-                }
-              );
-              port.postMessage({ data: responseMessage });
-            } catch (error) {
-              const responseMessage = createRuntimeMessage(
-                "forceRefreshTokensResponse",
-                {
-                  error: getError(error),
-                }
-              );
-              port.postMessage({ data: responseMessage });
-            }
-
-            break;
-          }
-
-          case "signOutRequest": {
-            await signUserOut();
-
-            const responseMessage = createRuntimeMessage("signOutResponse");
+            const responseMessage = createRuntimeMessage("authTokensResponse", {
+              data: tokensData,
+            });
             port.postMessage({ data: responseMessage });
-
-            break;
+          } catch (error) {
+            const responseMessage = createRuntimeMessage("authTokensResponse", {
+              error: getError(error),
+            });
+            port.postMessage({ data: responseMessage });
           }
+
+          break;
+        }
+
+        case "currentUserRequest": {
+          try {
+            const currentUser = await getCurrentUser();
+
+            if (currentUser === undefined) {
+              throw new IdentificationError("UserNotLoggedIn");
+            }
+
+            const responseMessage = createRuntimeMessage(
+              "currentUserResponse",
+              {
+                data: currentUser,
+              }
+            );
+            port.postMessage({ data: responseMessage });
+          } catch (error) {
+            const responseMessage = createRuntimeMessage(
+              "currentUserResponse",
+              {
+                error: getError(error),
+              }
+            );
+            port.postMessage({ data: responseMessage });
+          }
+
+          break;
+        }
+
+        case "forceRefreshTokensRequest": {
+          try {
+            await getAuthTokens(true); // forceful fetch to get latest
+
+            const responseMessage = createRuntimeMessage(
+              "forceRefreshTokensResponse",
+              {
+                data: { success: true },
+              }
+            );
+            port.postMessage({ data: responseMessage });
+          } catch (error) {
+            const responseMessage = createRuntimeMessage(
+              "forceRefreshTokensResponse",
+              {
+                error: getError(error),
+              }
+            );
+            port.postMessage({ data: responseMessage });
+          }
+
+          break;
+        }
+
+        case "signOutRequest": {
+          await signUserOut();
+
+          const responseMessage = createRuntimeMessage("signOutResponse");
+          port.postMessage({ data: responseMessage });
+
+          break;
         }
       }
-    );
+    });
   });
 }
 
 export function startMessageListener() {
-  browser.runtime.onMessage.addListener(
-    async (event: WebAppMessageData<WebAppMessageKind>, sender) => {
-      switch (event.kind) {
-        case "authSignOutRequest": {
-          try {
-            await signOut();
+  browser.runtime.onMessage.addListener(async (message) => {
+    const event = message as WebAppMessageData<WebAppMessageKind>;
 
-            sendTabMessage("authSignOutResponse", { data: true });
-          } catch (error) {
-            logDebug(error);
+    switch (event.kind) {
+      case "authSignOutRequest": {
+        try {
+          await signOut();
 
-            sendTabMessage("authSignOutResponse", {
-              error: getError(error),
-            });
-          }
+          sendTabMessage("authSignOutResponse", { data: true });
+        } catch (error) {
+          logDebug(error);
 
-          break;
+          sendTabMessage("authSignOutResponse", {
+            error: getError(error),
+          });
         }
 
-        case "authUpdateTokensRequest": {
+        break;
+      }
+
+      case "authUpdateTokensRequest": {
+        /**
+         * Auth tokens received from auth.js script.
+         */
+        try {
+          const tokens = event.details as ApiAuthTokens;
+
+          if (!tokens) {
+            throw new IdentificationError("MissingTokens");
+          }
+
           /**
-           * Auth tokens received from auth.js script.
+           * Ensure protected API requests succeed with the received token.
            */
-          try {
-            const tokens = event.details as ApiAuthTokens;
+          const response = await fetch(getApiEndpoint("GET:authWhoAmI"), {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${tokens.accessToken}`,
+            },
+          });
 
-            if (!tokens) {
-              throw new IdentificationError("MissingTokens");
-            }
+          if (!response.ok) {
+            throw new IdentificationError();
+          }
 
+          /**
+           * Update storage using our own keys, not Amplify's. These are
+           * translated in the custom token provider.
+           */
+          await sessionStorageProvider.set({
+            authAccessToken: tokens.accessToken,
+            authIdToken: tokens.idToken,
+            authLastAuthUser: decodeJWT(
+              String(tokens.idToken)
+            ).payload.email?.toString(),
+            authRefreshToken: tokens.refreshToken,
+          });
+
+          /**
+           * Now that storage is updated, ensure fetching the Amplify session
+           * succeeds.
+           */
+          await getCurrentUser();
+
+          sendTabMessage("authUpdateTokensResponse", {
+            data: {
+              accessToken: tokens.accessToken,
+              idToken: tokens.accessToken,
+            },
+          });
+        } catch (error) {
+          logDebug(error);
+
+          sendTabMessage("authUpdateTokensResponse", {
+            error: getError(error),
+          });
+        }
+
+        break;
+      }
+
+      case "authUserRequest": {
+        try {
+          const currentUser = await getCurrentUser();
+
+          if (!currentUser) {
+            throw new IdentificationError("UserNotLoggedIn");
+          }
+
+          sendTabMessage("authUserResponse", {
+            data: currentUser,
+          });
+        } catch (error) {
+          if (
+            error instanceof IdentificationError &&
+            error.name !== "UserNotLoggedIn"
+          ) {
             /**
-             * Ensure protected API requests succeed with the received token.
+             * An unexpected identification error was thrown.
              */
-            const response = await fetch(getApiEndpoint("GET:authWhoAmI"), {
-              method: "GET",
-              headers: {
-                Authorization: `Bearer ${tokens.accessToken}`,
-              },
-            });
-
-            if (!response.ok) {
-              throw new IdentificationError();
-            }
-
-            /**
-             * Update storage using our own keys, not Amplify's. These are
-             * translated in the custom token provider.
-             */
-            await sessionStorageProvider.set({
-              authAccessToken: tokens.accessToken,
-              authIdToken: tokens.idToken,
-              authLastAuthUser: decodeJWT(
-                String(tokens.idToken)
-              ).payload.email?.toString(),
-              authRefreshToken: tokens.refreshToken,
-            });
-
-            /**
-             * Now that storage is updated, ensure fetching the Amplify session
-             * succeeds.
-             */
-            await getCurrentUser();
-
-            sendTabMessage("authUpdateTokensResponse", {
-              data: {
-                accessToken: tokens.accessToken,
-                idToken: tokens.accessToken,
-              },
-            });
-          } catch (error) {
             logDebug(error);
-
-            sendTabMessage("authUpdateTokensResponse", {
-              error: getError(error),
-            });
           }
 
-          break;
+          sendTabMessage("authUserResponse", { error: getError(error) });
         }
 
-        case "authUserRequest": {
-          try {
-            const currentUser = await getCurrentUser();
+        break;
+      }
 
-            if (!currentUser) {
-              throw new IdentificationError("UserNotLoggedIn");
-            }
+      case "pingRequest": {
+        sendTabMessage("pingResponse", true);
 
-            sendTabMessage("authUserResponse", {
-              data: currentUser,
-            });
-          } catch (error) {
-            if (
-              error instanceof IdentificationError &&
-              error.name !== "UserNotLoggedIn"
-            ) {
-              /**
-               * An unexpected identification error was thrown.
-               */
-              logDebug(error);
-            }
-
-            sendTabMessage("authUserResponse", { error: getError(error) });
-          }
-
-          break;
-        }
-
-        case "pingRequest": {
-          sendTabMessage("pingResponse", true);
-
-          break;
-        }
+        break;
       }
     }
-  );
+  });
 }

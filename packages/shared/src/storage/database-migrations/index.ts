@@ -80,12 +80,19 @@ export const MIGRATIONS: Migrations = {
 async function fetchStorageVersion() {
   const { storageVersion } = await storageGet(["storageVersion"]);
 
-  return storageVersion;
+  if (!storageVersion) {
+    return undefined;
+  }
+
+  return storageVersion as StorageVersion;
 }
 
-function isVersionGreaterThan(a: StorageVersion, b: StorageVersion): boolean {
+function isVersionGreaterThan(
+  a: StorageVersion,
+  b: StorageVersion | undefined
+): boolean {
   const [aMajor, aMinor, aPatch] = a.split(".").map(Number);
-  const [bMajor, bMinor, bPatch] = b.split(".").map(Number);
+  const [bMajor, bMinor, bPatch] = b ? b.split(".").map(Number) : [];
 
   if (aMajor > bMajor) return true;
   if (aMajor < bMajor) return false;

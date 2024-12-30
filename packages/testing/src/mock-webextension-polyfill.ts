@@ -30,7 +30,7 @@ type TRuntimeMessageEventCallback = (
   message: any,
   sender: Runtime.MessageSender,
   sendResponse: (response?: any) => void
-) => void | true;
+) => void;
 
 type TStorage = Partial<Browser["storage"]>;
 
@@ -164,7 +164,6 @@ class MockPort implements Runtime.Port {
       hasListener: (callback: (message: any, port: Runtime.Port) => void) => {
         return this.listeners.has(callback);
       },
-      hasListeners: () => this.listeners.size > 0,
       removeListener: (
         callback: (message: any, port: Runtime.Port) => void
       ) => {
@@ -181,7 +180,6 @@ class MockPort implements Runtime.Port {
       hasListener: (callback: (port: Runtime.Port) => void) => {
         return this.disconnectListeners.has(callback);
       },
-      hasListeners: () => this.disconnectListeners.size > 0,
       removeListener: (callback: (port: Runtime.Port) => void) => {
         this.disconnectListeners.delete(callback);
       },
@@ -225,7 +223,6 @@ class MockRuntime implements TRuntime {
       hasListener: (callback: (port: Runtime.Port) => void) => {
         return this.connectListeners.has(callback);
       },
-      hasListeners: () => this.connectListeners.size > 0,
       removeListener: (callback: (port: Runtime.Port) => void) => {
         this.connectListeners.delete(callback);
       },
@@ -240,7 +237,6 @@ class MockRuntime implements TRuntime {
       hasListener: (callback: TRuntimeMessageEventCallback) => {
         return this.messageListeners.has(callback);
       },
-      hasListeners: () => this.messageListeners.size > 0,
       removeListener: (callback: TRuntimeMessageEventCallback) => {
         this.messageListeners.delete(callback);
       },
@@ -252,7 +248,6 @@ class MockStorage<T> implements TStorage {
   _onChanged: Events.Event<ListenerCallback> = {
     addListener: (callback: ListenerCallback) => this._listeners.add(callback),
     hasListener: (callback: ListenerCallback) => this._listeners.has(callback),
-    hasListeners: () => this._listeners.size > 0,
     removeListener: (callback: ListenerCallback) =>
       this._listeners.delete(callback),
   };
@@ -267,9 +262,9 @@ class MockStorage<T> implements TStorage {
 
   onChanged? = this._onChanged;
 
-  local?: Storage.LocalStorageArea;
-  session?: Storage.StorageArea;
-  sync?: Storage.SyncStorageAreaSync;
+  local?: Storage.Static["local"];
+  session?: Storage.Static["session"];
+  sync?: Storage.Static["sync"];
 
   constructor(initialValues?: TStorageInitialValues<T>) {
     if (initialValues !== undefined) {
@@ -285,19 +280,18 @@ class MockStorage<T> implements TStorage {
     this.sync = this.getStorageArea("sync");
   }
 
-  getStorageArea(area: "local"): Storage.LocalStorageArea;
+  getStorageArea(area: "local"): Storage.Static["local"];
 
-  getStorageArea(area: "session"): Storage.StorageArea;
+  getStorageArea(area: "session"): Storage.Static["session"];
 
-  getStorageArea(area: "sync"): Storage.SyncStorageAreaSync;
+  getStorageArea(area: "sync"): Storage.Static["sync"];
 
   getStorageArea(area: TStorageArea) {
     const baseProps = this.getStorageAreaBase(area);
 
     switch (area) {
       case "local": {
-        const localArea: Storage.LocalStorageArea = {
-          QUOTA_BYTES: 5242880,
+        const localArea: Storage.Static["local"] = {
           ...baseProps,
         };
 
@@ -313,12 +307,7 @@ class MockStorage<T> implements TStorage {
       }
 
       case "sync": {
-        const syncArea: Storage.SyncStorageAreaSync = {
-          MAX_ITEMS: 512,
-          MAX_WRITE_OPERATIONS_PER_HOUR: 1800,
-          MAX_WRITE_OPERATIONS_PER_MINUTE: 120,
-          QUOTA_BYTES: 102400,
-          QUOTA_BYTES_PER_ITEM: 8192,
+        const syncArea: Storage.Static["sync"] = {
           getBytesInUse: async () => 100,
           ...baseProps,
         };
@@ -365,7 +354,9 @@ class MockStorage<T> implements TStorage {
           const result: Record<any, any> = {};
 
           if (Array.isArray(keys)) {
-            keys.forEach((key: Key<T>) => {
+            keys.forEach((k) => {
+              const key = k as Key<T>;
+
               result[key] = currentStore[key];
             });
           } else if (keys && typeof keys === "object") {
