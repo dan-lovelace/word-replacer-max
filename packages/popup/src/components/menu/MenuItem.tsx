@@ -65,7 +65,6 @@ export default function MenuItem({
             props.disabled && "pe-none",
             linkProps.className
           )}
-          disabled={props.disabled}
         >
           {buttonElement}
         </a>

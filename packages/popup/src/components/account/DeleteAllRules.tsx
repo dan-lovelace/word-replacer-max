@@ -1,5 +1,5 @@
 import { ChangeEvent } from "preact/compat";
-import { StateUpdater, useState } from "preact/hooks";
+import { Dispatch, StateUpdater, useState } from "preact/hooks";
 
 import { storageSetByKeys } from "@worm/shared/src/storage";
 
@@ -11,7 +11,7 @@ import Button from "../button/Button";
 import Slide from "../transition/Slide";
 
 type DeleteAllRulesProps = {
-  setIsConfirmingDelete: StateUpdater<boolean>;
+  setIsConfirmingDelete: Dispatch<StateUpdater<boolean>>;
 };
 
 export default function DeleteAllRules({

@@ -1,4 +1,4 @@
-import { StateUpdater, useMemo } from "preact/hooks";
+import { Dispatch, StateUpdater, useMemo } from "preact/hooks";
 import { JSXInternal } from "preact/src/jsx";
 
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
@@ -47,7 +47,7 @@ type ReplacementSuggestProps = Pick<
     key: keyof Matcher,
     newValue: Matcher["replacement"]
   ) => void;
-  setValue: StateUpdater<string>;
+  setValue: Dispatch<StateUpdater<string>>;
 };
 
 export default function ReplacementSuggest({
