@@ -91,7 +91,7 @@ describe("storageSetByKeys", () => {
     };
     await localStorage.set(testLocalValues);
     expect(
-      Object.keys((await localStorage.get()).recentSuggestions)
+      Object.keys((await localStorage.get()).recentSuggestions ?? {})
     ).toHaveLength(3);
 
     await storageSetByKeys({
@@ -126,7 +126,7 @@ describe("storageSetByKeys", () => {
     };
     await localStorage.set(testLocalValues);
     expect(
-      Object.keys((await localStorage.get()).recentSuggestions)
+      Object.keys((await localStorage.get()).recentSuggestions ?? {})
     ).toHaveLength(3);
 
     await storageSetByKeys({
