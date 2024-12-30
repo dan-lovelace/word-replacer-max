@@ -73,15 +73,15 @@ export const sessionStorageInterface: KeyValueStorageInterface = {
 
       switch (suffix) {
         case "LastAuthUser":
-          return resolve(authLastAuthUser);
+          return resolve(authLastAuthUser as string);
         case "accessToken":
-          return resolve(authAccessToken);
+          return resolve(authAccessToken as string);
         case "clockDrift":
-          return resolve(authClockDrift);
+          return resolve(authClockDrift as string);
         case "idToken":
-          return resolve(authIdToken);
+          return resolve(authIdToken as string);
         case "refreshToken":
-          return resolve(authRefreshToken);
+          return resolve(authRefreshToken as string);
         default:
           resolve(null);
       }

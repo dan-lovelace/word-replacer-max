@@ -14,13 +14,13 @@
     "aws-amplify": "^6.11.0",
     "axios": "^1.7.9",
     "uuid": "^11.0.3",
-    "webextension-polyfill": "^0.10.0",
+    "webextension-polyfill": "^0.12.0",
     "zod": "^3.24.1"
   },
   "devDependencies": {
     "@types/archiver": "^6.0.3",
     "@types/uuid": "^10.0.0",
-    "@types/webextension-polyfill": "^0.10.7",
+    "@types/webextension-polyfill": "^0.12.1",
     "@worm/plugins": "*",
     "@worm/testing": "*",
     "@worm/types": "*",

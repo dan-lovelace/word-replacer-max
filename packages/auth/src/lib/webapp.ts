@@ -37,13 +37,14 @@ export function initializeWebApp() {
      * Review the webapp's iframe content window message listener for more
      * details.
      */
-    browser.runtime.onMessage.addListener(
-      (event: WebAppMessage<WebAppMessageKind>) => {
-        const latestElement = getWebAppIFrame();
+    browser.runtime.onMessage.addListener((message) => {
+      const event = message as WebAppMessage<WebAppMessageKind>;
+      const latestElement = getWebAppIFrame();
 
-        latestElement?.contentWindow?.postMessage(event);
-      }
-    );
+      latestElement?.contentWindow?.postMessage(event);
+
+      return undefined;
+    });
 
     /**
      * Listen for messages from the webapp iframe and pass them to the

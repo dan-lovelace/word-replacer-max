@@ -53,7 +53,7 @@ export const getUpdatedStorage = (
     Object.entries(changes).forEach(([storedKey, change]) => {
       if (storedKey.startsWith(STORAGE_MATCHER_PREFIX)) {
         // Updating a matcher, modify the existing array of matchers
-        const { newValue, oldValue }: StorageChangeOf<Matcher> = change;
+        const { newValue, oldValue } = change as StorageChangeOf<Matcher>;
 
         const newMatchers: Matcher[] = [...(prevSyncStorage.matchers || [])];
 
