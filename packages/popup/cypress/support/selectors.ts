@@ -66,6 +66,12 @@ export const selectors = {
       cy.findByTestId("account-dropdown-signed-out-menu-container"),
     accountDropdownSignOutButton: () =>
       cy.findByTestId("account-dropdown-sign-out-button"),
+    disabledBanner: {
+      enableButton: () => cy.findByTestId("enable-button"),
+      root: () => cy.findByTestId("disabled-banner"),
+    },
+    extensionEnabledToggleButton: () =>
+      cy.findByTestId("extension-enabled-toggle-button"),
     tabs: {
       domains: () => cy.findByTestId("domains-tab"),
       options: () => cy.findByTestId("options-tab"),

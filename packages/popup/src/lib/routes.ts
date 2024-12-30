@@ -15,7 +15,7 @@ export function getCanUploadDirect() {
   }
 }
 
-export function getNotificationMessage() {
+export function getURLNotificationMessage() {
   return (
     new URLSearchParams(window.location.search).get(NOTIFY_PARAMETER) ??
     undefined

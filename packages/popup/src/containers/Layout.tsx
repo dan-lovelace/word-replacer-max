@@ -10,19 +10,17 @@ import { getEnvConfig } from "@worm/shared/src/config";
 import { storageSetByKeys } from "@worm/shared/src/storage";
 import { PopupTab } from "@worm/types/src/popup";
 
+import DisabledBanner from "../components/alert/DisabledBanner";
 import { useToast } from "../components/alert/useToast";
 import Button from "../components/button/Button";
-import IconButton, {
-  ICON_BUTTON_BASE_CLASS,
-  IconButtonProps,
-} from "../components/button/IconButton";
+import IconButton, { IconButtonProps } from "../components/button/IconButton";
 import DropdownButton from "../components/menu/DropdownButton";
 import DropdownMenuContainer from "../components/menu/DropdownMenuContainer";
 import MenuItem from "../components/menu/MenuItem";
 import MenuItemContainer from "../components/menu/MenuItemContainer";
 import TermsAcceptance from "../components/terms/TermsAcceptance";
 import { useLanguage } from "../lib/language";
-import { getNotificationMessage } from "../lib/routes";
+import { getURLNotificationMessage } from "../lib/routes";
 import { PreactChildren } from "../lib/types";
 import { useAuth } from "../store/Auth";
 import { useConfig } from "../store/Config";
@@ -75,7 +73,6 @@ export default function Layout({ children }: LayoutProps) {
     },
   } = useConfig();
   const language = useLanguage();
-  const notificationMessage = useMemo(getNotificationMessage, []);
   const { showToast } = useToast();
 
   useEffect(() => {
@@ -134,21 +131,24 @@ export default function Layout({ children }: LayoutProps) {
     storageSetByKeys({ preferences: newPreferences });
   };
 
+  const urlNotificationMessage = useMemo(getURLNotificationMessage, []);
+
   return (
     <div className="layout">
       <div className="d-flex flex-column h-100">
-        {notificationMessage && (
+        <TermsAcceptance />
+        <DisabledBanner />
+        {urlNotificationMessage && (
           <div className="alert alert-info d-flex gap-2 rounded-0" role="alert">
             <div>
               <img src={getAssetURL("img/firefox-logo.svg")} />
             </div>
             <div>
               <div className="fw-bold">Firefox detected</div>
-              <div className="fs-sm">{notificationMessage}</div>
+              <div className="fs-sm">{urlNotificationMessage}</div>
             </div>
           </div>
         )}
-        <TermsAcceptance />
         <div className="d-flex w-100">
           <div className="d-flex align-items-center justify-content-center border-bottom">
             <IconButton
@@ -162,7 +162,7 @@ export default function Layout({ children }: LayoutProps) {
                   color: preferences?.extensionEnabled
                     ? "var(--bs-green)"
                     : "rgba(var(--bs-tertiary-color-rgb), 0.15)",
-                  padding: "5px 4px 3px",
+                  padding: "3px 4px",
                   transition: "all 150ms",
                 },
               }}
@@ -173,6 +173,7 @@ export default function Layout({ children }: LayoutProps) {
                 preferences?.extensionEnabled ? "enabled" : "disabled"
               }`}
               onClick={handleExtensionEnabledClick}
+              data-testid="extension-enabled-toggle-button"
             />
           </div>
           <ul className="nav nav-tabs flex-fill">

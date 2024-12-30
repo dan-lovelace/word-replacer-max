@@ -47,7 +47,7 @@ const queryPatternMetadata: {
   },
   {
     icon: regexIcon,
-    title: "Use regular expression",
+    title: "Use RegEx (advanced)",
     value: "regex",
   },
 ];

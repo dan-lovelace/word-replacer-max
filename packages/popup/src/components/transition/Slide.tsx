@@ -1,17 +1,25 @@
-import { useEffect, useRef, useState } from "preact/hooks";
+import { ComponentProps } from "preact";
+import { useEffect, useMemo, useRef, useState } from "preact/hooks";
 
 import { PreactChildren } from "../../lib/types";
 
-interface SlideProps {
+type SlideProps = ComponentProps<"div"> & {
   children: PreactChildren;
+  disableEnter?: boolean;
   isOpen?: boolean;
-}
+};
 
 const TRANSITION_DURATION_MS = 90;
 const TRANSITION_EASING = "ease-out";
 
-export default function Slide({ isOpen, children }: SlideProps) {
+export default function Slide({
+  children,
+  disableEnter = false,
+  isOpen,
+  ...rest
+}: SlideProps) {
   const [height, setHeight] = useState(isOpen ? "auto" : "0px");
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -26,20 +34,61 @@ export default function Slide({ isOpen, children }: SlideProps) {
   }, [isOpen]);
 
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen) {
+      setIsTransitioning(true);
+
+      return;
+    }
+
+    if (disableEnter) {
+      // when disabling enter, set an explicit height first
+      if (contentRef.current) {
+        setHeight(`${contentRef.current.scrollHeight}px`);
+      }
+
+      setIsTransitioning(false);
+
+      // now set to auto after a frame to ensure smooth transition
+      requestAnimationFrame(() => {
+        setHeight("auto");
+      });
+
+      return;
+    }
+
+    setIsTransitioning(true);
 
     const timeoutId = setTimeout(() => {
       setHeight("auto");
+      setIsTransitioning(false);
     }, TRANSITION_DURATION_MS);
 
     return () => clearTimeout(timeoutId);
-  }, [isOpen]);
+  }, [isOpen, disableEnter]);
 
   const updateHeight = () => {
     if (!contentRef.current) return;
 
+    if (isOpen && disableEnter) {
+      setHeight(`${contentRef.current.scrollHeight}px`);
+
+      requestAnimationFrame(() => {
+        setHeight("auto");
+      });
+
+      return;
+    }
+
     setHeight(isOpen ? `${contentRef.current.scrollHeight}px` : "0px");
   };
+
+  const transitionStyle = useMemo(
+    () =>
+      isTransitioning
+        ? `max-height ${TRANSITION_DURATION_MS}ms ${TRANSITION_EASING}, opacity ${TRANSITION_DURATION_MS}ms ${TRANSITION_EASING}`
+        : "none",
+    [isTransitioning]
+  );
 
   return (
     <div
@@ -48,9 +97,10 @@ export default function Slide({ isOpen, children }: SlideProps) {
       style={{
         maxHeight: height,
         opacity: isOpen ? 1 : 0,
-        overflow: isOpen ? "visible" : "hidden",
-        transition: `max-height ${TRANSITION_DURATION_MS}ms ${TRANSITION_EASING}, opacity ${TRANSITION_DURATION_MS}ms ${TRANSITION_EASING}`,
+        overflow: "hidden",
+        transition: transitionStyle,
       }}
+      {...rest}
     >
       {children}
     </div>

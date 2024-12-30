@@ -74,6 +74,10 @@ export default {
     REPLACEMENT_SCOPE_SUB_HEADING:
       "Choose how you want to control which websites use your replacements.",
   },
+  layout: {
+    DISABLED_BANNER_BODY: "Extension is disabled.",
+    DISABLED_BANNER_ENABLE_BUTTON_TEXT: "Enable now",
+  },
   options: {
     CORRUPTED_IMPORT_CONTENT: "It looks like your export file is corrupted.",
     DIRECT_UPLOAD_DISALLOWED:
