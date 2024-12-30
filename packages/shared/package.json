@@ -11,14 +11,14 @@
     "test": "if [ \"$CI\" != \"true\" ]; then yarn run cypress:run; fi"
   },
   "dependencies": {
-    "aws-amplify": "^6.6.0",
-    "axios": "^1.7.7",
+    "aws-amplify": "^6.11.0",
+    "axios": "^1.7.9",
     "uuid": "^11.0.3",
     "webextension-polyfill": "^0.10.0",
     "zod": "^3.24.1"
   },
   "devDependencies": {
-    "@types/archiver": "^6.0.2",
+    "@types/archiver": "^6.0.3",
     "@types/uuid": "^10.0.0",
     "@types/webextension-polyfill": "^0.10.7",
     "@worm/plugins": "*",
@@ -28,8 +28,8 @@
     "lerna": "^8.1.9",
     "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
-    "tsx": "^4.17.0",
+    "tsx": "^4.19.2",
     "typescript": "^5.7.2",
-    "vite": "^6.0.3"
+    "vite": "^6.0.6"
   }
 }
