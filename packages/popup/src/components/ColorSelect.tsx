@@ -92,10 +92,12 @@ export default function ColorSelect({
         }
       />
       <input
+        autocomplete="off"
         className="form-control"
         data-testid="color-select-custom-input"
         placeholder="#000000"
         size={8}
+        spellcheck={false}
         type="text"
         value={selectedColor}
         onChange={handleInputChange}

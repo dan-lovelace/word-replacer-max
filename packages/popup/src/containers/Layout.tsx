@@ -32,7 +32,6 @@ type LayoutProps = {
 
 type LayoutTab = {
   identifier: PopupTab;
-  isHidden?: boolean;
   label: string;
   testId: string;
 };
@@ -177,30 +176,27 @@ export default function Layout({ children }: LayoutProps) {
             />
           </div>
           <ul className="nav nav-tabs flex-fill">
-            {tabs.map(
-              ({ identifier, isHidden, label, testId }) =>
-                !isHidden && (
-                  <li
-                    key={identifier}
-                    className={cx(
-                      "nav-item",
-                      identifier === "support" &&
-                        "flex-fill d-flex justify-content-end"
-                    )}
-                    data-testid={testId}
-                  >
-                    <Button
-                      className={cx(
-                        "nav-link",
-                        preferences?.activeTab === identifier && "active"
-                      )}
-                      onClick={handleTabChange(identifier)}
-                    >
-                      {label}
-                    </Button>
-                  </li>
-                )
-            )}
+            {tabs.map(({ identifier, label, testId }) => (
+              <li
+                key={identifier}
+                className={cx(
+                  "nav-item",
+                  identifier === "support" &&
+                    "flex-fill d-flex justify-content-end"
+                )}
+                data-testid={testId}
+              >
+                <Button
+                  className={cx(
+                    "nav-link",
+                    preferences?.activeTab === identifier && "active"
+                  )}
+                  onClick={handleTabChange(identifier)}
+                >
+                  {label}
+                </Button>
+              </li>
+            ))}
             <li className="nav-item d-flex align-items-center justify-content-center">
               <DropdownButton<IconButtonProps>
                 componentProps={{

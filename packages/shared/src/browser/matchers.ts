@@ -1,4 +1,10 @@
-import { Matcher, StorageMatcher } from "@worm/types/src/rules";
+import {
+  Matcher,
+  StorageMatcher,
+  StorageMatcherGroup,
+} from "@worm/types/src/rules";
+
+export const STORAGE_MATCHER_GROUP_PREFIX = "group__";
 
 export const STORAGE_MATCHER_PREFIX = "matcher__";
 
@@ -25,6 +31,22 @@ export const convertStoredMatchers = (allStorage: Record<string, any>) => {
   const sorted = sortMatchers(storedMatchers);
 
   return sorted && sorted.length > 0 ? sorted : undefined;
+};
+
+export const getMatcherGroups = (allStorage: Record<string, any>) => {
+  const storedGroups: Record<string, StorageMatcherGroup> = Object.keys(
+    allStorage
+  ).reduce((acc, val) => {
+    const isGroup = val.startsWith(STORAGE_MATCHER_GROUP_PREFIX);
+
+    if (!isGroup) return acc;
+
+    const groupValue = allStorage[val];
+
+    return { ...acc, [val]: groupValue };
+  }, {} as Record<string, StorageMatcherGroup>);
+
+  return Object.keys(storedGroups).length ? storedGroups : undefined;
 };
 
 export function matchersFromStorage(allStorage: Record<string, any>) {

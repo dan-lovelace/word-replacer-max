@@ -96,6 +96,9 @@ export default {
     SHAREABLE_LINK_CLIPBOARD_COPY_SUCCESS:
       "Shareable link copied to clipboard.",
   },
+  ruleGroups: {
+    NEW_GROUP_FORM_NAME_INPUT_PLACERHOLDER: "Group name",
+  },
   rules: {
     EMPTY_RULES_LIST_ALERT_TITLE: "No active rules",
     EMPTY_RULES_LIST_ALERT_BODY: "Add a rule to start replacing text again.",

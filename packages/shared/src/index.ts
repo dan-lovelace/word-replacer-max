@@ -1,6 +1,7 @@
 import "../vite-env.d.ts";
 
 export * from "./classnames";
+export * from "./color";
 export * from "./debounce";
 export * from "./domains";
 export * from "./logging";

@@ -3,7 +3,7 @@ import { z } from "zod";
 
 import { ApiSuggestResponseData, ToneOption } from "./api";
 import { DomainEffect, ExportLink, PopupTab } from "./popup";
-import { ReplacementStyle, ReplacementSuggest } from "./replace";
+import { ReplacementStyle, ReplacementSuggest, RuleGroups } from "./replace";
 import { Matcher, StorageMatcher } from "./rules";
 
 export const schemaVersions = [1] as const;
@@ -104,6 +104,7 @@ export type SyncStorage = Partial<{
   preferences: SyncStoragePreferences;
   replacementStyle: ReplacementStyle;
   replacementSuggest: ReplacementSuggest;
+  ruleGroups: RuleGroups;
   storageVersion: StorageVersion;
 }>;
 

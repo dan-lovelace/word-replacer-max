@@ -7,6 +7,8 @@ import { useLanguage } from "../../lib/language";
 import { useConfig } from "../../store/Config";
 
 import Alert, { ALERT_SIZES } from "../Alerts";
+import RuleGroupsModal from "../rule-groups/RuleGroupsModal";
+import RuleGroupsToolbar from "../rule-groups/RuleGroupsToolbar";
 import RuleRow from "../rules/RuleRow";
 
 import AddNewRule from "./AddNewRule";
@@ -45,6 +47,7 @@ export default function RuleList() {
 
   return (
     <>
+      <RuleGroupsToolbar />
       <div className="row gx-3 gy-2" data-testid="rule-list-wrapper">
         {sortedMatchers?.map((matcher) => (
           <div
@@ -64,6 +67,7 @@ export default function RuleList() {
       >
         <AddNewRule />
       </div>
+      <RuleGroupsModal />
     </>
   );
 }

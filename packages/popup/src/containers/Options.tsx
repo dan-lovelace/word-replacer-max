@@ -4,6 +4,7 @@ import ExportModal from "../components/export/ExportModal";
 import Import from "../components/import/Import";
 import ReplacementStyles from "../components/options/ReplacementStyles";
 import ReplacementSuggestions from "../components/options/ReplacementSuggestions";
+import RuleGroups from "../components/options/RuleGroups";
 import { COPY_CONTAINER_COL_CLASS } from "../lib/classnames";
 import { PreactChildren } from "../lib/types";
 
@@ -21,6 +22,7 @@ export default function Options() {
             <ColumnContent>
               <div className="d-flex flex-column gap-2">
                 <ReplacementStyles />
+                <RuleGroups />
                 <ReplacementSuggestions />
               </div>
             </ColumnContent>

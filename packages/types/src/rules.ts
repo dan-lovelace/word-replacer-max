@@ -1,3 +1,4 @@
+import { Sortable } from "./";
 import { QueryPattern } from "./replace";
 
 export type Matcher = {
@@ -14,6 +15,14 @@ export type Matcher = {
   useGlobalReplacementStyle?: boolean;
 };
 
+export type MatcherGroup = {
+  active?: boolean;
+  color: string;
+  identifier: string;
+  matchers?: Pick<Matcher, "active" | "identifier">[];
+  name: string;
+};
+
 /**
  * Matcher properties used at replacement time.
  */
@@ -27,6 +36,6 @@ export type MatcherReplaceProps = Pick<
  */
 export type MatcherInSync = Record<string, Matcher>;
 
-export type StorageMatcher = Matcher & {
-  sortIndex?: number;
-};
+export type StorageMatcher = Sortable<Matcher>;
+
+export type StorageMatcherGroup = Sortable<MatcherGroup>;

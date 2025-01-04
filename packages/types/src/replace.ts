@@ -30,6 +30,11 @@ export type ReplacementSuggestion = {
   text: string;
 };
 
+export type RuleGroups = {
+  active: boolean;
+  isFiltered: boolean;
+};
+
 export type VueNodeInfo = {
   commentMarkers: Comment[];
   isVueManaged: boolean;
