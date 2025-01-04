@@ -35,7 +35,7 @@ export default function LoginSuccessPage() {
   const [secondsLeft, setSecondsLeft] = useState(REDIRECT_TIMEOUT_SECONDS);
 
   const navigate = useNavigate();
-  const secondsLeftRef = useRef<number>();
+  const secondsLeftRef = useRef<number>(null);
   const { palette } = useTheme();
 
   secondsLeftRef.current = secondsLeft;
