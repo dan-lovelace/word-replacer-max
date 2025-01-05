@@ -19,7 +19,7 @@ export type MatcherGroup = {
   active?: boolean;
   color: string;
   identifier: string;
-  matchers?: Pick<Matcher, "active" | "identifier">[];
+  matchers?: Matcher["identifier"][];
   name: string;
 };
 

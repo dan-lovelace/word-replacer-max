@@ -2,12 +2,17 @@ import { useEffect, useMemo, useState } from "preact/hooks";
 import { Fragment } from "preact/jsx-runtime";
 
 import { cx } from "@worm/shared";
-import { getMatcherGroups } from "@worm/shared/src/browser";
+import {
+  getMatcherGroups,
+  STORAGE_MATCHER_GROUP_PREFIX,
+} from "@worm/shared/src/browser";
 import { storageSetByKeys } from "@worm/shared/src/storage";
 
 import { useConfig } from "../../store/Config";
 
 import IconButton, { ICON_BUTTON_BASE_CLASS } from "../button/IconButton";
+
+import RuleGroupColor from "./RuleGroupColor";
 
 export default function RuleGroupsToolbar() {
   const [isOptionHeld, setIsOptionHeld] = useState(false);
@@ -44,13 +49,14 @@ export default function RuleGroupsToolbar() {
   }, []);
 
   const handleChange = (identifier: string) => () => {
+    const storageKey = `${STORAGE_MATCHER_GROUP_PREFIX}${identifier}`;
     const existingGroups = getMatcherGroups(sync) ?? {};
 
     if (isOptionHeld) {
       storageSetByKeys({
-        [identifier]: {
-          ...existingGroups[identifier],
-          active: !Boolean(existingGroups[identifier]?.active ?? false),
+        [storageKey]: {
+          ...existingGroups[storageKey],
+          active: !Boolean(existingGroups[storageKey]?.active ?? false),
         },
       });
     } else {
@@ -60,7 +66,7 @@ export default function RuleGroupsToolbar() {
           [key]: {
             ...existingGroups[key],
             active:
-              key === identifier ? !Boolean(existingGroups[key].active) : false,
+              key === storageKey ? !Boolean(existingGroups[key].active) : false,
           },
         }),
         {} as typeof existingGroups
@@ -70,32 +76,14 @@ export default function RuleGroupsToolbar() {
     }
   };
 
-  const handleIsFilteredClick = () => {
-    const newRuleGroups = Object.assign({}, ruleGroups);
-
-    newRuleGroups.isFiltered = !Boolean(ruleGroups?.isFiltered);
-
-    storageSetByKeys({
-      ruleGroups: newRuleGroups,
-    });
-  };
-
   if (!ruleGroups?.active) {
     return <></>;
   }
 
-  const { ruleGroupsArray, selectedCount } = useMemo(() => {
-    const matcherGroups = getMatcherGroups(sync);
-    const matcherGroupValues = Object.values(matcherGroups ?? {});
-    const matcherGroupSelections = matcherGroupValues.filter(
-      (group) => group.active
-    ).length;
-
-    return {
-      ruleGroupsArray: matcherGroupValues,
-      selectedCount: matcherGroupSelections,
-    };
-  }, [sync]);
+  const renderedMatchers = useMemo(
+    () => Object.values(getMatcherGroups(sync) ?? {}),
+    [sync]
+  );
 
   return (
     <div
@@ -122,7 +110,7 @@ export default function RuleGroupsToolbar() {
       />
       <div className="flex-fill">
         <div className="d-flex flex-wrap gap-1" role="group">
-          {ruleGroupsArray.map(
+          {renderedMatchers.map(
             ({ active = false, color, identifier, name }) => {
               const inputId = `rule-group__${identifier}`;
 
@@ -143,45 +131,14 @@ export default function RuleGroupsToolbar() {
                     )}
                     for={inputId}
                   >
-                    <span
-                      style={{
-                        backgroundColor: color,
-                        borderRadius: "100%",
-                        height: 10,
-                        outline: "1px solid var(--bs-border-color)",
-                        width: 10,
-                      }}
-                    />
-                    {name}
+                    <RuleGroupColor color={color} />
+                    <span>{name}</span>
                   </label>
                 </Fragment>
               );
             }
           )}
         </div>
-      </div>
-      <div
-        className="align-self-start"
-        style={{
-          marginRight: 1,
-          opacity: selectedCount > 0 ? 1 : 0,
-          transition: "opacity 150ms ease-in-out",
-        }}
-      >
-        <IconButton
-          icon={ruleGroups?.isFiltered ? "filter_alt" : "filter_alt_off"}
-          iconProps={{
-            className: "text-secondary",
-            size: "sm",
-          }}
-          style={{ height: 32 }}
-          title={
-            ruleGroups?.isFiltered
-              ? `Filtering by selected group${selectedCount === 1 ? "" : "s"}`
-              : "Showing all rules"
-          }
-          onClick={handleIsFilteredClick}
-        />
       </div>
     </div>
   );

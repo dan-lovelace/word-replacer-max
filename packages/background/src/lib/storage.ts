@@ -65,7 +65,10 @@ export async function initializeStorage() {
       activeTab: "rules",
       domainListEffect: "deny",
       extensionEnabled: true,
-      focusRule: "",
+      focusRule: {
+        field: "replacement",
+        matcher: "",
+      },
     };
   }
 

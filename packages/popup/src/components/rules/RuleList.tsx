@@ -1,6 +1,6 @@
 import { useMemo } from "preact/hooks";
 
-import { sortMatchers } from "@worm/shared/src/browser";
+import { getActiveMatchers } from "@worm/shared/src/browser/matchers";
 import { StorageMatcher } from "@worm/types/src/rules";
 
 import { useLanguage } from "../../lib/language";
@@ -16,11 +16,13 @@ import AddNewRule from "./AddNewRule";
 export default function RuleList() {
   const {
     storage: {
+      sync,
       sync: { matchers },
     },
   } = useConfig();
   const { rules: lang } = useLanguage();
 
+  // Zero-state banner rendered when no rules exist
   if (!Boolean(matchers?.length)) {
     return (
       <div className="row">
@@ -40,22 +42,22 @@ export default function RuleList() {
     );
   }
 
-  const sortedMatchers: StorageMatcher[] | undefined = useMemo(
-    () => sortMatchers(matchers),
-    [matchers]
+  const renderedMatchers: StorageMatcher[] | undefined = useMemo(
+    () => getActiveMatchers(sync),
+    [sync]
   );
 
   return (
     <>
       <RuleGroupsToolbar />
       <div className="row gx-3 gy-2" data-testid="rule-list-wrapper">
-        {sortedMatchers?.map((matcher) => (
+        {renderedMatchers?.map((matcher) => (
           <div
             key={matcher.identifier}
             className="rule-row-wrapper col-12 col-xxl-6 position-relative"
           >
             <div className="container-fluid gx-1">
-              <RuleRow matcher={matcher} matchers={sortedMatchers} />
+              <RuleRow matcher={matcher} matchers={renderedMatchers} />
             </div>
           </div>
         ))}

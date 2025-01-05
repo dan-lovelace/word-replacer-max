@@ -1,8 +1,12 @@
 import { Ref } from "preact";
-import { useState } from "preact/hooks";
+import { useMemo, useState } from "preact/hooks";
 import { JSXInternal } from "preact/src/jsx";
 
 import { cx, isReplacementEmpty } from "@worm/shared";
+import {
+  getMatcherGroups,
+  STORAGE_MATCHER_GROUP_PREFIX,
+} from "@worm/shared/src/browser";
 import { storageSetByKeys } from "@worm/shared/src/storage";
 import { Matcher } from "@worm/types/src/rules";
 
@@ -10,8 +14,18 @@ import { useAuth } from "../../store/Auth";
 import { useConfig } from "../../store/Config";
 
 import { useToast } from "../alert/useToast";
+import Alert from "../Alerts";
 import Button from "../button/Button";
-import IconButton, { ICON_BUTTON_BASE_CLASS } from "../button/IconButton";
+import IconButton, {
+  ICON_BUTTON_BASE_CLASS,
+  IconButtonProps,
+} from "../button/IconButton";
+import DropdownButton from "../menu/DropdownButton";
+import DropdownMenuContainer from "../menu/DropdownMenuContainer";
+import MenuItem from "../menu/MenuItem";
+import MenuItemContainer from "../menu/MenuItemContainer";
+import RuleGroupColor from "../rule-groups/RuleGroupColor";
+import Tooltip from "../Tooltip";
 
 import ReplacementSuggest from "./ReplacementSuggest";
 
@@ -50,10 +64,29 @@ export default function ReplacementInput({
   const { hasAccess } = useAuth();
   const {
     storage: {
-      sync: { matchers, replacementStyle, replacementSuggest },
+      sync,
+      sync: { matchers, replacementStyle, replacementSuggest, ruleGroups },
     },
   } = useConfig();
-  const { showRefreshToast } = useToast();
+  const { showRefreshToast, showToast } = useToast();
+
+  const handleAddToGroupClick = (groupIdentifier: string) => () => {
+    const storageKey = `${STORAGE_MATCHER_GROUP_PREFIX}${groupIdentifier}`;
+    const group = getMatcherGroups(sync)?.[storageKey];
+
+    if (!group) {
+      return showToast({
+        message: "Unable to find group",
+        options: { severity: "danger" },
+      });
+    }
+
+    group.matchers = [...(group.matchers ?? []), identifier];
+
+    storageSetByKeys({
+      [storageKey]: group,
+    });
+  };
 
   const handleFormSubmit = (
     event:
@@ -62,6 +95,26 @@ export default function ReplacementInput({
   ) => {
     event.preventDefault();
     updateReplacement();
+  };
+
+  const handleRemoveFromGroupClick = (groupIdentifier: string) => () => {
+    const storageKey = `${STORAGE_MATCHER_GROUP_PREFIX}${groupIdentifier}`;
+    const group = getMatcherGroups(sync)?.[storageKey];
+
+    if (!group) {
+      return showToast({
+        message: "Unable to find group",
+        options: { severity: "danger" },
+      });
+    }
+
+    group.matchers = group.matchers?.filter(
+      (matcherIdentifier) => identifier !== matcherIdentifier
+    );
+
+    storageSetByKeys({
+      [storageKey]: group,
+    });
   };
 
   const handleReplacementStyleChange = () => {
@@ -101,6 +154,22 @@ export default function ReplacementInput({
     onChange(identifier, "replacement", updatedValue);
   };
 
+  const { availableGroups, includedGroups } = useMemo(() => {
+    const values = Object.values(getMatcherGroups(sync) ?? {});
+
+    const _availableGroups = values.filter(
+      (group) => !group.matchers?.includes(identifier)
+    );
+    const _includedGroups = values.filter((group) =>
+      group.matchers?.includes(identifier)
+    );
+
+    return {
+      availableGroups: _availableGroups,
+      includedGroups: _includedGroups,
+    };
+  }, [sync]);
+
   const canSuggest =
     replacementSuggest?.active && hasAccess("api:post:Suggest");
   const inputWidth =
@@ -109,70 +178,136 @@ export default function ReplacementInput({
       (replacementStyle?.active ? INPUT_BUTTON_WIDTH : 0));
 
   return (
-    <form
-      className="flex-fill border rounded"
-      onSubmit={handleFormSubmit}
-      data-testid="replacement-input-form"
-    >
-      <div className="input-group" role="group">
-        <input
-          className="form-control border-0"
-          disabled={disabled}
-          enterkeyhint="enter"
-          ref={inputRef}
-          type="text"
-          value={value}
-          onBlur={handleFormSubmit}
-          onInput={handleTextChange}
-          style={{
-            width: inputWidth,
-
-            /**
-             * FIX: When certain child classes do not exist within Bootstrap's
-             * `input-group`, the input's border radii are removed so we re-set
-             * them here.
-             */
-            borderBottomRightRadius: "var(--bs-border-radius)",
-            borderTopRightRadius: "var(--bs-border-radius)",
-          }}
-          data-testid="replacement-text-input"
-        />
-        <div className={cx(!canSuggest && "d-none")}>
-          <ReplacementSuggest
-            active={active}
+    <>
+      <form
+        className="flex-fill border rounded"
+        onSubmit={handleFormSubmit}
+        data-testid="replacement-input-form"
+      >
+        <div className="input-group" role="group">
+          <input
+            className="form-control border-0"
             disabled={disabled}
-            identifier={identifier}
-            queries={queries}
-            replacement={replacement}
+            enterkeyhint="enter"
+            ref={inputRef}
+            type="text"
             value={value}
-            onReplacementChange={onChange}
-            setValue={setValue}
-          />
-        </div>
-        {replacementStyle?.active && (
-          <IconButton
-            className={cx(ICON_BUTTON_BASE_CLASS, "px-2")}
-            disabled={disabled}
-            icon={
-              useGlobalReplacementStyle
-                ? "format_color_text"
-                : "format_color_reset"
-            }
-            iconProps={{
-              className: "text-secondary",
-              size: "sm",
+            onBlur={handleFormSubmit}
+            onInput={handleTextChange}
+            style={{
+              width: inputWidth,
+
+              /**
+               * FIX: When certain child classes do not exist within Bootstrap's
+               * `input-group`, the input's border radii are removed so we re-set
+               * them here.
+               */
+              borderBottomRightRadius: "var(--bs-border-radius)",
+              borderTopRightRadius: "var(--bs-border-radius)",
             }}
-            title={`Replacement style ${
-              useGlobalReplacementStyle ? "enabled" : "disabled"
-            }`}
-            onClick={handleReplacementStyleChange}
-            data-testid="replacement-style-button"
+            data-testid="replacement-text-input"
           />
-        )}
-      </div>
-      <Button className="visually-hidden" disabled={disabled} type="submit">
-        Save
-      </Button>
-    </form>
+          <div className={cx(!canSuggest && "d-none")}>
+            <ReplacementSuggest
+              active={active}
+              disabled={disabled}
+              identifier={identifier}
+              queries={queries}
+              replacement={replacement}
+              value={value}
+              onReplacementChange={onChange}
+              setValue={setValue}
+            />
+          </div>
+          {replacementStyle?.active && (
+            <IconButton
+              className={cx(ICON_BUTTON_BASE_CLASS, "px-2")}
+              disabled={disabled}
+              icon={
+                useGlobalReplacementStyle
+                  ? "format_color_text"
+                  : "format_color_reset"
+              }
+              iconProps={{
+                className: "text-secondary",
+                size: "sm",
+              }}
+              title={`Replacement style ${
+                useGlobalReplacementStyle ? "enabled" : "disabled"
+              }`}
+              onClick={handleReplacementStyleChange}
+              data-testid="replacement-style-button"
+            />
+          )}
+          {ruleGroups?.active && (
+            <DropdownButton<IconButtonProps>
+              componentProps={{
+                className: cx(ICON_BUTTON_BASE_CLASS, "px-2"),
+                icon: "more_vert",
+                iconProps: {
+                  className: "text-secondary",
+                  size: "sm",
+                },
+                "data-testid": "more-dropdown-button",
+              }}
+              Component={IconButton}
+              menuContent={
+                ruleGroups?.active && (
+                  <>
+                    <MenuItemContainer className="border-bottom">
+                      Add to group
+                    </MenuItemContainer>
+                    <DropdownMenuContainer>
+                      {availableGroups.length ? (
+                        availableGroups.map(
+                          (group) =>
+                            !group.matchers?.includes(identifier) && (
+                              <MenuItem
+                                key={group.identifier}
+                                onClick={handleAddToGroupClick(
+                                  group.identifier
+                                )}
+                              >
+                                <RuleGroupColor color={group.color} />
+                                {group.name}
+                              </MenuItem>
+                            )
+                        )
+                      ) : (
+                        <div className="px-1">
+                          <Alert severity="info">
+                            {!includedGroups.length
+                              ? "No groups exist"
+                              : "No more groups available"}
+                          </Alert>
+                        </div>
+                      )}
+                    </DropdownMenuContainer>
+                  </>
+                )
+              }
+            />
+          )}
+        </div>
+        <Button className="visually-hidden" disabled={disabled} type="submit">
+          Save
+        </Button>
+      </form>
+      {includedGroups.length > 0 && (
+        <div className="d-flex gap-1 px-2 py-2">
+          {includedGroups.map((group) => (
+            <Tooltip key={group.identifier} title={group.name}>
+              <Button
+                className="btn btn-light bg-transparent p-0"
+                title="Click to remove from group"
+                onClick={handleRemoveFromGroupClick(group.identifier)}
+              >
+                <RuleGroupColor color={group.color} />
+              </Button>
+            </Tooltip>
+          ))}
+        </div>
+      )}
+    </>
   );
 }

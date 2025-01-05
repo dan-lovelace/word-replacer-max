@@ -112,5 +112,8 @@ export type SyncStoragePreferences = {
   activeTab: PopupTab;
   domainListEffect: DomainEffect;
   extensionEnabled: boolean;
-  focusRule: Matcher["identifier"];
+  focusRule: {
+    field: keyof Pick<Matcher, "queries" | "replacement">;
+    matcher: Matcher["identifier"];
+  };
 };

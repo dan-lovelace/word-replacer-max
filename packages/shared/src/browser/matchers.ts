@@ -3,6 +3,7 @@ import {
   StorageMatcher,
   StorageMatcherGroup,
 } from "@worm/types/src/rules";
+import { SyncStorage } from "@worm/types/src/storage";
 
 export const STORAGE_MATCHER_GROUP_PREFIX = "group__";
 
@@ -31,6 +32,33 @@ export const convertStoredMatchers = (allStorage: Record<string, any>) => {
   const sorted = sortMatchers(storedMatchers);
 
   return sorted && sorted.length > 0 ? sorted : undefined;
+};
+
+/**
+ * Constructs a list of active matchers considering other storage
+ * configurations such as rule groups.
+ */
+export const getActiveMatchers = (allStorage: Record<string, any>) => {
+  const { matchers, ruleGroups } = allStorage as SyncStorage;
+  const activeGroups = getActiveMatcherGroups(allStorage);
+  const storedMatchers = sortMatchers(matchers);
+
+  if (!ruleGroups?.active || !activeGroups.length) {
+    return storedMatchers;
+  }
+
+  return storedMatchers?.filter((matcher) =>
+    activeGroups.some((group) => group.matchers?.includes(matcher.identifier))
+  );
+};
+
+/**
+ * Constructs a list of active matcher groups from storage.
+ */
+export const getActiveMatcherGroups = (allStorage: Record<string, any>) => {
+  return Object.values(getMatcherGroups(allStorage) ?? {}).filter(
+    (group) => group.active
+  );
 };
 
 export const getMatcherGroups = (allStorage: Record<string, any>) => {

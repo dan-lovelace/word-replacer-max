@@ -6,6 +6,7 @@ import { storageSetByKeys } from "@worm/shared/src/storage";
 import { generateMatcherGroup } from "../../lib/rule-groups";
 import { useConfig } from "../../store/Config";
 
+import { useToast } from "../alert/useToast";
 import Button from "../button/Button";
 
 import RuleGroupRow from "./RuleGroupRow";
@@ -16,6 +17,7 @@ export default function RuleGroupsModal() {
   const {
     storage: { sync },
   } = useConfig();
+  const { showToast } = useToast();
 
   const handleNewClick = () => {
     let newGroupNumber = 1;
@@ -31,7 +33,15 @@ export default function RuleGroupsModal() {
     storageSetByKeys(
       generateMatcherGroup({
         name: `Group ${newGroupNumber}`,
-      })
+      }),
+      {
+        onError: (message) => {
+          showToast({
+            message,
+            options: { severity: "danger" },
+          });
+        },
+      }
     );
   };
 

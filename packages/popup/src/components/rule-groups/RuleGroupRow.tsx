@@ -1,8 +1,15 @@
 import { ComponentProps } from "preact";
-import { useCallback, useEffect, useRef, useState } from "preact/hooks";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "preact/hooks";
 import { JSXInternal } from "preact/src/jsx";
 
 import { cx } from "@worm/shared";
+import { STORAGE_MATCHER_GROUP_PREFIX } from "@worm/shared/src/browser";
 import {
   storageRemoveByKeys,
   storageSetByKeys,
@@ -28,6 +35,10 @@ export default function RuleGroupRow({ data }: RuleGroupRowProps) {
   });
 
   const language = useLanguage();
+  const storageKey = useMemo(
+    () => `${STORAGE_MATCHER_GROUP_PREFIX}${identifier}`,
+    [identifier]
+  );
   const confirmingDeleteRef = useRef<boolean>();
   confirmingDeleteRef.current = isConfirmingDelete;
 
@@ -55,7 +66,7 @@ export default function RuleGroupRow({ data }: RuleGroupRowProps) {
     };
 
     storageSetByKeys({
-      [identifier]: newData,
+      [storageKey]: newData,
     });
   };
 
@@ -68,7 +79,7 @@ export default function RuleGroupRow({ data }: RuleGroupRowProps) {
     };
 
     storageSetByKeys({
-      [identifier]: newData,
+      [storageKey]: newData,
     });
   };
 
@@ -78,7 +89,7 @@ export default function RuleGroupRow({ data }: RuleGroupRowProps) {
     if (!isConfirmable || isConfirmingDelete) {
       document.documentElement.removeEventListener("click", clickawayListener);
 
-      storageRemoveByKeys([identifier]);
+      storageRemoveByKeys([storageKey]);
 
       return;
     }
@@ -108,7 +119,7 @@ export default function RuleGroupRow({ data }: RuleGroupRowProps) {
     };
 
     storageSetByKeys({
-      [identifier]: newData,
+      [storageKey]: newData,
     });
   };
 

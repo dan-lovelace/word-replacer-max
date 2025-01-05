@@ -32,7 +32,6 @@ export type ReplacementSuggestion = {
 
 export type RuleGroups = {
   active: boolean;
-  isFiltered: boolean;
 };
 
 export type VueNodeInfo = {
