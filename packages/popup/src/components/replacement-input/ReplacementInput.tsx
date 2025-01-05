@@ -46,7 +46,8 @@ type ReplacementInputProps = Pick<
   ) => void;
 };
 
-const INPUT_BUTTON_WIDTH = 31;
+export const INPUT_BUTTON_WIDTH = 32;
+
 const INPUT_WIDTH_BASE = 250;
 
 export default function ReplacementInput({
@@ -174,9 +175,9 @@ export default function ReplacementInput({
     replacementSuggest?.active && hasAccess("api:post:Suggest");
   const inputWidth =
     INPUT_WIDTH_BASE -
-    ((canSuggest ? INPUT_BUTTON_WIDTH : 0) +
-      (replacementStyle?.active ? INPUT_BUTTON_WIDTH : 0));
-
+    ((canSuggest ? INPUT_BUTTON_WIDTH - 1 : 0) +
+      (replacementStyle?.active ? INPUT_BUTTON_WIDTH - 1 : 0) +
+      (ruleGroups?.active ? INPUT_BUTTON_WIDTH - 1 : 0));
   return (
     <>
       <form
@@ -186,7 +187,11 @@ export default function ReplacementInput({
       >
         <div className="input-group" role="group">
           <input
-            className="form-control border-0"
+            className={cx(
+              "form-control border-0",
+              (canSuggest || replacementStyle?.active || ruleGroups?.active) &&
+                "rounded-end-0"
+            )}
             disabled={disabled}
             enterkeyhint="enter"
             ref={inputRef}
@@ -220,35 +225,42 @@ export default function ReplacementInput({
             />
           </div>
           {replacementStyle?.active && (
-            <IconButton
-              className={cx(ICON_BUTTON_BASE_CLASS, "px-2")}
-              disabled={disabled}
-              icon={
-                useGlobalReplacementStyle
-                  ? "format_color_text"
-                  : "format_color_reset"
-              }
-              iconProps={{
-                className: "text-secondary",
-                size: "sm",
-              }}
-              title={`Replacement style ${
-                useGlobalReplacementStyle ? "enabled" : "disabled"
-              }`}
-              onClick={handleReplacementStyleChange}
-              data-testid="replacement-style-button"
-            />
+            <div class="d-flex">
+              <IconButton
+                className={cx(ICON_BUTTON_BASE_CLASS, "px-2")}
+                disabled={disabled}
+                icon={
+                  useGlobalReplacementStyle
+                    ? "format_color_text"
+                    : "format_color_reset"
+                }
+                iconProps={{
+                  className: "text-secondary",
+                  size: "sm",
+                }}
+                title={`Replacement style ${
+                  useGlobalReplacementStyle ? "enabled" : "disabled"
+                }`}
+                style={{ width: INPUT_BUTTON_WIDTH }}
+                onClick={handleReplacementStyleChange}
+                data-testid="replacement-style-button"
+              />
+            </div>
           )}
           {ruleGroups?.active && (
             <DropdownButton<IconButtonProps>
+              offset={0}
               componentProps={{
                 className: cx(ICON_BUTTON_BASE_CLASS, "px-2"),
                 icon: "more_vert",
                 iconProps: {
                   className: "text-secondary",
-                  size: "sm",
                 },
-                "data-testid": "more-dropdown-button",
+                style: {
+                  width: INPUT_BUTTON_WIDTH,
+                },
+                "aria-label": "Rule groups dropdown toggle",
+                "data-testid": "rule-groups-dropdown-toggle",
               }}
               Component={IconButton}
               menuContent={
@@ -293,12 +305,13 @@ export default function ReplacementInput({
           Save
         </Button>
       </form>
-      {includedGroups.length > 0 && (
-        <div className="d-flex gap-1 px-2 py-2">
+      {ruleGroups?.active && includedGroups.length > 0 && (
+        <div className="d-flex gap-1 py-2">
           {includedGroups.map((group) => (
             <Tooltip key={group.identifier} title={group.name}>
               <Button
                 className="btn btn-light bg-transparent p-0"
+                disabled={disabled}
                 title="Click to remove from group"
                 onClick={handleRemoveFromGroupClick(group.identifier)}
               >

@@ -100,8 +100,8 @@ export default function RuleGroupsToolbar() {
         title="Rule groups"
         style={{
           height: 32,
-          marginLeft: 1,
-          marginRight: 2,
+          marginLeft: 2,
+          marginRight: 1,
           padding: "var(--bs-btn-padding-y) 10px",
         }}
         data-bs-toggle="modal"

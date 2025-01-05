@@ -161,12 +161,15 @@ export default function Layout({ children }: LayoutProps) {
                   color: preferences?.extensionEnabled
                     ? "var(--bs-green)"
                     : "rgba(var(--bs-tertiary-color-rgb), 0.15)",
+                  height: 32,
                   padding: "3px 4px",
                   transition: "all 150ms",
+                  width: 32,
                 },
               }}
               style={{
-                padding: "4px 12px",
+                padding: "4px 11px",
+                marginLeft: 1,
               }}
               title={`Extension ${
                 preferences?.extensionEnabled ? "enabled" : "disabled"
