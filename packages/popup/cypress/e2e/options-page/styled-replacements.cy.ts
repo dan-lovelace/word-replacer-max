@@ -1,4 +1,5 @@
 import { systemColors } from "@worm/shared/src/replace/lib/style";
+import { SyncStorage } from "@worm/types/src/storage";
 
 import { selectors as s } from "../../support/selectors";
 
@@ -81,7 +82,10 @@ describe("styled replacements", () => {
 
       cy.getBrowser().then((browser) => {
         browser.storage?.sync?.get().then((storage) => {
-          cy.wrap(storage.replacementStyle.options).should("include", "bold");
+          cy.wrap((storage as SyncStorage).replacementStyle?.options).should(
+            "include",
+            "bold"
+          );
         });
       });
     });
@@ -103,7 +107,7 @@ describe("styled replacements", () => {
 
       cy.getBrowser().then((browser) => {
         browser.storage?.sync?.get().then((storage) => {
-          cy.wrap(storage.replacementStyle.options).should(
+          cy.wrap((storage as SyncStorage).replacementStyle?.options).should(
             "not.include",
             "bold"
           );
@@ -128,7 +132,10 @@ describe("styled replacements", () => {
 
       cy.getBrowser().then((browser) => {
         browser.storage?.sync?.get().then((storage) => {
-          cy.wrap(storage.replacementStyle.options).should("include", "color");
+          cy.wrap((storage as SyncStorage).replacementStyle?.options).should(
+            "include",
+            "color"
+          );
         });
       });
     });
@@ -152,7 +159,7 @@ describe("styled replacements", () => {
 
       cy.getBrowser().then((browser) => {
         browser.storage?.sync?.get().then((storage) => {
-          cy.wrap(storage.replacementStyle.options).should(
+          cy.wrap((storage as SyncStorage).replacementStyle?.options).should(
             "not.include",
             "backgroundColor"
           );
@@ -176,6 +183,13 @@ describe("styled replacements", () => {
       replacementStyles.colorInputs.backgroundColorColorInput().within(() => {
         colorSelect.dropdownButton().click();
         colorSelect.dropdownMenu().should("be.visible");
+
+        colorSelect.dropdownMenuOptions().then((allOptions) => {
+          for (const option of allOptions as unknown as HTMLElement[]) {
+            cy.wrap(option).should("be.visible");
+          }
+        });
+
         colorSelect.dropdownMenuOptions().first().click();
 
         colorSelect
@@ -188,10 +202,9 @@ describe("styled replacements", () => {
 
       cy.getBrowser().then((browser) => {
         browser.storage?.sync?.get().then((storage) => {
-          cy.wrap(storage.replacementStyle.backgroundColor).should(
-            "eq",
-            systemColors.blueGray
-          );
+          cy.wrap(
+            (storage as SyncStorage).replacementStyle?.backgroundColor
+          ).should("eq", systemColors.blueGray);
         });
       });
     });
@@ -224,10 +237,9 @@ describe("styled replacements", () => {
 
       cy.getBrowser().then((browser) => {
         browser.storage?.sync?.get().then((storage) => {
-          cy.wrap(storage.replacementStyle.backgroundColor).should(
-            "eq",
-            testColor
-          );
+          cy.wrap(
+            (storage as SyncStorage).replacementStyle?.backgroundColor
+          ).should("eq", testColor);
         });
       });
     });

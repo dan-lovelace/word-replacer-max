@@ -97,7 +97,7 @@ export default function Slide({
       style={{
         maxHeight: height,
         opacity: isOpen ? 1 : 0,
-        overflow: "hidden",
+        overflow: isOpen ? "visible" : "hidden",
         transition: transitionStyle,
       }}
       {...rest}
