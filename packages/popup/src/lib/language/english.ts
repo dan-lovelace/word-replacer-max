@@ -59,6 +59,9 @@ export default {
   layout: {
     DISABLED_BANNER_BODY: "Extension is disabled.",
     DISABLED_BANNER_ENABLE_BUTTON_TEXT: "Enable now",
+    EMPTY_DOMAIN_ALLOWLIST_BODY: "No domains allowed – rules are disabled.",
+    EMPTY_DOMAIN_ALLOWLIST_OR_TEXT: "or add domains.",
+    EMPTY_DOMAIN_ALLOWLIST_SWITCH_BUTTON_TEXT: "Switch to blocklist",
   },
   options: {
     CORRUPTED_IMPORT_CONTENT: "It looks like your export file is corrupted.",
