@@ -1,6 +1,8 @@
 import { v4 as uuidv4 } from "uuid";
 
-import { DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE } from "@worm/shared/src/replace/lib/style";
+import {
+  DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE,
+} from "@worm/shared/src/replace/lib/style";
 import {
   BASELINE_STORAGE_VERSION,
   runStorageMigrations,
@@ -30,7 +32,7 @@ export async function initializeStorage() {
   const initialStorage: SyncStorage = {};
 
   if (domainList === undefined) {
-    initialStorage.domainList = [];
+    initialStorage.domainList = ["docs.google.com", "github.com"];
   }
 
   if (exportLinks === undefined) {
