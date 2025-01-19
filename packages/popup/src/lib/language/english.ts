@@ -55,24 +55,6 @@ export default {
   domains: {
     ADD_DOMAIN_FORM_INPUT_PLACEHOLDER: "Enter a domain (e.g., example.com)",
     ADD_DOMAIN_FORM_SUBMIT_BUTTON_TEXT: "Add",
-    ADD_CURRENT_DOMAIN_BUTTON_TEXT: "Add current site",
-    DOMAINS_LIST_HEADING: "Domain List",
-    EMPTY_DOMAINS_LIST_ALERT_TITLE: "No domains",
-    EMPTY_DOMAINS_LIST_ALERT_BODY_ALLOW:
-      "None of your replacements are being applied. To start replacing on specific sites, add them to your domains list. Alternatively, change your list type to 'Blocklist' to use your rules more broadly.",
-    EMPTY_DOMAINS_LIST_ALERT_BODY_DENY:
-      "Text replacements are active on all websites. To avoid replacing on specific sites, add them to your domains list.",
-    LIST_EFFECT_ALLOWLIST_DESCRIPTION:
-      "Word replacements will only work on the domains you list",
-    LIST_EFFECT_ALLOWLIST_LABEL: "Only on listed domains",
-    LIST_EFFECT_ALLOWLIST_NAME: "Allowlist",
-    LIST_EFFECT_BLOCKLIST_DESCRIPTION:
-      "Word replacements will work everywhere except the domains you list",
-    LIST_EFFECT_BLOCKLIST_LABEL: "Everywhere except listed domains",
-    LIST_EFFECT_BLOCKLIST_NAME: "Blocklist",
-    REPLACEMENT_SCOPE_HEADING: "List Type",
-    REPLACEMENT_SCOPE_SUB_HEADING:
-      "Choose how you want to control which websites use your replacements.",
   },
   layout: {
     DISABLED_BANNER_BODY: "Extension is disabled.",
