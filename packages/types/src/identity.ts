@@ -16,7 +16,7 @@ export type AppUser =
 
 type IdentificationErrorName = keyof typeof identificationErrorMessages;
 
-export type SignInStatusState =
+export type SignInStatus =
   | "signedIn"
   | "signedOut"
   | "signingIn"
