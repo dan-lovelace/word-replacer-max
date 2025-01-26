@@ -4,6 +4,7 @@ import { Fragment } from "preact/jsx-runtime";
 import { cx } from "@worm/shared";
 import {
   getMatcherGroups,
+  sortMatcherGroups,
   STORAGE_MATCHER_GROUP_PREFIX,
 } from "@worm/shared/src/browser";
 import { storageSetByKeys } from "@worm/shared/src/storage";
@@ -95,8 +96,8 @@ export default function RuleGroupsToolbar() {
     return <></>;
   }
 
-  const renderedMatchers = useMemo(
-    () => Object.values(getMatcherGroups(sync) ?? {}),
+  const sortedGroups = useMemo(
+    () => sortMatcherGroups(Object.values(getMatcherGroups(sync) ?? {})),
     [sync]
   );
 
@@ -125,34 +126,32 @@ export default function RuleGroupsToolbar() {
       />
       <div className="flex-fill">
         <div className="d-flex flex-wrap gap-1" role="group">
-          {renderedMatchers.map(
-            ({ active = false, color, identifier, name }) => {
-              const inputId = `rule-group__${identifier}`;
+          {sortedGroups.map(({ active = false, color, identifier, name }) => {
+            const inputId = `rule-group__${identifier}`;
 
-              if (!name.length) return false;
+            if (!name.length) return false;
 
-              return (
-                <Fragment key={identifier}>
-                  <input
-                    checked={active}
-                    className="btn-check"
-                    id={inputId}
-                    type="checkbox"
-                    onClick={handleChange(identifier)}
-                  />
-                  <label
-                    className={cx(
-                      "btn btn-light btn-sm d-flex align-items-center gap-2 text-nowrap"
-                    )}
-                    for={inputId}
-                  >
-                    <RuleGroupColor color={color} />
-                    <span>{name}</span>
-                  </label>
-                </Fragment>
-              );
-            }
-          )}
+            return (
+              <Fragment key={identifier}>
+                <input
+                  checked={active}
+                  className="btn-check"
+                  id={inputId}
+                  type="checkbox"
+                  onClick={handleChange(identifier)}
+                />
+                <label
+                  className={cx(
+                    "btn btn-light btn-sm d-flex align-items-center gap-2 text-nowrap"
+                  )}
+                  for={inputId}
+                >
+                  <RuleGroupColor color={color} />
+                  <span>{name}</span>
+                </label>
+              </Fragment>
+            );
+          })}
         </div>
       </div>
     </div>

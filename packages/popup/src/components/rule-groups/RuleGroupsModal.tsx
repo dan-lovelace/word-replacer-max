@@ -1,6 +1,6 @@
 import { useMemo, useRef } from "preact/hooks";
 
-import { getMatcherGroups } from "@worm/shared/src/browser";
+import { getMatcherGroups, sortMatcherGroups } from "@worm/shared/src/browser";
 import { storageSetByKeys } from "@worm/shared/src/storage";
 
 import { generateMatcherGroup } from "../../lib/rule-groups";
@@ -23,7 +23,7 @@ export default function RuleGroupsModal() {
     let newGroupNumber = 1;
 
     while (
-      Object.values(ruleGroups ?? {}).some(
+      Object.values(sortedGroups ?? {}).some(
         (group) => group.name === `Group ${newGroupNumber}`
       )
     ) {
@@ -33,6 +33,12 @@ export default function RuleGroupsModal() {
     storageSetByKeys(
       generateMatcherGroup({
         name: `Group ${newGroupNumber}`,
+        sortIndex:
+          Math.max(
+            ...Object.values(sortedGroups ?? {}).map(
+              (group) => group.sortIndex ?? 0
+            )
+          ) + 1,
       }),
       {
         onError: (message) => {
@@ -45,7 +51,10 @@ export default function RuleGroupsModal() {
     );
   };
 
-  const ruleGroups = useMemo(() => getMatcherGroups(sync), [sync]);
+  const sortedGroups = useMemo(
+    () => sortMatcherGroups(Object.values(getMatcherGroups(sync) ?? {})),
+    [sync]
+  );
 
   return (
     <div
@@ -74,10 +83,9 @@ export default function RuleGroupsModal() {
               className="d-flex flex-column gap-1"
               data-testid="rule-groups-list"
             >
-              {ruleGroups &&
-                Object.keys(ruleGroups).map((key) => (
-                  <RuleGroupRow key={key} data={ruleGroups[key]} />
-                ))}
+              {sortedGroups.map((group) => (
+                <RuleGroupRow key={group.identifier} data={group} />
+              ))}
             </div>
             <div className="mt-2" data-testid="rule-groups-actions">
               <Button startIcon="add" onClick={handleNewClick}>

@@ -100,6 +100,14 @@ export function matchersToStorage(
   );
 }
 
+export function sortMatcherGroups(matcherGroups: StorageMatcherGroup[]) {
+  return matcherGroups
+    ?.slice()
+    .sort((a, b) => (a.sortIndex ?? 0) - (b.sortIndex ?? 0));
+}
+
 export function sortMatchers(matchers: StorageMatcher[] | undefined) {
-  return matchers?.sort((a, b) => (a.sortIndex ?? 0) - (b.sortIndex ?? 0));
+  return matchers
+    ?.slice()
+    .sort((a, b) => (a.sortIndex ?? 0) - (b.sortIndex ?? 0));
 }
