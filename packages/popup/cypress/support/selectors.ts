@@ -125,6 +125,11 @@ export const selectors = {
     },
     toggleButton: () => cy.findByTestId("replacement-styles-toggle-button"),
   },
+  ruleGroups: {
+    toolbar: {
+      root: () => cy.findByTestId("rule-groups-toolbar"),
+    },
+  },
   ruleRows: () => cy.findAllByTestId("rule-row"),
   ruleRowsFirst: () => selectors.ruleRows().first(),
   rules: {
@@ -150,6 +155,9 @@ export const selectors = {
         toneSelectOption: () => cy.findByTestId("tone-option"),
       },
       dropdownToggle: () => cy.findByTestId("suggestions-dropdown-toggle"),
+    },
+    ruleGroups: {
+      includedGroupsList: () => cy.findByTestId("included-groups-list"),
     },
   },
   support: {

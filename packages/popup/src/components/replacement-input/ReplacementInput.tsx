@@ -323,7 +323,7 @@ export default function ReplacementInput({
         </Button>
       </form>
       {canGroupRules && (
-        <div className="d-flex gap-1 py-2">
+        <div className="d-flex gap-1 py-2" data-testid="included-groups-list">
           {includedGroups.map((group) => (
             <Tooltip key={group.identifier} title={group.name}>
               <Button

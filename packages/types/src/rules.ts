@@ -34,6 +34,11 @@ export type MatcherReplaceProps = Pick<
 /**
  * A Matcher as stored in the `sync` storage area.
  */
+export type MatcherGroupInSync = Record<string, MatcherGroup>;
+
+/**
+ * A Matcher as stored in the `sync` storage area.
+ */
 export type MatcherInSync = Record<string, Matcher>;
 
 export type StorageMatcher = Sortable<Matcher>;

@@ -1,6 +1,6 @@
 import { selectors } from "../../support/selectors";
 
-describe("rule groups", () => {
+describe("options page rule groups", () => {
   describe("feature availability", () => {
     beforeEach(() => {
       cy.visitWithStorage({

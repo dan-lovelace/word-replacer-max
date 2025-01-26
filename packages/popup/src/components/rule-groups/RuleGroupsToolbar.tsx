@@ -103,7 +103,7 @@ export default function RuleGroupsToolbar() {
   return (
     <div
       className="bg-white d-flex align-items-center gap-2 position-sticky mx-n1 py-2 top-0 z-3"
-      data-testid="rule-groups"
+      data-testid="rule-groups-toolbar"
     >
       <IconButton
         className={cx(ICON_BUTTON_BASE_CLASS, "align-self-start")}
