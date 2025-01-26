@@ -1,5 +1,6 @@
 import { useMemo } from "preact/hooks";
 
+import { cx } from "@worm/shared";
 import { getActiveMatchers } from "@worm/shared/src/browser/matchers";
 import { StorageMatcher } from "@worm/types/src/rules";
 
@@ -20,7 +21,7 @@ export default function RuleList() {
     storage: {
       local: { authIdToken },
       sync,
-      sync: { matchers },
+      sync: { matchers, ruleGroups },
     },
   } = useConfig();
   const { rules: lang } = useLanguage();
@@ -46,8 +47,8 @@ export default function RuleList() {
   }
 
   const canGroupRules = useMemo(
-    () => hasAccess("feat:ruleGroups"),
-    [authIdToken]
+    () => ruleGroups?.active && hasAccess("feat:ruleGroups"),
+    [authIdToken, ruleGroups?.active]
   );
 
   const renderedMatchers: StorageMatcher[] | undefined = useMemo(
@@ -58,7 +59,10 @@ export default function RuleList() {
   return (
     <>
       {canGroupRules && <RuleGroupsToolbar />}
-      <div className="row gx-3 gy-2" data-testid="rule-list-wrapper">
+      <div
+        className={cx("row gx-3 gy-2", !canGroupRules && "pt-2")}
+        data-testid="rule-list-wrapper"
+      >
         {renderedMatchers?.map((matcher) => (
           <div
             key={matcher.identifier}

@@ -72,7 +72,7 @@ export default function DomainInput() {
   };
 
   return (
-    <div className="container-fluid gx-0 d-flex flex-column">
+    <div className="container-fluid gx-0 d-flex flex-column pt-2">
       <div className="row mb-2">
         <div className="col-12 col-lg-8">
           <div className="d-flex align-items-center gap-2">
