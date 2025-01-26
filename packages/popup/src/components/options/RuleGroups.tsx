@@ -4,6 +4,7 @@ import { JSXInternal } from "preact/src/jsx";
 import { storageSetByKeys } from "@worm/shared/src/storage";
 
 import { Indented } from "../../containers/Indented";
+import { useAuth } from "../../store/Auth";
 import { useConfig } from "../../store/Config";
 
 type ReplacementGroupsProps = ComponentProps<"div"> & {};
@@ -11,6 +12,7 @@ type ReplacementGroupsProps = ComponentProps<"div"> & {};
 const INPUT_ID = "rule-groups-enabled-checkbox";
 
 export default function RuleGroups({}: ReplacementGroupsProps) {
+  const { hasAccess } = useAuth();
   const {
     storage: {
       sync: { ruleGroups },
@@ -30,6 +32,10 @@ export default function RuleGroups({}: ReplacementGroupsProps) {
   };
 
   const isActive = Boolean(ruleGroups?.active);
+
+  if (!hasAccess("feat:ruleGroups")) {
+    return <></>;
+  }
 
   return (
     <div data-testid="rule-groups">

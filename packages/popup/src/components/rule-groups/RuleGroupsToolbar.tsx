@@ -10,6 +10,7 @@ import { storageSetByKeys } from "@worm/shared/src/storage";
 
 import { useConfig } from "../../store/Config";
 
+import { useToast } from "../alert/useToast";
 import IconButton, { ICON_BUTTON_BASE_CLASS } from "../button/IconButton";
 
 import RuleGroupColor from "./RuleGroupColor";
@@ -23,6 +24,7 @@ export default function RuleGroupsToolbar() {
       sync: { ruleGroups },
     },
   } = useConfig();
+  const { showRefreshToast } = useToast();
 
   useEffect(() => {
     const optionKeys = ["Control", "Meta"];
@@ -53,12 +55,21 @@ export default function RuleGroupsToolbar() {
     const existingGroups = getMatcherGroups(sync) ?? {};
 
     if (isOptionHeld) {
-      storageSetByKeys({
-        [storageKey]: {
-          ...existingGroups[storageKey],
-          active: !Boolean(existingGroups[storageKey]?.active ?? false),
+      const newActive = !Boolean(existingGroups[storageKey]?.active ?? false);
+
+      storageSetByKeys(
+        {
+          [storageKey]: {
+            ...existingGroups[storageKey],
+            active: newActive,
+          },
         },
-      });
+        {
+          onSuccess() {
+            showRefreshToast(!newActive);
+          },
+        }
+      );
     } else {
       const newGroups = Object.keys(existingGroups).reduce(
         (acc, key) => ({
@@ -72,7 +83,11 @@ export default function RuleGroupsToolbar() {
         {} as typeof existingGroups
       );
 
-      storageSetByKeys(newGroups);
+      storageSetByKeys(newGroups, {
+        onSuccess() {
+          showRefreshToast();
+        },
+      });
     }
   };
 

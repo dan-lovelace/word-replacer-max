@@ -4,6 +4,7 @@ import { getActiveMatchers } from "@worm/shared/src/browser/matchers";
 import { StorageMatcher } from "@worm/types/src/rules";
 
 import { useLanguage } from "../../lib/language";
+import { useAuth } from "../../store/Auth";
 import { useConfig } from "../../store/Config";
 
 import Alert, { ALERT_SIZES } from "../Alerts";
@@ -14,8 +15,10 @@ import RuleRow from "../rules/RuleRow";
 import AddNewRule from "./AddNewRule";
 
 export default function RuleList() {
+  const { hasAccess } = useAuth();
   const {
     storage: {
+      local: { authIdToken },
       sync,
       sync: { matchers },
     },
@@ -42,6 +45,11 @@ export default function RuleList() {
     );
   }
 
+  const canGroupRules = useMemo(
+    () => hasAccess("feat:ruleGroups"),
+    [authIdToken]
+  );
+
   const renderedMatchers: StorageMatcher[] | undefined = useMemo(
     () => getActiveMatchers(sync),
     [sync]
@@ -49,7 +57,7 @@ export default function RuleList() {
 
   return (
     <>
-      <RuleGroupsToolbar />
+      {canGroupRules && <RuleGroupsToolbar />}
       <div className="row gx-3 gy-2" data-testid="rule-list-wrapper">
         {renderedMatchers?.map((matcher) => (
           <div

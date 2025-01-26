@@ -26,6 +26,8 @@ export const storageGet = sync.get;
 export const storageRemove = sync.remove;
 export const storageSet = sync.set;
 
+export const authStorageProvider = getStorageProvider("local");
+
 export function getStorageProvider(providerName: StorageProvider = "sync") {
   return browser.storage[providerName];
 }

@@ -65,6 +65,7 @@ export default function ReplacementInput({
   const { hasAccess } = useAuth();
   const {
     storage: {
+      local: { authIdToken },
       sync,
       sync: { matchers, replacementStyle, replacementSuggest, ruleGroups },
     },
@@ -113,9 +114,16 @@ export default function ReplacementInput({
       (matcherIdentifier) => identifier !== matcherIdentifier
     );
 
-    storageSetByKeys({
-      [storageKey]: group,
-    });
+    storageSetByKeys(
+      {
+        [storageKey]: group,
+      },
+      {
+        onSuccess() {
+          showRefreshToast(active && group.active);
+        },
+      }
+    );
   };
 
   const handleReplacementStyleChange = () => {
@@ -171,13 +179,22 @@ export default function ReplacementInput({
     };
   }, [sync]);
 
-  const canSuggest =
-    replacementSuggest?.active && hasAccess("api:post:Suggest");
+  const canGroupRules = useMemo(
+    () => ruleGroups?.active && hasAccess("feat:ruleGroups"),
+    [authIdToken, ruleGroups?.active]
+  );
+
+  const canSuggest = useMemo(
+    () => replacementSuggest?.active && hasAccess("api:post:Suggest"),
+    [authIdToken, replacementSuggest?.active]
+  );
+
   const inputWidth =
     INPUT_WIDTH_BASE -
     ((canSuggest ? INPUT_BUTTON_WIDTH - 1 : 0) +
       (replacementStyle?.active ? INPUT_BUTTON_WIDTH - 1 : 0) +
       (ruleGroups?.active ? INPUT_BUTTON_WIDTH - 1 : 0));
+
   return (
     <>
       <form
@@ -247,7 +264,7 @@ export default function ReplacementInput({
               />
             </div>
           )}
-          {ruleGroups?.active && (
+          {canGroupRules && (
             <DropdownButton<IconButtonProps>
               offset={0}
               componentProps={{
@@ -305,7 +322,7 @@ export default function ReplacementInput({
           Save
         </Button>
       </form>
-      {ruleGroups?.active && includedGroups.length > 0 && (
+      {canGroupRules && (
         <div className="d-flex gap-1 py-2">
           {includedGroups.map((group) => (
             <Tooltip key={group.identifier} title={group.name}>

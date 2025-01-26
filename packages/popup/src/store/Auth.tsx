@@ -1,16 +1,14 @@
 import { createContext } from "preact";
 import { useContext, useEffect, useMemo } from "preact/hooks";
 
-import { decodeJWT } from "aws-amplify/auth";
-
 import {
   connectionManager,
   ConnectMessageSender,
 } from "@worm/shared/src/browser";
 import {
   getJWTAppUser,
+  getTokenGroups,
   groupsHavePermission,
-  JWT_GROUPS_KEY,
 } from "@worm/shared/src/permission";
 import { AppUser } from "@worm/types/src/identity";
 import { UserGroups, UserPermission } from "@worm/types/src/permission";
@@ -67,13 +65,11 @@ export function AuthProvider({ children }: { children: PreactChildren }) {
       return false;
     }
 
-    const groups = decodeJWT(authIdToken).payload[JWT_GROUPS_KEY];
+    const groups = getTokenGroups(authIdToken);
 
-    if (!groups || !Array.isArray(groups)) {
-      return false;
-    }
-
-    return groupsHavePermission(groups as UserGroups, permission);
+    return groups
+      ? groupsHavePermission(groups as UserGroups, permission)
+      : false;
   };
 
   return (

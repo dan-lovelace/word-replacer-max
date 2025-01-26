@@ -1,6 +1,6 @@
 import { KeyValueStorageInterface } from "@aws-amplify/core";
 
-import { getStorageProvider } from "@worm/shared/src/storage";
+import { authStorageProvider } from "@worm/shared/src/storage";
 
 type StorageAuthKey = (typeof storageAuthSuffixes)[number];
 
@@ -41,8 +41,6 @@ const storageAuthSuffixes = [
   "refreshToken",
 ] as const;
 
-export const sessionStorageProvider = getStorageProvider("local");
-
 export const sessionStorageInterface = (
   clientId: string
 ): KeyValueStorageInterface => {
@@ -51,7 +49,7 @@ export const sessionStorageInterface = (
   return {
     clear: () =>
       new Promise(async (resolve) => {
-        await sessionStorageProvider.remove([
+        await authStorageProvider.remove([
           "authAccessToken",
           "authClockDrift",
           "authIdToken",
@@ -73,7 +71,7 @@ export const sessionStorageInterface = (
           return resolve(null);
         }
 
-        const getRes = await sessionStorageProvider.get([
+        const getRes = await authStorageProvider.get([
           "authAccessToken",
           "authClockDrift",
           "authIdToken",
@@ -118,27 +116,27 @@ export const sessionStorageInterface = (
 
         switch (suffix) {
           case "LastAuthUser":
-            await sessionStorageProvider.set({
+            await authStorageProvider.set({
               authLastAuthUser: value,
             });
             break;
           case "accessToken":
-            await sessionStorageProvider.set({
+            await authStorageProvider.set({
               authAccessToken: value,
             });
             break;
           case "clockDrift":
-            await sessionStorageProvider.set({
+            await authStorageProvider.set({
               authClockDrift: value,
             });
             break;
           case "idToken":
-            await sessionStorageProvider.set({
+            await authStorageProvider.set({
               authIdToken: value,
             });
             break;
           case "refreshToken":
-            await sessionStorageProvider.set({
+            await authStorageProvider.set({
               authRefreshToken: value,
             });
             break;
@@ -155,7 +153,7 @@ export const sessionStorageInterface = (
     removeItem: (key: string) =>
       new Promise(async (resolve) => {
         if (key === undefined) {
-          await sessionStorageProvider.remove([
+          await authStorageProvider.remove([
             "authAccessToken",
             "authClockDrift",
             "authIdToken",
@@ -186,19 +184,19 @@ export const sessionStorageInterface = (
         const fn = async () => {
           switch (suffix) {
             case "LastAuthUser":
-              await sessionStorageProvider.remove(["authLastAuthUser"]);
+              await authStorageProvider.remove(["authLastAuthUser"]);
               break;
             case "accessToken":
-              await sessionStorageProvider.remove(["authAccessToken"]);
+              await authStorageProvider.remove(["authAccessToken"]);
               break;
             case "clockDrift":
-              await sessionStorageProvider.remove(["authClockDrift"]);
+              await authStorageProvider.remove(["authClockDrift"]);
               break;
             case "idToken":
-              await sessionStorageProvider.remove(["authIdToken"]);
+              await authStorageProvider.remove(["authIdToken"]);
               break;
             case "refreshToken":
-              await sessionStorageProvider.remove(["authRefreshToken"]);
+              await authStorageProvider.remove(["authRefreshToken"]);
               break;
           }
         };
