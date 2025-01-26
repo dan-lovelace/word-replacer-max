@@ -1,7 +1,7 @@
 import { interceptApiUsage } from "../../support/interceptors/api-usage";
 import { selectors } from "../../support/selectors";
 
-describe("API usage", () => {
+describe("api usage", () => {
   describe("for replacement suggest", () => {
     beforeEach(() => {
       cy.visitWithStorage({

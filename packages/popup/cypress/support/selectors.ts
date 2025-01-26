@@ -89,6 +89,10 @@ export const selectors = {
       toggleButton: () =>
         cy.findByTestId("replacement-suggestions-toggle-button"),
     },
+    ruleGroups: {
+      inputWrapper: () => cy.findByTestId("rule-groups-input-wrapper"),
+      toggleButton: () => cy.findByTestId("rule-groups-toggle-button"),
+    },
     rulesImport: {
       input: () => cy.findByTestId("file-input__input"),
       label: () => cy.findByTestId("file-input__label"),

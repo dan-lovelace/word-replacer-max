@@ -1,5 +1,6 @@
 import { merge } from "ts-deepmerge";
 
+import { DeepPartial } from "@worm/types";
 import { ApiAccountUsage } from "@worm/types/src/api";
 
 import { ENDPOINTS } from "../endpoints";
@@ -7,7 +8,9 @@ import { ENDPOINTS } from "../endpoints";
 /**
  * Modifies suggestion requests to include the access token from test storage.
  */
-export function interceptApiUsage(overrides: ApiAccountUsage = {}) {
+export function interceptApiUsage(
+  overrides: DeepPartial<ApiAccountUsage> = {}
+) {
   cy.intercept(ENDPOINTS.ACCOUNT_USAGE, {
     body: {
       data: merge(
