@@ -5,6 +5,15 @@ $enable-negative-margins: true;
 $primary: #025ade;
 $tooltip-max-width: 300px;
 
+$zindex-levels: (
+  n1: -1,
+  0: 0,
+  1: 1,
+  2: 2,
+  3: 3,
+  4: 4,
+);
+
 @import "bootstrap/scss/bootstrap";
 
 /**

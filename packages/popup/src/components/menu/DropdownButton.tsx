@@ -78,7 +78,7 @@ export default function DropdownButton<T>({
 
       {isOpen && (
         <div
-          className="bg-white rounded shadow overflow-hidden z-3"
+          className="bg-white rounded shadow overflow-hidden z-4"
           ref={refs.setFloating}
           style={{
             left: x ?? 0,
