@@ -18,7 +18,10 @@ exports[`runStorageMigrations does not run migrations when on the latest version
     "activeTab": "rules",
     "domainListEffect": "deny",
     "extensionEnabled": true,
-    "focusRule": "",
+    "focusRule": {
+      "field": "replacement",
+      "matcher": "",
+    },
   },
   "storageVersion": "1.0.0",
 }
@@ -43,7 +46,10 @@ exports[`runStorageMigrations does not run migrations when on the latest version
     "activeTab": "rules",
     "domainListEffect": "deny",
     "extensionEnabled": true,
-    "focusRule": "",
+    "focusRule": {
+      "field": "replacement",
+      "matcher": "",
+    },
   },
   "replacementStyle": {
     "active": false,
@@ -76,7 +82,10 @@ exports[`runStorageMigrations migrates from 1.0.0 to 1.1.0 1`] = `
     "activeTab": "rules",
     "domainListEffect": "deny",
     "extensionEnabled": true,
-    "focusRule": "",
+    "focusRule": {
+      "field": "replacement",
+      "matcher": "",
+    },
   },
   "replacementStyle": {
     "active": false,
@@ -108,7 +117,10 @@ exports[`runStorageMigrations migrates from undefined version to 1.0.0 1`] = `
     "activeTab": "rules",
     "domainListEffect": "deny",
     "extensionEnabled": true,
-    "focusRule": "",
+    "focusRule": {
+      "field": "replacement",
+      "matcher": "",
+    },
   },
   "storageVersion": "1.0.0",
 }
@@ -133,7 +145,10 @@ exports[`runStorageMigrations migrates from undefined version to 1.1.0 1`] = `
     "activeTab": "rules",
     "domainListEffect": "deny",
     "extensionEnabled": true,
-    "focusRule": "",
+    "focusRule": {
+      "field": "replacement",
+      "matcher": "",
+    },
   },
   "replacementStyle": {
     "active": false,
@@ -192,7 +207,10 @@ exports[`runStorageMigrations works with extension version v0.6.2 storage 1`] = 
     "activeTab": "rules",
     "domainListEffect": "deny",
     "extensionEnabled": true,
-    "focusRule": "",
+    "focusRule": {
+      "field": "replacement",
+      "matcher": "",
+    },
   },
   "replacementStyle": {
     "active": false,

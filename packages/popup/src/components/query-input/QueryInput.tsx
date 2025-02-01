@@ -1,4 +1,4 @@
-import { Fragment } from "preact";
+import { Fragment, Ref } from "preact";
 import { useEffect, useRef, useState } from "preact/hooks";
 import { JSXInternal } from "preact/src/jsx";
 
@@ -23,6 +23,7 @@ type QueryInputProps = Pick<
   "active" | "identifier" | "queries" | "queryPatterns" | "replacement"
 > & {
   disabled: boolean;
+  inputRef: Ref<HTMLInputElement>;
   onChange: (
     identifier: string,
     key: keyof Matcher,
@@ -56,6 +57,7 @@ export default function QueryInput({
   active,
   disabled,
   identifier,
+  inputRef,
   queries,
   queryPatterns,
   replacement,
@@ -228,6 +230,7 @@ export default function QueryInput({
             disabled={disabled}
             enterkeyhint="enter"
             placeholder="Search for..."
+            ref={inputRef}
             type="text"
             value={inputValue}
             onBlur={handleFormSubmit}

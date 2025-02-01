@@ -1,6 +1,6 @@
 import { createContext, useContext, useState } from "react";
 
-import { SignInStatusState } from "@worm/types/src/identity";
+import { SignInStatus } from "@worm/types/src/identity";
 
 type AppUser = {
   email: string;
@@ -8,9 +8,9 @@ type AppUser = {
 
 type AuthProviderContextProps = {
   appUser?: AppUser;
-  signInStatus: SignInStatusState;
+  signInStatus: SignInStatus;
   setAppUser: React.Dispatch<React.SetStateAction<AppUser | undefined>>;
-  setSignInStatus: React.Dispatch<React.SetStateAction<SignInStatusState>>;
+  setSignInStatus: React.Dispatch<React.SetStateAction<SignInStatus>>;
 };
 
 type AuthProviderProps = React.HTMLAttributes<HTMLDivElement>;
@@ -21,8 +21,7 @@ const AuthProviderContext = createContext<AuthProviderContextProps>(
 
 const useAuthProviderValue = (): AuthProviderContextProps => {
   const [appUser, setAppUser] = useState<AppUser>();
-  const [signInStatus, setSignInStatus] =
-    useState<SignInStatusState>("unknown");
+  const [signInStatus, setSignInStatus] = useState<SignInStatus>("unknown");
 
   return {
     appUser,

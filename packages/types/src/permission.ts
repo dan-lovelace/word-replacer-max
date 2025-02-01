@@ -36,7 +36,8 @@ export type UserPermission =
   | "api:post:AuthDeleteAccount"
   | "api:post:AuthTestTokens"
   | "api:post:Suggest"
-  | "api:unlimitedUsage";
+  | "api:unlimitedUsage"
+  | "feat:ruleGroups";
 
 export type UserPoolCustomAttributes = {
   terms_acceptance: TermsAcceptance;

@@ -29,7 +29,10 @@ const mockSyncStorage: Record<string, any> = {
     activeTab: "rules",
     domainListEffect: "deny",
     extensionEnabled: true,
-    focusRule: "",
+    focusRule: {
+      field: "replacement",
+      matcher: "",
+    },
   },
   replacementStyle: DEFAULT_REPLACEMENT_STYLE,
 };

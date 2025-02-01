@@ -44,6 +44,7 @@ export default function RuleRow({
   } = useConfig();
   const language = useLanguage();
   const confirmingDeleteRef = useRef<boolean>();
+  const queriesInputRef = useRef<HTMLInputElement>(null);
   const replacementInputRef = useRef<HTMLInputElement>(null);
   const { showToast } = useToast();
 
@@ -54,17 +55,32 @@ export default function RuleRow({
 
     const { focusRule } = preferences;
 
-    if (focusRule !== identifier || !replacementInputRef.current) {
+    if (
+      focusRule.matcher !== identifier ||
+      !queriesInputRef.current ||
+      !replacementInputRef.current
+    ) {
       return;
     }
 
     // scroll to and focus the new row's replacement input field
-    replacementInputRef.current.scrollIntoView();
-    replacementInputRef.current.focus();
+    switch (focusRule.field) {
+      case "queries": {
+        queriesInputRef.current.scrollIntoView();
+        queriesInputRef.current.focus();
+        break;
+      }
+
+      case "replacement": {
+        replacementInputRef.current.scrollIntoView();
+        replacementInputRef.current.focus();
+        break;
+      }
+    }
 
     // unset focused rule in storage
     const newPreferences = Object.assign({}, preferences);
-    newPreferences.focusRule = "";
+    newPreferences.focusRule.matcher = "";
     storageSetByKeys({
       preferences: newPreferences,
     });
@@ -202,6 +218,7 @@ export default function RuleRow({
           active={active}
           disabled={disabled}
           identifier={identifier}
+          inputRef={queriesInputRef}
           queries={queries}
           queryPatterns={queryPatterns}
           replacement={replacement}

@@ -10,6 +10,8 @@ import Slide from "../transition/Slide";
 
 import ApiUsage from "./ApiUsage";
 
+const INPUT_ID = "replacement-suggestion-enabled-checkbox";
+
 export default function ReplacementSuggestions() {
   const { hasAccess } = useAuth();
   const {
@@ -30,7 +32,6 @@ export default function ReplacementSuggestions() {
     });
   };
 
-  const inputId = "replacement-suggestion-enabled-checkbox";
   const isActive = Boolean(replacementSuggest?.active);
 
   if (!hasAccess("api:post:Suggest")) {
@@ -47,14 +48,14 @@ export default function ReplacementSuggestions() {
           checked={isActive}
           className="form-check-input m-0"
           data-testid="replacement-suggestions-toggle-button"
-          id={inputId}
+          id={INPUT_ID}
           role="switch"
           type="checkbox"
           onChange={handleActiveChange}
         />
         <label
           className="form-check-label user-select-none fw-medium"
-          for={inputId}
+          for={INPUT_ID}
         >
           Replacement suggestions
         </label>

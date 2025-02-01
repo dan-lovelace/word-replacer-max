@@ -14,7 +14,7 @@ export default function HomePage() {
 
   return (
     <div
-      className="container-fluid py-2 flex-fill overflow-y-auto"
+      className="container-fluid pb-2 flex-fill overflow-y-auto"
       data-testid="home-page"
     >
       {preferences?.activeTab === "account" && <Account />}

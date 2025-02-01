@@ -55,7 +55,7 @@ export default function NewsletterSignup() {
   const [validationErrors, setValidationErrors] = useState<ValidationErrors>();
 
   const { isPending, mutate: invokeMarketingSignup } = useMarketingSignup();
-  const containerRef = useRef<HTMLDivElement>();
+  const containerRef = useRef<HTMLDivElement>(null);
   const { breakpoints, palette, zIndex } = useTheme();
 
   const handleFormDataChange = (

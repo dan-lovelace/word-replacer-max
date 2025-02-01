@@ -34,7 +34,10 @@ describe("runStorageMigrations", () => {
         activeTab: "rules",
         domainListEffect: "deny",
         extensionEnabled: true,
-        focusRule: "",
+        focusRule: {
+          field: "replacement",
+          matcher: "",
+        },
       },
       storageVersion: "1.0.0",
     };
@@ -63,7 +66,10 @@ describe("runStorageMigrations", () => {
         activeTab: "rules",
         domainListEffect: "deny",
         extensionEnabled: true,
-        focusRule: "",
+        focusRule: {
+          field: "replacement",
+          matcher: "",
+        },
       },
       replacementStyle: {
         active: false,
@@ -97,7 +103,10 @@ describe("runStorageMigrations", () => {
         activeTab: "rules",
         domainListEffect: "deny",
         extensionEnabled: true,
-        focusRule: "",
+        focusRule: {
+          field: "replacement",
+          matcher: "",
+        },
       },
     };
     await storageSet(testStorage);
@@ -124,7 +133,10 @@ describe("runStorageMigrations", () => {
         activeTab: "rules",
         domainListEffect: "deny",
         extensionEnabled: true,
-        focusRule: "",
+        focusRule: {
+          field: "replacement",
+          matcher: "",
+        },
       },
     };
     await storageSet(testStorage);
@@ -151,7 +163,10 @@ describe("runStorageMigrations", () => {
         activeTab: "rules",
         domainListEffect: "deny",
         extensionEnabled: true,
-        focusRule: "",
+        focusRule: {
+          field: "replacement",
+          matcher: "",
+        },
       },
       storageVersion: "1.0.0",
     };
@@ -197,7 +212,10 @@ describe("runStorageMigrations", () => {
         activeTab: "rules",
         domainListEffect: "deny",
         extensionEnabled: true,
-        focusRule: "",
+        focusRule: {
+          field: "replacement",
+          matcher: "",
+        },
       },
       storageVersion: "1.0.0",
     };

@@ -20,11 +20,16 @@ export default function MaterialIcon({
   ...rest
 }: MaterialIconProps) {
   const sizeClassName = useMemo(() => {
+    /**
+     * NOTE: Bootstrap utility classes are intentionally not used for certain
+     * sizes because they scale slightly depending on viewable width. The
+     * exception being `fs-6` which does not have any scaling properties.
+     */
     switch (size) {
       case "lg":
-        return "fs-4";
+        return "fs-lg";
       case "md":
-        return "fs-5";
+        return "fs-md";
       case "sm":
         return "fs-6";
       default:

@@ -7,6 +7,7 @@ import {
 } from "@worm/shared";
 import { getApiEndpoint } from "@worm/shared/src/api";
 import { browser } from "@worm/shared/src/browser";
+import { authStorageProvider } from "@worm/shared/src/storage";
 import { ApiAuthTokens } from "@worm/types/src/api";
 import { IdentificationError } from "@worm/types/src/identity";
 import {
@@ -19,7 +20,6 @@ import {
 import { UserTokens } from "@worm/types/src/permission";
 
 import { getAuthTokens, getCurrentUser, signUserOut } from "./auth/session";
-import { sessionStorageProvider } from "./auth/session-store";
 
 function getError(error: unknown) {
   let errorMessage: string;
@@ -213,7 +213,7 @@ export function startMessageListener() {
            * Update storage using our own keys, not Amplify's. These are
            * translated in the custom token provider.
            */
-          await sessionStorageProvider.set({
+          await authStorageProvider.set({
             authAccessToken: tokens.accessToken,
             authIdToken: tokens.idToken,
             authLastAuthUser: decodeJWT(

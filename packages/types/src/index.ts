@@ -1,3 +1,7 @@
+export type Sortable<T> = T & {
+  sortIndex?: number;
+};
+
 export type DeepPartial<T> = T extends object
   ? {
       [P in keyof T]?: DeepPartial<T[P]>;

@@ -35,7 +35,9 @@ const authConfig: AuthConfig = {
 };
 
 cognitoUserPoolsTokenProvider.setAuthConfig(authConfig);
-cognitoUserPoolsTokenProvider.setKeyValueStorage(sessionStorageInterface);
+cognitoUserPoolsTokenProvider.setKeyValueStorage(
+  sessionStorageInterface(userPoolClientId)
+);
 
 /**
  * Amplify's configuration entrypoint.

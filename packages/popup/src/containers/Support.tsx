@@ -13,7 +13,9 @@ import {
   MAILTO_CONTACT_SUPPORT_URL,
   SUBMIT_NEW_TICKET_URL,
 } from "@worm/shared/src/support";
-import { CONTACT_SUPPORT_MAXIMUM_MESSAGE_LENGTH } from "@worm/shared/src/validation/contact";
+import {
+  CONTACT_SUPPORT_MAXIMUM_MESSAGE_LENGTH,
+} from "@worm/shared/src/validation/contact";
 import {
   ApiContactSupportRequest,
   ApiContactSupportResponse,
@@ -140,7 +142,7 @@ export default function Support() {
   };
 
   return (
-    <div className="container-fluid gx-0" data-testid="support-container">
+    <div className="container-fluid gx-0 pt-2" data-testid="support-container">
       {currentUser ? (
         <div
           className="d-flex flex-column gap-3"

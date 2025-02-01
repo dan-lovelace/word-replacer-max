@@ -15,7 +15,7 @@ export default function Account() {
 
   return (
     <div
-      className="container-fluid gx-0 d-flex flex-column gap-3"
+      className="container-fluid gx-0 d-flex flex-column gap-3 pt-2"
       data-testid="account-container"
     >
       <div className="row">

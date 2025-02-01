@@ -13,6 +13,7 @@ import {
 
 import { STORAGE_MATCHER_PREFIX } from "../../browser";
 import { logDebug } from "../../logging";
+import { DEFAULT_RULE_GROUPS } from "../../replace/lib/groups";
 import { DEFAULT_REPLACEMENT_SUGGEST } from "../../replace/lib/suggest";
 
 import { BASELINE_STORAGE_VERSION, CURRENT_STORAGE_VERSION } from "../";
@@ -68,6 +69,21 @@ export const MIGRATIONS: Migrations = {
       1: (storage) => {
         const updatedValues: SyncStorage = {
           replacementSuggest: DEFAULT_REPLACEMENT_SUGGEST,
+        };
+        const merged = merge(storage, updatedValues);
+
+        return merged;
+      },
+    },
+    2: {
+      /**
+       * **1.2.0** - Rule groups
+       *
+       * Initializes rule groups with default values.
+       */
+      0: (storage) => {
+        const updatedValues: SyncStorage = {
+          ruleGroups: DEFAULT_RULE_GROUPS,
         };
         const merged = merge(storage, updatedValues);
 
