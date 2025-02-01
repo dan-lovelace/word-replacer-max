@@ -223,6 +223,9 @@ exports[`runStorageMigrations works with extension version v0.6.2 storage 1`] = 
   "replacementSuggest": {
     "active": false,
   },
-  "storageVersion": "1.1.1",
+  "ruleGroups": {
+    "active": false,
+  },
+  "storageVersion": "1.2.0",
 }
 `;

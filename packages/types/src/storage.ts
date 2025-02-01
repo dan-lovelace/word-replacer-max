@@ -8,7 +8,7 @@ import { Matcher, StorageMatcher } from "./rules";
 
 export const schemaVersions = [1] as const;
 
-export const storageVersions = ["1.0.0", "1.1.0", "1.1.1"] as const;
+export const storageVersions = ["1.0.0", "1.1.0", "1.1.1", "1.2.0"] as const;
 
 export type LocalStorage = Partial<{
   recentSuggestions: RecentSuggestions;
