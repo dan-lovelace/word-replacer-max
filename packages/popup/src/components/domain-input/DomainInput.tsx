@@ -9,7 +9,9 @@ import { useLanguage } from "../../lib/language";
 import { useConfig } from "../../store/Config";
 
 import { useToast } from "../alert/useToast";
+import Alert from "../Alerts";
 import Chip from "../Chip";
+import Slide from "../transition/Slide";
 
 export default function DomainInput() {
   const [value, setValue] = useState("");
@@ -38,6 +40,8 @@ export default function DomainInput() {
       | JSXInternal.TargetedFocusEvent<HTMLInputElement>
   ) => {
     event.preventDefault();
+
+    if (!value.trim().length) return;
 
     const formatted = formatDomainInput(value);
 
@@ -118,6 +122,15 @@ export default function DomainInput() {
               </div>
             </div>
           </div>
+          <Slide isOpen={preferences?.domainListEffect === "allow"}>
+            <Alert
+              className="mt-2"
+              severity="warning"
+              title={language.domains.ALLOWLIST_ALERT_TITLE}
+            >
+              {language.domains.ALLOWLIST_ALERT_BODY}
+            </Alert>
+          </Slide>
         </div>
       </div>
       <div className="row">

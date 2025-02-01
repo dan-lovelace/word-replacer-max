@@ -94,10 +94,10 @@ export default function RuleGroupsToolbar() {
         }}
         title="Rule groups"
         style={{
-          height: 32,
+          height: 23,
           marginLeft: 2,
           marginRight: 1,
-          padding: "var(--bs-btn-padding-y) 10px",
+          padding: "0px 10px",
         }}
         data-bs-toggle="modal"
         data-bs-target="#rule-groups-modal"
@@ -121,7 +121,7 @@ export default function RuleGroupsToolbar() {
                 />
                 <label
                   className={cx(
-                    "btn btn-light btn-sm d-flex align-items-center gap-2 text-nowrap"
+                    "btn btn-light btn-sm py-0 d-flex align-items-center gap-2 text-nowrap"
                   )}
                   for={inputId}
                   data-testid="rule-group-toggle"

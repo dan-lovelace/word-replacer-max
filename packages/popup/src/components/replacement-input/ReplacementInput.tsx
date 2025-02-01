@@ -5,6 +5,7 @@ import { JSXInternal } from "preact/src/jsx";
 import { cx, isReplacementEmpty } from "@worm/shared";
 import {
   getMatcherGroups,
+  sortMatcherGroups,
   STORAGE_MATCHER_GROUP_PREFIX,
 } from "@worm/shared/src/browser";
 import { storageSetByKeys } from "@worm/shared/src/storage";
@@ -175,8 +176,8 @@ export default function ReplacementInput({
 
     return {
       allGroups: values,
-      availableGroups: _availableGroups,
-      includedGroups: _includedGroups,
+      availableGroups: sortMatcherGroups(_availableGroups),
+      includedGroups: sortMatcherGroups(_includedGroups),
     };
   }, [sync]);
 
