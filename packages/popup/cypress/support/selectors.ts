@@ -37,6 +37,9 @@ export const selectors = {
     customInput: () => cy.findByTestId("color-select-custom-input"),
     wrapper: () => cy.findByTestId("color-select"),
   },
+  domains: {
+    addDomainInput: () => cy.findByTestId("add-domain-input"),
+  },
   exportButton: () => cy.findAllByTestId("export-button"),
   exportModal: {
     modal: () => cy.findByTestId("export-modal"),

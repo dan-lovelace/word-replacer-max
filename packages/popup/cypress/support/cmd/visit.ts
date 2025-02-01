@@ -13,7 +13,7 @@ const defaultStore: VisitWithStorageParams = {
   local: {},
   session: {},
   sync: {
-    domainList: [],
+    domainList: ["docs.google.com", "github.com"],
     preferences: {
       activeTab: "rules",
       domainListEffect: "deny",

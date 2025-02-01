@@ -1,6 +1,7 @@
 import { useState } from "preact/hooks";
 import { JSXInternal } from "preact/src/jsx";
 
+import { formatDomainInput } from "@worm/shared";
 import { storageSetByKeys } from "@worm/shared/src/storage";
 import { DomainEffect } from "@worm/types/src/popup";
 
@@ -38,12 +39,23 @@ export default function DomainInput() {
   ) => {
     event.preventDefault();
 
-    if (!value || value.length === 0) return;
+    const formatted = formatDomainInput(value);
 
-    if (!domainList?.includes(value)) {
+    if (!formatted) {
+      showToast({
+        message: "Invalid domain. Check your input and try again.",
+        options: {
+          severity: "danger",
+        },
+      });
+
+      return;
+    }
+
+    if (!domainList?.includes(formatted)) {
       storageSetByKeys(
         {
-          domainList: [...(domainList || []), value],
+          domainList: [...(domainList || []), formatted],
         },
         {
           onError: (message) => {
@@ -134,6 +146,7 @@ export default function DomainInput() {
               value={value}
               onBlur={handleFormSubmit}
               onInput={handleTextChange}
+              data-testid="add-domain-input"
             />
             <button className="visually-hidden" type="submit">
               {language.domains.ADD_DOMAIN_FORM_SUBMIT_BUTTON_TEXT}

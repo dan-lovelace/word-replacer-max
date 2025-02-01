@@ -10,7 +10,7 @@ declare global {
 }
 
 const mockSyncStorage: Record<string, any> = {
-  domainList: [],
+  domainList: ["docs.google.com", "github.com"],
   matcher__1234: {
     active: true,
     identifier: "1234",
