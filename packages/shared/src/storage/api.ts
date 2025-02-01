@@ -9,6 +9,7 @@ import {
 
 import {
   browser,
+  getMatcherGroups,
   matchersFromStorage,
   matchersToStorage,
   STORAGE_MATCHER_PREFIX,
@@ -58,9 +59,37 @@ export async function storageGetByKeys<T extends SyncStorageKey>(keys?: T[]) {
   return results;
 }
 
-export function storageRemoveByKeys<Key extends SyncStorageKey | string>(
+export async function storageRemoveByKeys<Key extends SyncStorageKey | string>(
   keys: Key[]
 ) {
+  const matcherKeys = keys.filter((key) =>
+    key.startsWith(`${STORAGE_MATCHER_PREFIX}`)
+  ) as (keyof SyncStorage)[];
+
+  if (matcherKeys.length > 0) {
+    /**
+     * A matcher is being deleted. Clean up any associated rule group
+     * matchers.
+     */
+    const allStorage = await storageGetByKeys();
+    const groups = getMatcherGroups(allStorage) ?? {};
+
+    for (const matcherKey of matcherKeys) {
+      const matcher = allStorage.matchers?.find(
+        (matcher) =>
+          `${STORAGE_MATCHER_PREFIX}${matcher.identifier}` === matcherKey
+      );
+
+      for (const group of Object.values(groups)) {
+        group.matchers = group.matchers?.filter(
+          (matcherId) => matcherId !== matcher?.identifier
+        );
+      }
+    }
+
+    await storageSetByKeys(groups);
+  }
+
   return storageRemove(keys);
 }
 
@@ -88,6 +117,18 @@ export async function storageSetByKeys(
           )
         );
       }
+
+      /**
+       * Clean up any associated rule group matchers.
+       */
+      const storedMatcherGroups = getMatcherGroups(allStorage) ?? {};
+      const groupsArray = Object.values(storedMatcherGroups ?? {});
+
+      for (const group of groupsArray) {
+        group.matchers = [];
+      }
+
+      await storageSetByKeys(storedMatcherGroups);
     }
 
     /**
