@@ -82,7 +82,7 @@ export default {
       "Shareable link copied to clipboard.",
   },
   ruleGroups: {
-    NEW_GROUP_FORM_NAME_INPUT_PLACERHOLDER: "Group name",
+    NEW_GROUP_FORM_NAME_INPUT_PLACEHOLDER: "Group name",
   },
   rules: {
     EMPTY_RULES_LIST_ALERT_TITLE: "No active rules",

@@ -135,7 +135,7 @@ export default function RuleGroupRow({ data }: RuleGroupRowProps) {
             className="form-control"
             name="name"
             placeholder={
-              language.ruleGroups.NEW_GROUP_FORM_NAME_INPUT_PLACERHOLDER
+              language.ruleGroups.NEW_GROUP_FORM_NAME_INPUT_PLACEHOLDER
             }
             type="text"
             value={formData.name}

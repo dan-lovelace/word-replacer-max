@@ -64,13 +64,21 @@ export const MIGRATIONS: Migrations = {
        * **1.1.1** - Replacement suggestions
        *
        * Initializes replacement suggestions by creating a new storage
-       * property with default values.
+       * property with default values. Also reshapes preferences from a string
+       * to an object.
        */
       1: (storage) => {
         const updatedValues: SyncStorage = {
           replacementSuggest: DEFAULT_REPLACEMENT_SUGGEST,
         };
         const merged = merge(storage, updatedValues);
+
+        if (merged.preferences) {
+          merged.preferences.focusRule = {
+            field: "replacement",
+            matcher: "",
+          };
+        }
 
         return merged;
       },

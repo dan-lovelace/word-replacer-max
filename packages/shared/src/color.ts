@@ -3,7 +3,7 @@ class ColorGenerator {
   private readonly HUE_DIFFERENCE_THRESHOLD = 30;
   private readonly SATURATION_RANGE = { min: 70, max: 80 };
   private readonly LIGHTNESS_RANGE = { min: 45, max: 65 };
-  private readonly UNIQUE_COLOR_MEMORY_SIZE = 5; // Number of previous colors to ensure uniqueness against
+  private readonly UNIQUE_COLOR_MEMORY_SIZE = 5;
 
   private hslToHex(hue: number, saturation: number, lightness: number): string {
     const hslToRgb = (
@@ -25,7 +25,7 @@ class ColorGenerator {
     saturation /= 100;
     lightness /= 100;
 
-    // Calculate chroma (color intensity) and grayscale adjustment
+    // calculate chroma (color intensity) and grayscale adjustment
     const chromaMax =
       lightness < 0.5
         ? lightness * (1 + saturation)
@@ -65,7 +65,8 @@ class ColorGenerator {
       attempts++;
 
       if (attempts >= MAX_ATTEMPTS) {
-        this.recentHues = []; // Reset if we can't find a unique hue
+        // reset if we can't find a unique hue
+        this.recentHues = [];
 
         break;
       }
