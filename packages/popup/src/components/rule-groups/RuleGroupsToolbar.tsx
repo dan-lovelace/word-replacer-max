@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState } from "preact/hooks";
+import { useMemo } from "preact/hooks";
 import { Fragment } from "preact/jsx-runtime";
+import { JSXInternal } from "preact/src/jsx";
 
 import { cx } from "@worm/shared";
 import {
@@ -17,8 +18,6 @@ import IconButton, { ICON_BUTTON_BASE_CLASS } from "../button/IconButton";
 import RuleGroupColor from "./RuleGroupColor";
 
 export default function RuleGroupsToolbar() {
-  const [isOptionHeld, setIsOptionHeld] = useState(false);
-
   const {
     storage: {
       sync,
@@ -27,70 +26,50 @@ export default function RuleGroupsToolbar() {
   } = useConfig();
   const { showRefreshToast } = useToast();
 
-  useEffect(() => {
-    const optionKeys = ["Control", "Meta"];
+  const handleChange =
+    (identifier: string) =>
+    (event: JSXInternal.TargetedMouseEvent<HTMLInputElement>) => {
+      const storageKey = `${STORAGE_MATCHER_GROUP_PREFIX}${identifier}`;
+      const existingGroups = getMatcherGroups(sync) ?? {};
 
-    const keyDownListener = ({ key }: KeyboardEvent) => {
-      if (!optionKeys.includes(key)) return;
+      if (event.ctrlKey || event.metaKey) {
+        const newActive = !Boolean(existingGroups[storageKey]?.active ?? false);
 
-      setIsOptionHeld(true);
-    };
-
-    const keyUpListener = ({ key }: KeyboardEvent) => {
-      if (!optionKeys.includes(key)) return;
-
-      setIsOptionHeld(false);
-    };
-
-    document.documentElement.addEventListener("keydown", keyDownListener);
-    document.documentElement.addEventListener("keyup", keyUpListener);
-
-    return () => {
-      document.documentElement.removeEventListener("keydown", keyDownListener);
-      document.documentElement.removeEventListener("keyup", keyUpListener);
-    };
-  }, []);
-
-  const handleChange = (identifier: string) => () => {
-    const storageKey = `${STORAGE_MATCHER_GROUP_PREFIX}${identifier}`;
-    const existingGroups = getMatcherGroups(sync) ?? {};
-
-    if (isOptionHeld) {
-      const newActive = !Boolean(existingGroups[storageKey]?.active ?? false);
-
-      storageSetByKeys(
-        {
-          [storageKey]: {
-            ...existingGroups[storageKey],
-            active: newActive,
+        storageSetByKeys(
+          {
+            [storageKey]: {
+              ...existingGroups[storageKey],
+              active: newActive,
+            },
           },
-        },
-        {
+          {
+            onSuccess() {
+              showRefreshToast(!newActive);
+            },
+          }
+        );
+      } else {
+        const newGroups = Object.keys(existingGroups).reduce(
+          (acc, key) => ({
+            ...acc,
+            [key]: {
+              ...existingGroups[key],
+              active:
+                key === storageKey
+                  ? !Boolean(existingGroups[key].active)
+                  : false,
+            },
+          }),
+          {} as typeof existingGroups
+        );
+
+        storageSetByKeys(newGroups, {
           onSuccess() {
-            showRefreshToast(!newActive);
+            showRefreshToast();
           },
-        }
-      );
-    } else {
-      const newGroups = Object.keys(existingGroups).reduce(
-        (acc, key) => ({
-          ...acc,
-          [key]: {
-            ...existingGroups[key],
-            active:
-              key === storageKey ? !Boolean(existingGroups[key].active) : false,
-          },
-        }),
-        {} as typeof existingGroups
-      );
-
-      storageSetByKeys(newGroups, {
-        onSuccess() {
-          showRefreshToast();
-        },
-      });
-    }
-  };
+        });
+      }
+    };
 
   if (!ruleGroups?.active) {
     return <></>;
@@ -145,6 +124,7 @@ export default function RuleGroupsToolbar() {
                     "btn btn-light btn-sm d-flex align-items-center gap-2 text-nowrap"
                   )}
                   for={inputId}
+                  data-testid="rule-group-toggle"
                 >
                   <RuleGroupColor color={color} />
                   <span>{name}</span>

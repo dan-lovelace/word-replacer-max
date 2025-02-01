@@ -133,6 +133,7 @@ export const selectors = {
       ruleGroupRows: () => cy.findAllByTestId("rule-group-row"),
     },
     toolbar: {
+      groupToggles: () => cy.findAllByTestId("rule-group-toggle"),
       modalToggleButton: () => cy.findByTestId("rule-groups-button"),
       root: () => cy.findByTestId("rule-groups-toolbar"),
     },
