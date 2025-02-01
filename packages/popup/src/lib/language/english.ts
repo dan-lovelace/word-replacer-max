@@ -56,8 +56,8 @@ export default {
     ADD_DOMAIN_FORM_INPUT_PLACEHOLDER: "Enter a domain (e.g., example.com)",
     ADD_DOMAIN_FORM_SUBMIT_BUTTON_TEXT: "Add",
     ALLOWLIST_ALERT_BODY:
-      "With Allow mode, text replacements will only occur on the specific domains in this list. Expect replacements to work in fewer places compared to using Deny mode.",
-    ALLOWLIST_ALERT_TITLE: "Limited text replacements",
+      "Allow mode means your text replacements will only work on websites you list here - nowhere else.",
+    ALLOWLIST_ALERT_TITLE: "Limited replacement scope",
   },
   layout: {
     DISABLED_BANNER_BODY: "Extension is disabled.",
