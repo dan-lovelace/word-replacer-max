@@ -39,6 +39,9 @@ export const selectors = {
   },
   domains: {
     addDomainInput: () => cy.findByTestId("add-domain-input"),
+    allowAlert: () => cy.findByTestId("allow-alert"),
+    allowRadioButton: () => cy.findByTestId("allow-radio-button"),
+    denyRadioButton: () => cy.findByTestId("deny-radio-button"),
   },
   exportButton: () => cy.findAllByTestId("export-button"),
   exportModal: {

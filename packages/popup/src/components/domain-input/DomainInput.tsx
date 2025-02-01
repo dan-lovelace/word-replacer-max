@@ -103,7 +103,11 @@ export default function DomainInput() {
                   type="radio"
                   onChange={handleEffectChange("allow")}
                 />
-                <label className="form-check-label" for="allowRadio">
+                <label
+                  className="form-check-label"
+                  for="allowRadio"
+                  data-testid="allow-radio-button"
+                >
                   Allow
                 </label>
               </div>
@@ -116,7 +120,11 @@ export default function DomainInput() {
                   type="radio"
                   onChange={handleEffectChange("deny")}
                 />
-                <label className="form-check-label" for="denyRadio">
+                <label
+                  className="form-check-label"
+                  for="denyRadio"
+                  data-testid="deny-radio-button"
+                >
                   Deny
                 </label>
               </div>
@@ -127,6 +135,7 @@ export default function DomainInput() {
               className="mt-2"
               severity="warning"
               title={language.domains.ALLOWLIST_ALERT_TITLE}
+              data-testid="allow-alert"
             >
               {language.domains.ALLOWLIST_ALERT_BODY}
             </Alert>

@@ -67,4 +67,17 @@ describe("domain input", () => {
       cy.wrap(allStorage?.domainList).should("not.contain", invalidDomain);
     });
   });
+
+  it("should show a warning with allow mode selected", () => {
+    selectors.domains.allowRadioButton().click();
+
+    selectors.domains.allowAlert().should("be.visible");
+  });
+
+  it("should not show a warning with deny mode selected", () => {
+    selectors.domains.allowRadioButton().click();
+    selectors.domains.denyRadioButton().click();
+
+    selectors.domains.allowAlert().should("not.be.visible");
+  });
 });
