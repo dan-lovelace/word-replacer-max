@@ -141,6 +141,7 @@ export default function RuleGroupRow({ data }: RuleGroupRowProps) {
             value={formData.name}
             onBlur={handleFormSubmit}
             onChange={handleFormChange}
+            data-testid="name-input"
           />
         </div>
         <div>
@@ -165,6 +166,7 @@ export default function RuleGroupRow({ data }: RuleGroupRowProps) {
             onClick={handleDeleteClick}
             style={{ minHeight: 40 }}
             data-dismiss="delete"
+            data-testid="delete-group-button"
           />
         </div>
         <button className="btn btn-secondary visually-hidden" type="submit">

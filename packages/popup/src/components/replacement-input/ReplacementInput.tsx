@@ -325,12 +325,17 @@ export default function ReplacementInput({
       {canGroupRules && (
         <div className="d-flex gap-1 py-2" data-testid="included-groups-list">
           {includedGroups.map((group) => (
-            <Tooltip key={group.identifier} title={group.name}>
+            <Tooltip
+              key={group.identifier}
+              title={group.name}
+              data-testid="rule-group-tooltip"
+            >
               <Button
                 className="btn btn-light bg-transparent p-0"
                 disabled={disabled}
                 title="Click to remove from group"
                 onClick={handleRemoveFromGroupClick(group.identifier)}
+                data-testid="remove-from-group-button"
               >
                 <RuleGroupColor color={group.color} />
               </Button>

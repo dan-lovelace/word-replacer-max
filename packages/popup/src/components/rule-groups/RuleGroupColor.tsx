@@ -19,6 +19,7 @@ export default function RuleGroupColor({
         width: 10,
       }}
       {...rest}
+      data-testid="rule-group-color"
     />
   );
 }

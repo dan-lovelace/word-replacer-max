@@ -126,7 +126,14 @@ export const selectors = {
     toggleButton: () => cy.findByTestId("replacement-styles-toggle-button"),
   },
   ruleGroups: {
+    manageModal: {
+      addGroupButton: () => cy.findByTestId("add-group-button"),
+      deleteGroupButton: () => cy.findByTestId("delete-group-button"),
+      nameInput: () => cy.findByTestId("name-input"),
+      ruleGroupRows: () => cy.findAllByTestId("rule-group-row"),
+    },
     toolbar: {
+      modalToggleButton: () => cy.findByTestId("rule-groups-button"),
       root: () => cy.findByTestId("rule-groups-toolbar"),
     },
   },
@@ -158,6 +165,10 @@ export const selectors = {
     },
     ruleGroups: {
       includedGroupsList: () => cy.findByTestId("included-groups-list"),
+      groupColors: () => cy.findAllByTestId("rule-group-color"),
+      groupTooltips: () => cy.findAllByTestId("rule-group-tooltip"),
+      removeFromGroupButtons: () =>
+        cy.findAllByTestId("remove-from-group-button"),
     },
   },
   support: {
@@ -171,5 +182,9 @@ export const selectors = {
     loggedInContactOptions: () => cy.findByTestId("logged-in-contact-options"),
     loggedOutContactOptions: () =>
       cy.findByTestId("logged-out-contact-options"),
+  },
+  tooltip: {
+    container: () => cy.get(".tooltip.bs-tooltip-auto"),
+    inner: () => selectors.tooltip.container().get(".tooltip-inner"),
   },
 };

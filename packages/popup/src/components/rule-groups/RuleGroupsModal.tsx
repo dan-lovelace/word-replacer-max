@@ -88,7 +88,11 @@ export default function RuleGroupsModal() {
               ))}
             </div>
             <div className="mt-2" data-testid="rule-groups-actions">
-              <Button startIcon="add" onClick={handleNewClick}>
+              <Button
+                startIcon="add"
+                onClick={handleNewClick}
+                data-testid="add-group-button"
+              >
                 New group
               </Button>
             </div>
