@@ -163,7 +163,7 @@ export default function ReplacementInput({
     onChange(identifier, "replacement", updatedValue);
   };
 
-  const { availableGroups, includedGroups } = useMemo(() => {
+  const { allGroups, availableGroups, includedGroups } = useMemo(() => {
     const values = Object.values(getMatcherGroups(sync) ?? {});
 
     const _availableGroups = values.filter(
@@ -174,6 +174,7 @@ export default function ReplacementInput({
     );
 
     return {
+      allGroups: values,
       availableGroups: _availableGroups,
       includedGroups: _includedGroups,
     };
@@ -264,25 +265,27 @@ export default function ReplacementInput({
               />
             </div>
           )}
-          {canGroupRules && (
-            <DropdownButton<IconButtonProps>
-              offset={0}
-              componentProps={{
-                className: cx(ICON_BUTTON_BASE_CLASS, "px-2"),
-                icon: "more_vert",
-                iconProps: {
-                  className: "text-secondary",
-                },
-                style: {
-                  width: INPUT_BUTTON_WIDTH,
-                },
-                "aria-label": "Rule groups dropdown toggle",
-                "data-testid": "rule-groups-dropdown-toggle",
-              }}
-              Component={IconButton}
-              menuContent={
-                ruleGroups?.active && (
-                  <>
+          {canGroupRules &&
+            allGroups.length > 0 &&
+            (availableGroups.length > 0 ||
+              allGroups.length === includedGroups.length) && (
+              <DropdownButton<IconButtonProps>
+                offset={0}
+                componentProps={{
+                  className: cx(ICON_BUTTON_BASE_CLASS, "px-2"),
+                  icon: "more_vert",
+                  iconProps: {
+                    className: "text-secondary",
+                  },
+                  style: {
+                    width: INPUT_BUTTON_WIDTH,
+                  },
+                  "aria-label": "Rule groups dropdown toggle",
+                  "data-testid": "rule-groups-dropdown-toggle",
+                }}
+                Component={IconButton}
+                menuContent={
+                  <div data-testid="rule-groups-menu">
                     <MenuItemContainer className="border-bottom">
                       Add to group
                     </MenuItemContainer>
@@ -296,6 +299,7 @@ export default function ReplacementInput({
                                 onClick={handleAddToGroupClick(
                                   group.identifier
                                 )}
+                                data-testid="add-to-group-button"
                               >
                                 <RuleGroupColor color={group.color} />
                                 {group.name}
@@ -305,18 +309,15 @@ export default function ReplacementInput({
                       ) : (
                         <div className="px-1">
                           <Alert severity="info">
-                            {!includedGroups.length
-                              ? "No groups exist"
-                              : "No more groups available"}
+                            No more groups available
                           </Alert>
                         </div>
                       )}
                     </DropdownMenuContainer>
-                  </>
-                )
-              }
-            />
-          )}
+                  </div>
+                }
+              />
+            )}
         </div>
         <Button className="visually-hidden" disabled={disabled} type="submit">
           Save

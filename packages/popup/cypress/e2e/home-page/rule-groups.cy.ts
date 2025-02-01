@@ -492,7 +492,60 @@ describe("home page rule groups", () => {
           .contains(/override group 1/i);
       });
 
-      it("should allow adding to a new group", () => {});
+      it("should allow adding to a new group", () => {
+        selectors
+          .ruleRows()
+          .eq(1)
+          .within(() => {
+            selectors.rules.ruleGroups.addToGroupMenu.toggleButton().click();
+            selectors.rules.ruleGroups.addToGroupMenu
+              .root()
+              .should("be.visible");
+            selectors.rules.ruleGroups.addToGroupMenu
+              .addToGroupButtons()
+              .eq(0)
+              .click();
+            selectors.rules.ruleGroups.addToGroupMenu
+              .root()
+              .should("not.exist");
+
+            selectors.rules.ruleGroups.includedGroupsList().within(() => {
+              selectors.rules.ruleGroups.groupColors().should("have.length", 1);
+            });
+          });
+      });
+
+      it("should show an alert when adding to a group with no available groups", () => {
+        selectors
+          .ruleRows()
+          .eq(0)
+          .within(() => {
+            selectors.rules.ruleGroups.addToGroupMenu.toggleButton().click();
+            selectors.rules.ruleGroups.addToGroupMenu
+              .root()
+              .contains(/no more groups available/i);
+          });
+      });
+
+      it("should not show the option to add to group when no groups exist", () => {
+        selectors.ruleGroups.toolbar.modalToggleButton().click();
+        selectors.ruleGroups.manageModal.ruleGroupRows().each((row) => {
+          cy.wrap(row).within(() => {
+            selectors.ruleGroups.manageModal.deleteGroupButton().click();
+            selectors.ruleGroups.manageModal.deleteGroupButton().click();
+          });
+        });
+        selectors.ruleGroups.toolbar.modalToggleButton().click({ force: true });
+
+        selectors
+          .ruleRows()
+          .eq(0)
+          .within(() => {
+            selectors.rules.ruleGroups.addToGroupMenu
+              .toggleButton()
+              .should("not.exist");
+          });
+      });
 
       it("should allow removal from group", () => {
         selectors.ruleRowsFirst().within(() => {

@@ -165,6 +165,11 @@ export const selectors = {
       dropdownToggle: () => cy.findByTestId("suggestions-dropdown-toggle"),
     },
     ruleGroups: {
+      addToGroupMenu: {
+        addToGroupButtons: () => cy.findAllByTestId("add-to-group-button"),
+        root: () => cy.findByTestId("rule-groups-menu"),
+        toggleButton: () => cy.findByTestId("rule-groups-dropdown-toggle"),
+      },
       includedGroupsList: () => cy.findByTestId("included-groups-list"),
       groupColors: () => cy.findAllByTestId("rule-group-color"),
       groupTooltips: () => cy.findAllByTestId("rule-group-tooltip"),
