@@ -136,9 +136,12 @@ describe("home page rule groups", () => {
           .first()
           .within(() => {
             selectors.ruleGroups.manageModal.deleteGroupButton().click();
+
+            cy.wait(500); // wait for color transition in headless mode
+
             selectors.ruleGroups.manageModal
               .deleteGroupButton()
-              .should("have.css", "background-color", "rgb(220, 53, 69)");
+              .should("have.css", "background-color", "rgb(187, 45, 59)");
           });
 
         selectors.ruleGroups.manageModal
