@@ -5,6 +5,15 @@ $enable-negative-margins: true;
 $primary: #025ade;
 $tooltip-max-width: 300px;
 
+$zindex-levels: (
+  n1: -1,
+  0: 0,
+  1: 1,
+  2: 2,
+  3: 3,
+  4: 4,
+);
+
 @import "bootstrap/scss/bootstrap";
 
 /**
@@ -58,12 +67,20 @@ input[type="text"] {
   margin-top: 0.25rem;
 }
 
-.fs-sm {
-  font-size: 13.5px;
+.fs-xs {
+  font-size: 12px !important;
 }
 
-.fs-xs {
-  font-size: 12px;
+.fs-sm {
+  font-size: 13.5px !important;
+}
+
+.fs-md {
+  font-size: 20px !important;
+}
+
+.fs-lg {
+  font-size: 24px !important;
 }
 
 .z-toast {

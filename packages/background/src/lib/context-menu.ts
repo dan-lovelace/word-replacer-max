@@ -55,7 +55,10 @@ export function startContextMenuListener() {
         const newMatchers = [...(matchers ?? [])];
 
         if (existingMatcher) {
-          newPreferences.focusRule = existingMatcher.identifier;
+          newPreferences.focusRule = {
+            field: "replacement",
+            matcher: existingMatcher.identifier,
+          };
         } else {
           newMatchers.push({
             active: true,
@@ -65,7 +68,10 @@ export function startContextMenuListener() {
             replacement,
             useGlobalReplacementStyle: DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE,
           });
-          newPreferences.focusRule = identifier;
+          newPreferences.focusRule = {
+            field: "replacement",
+            matcher: identifier,
+          };
         }
 
         newPreferences.activeTab = "rules";

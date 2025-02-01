@@ -54,7 +54,7 @@ export default function AccountDetails() {
           <div className="d-flex flex-column gap-1">
             <FeatureItem
               icon="check_circle"
-              label="AI replacement suggestions"
+              label="Replacement suggestions"
               color="success"
             />
             <FeatureItem

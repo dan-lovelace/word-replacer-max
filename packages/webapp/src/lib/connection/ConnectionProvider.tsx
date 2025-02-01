@@ -22,7 +22,7 @@ import { useToast } from "../toast/ToastProvider";
 
 type ConnectionProviderContextProps = {
   connectionStatus: ConnectionStatusState;
-  iframeRef: React.RefObject<HTMLIFrameElement>;
+  iframeRef: React.RefObject<HTMLIFrameElement | null>;
   sendMessage: (message: WebAppMessageData<WebAppMessageKind>) => void;
 };
 
@@ -35,13 +35,13 @@ const ConnectionProviderContext = createContext<ConnectionProviderContextProps>(
 );
 
 const useConnectionProviderValue = (
-  iframeRef: React.RefObject<HTMLIFrameElement>
+  iframeRef: React.RefObject<HTMLIFrameElement | null>
 ): ConnectionProviderContextProps => {
   const [connectionStatus, setConnectionStatus] =
     useState<ConnectionStatusState>("connecting");
 
-  const timeoutRef = useRef<NodeJS.Timeout>();
-  const connectionStatusRef = useRef<ConnectionStatusState>();
+  const timeoutRef = useRef<NodeJS.Timeout>(null);
+  const connectionStatusRef = useRef<ConnectionStatusState>(null);
 
   const { signInStatus, setAppUser, setSignInStatus } = useAuthProvider();
   const { showToast } = useToast();

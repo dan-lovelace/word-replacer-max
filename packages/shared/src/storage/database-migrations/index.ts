@@ -13,10 +13,37 @@ import {
 
 import { STORAGE_MATCHER_PREFIX } from "../../browser";
 import { logDebug } from "../../logging";
+import { DEFAULT_RULE_GROUPS } from "../../replace/lib/groups";
 import { DEFAULT_REPLACEMENT_SUGGEST } from "../../replace/lib/suggest";
 
 import { BASELINE_STORAGE_VERSION, CURRENT_STORAGE_VERSION } from "../";
 import { storageGet, storageSet } from "../api";
+
+type ParseVersion<T extends string> =
+  T extends `${infer Major}.${infer Minor}.${infer Patch}`
+    ? [Major, Minor, Patch]
+    : never;
+
+type ValidVersionTuples = {
+  [K in StorageVersion]: ParseVersion<K>;
+}[StorageVersion];
+
+// Create separate types for valid major, minor, and patch numbers
+type ValidMajor = ValidVersionTuples[0];
+type ValidMinorsByMajor = {
+  [K in ValidVersionTuples as K[0]]: K[1];
+};
+type ValidPatchesByMinor = {
+  [K in ValidVersionTuples as `${K[0]}.${K[1]}`]: K[2];
+};
+
+type StrictMigrations = {
+  [Major in ValidMajor]: {
+    [Minor in ValidMinorsByMajor[Major]]: {
+      [Patch in ValidPatchesByMinor[`${Major}.${Minor}`]]: MigrateFn;
+    };
+  };
+};
 
 export type MigrateFn = (storage: SyncStorage) => SyncStorage;
 
@@ -24,7 +51,7 @@ export type Migrations = {
   [major: number]: { [minor: number]: { [patch: number]: MigrateFn } };
 };
 
-export const MIGRATIONS: Migrations = {
+export const MIGRATIONS: StrictMigrations = {
   1: {
     0: {
       /**
@@ -70,6 +97,29 @@ export const MIGRATIONS: Migrations = {
           replacementSuggest: DEFAULT_REPLACEMENT_SUGGEST,
         };
         const merged = merge(storage, updatedValues);
+
+        return merged;
+      },
+    },
+    2: {
+      /**
+       * **1.2.0** - Rule groups
+       *
+       * Initializes rule groups with default values. Also reshapes focus rule
+       * preferences from a string to an object.
+       */
+      0: (storage) => {
+        const updatedValues: SyncStorage = {
+          ruleGroups: DEFAULT_RULE_GROUPS,
+        };
+        const merged = merge(storage, updatedValues);
+
+        if (merged.preferences) {
+          merged.preferences.focusRule = {
+            field: "replacement",
+            matcher: "",
+          };
+        }
 
         return merged;
       },

@@ -57,5 +57,5 @@ export default defineConfig(({ mode }) => {
     };
   }
 
-  return modeConfig[mode] || modeConfig.production;
+  return modeConfig[mode as Environment] || modeConfig.production;
 });

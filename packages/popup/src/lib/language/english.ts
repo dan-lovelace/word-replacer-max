@@ -55,6 +55,9 @@ export default {
   domains: {
     ADD_DOMAIN_FORM_INPUT_PLACEHOLDER: "Enter a domain (e.g., example.com)",
     ADD_DOMAIN_FORM_SUBMIT_BUTTON_TEXT: "Add",
+    ALLOWLIST_ALERT_BODY:
+      "Allow mode means your text replacements will only work on websites you list here - nowhere else.",
+    ALLOWLIST_ALERT_TITLE: "Limited replacement scope",
   },
   layout: {
     DISABLED_BANNER_BODY: "Extension is disabled.",
@@ -80,6 +83,9 @@ export default {
       "Not allowed to copy link to clipboard.",
     SHAREABLE_LINK_CLIPBOARD_COPY_SUCCESS:
       "Shareable link copied to clipboard.",
+  },
+  ruleGroups: {
+    NEW_GROUP_FORM_NAME_INPUT_PLACEHOLDER: "Group name",
   },
   rules: {
     EMPTY_RULES_LIST_ALERT_TITLE: "No active rules",

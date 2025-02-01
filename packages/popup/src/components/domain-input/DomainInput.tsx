@@ -1,6 +1,7 @@
 import { useState } from "preact/hooks";
 import { JSXInternal } from "preact/src/jsx";
 
+import { formatDomainInput } from "@worm/shared";
 import { storageSetByKeys } from "@worm/shared/src/storage";
 import { DomainEffect } from "@worm/types/src/popup";
 
@@ -8,7 +9,9 @@ import { useLanguage } from "../../lib/language";
 import { useConfig } from "../../store/Config";
 
 import { useToast } from "../alert/useToast";
+import Alert from "../Alerts";
 import Chip from "../Chip";
+import Slide from "../transition/Slide";
 
 export default function DomainInput() {
   const [value, setValue] = useState("");
@@ -38,12 +41,25 @@ export default function DomainInput() {
   ) => {
     event.preventDefault();
 
-    if (!value || value.length === 0) return;
+    if (!value.trim().length) return;
 
-    if (!domainList?.includes(value)) {
+    const formatted = formatDomainInput(value);
+
+    if (!formatted) {
+      showToast({
+        message: "Invalid domain. Check your input and try again.",
+        options: {
+          severity: "danger",
+        },
+      });
+
+      return;
+    }
+
+    if (!domainList?.includes(formatted)) {
       storageSetByKeys(
         {
-          domainList: [...(domainList || []), value],
+          domainList: [...(domainList || []), formatted],
         },
         {
           onError: (message) => {
@@ -72,7 +88,7 @@ export default function DomainInput() {
   };
 
   return (
-    <div className="container-fluid gx-0 d-flex flex-column">
+    <div className="container-fluid gx-0 d-flex flex-column pt-2">
       <div className="row mb-2">
         <div className="col-12 col-lg-8">
           <div className="d-flex align-items-center gap-2">
@@ -87,7 +103,11 @@ export default function DomainInput() {
                   type="radio"
                   onChange={handleEffectChange("allow")}
                 />
-                <label className="form-check-label" for="allowRadio">
+                <label
+                  className="form-check-label"
+                  for="allowRadio"
+                  data-testid="allow-radio-button"
+                >
                   Allow
                 </label>
               </div>
@@ -100,12 +120,26 @@ export default function DomainInput() {
                   type="radio"
                   onChange={handleEffectChange("deny")}
                 />
-                <label className="form-check-label" for="denyRadio">
+                <label
+                  className="form-check-label"
+                  for="denyRadio"
+                  data-testid="deny-radio-button"
+                >
                   Deny
                 </label>
               </div>
             </div>
           </div>
+          <Slide isOpen={preferences?.domainListEffect === "allow"}>
+            <Alert
+              className="mt-2"
+              severity="warning"
+              title={language.domains.ALLOWLIST_ALERT_TITLE}
+              data-testid="allow-alert"
+            >
+              {language.domains.ALLOWLIST_ALERT_BODY}
+            </Alert>
+          </Slide>
         </div>
       </div>
       <div className="row">
@@ -134,6 +168,7 @@ export default function DomainInput() {
               value={value}
               onBlur={handleFormSubmit}
               onInput={handleTextChange}
+              data-testid="add-domain-input"
             />
             <button className="visually-hidden" type="submit">
               {language.domains.ADD_DOMAIN_FORM_SUBMIT_BUTTON_TEXT}

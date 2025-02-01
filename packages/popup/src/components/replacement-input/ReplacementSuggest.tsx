@@ -36,6 +36,8 @@ import DropdownMenuContainer from "../menu/DropdownMenuContainer";
 import MenuItem from "../menu/MenuItem";
 import MenuItemContainer from "../menu/MenuItemContainer";
 
+import { INPUT_BUTTON_WIDTH } from "./ReplacementInput";
+
 type ReplacementSuggestProps = Pick<
   Matcher,
   "active" | "identifier" | "queries" | "replacement"
@@ -194,13 +196,14 @@ export default function ReplacementSuggest({
       offset={2}
       Component={IconButton}
       componentProps={{
-        className: cx(ICON_BUTTON_BASE_CLASS, "rounded-0 px-1"),
+        className: cx(ICON_BUTTON_BASE_CLASS, "px-1"),
         disabled: isGenerateReplacementsDisabled,
         disabledTooltip: "Add search terms to get suggestions",
         icon: magicWand,
         title: "Get Suggestions",
         style: {
           opacity: isGenerateReplacementsDisabled ? 0.6 : 1,
+          width: INPUT_BUTTON_WIDTH,
         },
         "aria-label": "Suggestions dropdown toggle",
         "data-testid": "suggestions-dropdown-toggle",

@@ -37,6 +37,12 @@ export const selectors = {
     customInput: () => cy.findByTestId("color-select-custom-input"),
     wrapper: () => cy.findByTestId("color-select"),
   },
+  domains: {
+    addDomainInput: () => cy.findByTestId("add-domain-input"),
+    allowAlert: () => cy.findByTestId("allow-alert"),
+    allowRadioButton: () => cy.findByTestId("allow-radio-button"),
+    denyRadioButton: () => cy.findByTestId("deny-radio-button"),
+  },
   exportButton: () => cy.findAllByTestId("export-button"),
   exportModal: {
     modal: () => cy.findByTestId("export-modal"),
@@ -89,6 +95,10 @@ export const selectors = {
       toggleButton: () =>
         cy.findByTestId("replacement-suggestions-toggle-button"),
     },
+    ruleGroups: {
+      inputWrapper: () => cy.findByTestId("rule-groups-input-wrapper"),
+      toggleButton: () => cy.findByTestId("rule-groups-toggle-button"),
+    },
     rulesImport: {
       input: () => cy.findByTestId("file-input__input"),
       label: () => cy.findByTestId("file-input__label"),
@@ -121,6 +131,19 @@ export const selectors = {
     },
     toggleButton: () => cy.findByTestId("replacement-styles-toggle-button"),
   },
+  ruleGroups: {
+    manageModal: {
+      addGroupButton: () => cy.findByTestId("add-group-button"),
+      deleteGroupButton: () => cy.findByTestId("delete-group-button"),
+      nameInput: () => cy.findByTestId("name-input"),
+      ruleGroupRows: () => cy.findAllByTestId("rule-group-row"),
+    },
+    toolbar: {
+      groupToggles: () => cy.findAllByTestId("rule-group-toggle"),
+      modalToggleButton: () => cy.findByTestId("rule-groups-button"),
+      root: () => cy.findByTestId("rule-groups-toolbar"),
+    },
+  },
   ruleRows: () => cy.findAllByTestId("rule-row"),
   ruleRowsFirst: () => selectors.ruleRows().first(),
   rules: {
@@ -147,6 +170,18 @@ export const selectors = {
       },
       dropdownToggle: () => cy.findByTestId("suggestions-dropdown-toggle"),
     },
+    ruleGroups: {
+      addToGroupMenu: {
+        addToGroupButtons: () => cy.findAllByTestId("add-to-group-button"),
+        root: () => cy.findByTestId("rule-groups-menu"),
+        toggleButton: () => cy.findByTestId("rule-groups-dropdown-toggle"),
+      },
+      includedGroupsList: () => cy.findByTestId("included-groups-list"),
+      groupColors: () => cy.findAllByTestId("rule-group-color"),
+      groupTooltips: () => cy.findAllByTestId("rule-group-tooltip"),
+      removeFromGroupButtons: () =>
+        cy.findAllByTestId("remove-from-group-button"),
+    },
   },
   support: {
     contactSupportForm: () => cy.findByTestId("contact-support-form"),
@@ -159,5 +194,9 @@ export const selectors = {
     loggedInContactOptions: () => cy.findByTestId("logged-in-contact-options"),
     loggedOutContactOptions: () =>
       cy.findByTestId("logged-out-contact-options"),
+  },
+  tooltip: {
+    container: () => cy.get(".tooltip.bs-tooltip-auto"),
+    inner: () => selectors.tooltip.container().get(".tooltip-inner"),
   },
 };
