@@ -527,7 +527,7 @@ describe("home page rule groups", () => {
           });
       });
 
-      it("should not show the option to add to group when no groups exist", () => {
+      it("should disable the option to add to group when no groups exist", () => {
         selectors.ruleGroups.toolbar.modalToggleButton().click();
         selectors.ruleGroups.manageModal.ruleGroupRows().each((row) => {
           cy.wrap(row).within(() => {
@@ -543,7 +543,7 @@ describe("home page rule groups", () => {
           .within(() => {
             selectors.rules.ruleGroups.addToGroupMenu
               .toggleButton()
-              .should("not.exist");
+              .should("have.attr", "disabled");
           });
       });
 

@@ -266,59 +266,54 @@ export default function ReplacementInput({
               />
             </div>
           )}
-          {canGroupRules &&
-            allGroups.length > 0 &&
-            (availableGroups.length > 0 ||
-              allGroups.length === includedGroups.length) && (
-              <DropdownButton<IconButtonProps>
-                offset={0}
-                componentProps={{
-                  className: cx(ICON_BUTTON_BASE_CLASS, "px-2"),
-                  icon: "more_vert",
-                  iconProps: {
-                    className: "text-secondary",
-                  },
-                  style: {
-                    width: INPUT_BUTTON_WIDTH,
-                  },
-                  "aria-label": "Rule groups dropdown toggle",
-                  "data-testid": "rule-groups-dropdown-toggle",
-                }}
-                Component={IconButton}
-                menuContent={
-                  <div data-testid="rule-groups-menu">
-                    <MenuItemContainer className="border-bottom">
-                      Add to group
-                    </MenuItemContainer>
-                    <DropdownMenuContainer>
-                      {availableGroups.length ? (
-                        availableGroups.map(
-                          (group) =>
-                            !group.matchers?.includes(identifier) && (
-                              <MenuItem
-                                key={group.identifier}
-                                onClick={handleAddToGroupClick(
-                                  group.identifier
-                                )}
-                                data-testid="add-to-group-button"
-                              >
-                                <RuleGroupColor color={group.color} />
-                                {group.name}
-                              </MenuItem>
-                            )
-                        )
-                      ) : (
-                        <div className="px-1">
-                          <Alert severity="info">
-                            No more groups available
-                          </Alert>
-                        </div>
-                      )}
-                    </DropdownMenuContainer>
-                  </div>
-                }
-              />
-            )}
+          {canGroupRules && (
+            <DropdownButton<IconButtonProps>
+              offset={0}
+              componentProps={{
+                className: cx(ICON_BUTTON_BASE_CLASS, "px-2"),
+                disabled: disabled || allGroups.length === 0,
+                disabledTooltip: "You don't have any rule groups",
+                icon: "more_vert",
+                iconProps: {
+                  className: "text-secondary",
+                },
+                style: {
+                  width: INPUT_BUTTON_WIDTH,
+                },
+                "aria-label": "Rule groups dropdown toggle",
+                "data-testid": "rule-groups-dropdown-toggle",
+              }}
+              Component={IconButton}
+              menuContent={
+                <div data-testid="rule-groups-menu">
+                  <MenuItemContainer className="border-bottom">
+                    Add to group
+                  </MenuItemContainer>
+                  <DropdownMenuContainer>
+                    {availableGroups.length ? (
+                      availableGroups.map(
+                        (group) =>
+                          !group.matchers?.includes(identifier) && (
+                            <MenuItem
+                              key={group.identifier}
+                              onClick={handleAddToGroupClick(group.identifier)}
+                              data-testid="add-to-group-button"
+                            >
+                              <RuleGroupColor color={group.color} />
+                              {group.name}
+                            </MenuItem>
+                          )
+                      )
+                    ) : (
+                      <div className="px-1">
+                        <Alert severity="info">No more groups available</Alert>
+                      </div>
+                    )}
+                  </DropdownMenuContainer>
+                </div>
+              }
+            />
+          )}
         </div>
         <Button className="visually-hidden" disabled={disabled} type="submit">
           Save
