@@ -317,7 +317,7 @@ export default function ReplacementInput({
       </form>
       {canGroupRules && (
         <div
-          className="d-flex flex-wrap gap-1 py-2"
+          className="d-flex flex-wrap gap-1 pt-1 pb-1"
           data-testid="included-groups-list"
           style={{
             width: INPUT_WIDTH_BASE,
