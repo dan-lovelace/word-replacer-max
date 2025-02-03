@@ -38,7 +38,7 @@ describe("home page rule groups", () => {
         selectors.ruleGroups.toolbar.root().should("not.exist");
       });
 
-      it("should not display when logged out and feature is enabled", () => {
+      it("should display when logged out and feature is enabled", () => {
         cy.visitWithStorage({
           sync: {
             ...defaultTestMatcherGroups,
@@ -48,7 +48,7 @@ describe("home page rule groups", () => {
           },
         });
 
-        selectors.ruleGroups.toolbar.root().should("not.exist");
+        selectors.ruleGroups.toolbar.root().should("be.visible");
       });
 
       it("should not display when logged in and feature is disabled", () => {
