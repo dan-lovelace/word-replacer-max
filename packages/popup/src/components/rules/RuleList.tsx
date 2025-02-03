@@ -34,7 +34,7 @@ export default function RuleList() {
   return (
     <>
       {canGroupRules && <RuleGroupsToolbar />}
-      <div className={cx(!canGroupRules && "pt-2")}>
+      <div className={cx(canGroupRules ? "pt-1" : "pt-2")}>
         {matchers?.length ? (
           <>
             <div className="row gx-3 gy-2" data-testid="rule-list-wrapper">
