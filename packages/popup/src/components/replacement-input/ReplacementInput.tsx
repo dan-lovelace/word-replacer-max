@@ -181,16 +181,12 @@ export default function ReplacementInput({
     };
   }, [sync]);
 
-  const canGroupRules = useMemo(
-    () => ruleGroups?.active && hasAccess("feat:ruleGroups"),
-    [authIdToken, ruleGroups?.active]
-  );
-
   const canSuggest = useMemo(
     () => replacementSuggest?.active && hasAccess("api:post:Suggest"),
     [authIdToken, replacementSuggest?.active]
   );
 
+  const canGroupRules = Boolean(ruleGroups?.active);
   const inputWidth =
     INPUT_WIDTH_BASE -
     ((canSuggest ? INPUT_BUTTON_WIDTH - 1 : 0) +
@@ -266,66 +262,68 @@ export default function ReplacementInput({
               />
             </div>
           )}
-          {canGroupRules &&
-            allGroups.length > 0 &&
-            (availableGroups.length > 0 ||
-              allGroups.length === includedGroups.length) && (
-              <DropdownButton<IconButtonProps>
-                offset={0}
-                componentProps={{
-                  className: cx(ICON_BUTTON_BASE_CLASS, "px-2"),
-                  icon: "more_vert",
-                  iconProps: {
-                    className: "text-secondary",
-                  },
-                  style: {
-                    width: INPUT_BUTTON_WIDTH,
-                  },
-                  "aria-label": "Rule groups dropdown toggle",
-                  "data-testid": "rule-groups-dropdown-toggle",
-                }}
-                Component={IconButton}
-                menuContent={
-                  <div data-testid="rule-groups-menu">
-                    <MenuItemContainer className="border-bottom">
-                      Add to group
-                    </MenuItemContainer>
-                    <DropdownMenuContainer>
-                      {availableGroups.length ? (
-                        availableGroups.map(
-                          (group) =>
-                            !group.matchers?.includes(identifier) && (
-                              <MenuItem
-                                key={group.identifier}
-                                onClick={handleAddToGroupClick(
-                                  group.identifier
-                                )}
-                                data-testid="add-to-group-button"
-                              >
-                                <RuleGroupColor color={group.color} />
-                                {group.name}
-                              </MenuItem>
-                            )
-                        )
-                      ) : (
-                        <div className="px-1">
-                          <Alert severity="info">
-                            No more groups available
-                          </Alert>
-                        </div>
-                      )}
-                    </DropdownMenuContainer>
-                  </div>
-                }
-              />
-            )}
+          {canGroupRules && (
+            <DropdownButton<IconButtonProps>
+              offset={0}
+              componentProps={{
+                className: cx(ICON_BUTTON_BASE_CLASS, "px-2"),
+                disabled: disabled || allGroups.length === 0,
+                disabledTooltip: "You don't have any rule groups",
+                icon: "more_vert",
+                iconProps: {
+                  className: "text-secondary",
+                },
+                style: {
+                  width: INPUT_BUTTON_WIDTH,
+                },
+                title: "Add to group",
+                "aria-label": "Rule groups dropdown toggle",
+                "data-testid": "rule-groups-dropdown-toggle",
+              }}
+              Component={IconButton}
+              menuContent={
+                <div data-testid="rule-groups-menu">
+                  <MenuItemContainer className="border-bottom">
+                    Add to group
+                  </MenuItemContainer>
+                  <DropdownMenuContainer>
+                    {availableGroups.length ? (
+                      availableGroups.map(
+                        (group) =>
+                          !group.matchers?.includes(identifier) && (
+                            <MenuItem
+                              key={group.identifier}
+                              onClick={handleAddToGroupClick(group.identifier)}
+                              data-testid="add-to-group-button"
+                            >
+                              <RuleGroupColor color={group.color} />
+                              {group.name}
+                            </MenuItem>
+                          )
+                      )
+                    ) : (
+                      <div className="px-1">
+                        <Alert severity="info">No more groups available</Alert>
+                      </div>
+                    )}
+                  </DropdownMenuContainer>
+                </div>
+              }
+            />
+          )}
         </div>
         <Button className="visually-hidden" disabled={disabled} type="submit">
           Save
         </Button>
       </form>
       {canGroupRules && (
-        <div className="d-flex gap-1 py-2" data-testid="included-groups-list">
+        <div
+          className="d-flex flex-wrap gap-1 pt-1 pb-1"
+          data-testid="included-groups-list"
+          style={{
+            width: INPUT_WIDTH_BASE,
+          }}
+        >
           {includedGroups.map((group) => (
             <Tooltip
               key={group.identifier}

@@ -25,6 +25,16 @@ const defaultTestMatcherGroups = generateMatcherGroups({
   },
 });
 
+function deleteFirstGroup() {
+  selectors.ruleGroups.manageModal
+    .ruleGroupRows()
+    .first()
+    .within(() => {
+      selectors.ruleGroups.manageModal.deleteGroupButton().click();
+      selectors.ruleGroups.manageModal.deleteGroupButton().click();
+    });
+}
+
 describe("home page rule groups", () => {
   describe("toolbar", () => {
     describe("feature availability", () => {
@@ -38,7 +48,7 @@ describe("home page rule groups", () => {
         selectors.ruleGroups.toolbar.root().should("not.exist");
       });
 
-      it("should not display when logged out and feature is enabled", () => {
+      it("should display when logged out and feature is enabled", () => {
         cy.visitWithStorage({
           sync: {
             ...defaultTestMatcherGroups,
@@ -48,7 +58,7 @@ describe("home page rule groups", () => {
           },
         });
 
-        selectors.ruleGroups.toolbar.root().should("not.exist");
+        selectors.ruleGroups.toolbar.root().should("be.visible");
       });
 
       it("should not display when logged in and feature is disabled", () => {
@@ -102,7 +112,16 @@ describe("home page rule groups", () => {
         selectors.ruleGroups.manageModal
           .ruleGroupRows()
           .should("have.length", 2);
-        cy.findByRole("button", { name: /new group/i }).should("be.visible");
+        cy.findByRole("button", { name: /add group/i }).should("be.visible");
+      });
+
+      it("should show an alert when no groups exist", () => {
+        selectors.ruleGroups.toolbar.modalToggleButton().click();
+        deleteFirstGroup();
+        deleteFirstGroup();
+
+        cy.contains(/create your first group/i).should("be.visible");
+        cy.findByRole("button", { name: /add group/i }).should("be.visible");
       });
 
       it("should allow adding a new group", () => {
@@ -158,14 +177,7 @@ describe("home page rule groups", () => {
 
       it("should delete a group after confirmation", () => {
         selectors.ruleGroups.toolbar.modalToggleButton().click();
-
-        selectors.ruleGroups.manageModal
-          .ruleGroupRows()
-          .first()
-          .within(() => {
-            selectors.ruleGroups.manageModal.deleteGroupButton().click();
-            selectors.ruleGroups.manageModal.deleteGroupButton().click();
-          });
+        deleteFirstGroup();
 
         selectors.ruleGroups.manageModal
           .ruleGroupRows()
@@ -527,7 +539,7 @@ describe("home page rule groups", () => {
           });
       });
 
-      it("should not show the option to add to group when no groups exist", () => {
+      it("should disable the option to add to group when no groups exist", () => {
         selectors.ruleGroups.toolbar.modalToggleButton().click();
         selectors.ruleGroups.manageModal.ruleGroupRows().each((row) => {
           cy.wrap(row).within(() => {
@@ -543,7 +555,7 @@ describe("home page rule groups", () => {
           .within(() => {
             selectors.rules.ruleGroups.addToGroupMenu
               .toggleButton()
-              .should("not.exist");
+              .should("have.attr", "disabled");
           });
       });
 

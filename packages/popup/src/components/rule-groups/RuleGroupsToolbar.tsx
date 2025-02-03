@@ -28,11 +28,19 @@ export default function RuleGroupsToolbar() {
 
   const handleChange =
     (identifier: string) =>
-    (event: JSXInternal.TargetedMouseEvent<HTMLInputElement>) => {
+    (
+      event: JSXInternal.TargetedEvent<
+        HTMLInputElement | HTMLLabelElement,
+        MouseEvent | KeyboardEvent
+      >
+    ) => {
       const storageKey = `${STORAGE_MATCHER_GROUP_PREFIX}${identifier}`;
       const existingGroups = getMatcherGroups(sync) ?? {};
 
-      if (event.ctrlKey || event.metaKey) {
+      const isOptionHeld =
+        "ctrlKey" in event ? event.ctrlKey || event.metaKey : false;
+
+      if (isOptionHeld) {
         const newActive = !Boolean(existingGroups[storageKey]?.active ?? false);
 
         storageSetByKeys(
@@ -71,6 +79,16 @@ export default function RuleGroupsToolbar() {
       }
     };
 
+  const handleKeyDown =
+    (identifier: string) =>
+    (event: JSXInternal.TargetedKeyboardEvent<HTMLLabelElement>) => {
+      if (event.code === "Space") {
+        event.preventDefault();
+
+        handleChange(identifier)(event);
+      }
+    };
+
   if (!ruleGroups?.active) {
     return <></>;
   }
@@ -82,7 +100,7 @@ export default function RuleGroupsToolbar() {
 
   return (
     <div
-      className="bg-white d-flex align-items-center gap-2 position-sticky mx-n1 py-2 top-0 z-3"
+      className="bg-white d-flex align-items-center gap-2 position-sticky mx-n1 pt-2 pb-1 top-0 z-3"
       data-testid="rule-groups-toolbar"
     >
       <IconButton
@@ -116,14 +134,19 @@ export default function RuleGroupsToolbar() {
                   checked={active}
                   className="btn-check"
                   id={inputId}
+                  tabIndex={-1}
                   type="checkbox"
-                  onClick={handleChange(identifier)}
                 />
                 <label
                   className={cx(
                     "btn btn-light btn-sm py-0 d-flex align-items-center gap-2 text-nowrap"
                   )}
-                  for={inputId}
+                  htmlFor={inputId}
+                  role="checkbox"
+                  tabIndex={0}
+                  onClick={handleChange(identifier)}
+                  onKeyDown={handleKeyDown(identifier)}
+                  aria-checked={active}
                   data-testid="rule-group-toggle"
                 >
                   <RuleGroupColor color={color} />

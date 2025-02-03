@@ -32,6 +32,16 @@ export NODE_ENV=development
    ```
    yarn install
    ```
+   - ⚠️ IMPORTANT: In order to test in Firefox, you need to build AmplifyJS
+     locally and link its `@aws-amplify/core` package to this project (bug
+     report here: https://github.com/aws-amplify/amplify-js/pull/14180):
+     1. Update the fork https://github.com/dan-lovelace/amplify-js and clone it
+     1. Checkout branch `core/fix-convert-firefox-context`
+     1. Run `yarn build`
+     1. Run `yarn link-all`
+     1. Change back into the WRM repository
+     1. Run `yarn link @aws-amplify/core`
+     1. Run `yarn install` (use with the `--force` flag when `unlink`ing)
 1. Run the `build` command using whichever manifest version you desire (`2` or
    `3`)
    ```

@@ -28,7 +28,6 @@ const rolePolicies: UserRolePolicy = {
     "api:post:AuthAcceptTerms",
     "api:post:Suggest",
     "api:get:WhoAmI",
-    "feat:ruleGroups",
   ],
   testMember__2024_11_10: [
     "api:post:AuthAcceptTerms",
@@ -37,14 +36,12 @@ const rolePolicies: UserRolePolicy = {
     "api:post:Suggest",
     "api:get:WhoAmI",
     "api:unlimitedUsage",
-    "feat:ruleGroups",
   ],
   member__2024_11_03: [
     "api:post:AuthAcceptTerms",
     "api:post:AuthDeleteAccount",
     "api:post:Suggest",
     "api:get:WhoAmI",
-    "feat:ruleGroups",
   ],
 };
 

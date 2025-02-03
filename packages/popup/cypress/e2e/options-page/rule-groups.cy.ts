@@ -12,8 +12,8 @@ describe("options page rule groups", () => {
       });
     });
 
-    it("should not display when logged out", () => {
-      selectors.options.ruleGroups.inputWrapper().should("not.exist");
+    it("should display when logged out", () => {
+      selectors.options.ruleGroups.inputWrapper().should("be.visible");
     });
 
     it("should display when logged in", () => {

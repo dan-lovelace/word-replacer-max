@@ -16,30 +16,25 @@ import RuleRow from "../rules/RuleRow";
 import AddNewRule from "./AddNewRule";
 
 export default function RuleList() {
-  const { hasAccess } = useAuth();
   const {
     storage: {
-      local: { authIdToken },
       sync,
       sync: { matchers, ruleGroups },
     },
   } = useConfig();
   const { rules: lang } = useLanguage();
 
-  const canGroupRules = useMemo(
-    () => ruleGroups?.active && hasAccess("feat:ruleGroups"),
-    [authIdToken, ruleGroups?.active]
-  );
-
   const renderedMatchers: StorageMatcher[] | undefined = useMemo(
     () => getActiveMatchers(sync),
     [sync]
   );
 
+  const canGroupRules = Boolean(ruleGroups?.active);
+
   return (
     <>
       {canGroupRules && <RuleGroupsToolbar />}
-      <div className={cx(!canGroupRules && "pt-2")}>
+      <div className={cx(canGroupRules ? "pt-1" : "pt-2")}>
         {matchers?.length ? (
           <>
             <div className="row gx-3 gy-2" data-testid="rule-list-wrapper">
@@ -61,7 +56,6 @@ export default function RuleList() {
             >
               <AddNewRule />
             </div>
-            <RuleGroupsModal />
           </>
         ) : (
           <div className="row">
@@ -82,6 +76,7 @@ export default function RuleList() {
             </div>
           </div>
         )}
+        <RuleGroupsModal />
       </div>
     </>
   );

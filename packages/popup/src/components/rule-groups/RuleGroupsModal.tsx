@@ -1,5 +1,6 @@
 import { useMemo, useRef } from "preact/hooks";
 
+import { cx } from "@worm/shared";
 import { getMatcherGroups, sortMatcherGroups } from "@worm/shared/src/browser";
 import { storageSetByKeys } from "@worm/shared/src/storage";
 
@@ -7,9 +8,27 @@ import { generateMatcherGroup } from "../../lib/rule-groups";
 import { useConfig } from "../../store/Config";
 
 import { useToast } from "../alert/useToast";
+import Alert from "../Alerts";
 import Button from "../button/Button";
 
 import RuleGroupRow from "./RuleGroupRow";
+
+const AddGroupButton = ({
+  className,
+  handleNewClick,
+}: {
+  className?: string;
+  handleNewClick: () => void;
+}) => (
+  <Button
+    className={cx("btn btn-sm", className ?? "btn-primary")}
+    startIcon="add"
+    onClick={handleNewClick}
+    data-testid="add-group-button"
+  >
+    Add group
+  </Button>
+);
 
 export default function RuleGroupsModal() {
   const hideModalButtonRef = useRef<HTMLButtonElement>(null);
@@ -56,6 +75,8 @@ export default function RuleGroupsModal() {
     [sync]
   );
 
+  const groupsExist = sortedGroups.length > 0;
+
   return (
     <div
       className="modal fade z-modal"
@@ -83,18 +104,26 @@ export default function RuleGroupsModal() {
               className="d-flex flex-column gap-1"
               data-testid="rule-groups-list"
             >
-              {sortedGroups.map((group) => (
-                <RuleGroupRow key={group.identifier} data={group} />
-              ))}
+              {groupsExist ? (
+                sortedGroups.map((group) => (
+                  <RuleGroupRow key={group.identifier} data={group} />
+                ))
+              ) : (
+                <Alert severity="info" title="Create your first group">
+                  Add groups to quickly switch between sets of replacements.
+                  <div className="mt-3">
+                    <AddGroupButton handleNewClick={handleNewClick} />
+                  </div>
+                </Alert>
+              )}
             </div>
             <div className="mt-2" data-testid="rule-groups-actions">
-              <Button
-                startIcon="add"
-                onClick={handleNewClick}
-                data-testid="add-group-button"
-              >
-                New group
-              </Button>
+              {groupsExist && (
+                <AddGroupButton
+                  className="btn-secondary"
+                  handleNewClick={handleNewClick}
+                />
+              )}
             </div>
           </div>
         </div>
