@@ -57,7 +57,9 @@ export default function RuleGroups({}: ReplacementGroupsProps) {
       </div>
       <Indented data-testid="rule-groups-description">
         <div className="fs-sm">
-          Group your rules into categories and easily switch between them.
+          Group your rules into categories and easily switch between them. Hold
+          Ctrl (Windows) or Command (Mac) to select multiple groups and combine
+          their replacements.
         </div>
       </Indented>
     </div>

@@ -276,6 +276,7 @@ export default function ReplacementInput({
                 style: {
                   width: INPUT_BUTTON_WIDTH,
                 },
+                title: "Add to group",
                 "aria-label": "Rule groups dropdown toggle",
                 "data-testid": "rule-groups-dropdown-toggle",
               }}

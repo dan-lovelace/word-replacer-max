@@ -56,7 +56,6 @@ export default function RuleList() {
             >
               <AddNewRule />
             </div>
-            <RuleGroupsModal />
           </>
         ) : (
           <div className="row">
@@ -77,6 +76,7 @@ export default function RuleList() {
             </div>
           </div>
         )}
+        <RuleGroupsModal />
       </div>
     </>
   );

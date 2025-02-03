@@ -200,7 +200,7 @@ export default function ReplacementSuggest({
         disabled: isGenerateReplacementsDisabled,
         disabledTooltip: "Add search terms to get suggestions",
         icon: magicWand,
-        title: "Get Suggestions",
+        title: "Get suggestions",
         style: {
           opacity: isGenerateReplacementsDisabled ? 0.6 : 1,
           width: INPUT_BUTTON_WIDTH,
