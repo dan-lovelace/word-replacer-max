@@ -33,10 +33,6 @@ export default function RuleGroups({}: ReplacementGroupsProps) {
 
   const isActive = Boolean(ruleGroups?.active);
 
-  if (!hasAccess("feat:ruleGroups")) {
-    return <></>;
-  }
-
   return (
     <div data-testid="rule-groups">
       <div

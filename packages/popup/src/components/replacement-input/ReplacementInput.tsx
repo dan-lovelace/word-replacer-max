@@ -181,16 +181,12 @@ export default function ReplacementInput({
     };
   }, [sync]);
 
-  const canGroupRules = useMemo(
-    () => ruleGroups?.active && hasAccess("feat:ruleGroups"),
-    [authIdToken, ruleGroups?.active]
-  );
-
   const canSuggest = useMemo(
     () => replacementSuggest?.active && hasAccess("api:post:Suggest"),
     [authIdToken, replacementSuggest?.active]
   );
 
+  const canGroupRules = Boolean(ruleGroups?.active);
   const inputWidth =
     INPUT_WIDTH_BASE -
     ((canSuggest ? INPUT_BUTTON_WIDTH - 1 : 0) +

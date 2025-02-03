@@ -16,25 +16,20 @@ import RuleRow from "../rules/RuleRow";
 import AddNewRule from "./AddNewRule";
 
 export default function RuleList() {
-  const { hasAccess } = useAuth();
   const {
     storage: {
-      local: { authIdToken },
       sync,
       sync: { matchers, ruleGroups },
     },
   } = useConfig();
   const { rules: lang } = useLanguage();
 
-  const canGroupRules = useMemo(
-    () => ruleGroups?.active && hasAccess("feat:ruleGroups"),
-    [authIdToken, ruleGroups?.active]
-  );
-
   const renderedMatchers: StorageMatcher[] | undefined = useMemo(
     () => getActiveMatchers(sync),
     [sync]
   );
+
+  const canGroupRules = Boolean(ruleGroups?.active);
 
   return (
     <>

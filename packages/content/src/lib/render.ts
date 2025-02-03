@@ -115,12 +115,7 @@ export async function renderContent(msg = "") {
 
   let renderedMatchers = [...matchers];
 
-  if (
-    ruleGroups?.active &&
-    userGroups.value &&
-    groupsHavePermission(userGroups.value, "feat:ruleGroups")
-  ) {
-    // rule groups are active and user is logged in
+  if (ruleGroups?.active) {
     const matcherGroups = getMatcherGroups(syncStorage);
 
     if (matcherGroups !== undefined) {
