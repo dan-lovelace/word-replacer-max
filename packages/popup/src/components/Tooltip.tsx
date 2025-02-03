@@ -1,15 +1,20 @@
+import { ComponentProps } from "preact";
 import { useEffect, useRef } from "preact/hooks";
 
 import { Tooltip as BSTooltip } from "bootstrap";
 
-import { PreactChildren } from "../lib/types";
+import { cx } from "@worm/shared";
 
-type TooltipProps = {
-  children: PreactChildren;
+type TooltipProps = ComponentProps<"span"> & {
   title: string;
 };
 
-export default function Tooltip({ children, title }: TooltipProps) {
+export default function Tooltip({
+  children,
+  className,
+  title,
+  ...rest
+}: TooltipProps) {
   const tooltipRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
@@ -24,10 +29,14 @@ export default function Tooltip({ children, title }: TooltipProps) {
 
   return (
     <span
-      className="d-inline-flex align-items-center user-select-none"
+      className={cx(
+        "d-inline-flex align-items-center user-select-none",
+        className
+      )}
       data-bs-toggle="tooltip"
       data-bs-title={title}
       ref={tooltipRef}
+      {...rest}
     >
       {children}
     </span>
