@@ -8,7 +8,7 @@ describe("rules import", () => {
 
   it("should add rules from a csv file", () => {
     cy.fixture("rules-import.csv").as("rulesImport");
-    s.options.rulesImport.label().selectFile("@rulesImport");
+    s.options.rulesImport.fileInputLabel().selectFile("@rulesImport");
 
     s.layout.tabs.rules().click();
     s.ruleRows().then((ruleRows) => {
@@ -42,11 +42,58 @@ describe("rules import", () => {
 
   it("should not add rules from an empty csv file", () => {
     cy.fixture("empty-rules-import.csv").as("emptyRulesImport");
-    s.options.rulesImport.label().selectFile("@emptyRulesImport");
+    s.options.rulesImport.fileInputLabel().selectFile("@emptyRulesImport");
 
     s.layout.tabs.rules().click();
     s.ruleRows().then((ruleRows) => {
       expect(ruleRows.length).to.eq(2);
+    });
+  });
+
+  it("should retain sort order of exports when importing from file", () => {
+    cy.fixture("rules-import.json").as("rulesImport");
+    s.options.rulesImport.fileInputLabel().selectFile("@rulesImport");
+
+    s.layout.tabs.rules().click();
+    s.ruleRows().then((ruleRows) => {
+      expect(ruleRows.length).to.eq(12);
+
+      cy.wrap(ruleRows.slice(2)).each((row, idx) => {
+        cy.wrap(row).within(() => {
+          s.rules.queryInput.chips().then(() => {
+            cy.contains((idx + 1) % 10);
+          });
+        });
+      });
+    });
+  });
+
+  it("should retain sort order of exports when importing from link", () => {
+    cy.intercept("https://cdn.wordreplacermax.com/*.json", {
+      fixture: "rules-import.json",
+    }).as("share");
+
+    s.options.rulesImport.linkImportButton().click();
+    s.options.rulesImport.linkImportForm().within(() => {
+      s.options.rulesImport
+        .linkImportUrlInput()
+        .type("https://cdn.wordreplacermax.com/fake.json");
+      cy.findByRole("button", { name: /import/i }).click();
+    });
+
+    cy.wait("@share").then(() => {
+      s.layout.tabs.rules().click();
+      s.ruleRows().then((ruleRows) => {
+        expect(ruleRows.length).to.eq(12);
+
+        cy.wrap(ruleRows.slice(2)).each((row, idx) => {
+          cy.wrap(row).within(() => {
+            s.rules.queryInput.chips().then(() => {
+              cy.contains((idx + 1) % 10);
+            });
+          });
+        });
+      });
     });
   });
 });

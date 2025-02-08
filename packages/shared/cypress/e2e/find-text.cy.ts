@@ -82,6 +82,54 @@ describe("findText", () => {
         cy.wrap(result).should("have.length", 1);
       });
     });
+
+    it("merges adjacent text nodes into one", () => {
+      cy.visitMock({
+        targetContents: `
+          <p></p>
+        `,
+      });
+
+      cy.document().then((document) => {
+        const textNode1 = document.createTextNode("Lorem");
+        const textNode2 = document.createTextNode("ipsum");
+        const target = document.querySelector("p");
+
+        target?.appendChild(textNode1);
+        target?.appendChild(textNode2);
+
+        s.html().then(($element) => {
+          const html = $element.get(0);
+
+          const result = findText(html, "Lorem ipsum", []);
+          cy.wrap(result).should("have.length", 1);
+        });
+      });
+    });
+
+    it("trims empty space around adjacent text nodes before merging", () => {
+      cy.visitMock({
+        targetContents: `
+          <p></p>
+        `,
+      });
+
+      cy.document().then((document) => {
+        const textNode1 = document.createTextNode("Lorem ");
+        const textNode2 = document.createTextNode("  ipsum");
+        const target = document.querySelector("p");
+
+        target?.appendChild(textNode1);
+        target?.appendChild(textNode2);
+
+        s.html().then(($element) => {
+          const html = $element.get(0);
+
+          const result = findText(html, "Lorem ipsum", []);
+          cy.wrap(result).should("have.length", 1);
+        });
+      });
+    });
   });
 
   describe("'case' query pattern only", () => {

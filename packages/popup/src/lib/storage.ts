@@ -1,4 +1,4 @@
-import { STORAGE_MATCHER_PREFIX } from "@worm/shared/src/browser";
+import { sortMatchers, STORAGE_MATCHER_PREFIX } from "@worm/shared/src/browser";
 import { Matcher } from "@worm/types/src/rules";
 import {
   Storage,
@@ -86,7 +86,7 @@ export const getUpdatedStorage = (
           newMatchers[existingIdx] = newValue;
         }
 
-        (updatedArea as SyncStorage).matchers = newMatchers;
+        (updatedArea as SyncStorage).matchers = sortMatchers(newMatchers);
       } else {
         commonUpdate(storedKey, change);
       }

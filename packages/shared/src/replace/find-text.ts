@@ -4,9 +4,71 @@ import { CONTENTS_PROPERTY } from "./lib";
 import { nodeNameBlocklist } from "./lib/dom";
 import { getRegexFlags, patternRegex } from "./lib/regex";
 
+function checkContainsText(
+  content: string,
+  queryPatterns: QueryPattern[],
+  query: string
+) {
+  if (!queryPatterns || queryPatterns.length < 1) {
+    return patternRegex.default(query).test(content);
+  }
+
+  let containsText = false;
+
+  /**
+   * This iterates through all given patterns exhaustively because of pattern
+   * precedence. For example, `wholeWord` failing to match will override a
+   * previous `case` match and return false. It is not acceptable to `some()`
+   * the patterns list.
+   */
+  for (const pattern of queryPatterns) {
+    switch (pattern) {
+      case "case":
+      case "default": {
+        containsText = patternRegex[pattern](query).test(content);
+        break;
+      }
+
+      case "regex":
+      case "wholeWord": {
+        containsText = patternRegex[pattern](
+          query,
+          getRegexFlags(queryPatterns)
+        ).test(content);
+        break;
+      }
+    }
+  }
+
+  return containsText;
+}
+
+function getAdjacentTextNodes(node: Node): Text[] {
+  const nodes: Text[] = [];
+  let currentNode: Node | null = node;
+
+  while (currentNode) {
+    if (currentNode.nodeType === Node.TEXT_NODE) {
+      nodes.push(currentNode as Text);
+    } else {
+      break;
+    }
+
+    currentNode = currentNode.nextSibling;
+  }
+
+  return nodes;
+}
+
 /**
  * Recursively crawls an element in search of a given query and returns a list
  * of matching Text nodes.
+ *
+ * @remarks
+ * Also mutates chains of adjacent text nodes by merging them into a single
+ * node and deleting all but the first. This is done in preparation of
+ * replacment to support replacing text across text nodes that are beside each
+ * other. See: https://github.com/dan-lovelace/word-replacer-max/issues/60.
  */
 export function findText(
   element: HTMLElement,
@@ -14,51 +76,42 @@ export function findText(
   queryPatterns: QueryPattern[],
   found: Text[] = []
 ) {
-  const elementContents = String(element[CONTENTS_PROPERTY]);
-  let containsText = false;
+  if (element.nodeType === Node.TEXT_NODE) {
+    const subsequentTextNodes = getAdjacentTextNodes(element);
 
-  if (!queryPatterns || queryPatterns.length < 1) {
-    // default query pattern
-    containsText = patternRegex.default(query).test(elementContents);
-  } else {
-    for (const pattern of queryPatterns) {
-      switch (pattern) {
-        case "case":
-        case "default": {
-          containsText = patternRegex[pattern](query).test(elementContents);
-          break;
-        }
+    const combinedContent = subsequentTextNodes
+      .map((node) => {
+        const nodeContent = String(node[CONTENTS_PROPERTY]);
 
-        case "regex":
-        case "wholeWord": {
-          containsText = patternRegex[pattern](
-            query,
-            getRegexFlags(queryPatterns)
-          ).test(elementContents);
-          break;
-        }
+        return subsequentTextNodes.length > 1
+          ? nodeContent.trim()
+          : nodeContent;
+      })
+      .join(" ");
+
+    if (
+      checkContainsText(combinedContent, queryPatterns, query) &&
+      !element.parentElement?.dataset["isReplaced"] &&
+      !nodeNameBlocklist.has(String(element.parentNode?.nodeName.toLowerCase()))
+    ) {
+      // Update the element's text content
+      element.textContent = combinedContent;
+
+      // Remove any following text nodes since they have been merged
+      if (subsequentTextNodes.length > 1) {
+        subsequentTextNodes.slice(1).forEach((node) => {
+          node.remove();
+        });
       }
+
+      found.push(element as unknown as Text);
     }
-  }
-
-  if (!containsText) {
-    return found;
-  }
-
-  if (element.hasChildNodes()) {
+  } else if (element.hasChildNodes()) {
     const childElements = Array.from(element.childNodes) as HTMLElement[];
 
     for (const child of childElements) {
       findText(child, query, queryPatterns, found);
     }
-  }
-
-  if (
-    element.nodeType === Node.TEXT_NODE &&
-    !element.parentElement?.dataset["isReplaced"] &&
-    !nodeNameBlocklist.has(String(element.parentNode?.nodeName.toLowerCase()))
-  ) {
-    found.push(element as unknown as Text);
   }
 
   return found;

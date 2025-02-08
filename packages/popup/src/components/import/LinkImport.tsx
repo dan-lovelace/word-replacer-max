@@ -83,7 +83,11 @@ export default function LinkImport({ setIsImportingLink }: LinkImportProps) {
   };
 
   return (
-    <form className="input-group" onSubmit={handleImportSubmit}>
+    <form
+      className="input-group"
+      onSubmit={handleImportSubmit}
+      data-testid="link-import-form"
+    >
       <input
         autoFocus
         className="form-control"
@@ -93,6 +97,7 @@ export default function LinkImport({ setIsImportingLink }: LinkImportProps) {
         type="url"
         value={importLink}
         onInput={handleImportLinkChange}
+        data-testid="link-import-url-input"
       />
       <Button
         className="btn btn-outline-primary"
