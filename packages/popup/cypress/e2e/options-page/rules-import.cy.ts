@@ -81,14 +81,16 @@ describe("rules import", () => {
       cy.findByRole("button", { name: /import/i }).click();
     });
 
-    s.layout.tabs.rules().click();
-    s.ruleRows().then((ruleRows) => {
-      expect(ruleRows.length).to.eq(12);
+    cy.wait("@share").then(() => {
+      s.layout.tabs.rules().click();
+      s.ruleRows().then((ruleRows) => {
+        expect(ruleRows.length).to.eq(12);
 
-      cy.wrap(ruleRows.slice(2)).each((row, idx) => {
-        cy.wrap(row).within(() => {
-          s.rules.queryInput.chips().then(() => {
-            cy.contains((idx + 1) % 10);
+        cy.wrap(ruleRows.slice(2)).each((row, idx) => {
+          cy.wrap(row).within(() => {
+            s.rules.queryInput.chips().then(() => {
+              cy.contains((idx + 1) % 10);
+            });
           });
         });
       });
