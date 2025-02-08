@@ -7,18 +7,16 @@ import responsiveFontSizes from "@mui/material/styles/responsiveFontSizes";
 import ThemeProvider from "@mui/material/styles/ThemeProvider";
 
 import Layout from "./containers/Layout";
-import { useAuthProvider } from "./lib/auth/AuthProvider";
 import { ROUTES } from "./lib/routes";
-import { muiTheme } from "./style/mui-theme";
-
 import HomePage from "./pages/HomePage";
 import LoginCallbackPage from "./pages/LoginCallbackPage";
-import LoginSuccessPage from "./pages/LoginSuccessPage";
 import LoginPage from "./pages/LoginPage";
+import LoginSuccessPage from "./pages/LoginSuccessPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import PrivacyPage from "./pages/PrivacyPage";
 import SignUpPage from "./pages/SignUpPage";
 import TermsPage from "./pages/TermsPage";
+import { muiTheme } from "./style/mui-theme";
 
 let theme = createTheme(muiTheme);
 theme = responsiveFontSizes(theme);
@@ -45,8 +43,6 @@ function AppRoutes() {
 }
 
 export function App() {
-  const { appUser } = useAuthProvider();
-
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
