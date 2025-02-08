@@ -100,8 +100,11 @@ export const selectors = {
       toggleButton: () => cy.findByTestId("rule-groups-toggle-button"),
     },
     rulesImport: {
-      input: () => cy.findByTestId("file-input__input"),
-      label: () => cy.findByTestId("file-input__label"),
+      fileInput: () => cy.findByTestId("file-input__input"),
+      fileInputLabel: () => cy.findByTestId("file-input__label"),
+      linkImportButton: () => cy.findByTestId("link-import-button"),
+      linkImportForm: () => cy.findByTestId("link-import-form"),
+      linkImportUrlInput: () => cy.findByTestId("link-import-url-input"),
       uploadRedirect: () => cy.findByTestId("file-input__upload-redirect"),
     },
   },
@@ -147,6 +150,7 @@ export const selectors = {
   ruleRows: () => cy.findAllByTestId("rule-row"),
   ruleRowsFirst: () => selectors.ruleRows().first(),
   rules: {
+    deleteButton: () => cy.findByTestId("rule-row__delete-button"),
     list: {
       emptyRulesListAlert: () => cy.findByTestId("empty-rules-list-alert"),
       replacementInput: () => cy.findByTestId("replacement-text-input"),

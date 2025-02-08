@@ -243,7 +243,6 @@ export default function RuleRow({
       {!disabled && (
         <div className="rule-row-actions col-auto ps-0">
           <IconButton
-            data-dismiss="delete"
             className={cx(
               "px-2",
               isConfirmingDelete
@@ -257,6 +256,8 @@ export default function RuleRow({
             title={isConfirmingDelete ? "Confirm delete rule" : "Delete rule"}
             onBlur={() => clickawayListener(new MouseEvent(""))}
             onClick={handleDeleteClick}
+            data-dismiss="delete"
+            data-testid="rule-row__delete-button"
           />
         </div>
       )}
