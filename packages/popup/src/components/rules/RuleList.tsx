@@ -44,7 +44,7 @@ export default function RuleList() {
                   className="rule-row-wrapper col-12 col-xxl-6 position-relative"
                 >
                   <div className="container-fluid gx-1">
-                    <RuleRow matcher={matcher} matchers={renderedMatchers} />
+                    <RuleRow matcher={matcher} />
                   </div>
                 </div>
               ))}

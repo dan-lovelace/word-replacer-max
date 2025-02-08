@@ -582,6 +582,19 @@ describe("home page rule groups", () => {
           });
         });
       });
+
+      it("should not delete more than one rule with groups enabled", () => {
+        selectors.ruleGroups.toolbar.groupToggles().first().click();
+
+        selectors.ruleRowsFirst().within(() => {
+          selectors.rules.deleteButton().click();
+          selectors.rules.deleteButton().click();
+        });
+
+        selectors.ruleGroups.toolbar.groupToggles().first().click();
+
+        selectors.ruleRows().should("have.length", 1);
+      });
     });
   });
 });

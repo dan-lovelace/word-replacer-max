@@ -19,7 +19,6 @@ import ReplacementInput from "../replacement-input/ReplacementInput";
 
 type RuleRowProps = {
   matcher: Matcher;
-  matchers: Matcher[];
   disabled?: boolean;
 };
 
@@ -32,14 +31,13 @@ export default function RuleRow({
     replacement,
     useGlobalReplacementStyle,
   },
-  matchers,
   disabled = false,
 }: RuleRowProps) {
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
 
   const {
     storage: {
-      sync: { preferences },
+      sync: { matchers, preferences },
     },
   } = useConfig();
   const language = useLanguage();
@@ -49,6 +47,15 @@ export default function RuleRow({
   const { showToast } = useToast();
 
   confirmingDeleteRef.current = isConfirmingDelete;
+
+  const clickawayListener = useCallback((event: MouseEvent) => {
+    if (
+      confirmingDeleteRef.current === true &&
+      (event.target as HTMLElement)?.getAttribute("data-dismiss") !== "delete"
+    ) {
+      setIsConfirmingDelete(false);
+    }
+  }, []);
 
   useEffect(() => {
     if (!preferences?.focusRule) return;
@@ -85,15 +92,6 @@ export default function RuleRow({
       preferences: newPreferences,
     });
   }, [preferences]);
-
-  const clickawayListener = useCallback((event: MouseEvent) => {
-    if (
-      confirmingDeleteRef.current === true &&
-      (event.target as HTMLElement)?.getAttribute("data-dismiss") !== "delete"
-    ) {
-      setIsConfirmingDelete(false);
-    }
-  }, []);
 
   useEffect(() => {
     if (isConfirmingDelete) {
@@ -172,7 +170,7 @@ export default function RuleRow({
       }
 
       storageSetByKeys({
-        matchers: matchers.filter(
+        matchers: matchers?.filter(
           (matcher) => matcher.identifier !== identifier
         ),
       });
