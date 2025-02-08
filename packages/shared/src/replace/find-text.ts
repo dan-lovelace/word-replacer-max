@@ -62,7 +62,13 @@ function getAdjacentTextNodes(node: Node): Text[] {
 
 /**
  * Recursively crawls an element in search of a given query and returns a list
- * of matching Text nodes. Also mutates chains of adjacent text nodes
+ * of matching Text nodes.
+ *
+ * @remarks
+ * Also mutates chains of adjacent text nodes by merging them into a single
+ * node and deleting all but the first. This is done in preparation of
+ * replacment to support replacing text across text nodes that are beside each
+ * other. See: https://github.com/dan-lovelace/word-replacer-max/issues/60.
  */
 export function findText(
   element: HTMLElement,
