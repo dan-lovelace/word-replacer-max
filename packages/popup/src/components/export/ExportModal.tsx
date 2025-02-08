@@ -155,7 +155,7 @@ export default function ExportModal() {
                           Include
                         </label>
                       </div>
-                      <RuleRow disabled matcher={matcher} matchers={matchers} />
+                      <RuleRow disabled matcher={matcher} />
                     </div>
                   ))}
                 </>
