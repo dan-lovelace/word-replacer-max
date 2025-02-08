@@ -1,6 +1,8 @@
 import { replaceAll } from "@worm/shared/src/replace";
 
-import { DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE } from "../../src/replace/lib/style";
+import {
+  DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE,
+} from "../../src/replace/lib/style";
 
 import { selectors as s } from "../support/selectors";
 
@@ -404,6 +406,40 @@ describe("replaceAll", () => {
         });
       });
     });
+
+    it("replaces text across adjacent text nodes", () => {
+      cy.visitMock({
+        bodyContents: `
+          <div data-testid="target"></div>
+        `,
+      });
+
+      cy.document().then((document) => {
+        const textNode1 = document.createTextNode("Lorem");
+        const textNode2 = document.createTextNode("ipsum");
+        const target = document.querySelector("[data-testid='target']");
+
+        target?.appendChild(textNode1);
+        target?.appendChild(textNode2);
+
+        replaceAll(
+          [
+            {
+              active: true,
+              identifier: "ABCD-1234",
+              queries: ["lorem ipsum"],
+              queryPatterns: [],
+              replacement: "sit",
+              useGlobalReplacementStyle: DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE,
+            },
+          ],
+          undefined,
+          document
+        );
+
+        s.target().should("have.text", "sit");
+      });
+    });
   });
 
   describe("'regex' query pattern only", () => {
@@ -468,7 +504,7 @@ describe("replaceAll", () => {
   });
 
   describe("'wholeWord' query pattern only", () => {
-    it("does not remove empty space around sibling elements for 'wholeWord' pattern", () => {
+    it("does not remove empty space around sibling elements", () => {
       cy.visitMock({
         bodyContents: `
           <p data-testid="target">
@@ -494,6 +530,40 @@ describe("replaceAll", () => {
         );
 
         s.target().should("include.text", "Lorem sit dolor.");
+      });
+    });
+
+    it("trims empty space around sibling elements when adjacent text nodes exist", () => {
+      cy.visitMock({
+        bodyContents: `
+          <div data-testid="target"></div>
+        `,
+      });
+
+      cy.document().then((document) => {
+        const textNode1 = document.createTextNode("Lorem   ");
+        const textNode2 = document.createTextNode("ipsum");
+        const target = document.querySelector("[data-testid='target']");
+
+        target?.appendChild(textNode1);
+        target?.appendChild(textNode2);
+
+        replaceAll(
+          [
+            {
+              active: true,
+              identifier: "ABCD-1234",
+              queries: ["Lorem ipsum"],
+              queryPatterns: ["wholeWord"],
+              replacement: "sit",
+              useGlobalReplacementStyle: DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE,
+            },
+          ],
+          undefined,
+          document
+        );
+
+        s.target().should("have.text", "sit");
       });
     });
   });
