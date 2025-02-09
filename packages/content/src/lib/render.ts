@@ -103,11 +103,9 @@ export async function renderContent(msg = "") {
           .flat()
       );
 
-      if (groupedMatchers.size > 0) {
-        renderedMatchers = renderedMatchers.filter((matcher) =>
-          groupedMatchers.has(matcher.identifier)
-        );
-      }
+      renderedMatchers = renderedMatchers.filter((matcher) =>
+        groupedMatchers.has(matcher.identifier)
+      );
     }
   }
 
