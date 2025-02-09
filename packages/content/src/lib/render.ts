@@ -20,7 +20,7 @@ type RenderCache = {
 const RENDER_STORAGE_CACHE_LENGTH_MS = 100;
 const RENDER_STYLE_CACHE_LENGTH_MS = 1000;
 
-const renderCache: RenderCache = {
+export const renderCache: RenderCache = {
   storage: {
     expires: 0,
   },
@@ -96,20 +96,22 @@ export async function renderContent(msg = "") {
     const matcherGroups = getMatcherGroups(syncStorage);
 
     if (matcherGroups !== undefined) {
+      const activeGroups = Object.values(matcherGroups).filter(
+        (group) => group.active
+      );
       const groupedMatchers = new Set(
-        Object.values(matcherGroups)
-          .filter((group) => group.active)
-          .map((group) => [...(group.matchers ?? [])])
-          .flat()
+        activeGroups.map((group) => [...(group.matchers ?? [])]).flat()
       );
 
-      if (groupedMatchers.size > 0) {
+      if (groupedMatchers.size > 0 || activeGroups.length > 0) {
         renderedMatchers = renderedMatchers.filter((matcher) =>
           groupedMatchers.has(matcher.identifier)
         );
       }
     }
   }
+
+  if (renderedMatchers.length < 1) return;
 
   replaceAll(renderedMatchers, replacementStyle);
 }
