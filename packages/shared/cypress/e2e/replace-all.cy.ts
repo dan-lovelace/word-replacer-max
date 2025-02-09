@@ -476,6 +476,76 @@ describe("replaceAll", () => {
     });
   });
 
+  describe("'case' query pattern only", () => {
+    it("replaces text across adjacent text nodes for single-word queries", () => {
+      cy.visitMock({
+        bodyContents: `
+          <div data-testid="target"></div>
+        `,
+      });
+
+      cy.document().then((document) => {
+        const textNode1 = document.createTextNode("Lorem");
+        const textNode2 = document.createTextNode("ipsum");
+        const target = document.querySelector("[data-testid='target']");
+
+        target?.appendChild(textNode1);
+        target?.appendChild(textNode2);
+
+        replaceAll(
+          [
+            {
+              active: true,
+              identifier: "ABCD-1234",
+              queries: ["Loremipsum"],
+              queryPatterns: ["case"],
+              replacement: "sit",
+              useGlobalReplacementStyle: DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE,
+            },
+          ],
+          undefined,
+          document
+        );
+
+        s.target().should("have.text", "sit");
+      });
+    });
+
+    it("replaces text across adjacent text nodes for multiple-word queries", () => {
+      cy.visitMock({
+        bodyContents: `
+          <div data-testid="target"></div>
+        `,
+      });
+
+      cy.document().then((document) => {
+        const textNode1 = document.createTextNode("Lorem");
+        const textNode2 = document.createTextNode("ipsum");
+        const target = document.querySelector("[data-testid='target']");
+
+        target?.appendChild(textNode1);
+        target?.appendChild(textNode2);
+
+        replaceAll(
+          [
+            {
+              active: true,
+              identifier: "ABCD-1234",
+              queries: ["Lorem ipsum"],
+              queryPatterns: ["case"],
+              replacement: "sit",
+              useGlobalReplacementStyle: DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE,
+            },
+          ],
+          undefined,
+          document
+        );
+
+        s.target().should("have.text", "sit");
+      });
+    });
+  });
+
   describe("'regex' query pattern only", () => {
     it("works for regex negative lookaheads", () => {
       cy.visitMock({
@@ -535,6 +605,74 @@ describe("replaceAll", () => {
         .invoke("html")
         .should("match", /^Lorem <span[^>]*>sit<\/span> dolor$/);
     });
+
+    it("replaces text across adjacent text nodes for single-word queries", () => {
+      cy.visitMock({
+        bodyContents: `
+          <div data-testid="target"></div>
+        `,
+      });
+
+      cy.document().then((document) => {
+        const textNode1 = document.createTextNode("Lorem");
+        const textNode2 = document.createTextNode("ipsum");
+        const target = document.querySelector("[data-testid='target']");
+
+        target?.appendChild(textNode1);
+        target?.appendChild(textNode2);
+
+        replaceAll(
+          [
+            {
+              active: true,
+              identifier: "ABCD-1234",
+              queries: ["(Loremipsum)"],
+              queryPatterns: ["regex"],
+              replacement: "sit",
+              useGlobalReplacementStyle: DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE,
+            },
+          ],
+          undefined,
+          document
+        );
+
+        s.target().should("have.text", "sit");
+      });
+    });
+
+    it("replaces text across adjacent text nodes for multiple-word queries", () => {
+      cy.visitMock({
+        bodyContents: `
+          <div data-testid="target"></div>
+        `,
+      });
+
+      cy.document().then((document) => {
+        const textNode1 = document.createTextNode("Lorem");
+        const textNode2 = document.createTextNode("ipsum");
+        const target = document.querySelector("[data-testid='target']");
+
+        target?.appendChild(textNode1);
+        target?.appendChild(textNode2);
+
+        replaceAll(
+          [
+            {
+              active: true,
+              identifier: "ABCD-1234",
+              queries: ["(Lorem) (ipsum)"],
+              queryPatterns: ["regex"],
+              replacement: "sit",
+              useGlobalReplacementStyle: DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE,
+            },
+          ],
+          undefined,
+          document
+        );
+
+        s.target().should("have.text", "sit");
+      });
+    });
   });
 
   describe("'wholeWord' query pattern only", () => {
@@ -567,7 +705,7 @@ describe("replaceAll", () => {
       });
     });
 
-    it("trims empty space around sibling elements when adjacent text nodes exist", () => {
+    it("replaces text across adjacent text nodes for single-word queries", () => {
       cy.visitMock({
         bodyContents: `
           <div data-testid="target"></div>
@@ -575,8 +713,42 @@ describe("replaceAll", () => {
       });
 
       cy.document().then((document) => {
-        const textNode1 = document.createTextNode("Lorem   ");
-        const textNode2 = document.createTextNode("ipsum");
+        const textNode1 = document.createTextNode("Lorem");
+        const textNode2 = document.createTextNode("ipsum. dolor");
+        const target = document.querySelector("[data-testid='target']");
+
+        target?.appendChild(textNode1);
+        target?.appendChild(textNode2);
+
+        replaceAll(
+          [
+            {
+              active: true,
+              identifier: "ABCD-1234",
+              queries: ["Loremipsum"],
+              queryPatterns: ["wholeWord"],
+              replacement: "sit",
+              useGlobalReplacementStyle: DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE,
+            },
+          ],
+          undefined,
+          document
+        );
+
+        s.target().should("have.text", "sit. dolor");
+      });
+    });
+
+    it("replaces text across adjacent text nodes for multiple-word queries", () => {
+      cy.visitMock({
+        bodyContents: `
+          <div data-testid="target"></div>
+        `,
+      });
+
+      cy.document().then((document) => {
+        const textNode1 = document.createTextNode("Lorem");
+        const textNode2 = document.createTextNode("ipsum. dolor");
         const target = document.querySelector("[data-testid='target']");
 
         target?.appendChild(textNode1);
@@ -597,7 +769,41 @@ describe("replaceAll", () => {
           document
         );
 
-        s.target().should("have.text", "sit");
+        s.target().should("have.text", "sit. dolor");
+      });
+    });
+
+    it("trims empty space around sibling elements when adjacent text nodes exist", () => {
+      cy.visitMock({
+        bodyContents: `
+          <div data-testid="target"></div>
+        `,
+      });
+
+      cy.document().then((document) => {
+        const textNode1 = document.createTextNode("Lorem   ");
+        const textNode2 = document.createTextNode("ipsum. dolor");
+        const target = document.querySelector("[data-testid='target']");
+
+        target?.appendChild(textNode1);
+        target?.appendChild(textNode2);
+
+        replaceAll(
+          [
+            {
+              active: true,
+              identifier: "ABCD-1234",
+              queries: ["Lorem ipsum"],
+              queryPatterns: ["wholeWord"],
+              replacement: "sit",
+              useGlobalReplacementStyle: DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE,
+            },
+          ],
+          undefined,
+          document
+        );
+
+        s.target().should("have.text", "sit. dolor");
       });
     });
   });
