@@ -407,7 +407,41 @@ describe("replaceAll", () => {
       });
     });
 
-    it("replaces text across adjacent text nodes", () => {
+    it("replaces text across adjacent text nodes for single-word queries", () => {
+      cy.visitMock({
+        bodyContents: `
+          <div data-testid="target"></div>
+        `,
+      });
+
+      cy.document().then((document) => {
+        const textNode1 = document.createTextNode("Lorem");
+        const textNode2 = document.createTextNode("ipsum");
+        const target = document.querySelector("[data-testid='target']");
+
+        target?.appendChild(textNode1);
+        target?.appendChild(textNode2);
+
+        replaceAll(
+          [
+            {
+              active: true,
+              identifier: "ABCD-1234",
+              queries: ["loremipsum"],
+              queryPatterns: [],
+              replacement: "sit",
+              useGlobalReplacementStyle: DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE,
+            },
+          ],
+          undefined,
+          document
+        );
+
+        s.target().should("have.text", "sit");
+      });
+    });
+
+    it("replaces text across adjacent text nodes for queries that contain a space", () => {
       cy.visitMock({
         bodyContents: `
           <div data-testid="target"></div>

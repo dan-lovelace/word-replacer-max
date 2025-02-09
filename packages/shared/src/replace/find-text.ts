@@ -78,27 +78,41 @@ export function findText(
 ) {
   if (element.nodeType === Node.TEXT_NODE) {
     const subsequentTextNodes = getAdjacentTextNodes(element);
+    const isSubsequent = subsequentTextNodes.length > 1;
 
-    const combinedContent = subsequentTextNodes
-      .map((node) => {
-        const nodeContent = String(node[CONTENTS_PROPERTY]);
+    const elementContent = isSubsequent
+      ? /**
+         * Trim and merge all subsequent text nodes without spacing.
+         */
+        subsequentTextNodes
+          .map((node) => String(node[CONTENTS_PROPERTY]).trim())
+          .join("")
+      : /**
+         * Single text node, just get its own contents.
+         */
+        String(element[CONTENTS_PROPERTY]);
 
-        return subsequentTextNodes.length > 1
-          ? nodeContent.trim()
-          : nodeContent;
-      })
-      .join(" ");
+    // TODO: Fix this for RegEx
+    const containsQuery = isSubsequent
+      ? /**
+         * More than one text node, remove all spacing from query.
+         */
+        query.replace(/\s+/g, "")
+      : /**
+         * Keep query as-is.
+         */
+        query;
 
     if (
-      checkContainsText(combinedContent, queryPatterns, query) &&
+      checkContainsText(elementContent, queryPatterns, containsQuery) &&
       !element.parentElement?.dataset["isReplaced"] &&
       !nodeNameBlocklist.has(String(element.parentNode?.nodeName.toLowerCase()))
     ) {
       // Update the element's text content
-      element.textContent = combinedContent;
+      element.textContent = isSubsequent ? query : elementContent;
 
-      // Remove any following text nodes since they have been merged
-      if (subsequentTextNodes.length > 1) {
+      if (isSubsequent) {
+        // Remove any following text nodes since they have been merged
         subsequentTextNodes.slice(1).forEach((node) => {
           node.remove();
         });
