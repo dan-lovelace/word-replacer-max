@@ -4,10 +4,10 @@ import { CONTENTS_PROPERTY } from "./lib";
 import { nodeNameBlocklist } from "./lib/dom";
 import { getRegexFlags, patternRegex } from "./lib/regex";
 
-function checkContainsText(
+function checkElementContent(
   content: string,
-  queryPatterns: QueryPattern[],
-  query: string
+  query: string,
+  queryPatterns: QueryPattern[]
 ) {
   if (!queryPatterns || queryPatterns.length < 1) {
     return patternRegex.default(query).test(content);
@@ -61,6 +61,62 @@ function getAdjacentTextNodes(node: Node): Text[] {
 }
 
 /**
+ * Makes several attempts at matching and returning matched text from a list of
+ * text nodes. If more than one element is provided, we have to test matching
+ * with and without spaces between each one's text content to allow matching on
+ * queries with more than one word.
+ */
+function getMatchedText(
+  elements: Text[],
+  query: string,
+  queryPatterns: QueryPattern[]
+): string | undefined {
+  if (elements.length === 0) {
+    return undefined;
+  }
+
+  function checkContent(content: string) {
+    return checkElementContent(content, query, queryPatterns);
+  }
+
+  if (elements.length === 1) {
+    const elementContents = String(elements[0][CONTENTS_PROPERTY]);
+    const matches = checkContent(elementContents);
+
+    return matches ? elementContents : undefined;
+  }
+
+  const contentsList = elements
+    .map((element) => element[CONTENTS_PROPERTY])
+    .filter((content) => content !== null);
+
+  if (contentsList.length === 0) {
+    return undefined;
+  }
+
+  if (contentsList.length === 1) {
+    const elementContents = contentsList[0];
+    const matches = checkContent(elementContents);
+
+    return matches ? elementContents : undefined;
+  }
+
+  const trimmedContents = contentsList.map((content) => content?.trim());
+
+  const spacedContents = trimmedContents.join(" ");
+  const spacedMatches = checkContent(spacedContents);
+
+  if (spacedMatches) return spacedContents;
+
+  const unspacedContents = trimmedContents.join("");
+  const unspacedMatches = checkContent(unspacedContents);
+
+  if (unspacedMatches) return unspacedContents;
+
+  return undefined;
+}
+
+/**
  * Recursively crawls an element in search of a given query and returns a list
  * of matching Text nodes.
  *
@@ -78,27 +134,26 @@ export function findText(
 ) {
   if (element.nodeType === Node.TEXT_NODE) {
     const subsequentTextNodes = getAdjacentTextNodes(element);
+    const isSubsequent = subsequentTextNodes.length > 1;
 
-    const combinedContent = subsequentTextNodes
-      .map((node) => {
-        const nodeContent = String(node[CONTENTS_PROPERTY]);
+    const matchedText = getMatchedText(
+      subsequentTextNodes,
+      query,
+      queryPatterns
+    );
+    const isAlreadyReplaced = Boolean(
+      element.parentElement?.dataset["isReplaced"]
+    );
+    const isParentAllowed = !nodeNameBlocklist.has(
+      String(element.parentNode?.nodeName.toLowerCase())
+    );
 
-        return subsequentTextNodes.length > 1
-          ? nodeContent.trim()
-          : nodeContent;
-      })
-      .join(" ");
+    if (matchedText !== undefined && !isAlreadyReplaced && isParentAllowed) {
+      if (isSubsequent) {
+        // Override the element's content with the text that matched.
+        element.textContent = matchedText;
 
-    if (
-      checkContainsText(combinedContent, queryPatterns, query) &&
-      !element.parentElement?.dataset["isReplaced"] &&
-      !nodeNameBlocklist.has(String(element.parentNode?.nodeName.toLowerCase()))
-    ) {
-      // Update the element's text content
-      element.textContent = combinedContent;
-
-      // Remove any following text nodes since they have been merged
-      if (subsequentTextNodes.length > 1) {
+        // Remove any following text nodes since they have been merged
         subsequentTextNodes.slice(1).forEach((node) => {
           node.remove();
         });
