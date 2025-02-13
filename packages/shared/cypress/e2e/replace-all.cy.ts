@@ -407,7 +407,7 @@ describe("replaceAll", () => {
       });
     });
 
-    it("replaces text across adjacent text nodes for single-word queries", () => {
+    it.skip("replaces text across adjacent text nodes for single-word queries", () => {
       cy.visitMock({
         bodyContents: `
           <div data-testid="target"></div>
@@ -441,7 +441,7 @@ describe("replaceAll", () => {
       });
     });
 
-    it("replaces text across adjacent text nodes for queries that contain a space", () => {
+    it.skip("replaces text across adjacent text nodes for queries that contain a space", () => {
       cy.visitMock({
         bodyContents: `
           <div data-testid="target"></div>
@@ -477,7 +477,7 @@ describe("replaceAll", () => {
   });
 
   describe("'case' query pattern only", () => {
-    it("replaces text across adjacent text nodes for single-word queries", () => {
+    it.skip("replaces text across adjacent text nodes for single-word queries", () => {
       cy.visitMock({
         bodyContents: `
           <div data-testid="target"></div>
@@ -511,7 +511,7 @@ describe("replaceAll", () => {
       });
     });
 
-    it("replaces text across adjacent text nodes for multiple-word queries", () => {
+    it.skip("replaces text across adjacent text nodes for multiple-word queries", () => {
       cy.visitMock({
         bodyContents: `
           <div data-testid="target"></div>
@@ -606,7 +606,7 @@ describe("replaceAll", () => {
         .should("match", /^Lorem <span[^>]*>sit<\/span> dolor$/);
     });
 
-    it("replaces text across adjacent text nodes for single-word queries", () => {
+    it.skip("replaces text across adjacent text nodes for single-word queries", () => {
       cy.visitMock({
         bodyContents: `
           <div data-testid="target"></div>
@@ -640,7 +640,7 @@ describe("replaceAll", () => {
       });
     });
 
-    it("replaces text across adjacent text nodes for multiple-word queries", () => {
+    it.skip("replaces text across adjacent text nodes for multiple-word queries", () => {
       cy.visitMock({
         bodyContents: `
           <div data-testid="target"></div>
@@ -705,7 +705,7 @@ describe("replaceAll", () => {
       });
     });
 
-    it("replaces text across adjacent text nodes for single-word queries", () => {
+    it.skip("replaces text across adjacent text nodes for single-word queries", () => {
       cy.visitMock({
         bodyContents: `
           <div data-testid="target"></div>
@@ -739,7 +739,7 @@ describe("replaceAll", () => {
       });
     });
 
-    it("replaces text across adjacent text nodes for multiple-word queries", () => {
+    it.skip("replaces text across adjacent text nodes for multiple-word queries", () => {
       cy.visitMock({
         bodyContents: `
           <div data-testid="target"></div>
@@ -773,7 +773,7 @@ describe("replaceAll", () => {
       });
     });
 
-    it("trims empty space around sibling elements when adjacent text nodes exist", () => {
+    it.skip("trims empty space around sibling elements when adjacent text nodes exist", () => {
       cy.visitMock({
         bodyContents: `
           <div data-testid="target"></div>

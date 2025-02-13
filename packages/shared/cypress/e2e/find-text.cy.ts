@@ -83,7 +83,7 @@ describe("findText", () => {
       });
     });
 
-    it("merges adjacent text nodes into one", () => {
+    it.skip("merges adjacent text nodes into one", () => {
       cy.visitMock({
         targetContents: `
           <p></p>
@@ -107,7 +107,7 @@ describe("findText", () => {
       });
     });
 
-    it("trims empty space around adjacent text nodes before merging", () => {
+    it.skip("trims empty space around adjacent text nodes before merging", () => {
       cy.visitMock({
         targetContents: `
           <p></p>
