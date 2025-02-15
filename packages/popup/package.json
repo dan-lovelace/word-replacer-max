@@ -21,6 +21,7 @@
     "@worm/shared": "*",
     "bootstrap": "5.3.3",
     "material-icons": "^1.13.12",
+    "papaparse": "^5.5.2",
     "preact": "^10.25.4",
     "preact-iso": "^2.8.1",
     "preact-render-to-string": "^6.5.12"
