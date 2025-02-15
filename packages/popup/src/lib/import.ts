@@ -1,6 +1,7 @@
+import papaparse from "papaparse";
 import { v4 as uuidv4 } from "uuid";
 
-import { getSchemaByVersion, parseDelimitedString } from "@worm/shared";
+import { getSchemaByVersion } from "@worm/shared";
 import { DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE } from "@worm/shared/src/replace/lib/style";
 import { storageSetByKeys } from "@worm/shared/src/storage";
 import { Matcher } from "@worm/types/src/rules";
@@ -11,36 +12,66 @@ export function importMatchersCSV(
   currentMatchers: Matcher[] | undefined,
   options: StorageSetOptions
 ) {
-  const csvData = fromUserInput?.toString();
-  const rows = csvData
-    ?.split("\n")
-    .map((row) => row.trim())
-    .filter(Boolean);
+  const parsed = papaparse.parse(fromUserInput?.toString() ?? "", {
+    /**
+     * Enable header mode so we can iterate over each cell's header name to see
+     * if anything looks like a "replacement" column and update the matcher's
+     * `replacement`. If not, assume it's a query and push it to the matcher's
+     * `queries` array instead.
+     */
+    header: true,
+  });
 
-  if (!rows || !rows.length) return;
+  const csvMatchers: Matcher[] = [];
 
-  const queriesToAdd = [];
+  for (const row of parsed.data) {
+    if (!row || typeof row !== "object") continue;
 
-  for (const row of rows) {
-    const parsed = parseDelimitedString(row);
+    const currentRow = row as Record<string, string>;
+    const matcherToAdd: Matcher = {
+      active: true,
+      identifier: uuidv4(),
+      queries: [],
+      queryPatterns: [],
+      replacement: "",
+      useGlobalReplacementStyle: DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE,
+    };
 
-    if (parsed.length > 0) {
-      queriesToAdd.push(parsed);
+    /**
+     * Iterate over the row object's keys in search of anything that looks like
+     * it may be a "replacement" column.
+     */
+    for (const key of Object.keys(currentRow)) {
+      const cellValue = currentRow[key];
+
+      if (!cellValue) continue;
+
+      /**
+       * Consider all possibilities of the word "replace".
+       *
+       * @remarks
+       * "replace", "replacement", "replacing", "replace with"
+       */
+      if (/replac/gi.test(key)) {
+        // Add the first instance and silently ignore any subsequent matches.
+        if (!matcherToAdd.replacement) {
+          matcherToAdd.replacement = cellValue;
+        }
+      } else {
+        matcherToAdd.queries.push(cellValue);
+      }
     }
+
+    csvMatchers.push(matcherToAdd);
   }
 
-  const newMatchers: Matcher[] = queriesToAdd.map((queries) => ({
-    active: true,
-    identifier: uuidv4(),
-    queries,
-    queryPatterns: [],
-    replacement: "",
-    useGlobalReplacementStyle: DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE,
-  }));
+  const matchersToAdd = csvMatchers.filter(
+    (matcher) => matcher.queries.length > 0 || matcher.replacement.length > 0
+  );
 
   return storageSetByKeys(
     {
-      matchers: [...(currentMatchers ?? []), ...newMatchers],
+      matchers: [...(currentMatchers ?? []), ...matchersToAdd],
     },
     options
   );

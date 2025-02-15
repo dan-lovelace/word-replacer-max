@@ -185,8 +185,8 @@ describe("replacement suggest", () => {
           .click();
 
         selectors.ruleRowsFirst().within(() => {
-          selectors.rules.list
-            .replacementInput()
+          selectors.rules.replacementInput
+            .textInput()
             .invoke("val")
             .then((replacementValue) => {
               cy.wrap(replacementValue).should("eq", firstSuggestion);

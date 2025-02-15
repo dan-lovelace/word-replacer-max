@@ -153,12 +153,15 @@ export const selectors = {
     deleteButton: () => cy.findByTestId("rule-row__delete-button"),
     list: {
       emptyRulesListAlert: () => cy.findByTestId("empty-rules-list-alert"),
-      replacementInput: () => cy.findByTestId("replacement-text-input"),
     },
     queryInput: {
       chips: () => cy.findAllByTestId("query-input__chip"),
       input: () => cy.findByTestId("query-input__input"),
       root: () => cy.findByTestId("query-input"),
+    },
+    replacementInput: {
+      root: () => cy.findByTestId("replacement-input-form"),
+      textInput: () => cy.findByTestId("replacement-text-input"),
     },
     replacementSuggest: {
       dropdownMenu: {
