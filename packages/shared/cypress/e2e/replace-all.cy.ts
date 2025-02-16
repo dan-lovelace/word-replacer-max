@@ -1,8 +1,6 @@
 import { replaceAll } from "@worm/shared/src/replace";
 
-import {
-  DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE,
-} from "../../src/replace/lib/style";
+import { DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE } from "../../src/replace/lib/style";
 
 import { selectors as s } from "../support/selectors";
 
@@ -318,6 +316,133 @@ describe("replaceAll", () => {
         );
 
         s.target().should("have.text", "Lorem sit dolor");
+      });
+    });
+
+    it("replaces multiple matches for one query in the same rule", () => {
+      cy.visitMock({
+        bodyContents: `
+          <div data-testid="target">Lorem ipsum dolor Lorem ipsum dolor</div>
+        `,
+      });
+
+      cy.document().then((document) => {
+        replaceAll(
+          [
+            {
+              active: true,
+              identifier: "ABCD-1234",
+              queries: ["lorem"],
+              queryPatterns: [],
+              replacement: "sit",
+              useGlobalReplacementStyle: DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE,
+            },
+          ],
+          undefined,
+          document
+        );
+
+        s.target().should("have.text", "sit ipsum dolor sit ipsum dolor");
+      });
+    });
+
+    it("replaces multiple matches for multiple queries in the same rule", () => {
+      cy.visitMock({
+        bodyContents: `
+          <div data-testid="target">Lorem ipsum dolor Lorem ipsum dolor</div>
+        `,
+      });
+
+      cy.document().then((document) => {
+        replaceAll(
+          [
+            {
+              active: true,
+              identifier: "ABCD-1234",
+              queries: ["lorem", "dolor"],
+              queryPatterns: [],
+              replacement: "sit",
+              useGlobalReplacementStyle: DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE,
+            },
+          ],
+          undefined,
+          document
+        );
+
+        s.target().should("have.text", "sit ipsum sit sit ipsum sit");
+      });
+    });
+
+    it("replaces multiple matches for one query in multiple rules", () => {
+      cy.visitMock({
+        bodyContents: `
+          <div data-testid="target">Lorem ipsum dolor Lorem ipsum dolor</div>
+        `,
+      });
+
+      cy.document().then((document) => {
+        replaceAll(
+          [
+            {
+              active: true,
+              identifier: "ABCD-1234",
+              queries: ["lorem"],
+              queryPatterns: [],
+              replacement: "sit",
+              useGlobalReplacementStyle: DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE,
+            },
+            {
+              active: true,
+              identifier: "ABCD-4567",
+              queries: ["dolor"],
+              queryPatterns: [],
+              replacement: "amet",
+              useGlobalReplacementStyle: DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE,
+            },
+          ],
+          undefined,
+          document
+        );
+
+        s.target().should("have.text", "sit ipsum amet sit ipsum amet");
+      });
+    });
+
+    it("replaces multiple matches for multiple queries in multiple rules", () => {
+      cy.visitMock({
+        bodyContents: `
+          <div data-testid="target">Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing elit.</div>
+        `,
+      });
+
+      cy.document().then((document) => {
+        replaceAll(
+          [
+            {
+              active: true,
+              identifier: "ABCD-1234",
+              queries: ["lorem", "ipsum"],
+              queryPatterns: [],
+              replacement: "dolor",
+              useGlobalReplacementStyle: DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE,
+            },
+            {
+              active: true,
+              identifier: "ABCD-4567",
+              queries: ["sit", "amet"],
+              queryPatterns: [],
+              replacement: "consectetur",
+              useGlobalReplacementStyle: DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE,
+            },
+          ],
+          undefined,
+          document
+        );
+
+        s.target().should(
+          "have.text",
+          "dolor dolor dolor consectetur consectetur consectetur adipisicing elit. dolor dolor dolor consectetur consectetur consectetur adipisicing elit."
+        );
       });
     });
 

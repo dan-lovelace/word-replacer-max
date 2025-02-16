@@ -17,7 +17,7 @@ export function replaceText(
   replacementStyle: ReplacementStyle | undefined,
   startPosition: number = 0
 ) {
-  const { queryPatterns, replacement, useGlobalReplacementStyle } = matcher;
+  const { queryPatterns, replacement } = matcher;
 
   if (!element || isReplacementEmpty(replacement)) return;
 

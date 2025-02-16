@@ -83,6 +83,23 @@ describe("findText", () => {
       });
     });
 
+    it("matches multiple findings in the same node", () => {
+      cy.visitMock({
+        targetContents: `
+          <p>
+            ${DEFAULT_TEST_STRING} ${DEFAULT_TEST_STRING}
+          </p>
+        `,
+      });
+
+      s.html().then(($element) => {
+        const html = $element.get(0);
+
+        const result = findText(html, "ipsum", []);
+        cy.wrap(result).should("have.length", 1);
+      });
+    });
+
     it.skip("merges adjacent text nodes into one", () => {
       cy.visitMock({
         targetContents: `
