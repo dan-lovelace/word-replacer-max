@@ -15,14 +15,22 @@ export function startContentListeners() {
    * Listen for changes to the document and render when they occur.
    */
   const observer = new MutationObserver((mutationList) => {
-    for (const mutation of mutationList) {
-      if (mutation.type === "childList") {
-        render("mutation");
-      }
+    const hasTextChanges = mutationList.some(
+      (mutation) =>
+        mutation.type === "characterData" ||
+        Array.from(mutation.addedNodes).some(
+          (node) => node.nodeType === Node.TEXT_NODE || node.hasChildNodes()
+        )
+    );
+
+    if (hasTextChanges) {
+      render("mutation");
     }
   });
+
   observer.observe(document.documentElement, {
     childList: true,
     subtree: true,
+    characterData: true,
   });
 }
