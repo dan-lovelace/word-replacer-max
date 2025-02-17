@@ -541,7 +541,7 @@ describe("replaceAll", () => {
 
       cy.document().then((document) => {
         const textNode1 = document.createTextNode("Lorem");
-        const textNode2 = document.createTextNode("ipsum");
+        const textNode2 = document.createTextNode("ipsum dolor");
         const target = document.querySelector("[data-testid='target']");
 
         target?.appendChild(textNode1);
@@ -562,7 +562,7 @@ describe("replaceAll", () => {
           document
         );
 
-        s.target().should("have.text", "sit");
+        s.target().should("have.text", "sit dolor");
       });
     });
 
@@ -574,8 +574,8 @@ describe("replaceAll", () => {
       });
 
       cy.document().then((document) => {
-        const textNode1 = document.createTextNode("Lorem");
-        const textNode2 = document.createTextNode("ipsum");
+        const textNode1 = document.createTextNode("Lorem ipsum");
+        const textNode2 = document.createTextNode("dolor sit");
         const target = document.querySelector("[data-testid='target']");
 
         target?.appendChild(textNode1);
@@ -586,7 +586,7 @@ describe("replaceAll", () => {
             {
               active: true,
               identifier: "ABCD-1234",
-              queries: ["lorem ipsum"],
+              queries: ["ipsum dolor"],
               queryPatterns: [],
               replacement: "sit",
               useGlobalReplacementStyle: DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE,
@@ -596,7 +596,7 @@ describe("replaceAll", () => {
           document
         );
 
-        s.target().should("have.text", "sit");
+        s.target().should("have.text", "Lorem sit sit");
       });
     });
   });
