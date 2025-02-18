@@ -2,6 +2,7 @@ import { ApiAuthTokens } from "./api";
 import { AppUser } from "./identity";
 import { UserTokens } from "./permission";
 import { PopupAlertSeverity } from "./popup";
+import { Storage } from "./storage";
 import { WebAppPingResponse } from "./web-app";
 
 export interface BaseMessage<T extends string, K extends Record<T, unknown>>
@@ -41,6 +42,8 @@ export type RuntimeMessageKindMap = {
   currentUserResponse: ErrorableMessage<AppUser>;
   forceRefreshTokensRequest: undefined;
   forceRefreshTokensResponse: ErrorableMessage<ISuccessful>;
+  replacerStorageRequest: undefined;
+  replacerStorageResponse: ErrorableMessage<Partial<Storage>>;
   signOutRequest: undefined;
   signOutResponse: ErrorableMessage<undefined>;
 };

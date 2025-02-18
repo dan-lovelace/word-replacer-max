@@ -7,7 +7,10 @@ import {
 } from "@worm/shared";
 import { getApiEndpoint } from "@worm/shared/src/api";
 import { browser } from "@worm/shared/src/browser";
-import { authStorageProvider } from "@worm/shared/src/storage";
+import {
+  authStorageProvider,
+  storageGetByKeys,
+} from "@worm/shared/src/storage";
 import { ApiAuthTokens } from "@worm/types/src/api";
 import { IdentificationError } from "@worm/types/src/identity";
 import {
@@ -146,6 +149,22 @@ export function startConnectListener() {
             );
             port.postMessage({ data: responseMessage });
           }
+
+          break;
+        }
+
+        case "replacerStorageRequest": {
+          const syncStorage = await storageGetByKeys();
+          console.log("FETCHING STORAGE FRESH");
+          const responseMessage = createRuntimeMessage(
+            "replacerStorageResponse",
+            {
+              data: {
+                sync: syncStorage,
+              },
+            }
+          );
+          port.postMessage({ data: responseMessage });
 
           break;
         }
