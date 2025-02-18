@@ -9,7 +9,7 @@ import { browser } from "./browser";
  * Cache status for storage values
  */
 interface CacheStatus {
-  processing: boolean;
+  isProcessing: boolean;
   timestamp: number;
 }
 
@@ -43,7 +43,7 @@ export class StorageCache {
 
     this.cacheStatus = {
       timestamp: 0,
-      processing: false,
+      isProcessing: false,
     };
 
     this.backgroundPort = backgroundPort;
@@ -91,9 +91,47 @@ export class StorageCache {
 
       this.cacheStatus.timestamp = Date.now();
     } finally {
-      this.cacheStatus.processing = false;
+      this.cacheStatus.isProcessing = false;
       this.updatePromise = null;
     }
+  }
+
+  /**
+   * Attempts to update storage using the background script
+   * @private
+   */
+  private async updateStorageFromBackground(): Promise<void> {
+    if (!this.backgroundPort) {
+      throw new Error("Background port not available");
+    }
+
+    return new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => {
+        reject(new Error("Storage update timeout"));
+      }, 5000); // 5 second timeout
+
+      const messageHandler = (message: any) => {
+        const event = message as RuntimeMessage<RuntimeMessageKind>;
+
+        if (event.data.kind === "replacerStorageResponse") {
+          this.backgroundPort?.onMessage.removeListener(messageHandler);
+          clearTimeout(timeout);
+
+          const storageData = event.data.details?.data as CacheStorage;
+          this.cache = storageData;
+          this.cacheStatus.timestamp = Date.now();
+          this.cacheStatus.isProcessing = false;
+          this.updatePromise = null;
+
+          resolve();
+        }
+      };
+
+      this.backgroundPort?.onMessage.addListener(messageHandler);
+
+      const runtimeMessage = createRuntimeMessage("replacerStorageRequest");
+      this.backgroundPort?.postMessage({ data: runtimeMessage });
+    });
   }
 
   /**
@@ -112,7 +150,7 @@ export class StorageCache {
     const now = Date.now();
 
     // If we're already processing an update, wait for it
-    if (this.cacheStatus.processing && this.updatePromise) {
+    if (this.cacheStatus.isProcessing && this.updatePromise) {
       await this.updatePromise;
       return this.cache;
     }
@@ -123,39 +161,12 @@ export class StorageCache {
     }
 
     // Cache expired, need to refresh
-    this.cacheStatus.processing = true;
+    this.cacheStatus.isProcessing = true;
+    this.updatePromise = this.backgroundPort
+      ? this.updateStorageFromBackground()
+      : this.updateStorageDirectly();
 
-    if (this.backgroundPort) {
-      // Request update from background script
-      this.updatePromise = new Promise((resolve) => {
-        if (!this.backgroundPort) {
-          throw new Error("Unable to find background port in update promise");
-        }
-
-        const runtimeMessage = createRuntimeMessage("replacerStorageRequest");
-        this.backgroundPort.postMessage({ data: runtimeMessage });
-
-        const checkCache = () => {
-          if (now - this.cacheStatus.timestamp <= this.ttlMs) {
-            this.cacheStatus.processing = false;
-            this.updatePromise = null;
-
-            resolve();
-          } else {
-            setTimeout(checkCache, 1);
-          }
-        };
-
-        checkCache();
-      });
-
-      await this.updatePromise;
-    } else {
-      // Direct storage access if no background port
-      this.updatePromise = this.updateStorageDirectly();
-      await this.updatePromise;
-    }
-
+    await this.updatePromise;
     return this.cache;
   }
 }
