@@ -58,23 +58,16 @@ export class Replacer {
    */
   private async init(): Promise<void> {
     await this.updateStorageFromCache();
+
+    if (!this.storage.sync.preferences?.extensionEnabled) {
+      /**
+       * The extension is disabled, do not continue
+       */
+      return;
+    }
+
     await this.replaceAll();
     this.listenForChanges();
-  }
-
-  /**
-   * Updates the internal storage from cache
-   * @private
-   */
-  private async updateStorageFromCache(): Promise<void> {
-    if (this.isProcessingStorage) return;
-
-    try {
-      this.isProcessingStorage = true;
-      this.storage = await this.storageCache.getStorage();
-    } finally {
-      this.isProcessingStorage = false;
-    }
   }
 
   /**
@@ -82,7 +75,7 @@ export class Replacer {
    * @param mutations - Array of MutationRecord objects
    * @private
    */
-  private async handleChange(mutations: MutationRecord[]): Promise<void> {
+  private async handleMutations(mutations: MutationRecord[]): Promise<void> {
     if (mutations.length === 0) return;
 
     await this.updateStorageFromCache();
@@ -98,26 +91,6 @@ export class Replacer {
   }
 
   /**
-   * Sets up a MutationObserver to watch for DOM changes
-   * @private
-   */
-  private listenForChanges(): void {
-    const observer = new MutationObserver((mutations) => {
-      const textMutations = mutations.filter((mutation) =>
-        this.isRelevantMutation(mutation)
-      );
-
-      this.handleChange(textMutations);
-    });
-
-    observer.observe(this.startNode, {
-      childList: true,
-      subtree: true,
-      characterData: true,
-    });
-  }
-
-  /**
    * Determines if a mutation is relevant for text replacement
    * @param mutation - The MutationRecord to check
    * @private
@@ -130,6 +103,42 @@ export class Replacer {
         node.nodeType === Node.TEXT_NODE ||
         (node.nodeType === Node.ELEMENT_NODE && node.hasChildNodes())
     );
+  }
+
+  /**
+   * Sets up a MutationObserver to watch for DOM changes
+   * @private
+   */
+  private listenForChanges(): void {
+    const observer = new MutationObserver((mutations) => {
+      const textMutations = mutations.filter((mutation) =>
+        this.isRelevantMutation(mutation)
+      );
+
+      this.handleMutations(textMutations);
+    });
+
+    observer.observe(this.startNode, {
+      characterData: true,
+      childList: true,
+      subtree: true,
+    });
+  }
+
+  /**
+   * Processes newly added nodes for text replacement
+   * @param nodes - Array of nodes to process
+   * @param processedNodes - Set of already processed nodes
+   * @private
+   */
+  private processAddedNodes(nodes: Node[], processedNodes: Set<Node>): void {
+    for (const node of nodes) {
+      if (node.nodeType === Node.TEXT_NODE) {
+        this.processTextNode(node as Text, processedNodes);
+      } else if (node.nodeType === Node.ELEMENT_NODE) {
+        this.walkTextNodes(node as HTMLElement, processedNodes);
+      }
+    }
   }
 
   /**
@@ -164,18 +173,29 @@ export class Replacer {
   }
 
   /**
-   * Processes newly added nodes for text replacement
-   * @param nodes - Array of nodes to process
-   * @param processedNodes - Set of already processed nodes
+   * Checks if an element should be ignored for text replacement
+   * @param element - The element to check
    * @private
    */
-  private processAddedNodes(nodes: Node[], processedNodes: Set<Node>): void {
-    for (const node of nodes) {
-      if (node.nodeType === Node.TEXT_NODE) {
-        this.processTextNode(node as Text, processedNodes);
-      } else if (node.nodeType === Node.ELEMENT_NODE) {
-        this.walkTextNodes(node as HTMLElement, processedNodes);
-      }
+  private shouldIgnoreElement(element: HTMLElement): boolean {
+    return (
+      this.ignoreElements.has(element.tagName.toLowerCase()) ||
+      element.getAttribute("data-no-replace") === "true"
+    );
+  }
+
+  /**
+   * Updates the internal storage from cache
+   * @private
+   */
+  private async updateStorageFromCache(): Promise<void> {
+    if (this.isProcessingStorage) return;
+
+    try {
+      this.isProcessingStorage = true;
+      this.storage = await this.storageCache.getStorage();
+    } finally {
+      this.isProcessingStorage = false;
     }
   }
 
@@ -198,18 +218,6 @@ export class Replacer {
     while ((node = walker.nextNode() as Text)) {
       this.processTextNode(node, processedNodes);
     }
-  }
-
-  /**
-   * Checks if an element should be ignored for text replacement
-   * @param element - The element to check
-   * @private
-   */
-  private shouldIgnoreElement(element: HTMLElement): boolean {
-    return (
-      this.ignoreElements.has(element.tagName.toLowerCase()) ||
-      element.getAttribute("data-no-replace") === "true"
-    );
   }
 
   /**
