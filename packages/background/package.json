@@ -6,9 +6,11 @@
   "type": "module",
   "scripts": {
     "build": "tsc && yarn vite:tsx build --mode ${NODE_ENV:-production}",
-    "start": ": ${NODE_ENV:=development} && yarn build --watch",
+    "start": "yarn run watch",
+    "start:2": "MANIFEST_VERSION=2 yarn run watch",
     "test": "echo \"Error: no test specified\" && exit 0",
-    "vite:tsx": "NODE_OPTIONS='--import tsx' vite"
+    "vite:tsx": "NODE_OPTIONS='--import tsx' vite",
+    "watch": ": ${NODE_ENV:=development} && yarn run build --watch"
   },
   "dependencies": {
     "@worm/shared": "*"

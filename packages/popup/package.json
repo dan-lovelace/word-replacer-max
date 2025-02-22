@@ -9,9 +9,11 @@
     "cypress:open": "cypress open --e2e --browser chrome",
     "cypress:run": "cypress run",
     "dev": "yarn vite:tsx --host --mode ${VITE_MODE:-development}",
-    "start": ": ${NODE_ENV:=development} && yarn build --watch",
+    "start": "yarn run watch",
+    "start:2": "MANIFEST_VERSION=2 yarn run watch",
     "test": "if [ \"$CI\" != \"true\" ]; then yarn run cypress:run; fi",
-    "vite:tsx": "NODE_OPTIONS='--import tsx' vite"
+    "vite:tsx": "NODE_OPTIONS='--import tsx' vite",
+    "watch": ": ${NODE_ENV:=development} && yarn run build --watch"
   },
   "dependencies": {
     "@floating-ui/react": "^0.27.2",

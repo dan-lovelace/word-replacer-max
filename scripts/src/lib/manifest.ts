@@ -1,5 +1,6 @@
 import assert from "node:assert";
-import { readFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
 
 import { PUBLIC_GITHUB_REPOSITORY_URL } from "@worm/shared/src/support";
 import {
@@ -9,7 +10,7 @@ import {
   ManifestV3,
 } from "@worm/types/src/manifest";
 
-import { configureNodeEnvironment } from "./config";
+import { configureNodeEnvironment, distDir } from "./config";
 
 const commonProps: ManifestBase = {
   description: "Seamlessly replace text on any web page.",
@@ -21,7 +22,6 @@ const commonProps: ManifestBase = {
   },
   manifest_version: 0,
   name: "Word Replacer Max",
-  permissions: ["contextMenus", "storage"],
   version: "",
 };
 
@@ -29,7 +29,7 @@ const manifestV2Base: ManifestV2 = {
   ...commonProps,
   author: "dan@wordreplacermax.com",
   background: {
-    scripts: ["background.js"],
+    page: "offscreen-mv2.html",
   },
   browser_action: {
     default_popup: "popup.html",
@@ -41,7 +41,8 @@ const manifestV2Base: ManifestV2 = {
     },
   },
   manifest_version: 2,
-  web_accessible_resources: ["assets/*"],
+  permissions: ["contextMenus", "storage"],
+  web_accessible_resources: ["assets/*", "replacer.html"],
 };
 
 const manifestV3Base: ManifestV3 = {
@@ -56,6 +57,7 @@ const manifestV3Base: ManifestV3 = {
     service_worker: "background.js",
   },
   manifest_version: 3,
+  permissions: ["contextMenus", "offscreen", "storage"],
   web_accessible_resources: [
     {
       resources: ["assets/*"],
@@ -151,4 +153,24 @@ export async function getManifest(version: number): Promise<Manifest> {
   );
 
   return manifestBase;
+}
+
+export function writeManifest() {
+  return new Promise<void>(async (resolve) => {
+    const [, , manifestVersion] = process.argv;
+
+    const manifest = await getManifest(Number(manifestVersion));
+
+    if (!existsSync(distDir)) {
+      mkdirSync(distDir, { recursive: true });
+    }
+
+    writeFileSync(
+      join(distDir, "manifest.json"),
+      JSON.stringify(manifest, null, 2),
+      "utf-8"
+    );
+
+    resolve();
+  });
 }

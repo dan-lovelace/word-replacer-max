@@ -8,15 +8,13 @@ import { buildConfig } from "@worm/plugins";
 import { POPUP_DEV_SERVER_PORT } from "@worm/testing/src/popup";
 import { Environment } from "@worm/types/src/config";
 
+const assetsDir = join("assets", "popup");
+
 const productionConfig: UserConfig = {
   build: {
-    assetsDir: "popup",
+    assetsDir,
     rollupOptions: {
       input: "popup.html",
-      output: {
-        chunkFileNames: "[name].js",
-        assetFileNames: "[name].[ext]",
-      },
     },
   },
   plugins: [buildConfig(), preact()],
@@ -24,6 +22,7 @@ const productionConfig: UserConfig = {
 
 const testConfig: UserConfig = {
   build: {
+    assetsDir,
     rollupOptions: {
       input: "popup.html",
     },
