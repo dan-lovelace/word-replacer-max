@@ -1,12 +1,12 @@
 import { AuthError, decodeJWT, signOut } from "aws-amplify/auth";
 
-import {
-  createRuntimeMessage,
-  createWebAppMessage,
-  logDebug,
-} from "@worm/shared";
+import { createRuntimeMessage, logDebug } from "@worm/shared";
 import { getApiEndpoint } from "@worm/shared/src/api";
-import { browser } from "@worm/shared/src/browser";
+import {
+  browser,
+  sendConnectMessage,
+  sendTabMessage,
+} from "@worm/shared/src/browser";
 import {
   authStorageProvider,
   storageGetByKeys,
@@ -14,6 +14,9 @@ import {
 import { ApiAuthTokens } from "@worm/types/src/api";
 import { IdentificationError } from "@worm/types/src/identity";
 import {
+  ErrorableMessage,
+  HTMLReplaceRequest,
+  HTMLReplaceResponse,
   RuntimeMessage,
   RuntimeMessageKind,
   WebAppMessageData,
@@ -21,6 +24,8 @@ import {
   WebAppMessageKindMap,
 } from "@worm/types/src/message";
 import { UserTokens } from "@worm/types/src/permission";
+
+import { handleReplaceRequest } from "../../../replace/replace-html";
 
 import { getAuthTokens, getCurrentUser, signUserOut } from "./auth/session";
 
@@ -45,30 +50,49 @@ function getError(error: unknown) {
   };
 }
 
-async function sendTabMessage<T extends WebAppMessageKind>(
-  kind: T,
-  details?: WebAppMessageKindMap[T]
-) {
-  const [tab] = await browser.tabs.query({
-    active: true,
-    currentWindow: true,
+/**
+ * IMPORTANT: Note usage of the `chrome` namespace over the polyfill. This is
+ * intentional because the offscreen API is specific to Chrome.
+ */
+let creating: Promise<void> | null; // A global promise to avoid concurrency issues
+async function setupOffscreenDocument() {
+  const offscreenPath = "offscreen-mv3.html";
+  const offscreenUrl = chrome.runtime.getURL(offscreenPath);
+
+  const existingContexts = await chrome.runtime.getContexts({
+    contextTypes: [chrome.runtime.ContextType.OFFSCREEN_DOCUMENT],
+    documentUrls: [offscreenUrl],
   });
 
-  if (!tab) {
-    logDebug("Unable to locate active tab");
+  if (existingContexts.length > 0) {
     return;
   }
 
-  return browser.tabs.sendMessage(
-    Number(tab.id),
-    createWebAppMessage(kind, details)
-  );
+  if (creating) {
+    await creating;
+  } else {
+    creating = chrome.offscreen.createDocument({
+      url: offscreenPath,
+      reasons: [chrome.offscreen.Reason.DOM_PARSER],
+      justification: "Parsing DOM contents for text replacement",
+    });
+
+    await creating;
+    creating = null;
+  }
 }
 
 export function startConnectListener() {
   browser.runtime.onConnect.addListener((port) => {
     port.onMessage.addListener(async (message) => {
       const event = message as RuntimeMessage<RuntimeMessageKind>;
+
+      if (
+        event.data.targets !== undefined &&
+        !event.data.targets.includes("background")
+      ) {
+        return;
+      }
 
       switch (event.data.kind) {
         case "authTokensRequest": {
@@ -149,6 +173,68 @@ export function startConnectListener() {
             );
             port.postMessage({ data: responseMessage });
           }
+
+          break;
+        }
+
+        case "htmlReplaceRequest": {
+          const requestData = event.data.details as HTMLReplaceRequest;
+          const isManifestV3 =
+            browser.runtime.getManifest().manifest_version === 3;
+
+          if (isManifestV3) {
+            /**
+             * Manifest v3 does not expose DOMParser in the service worker. To
+             * perform replacements on request data, we send a message to an
+             * offscreen document and wait for it to send a response back
+             * containing the replacements.
+             */
+            await setupOffscreenDocument();
+
+            sendConnectMessage(
+              "background",
+              "htmlReplaceRequest",
+              requestData,
+              ["offscreen"]
+            );
+          } else {
+            /**
+             * Manifest v2 in use so the service worker is embedded in a
+             * background HTML page where DOMParser is available directly. We
+             * are able to parse request data in this context without having to
+             * commit to using another document for replacement.
+             */
+
+            // TODO: process html string
+            const responseData = handleReplaceRequest(requestData);
+
+            sendTabMessage(
+              "htmlReplaceResponse",
+              {
+                data: responseData,
+              },
+              ["content"]
+            );
+          }
+
+          break;
+        }
+
+        case "htmlReplaceResponse": {
+          /**
+           * Manifest v3 only. The offscreen document is responding with its
+           * results from parsing HTML string contents.
+           */
+          const { data: responseData } = event.data
+            .details as ErrorableMessage<HTMLReplaceResponse>;
+
+          sendTabMessage(
+            "htmlReplaceResponse",
+            {
+              data: responseData,
+            },
+            ["content"]
+          );
 
           break;
         }

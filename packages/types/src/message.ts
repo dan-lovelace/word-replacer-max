@@ -2,7 +2,7 @@ import { ApiAuthTokens } from "./api";
 import { AppUser } from "./identity";
 import { UserTokens } from "./permission";
 import { PopupAlertSeverity } from "./popup";
-import { Storage } from "./storage";
+import { Storage, SyncStorage } from "./storage";
 import { WebAppPingResponse } from "./web-app";
 
 export interface BaseMessage<T extends string, K extends Record<T, unknown>>
@@ -10,12 +10,17 @@ export interface BaseMessage<T extends string, K extends Record<T, unknown>>
   data: {
     details?: K[T];
     kind: T;
+    targets?: BaseMessageTargets;
   };
 }
 
 export interface ISuccessful {
   success: boolean;
 }
+
+export type BaseMessageTarget = "background" | "content" | "offscreen";
+
+export type BaseMessageTargets = BaseMessageTarget[];
 
 export type ErrorableMessage<T> = {
   data?: T;
@@ -46,6 +51,31 @@ export type RuntimeMessageKindMap = {
   replacerStorageResponse: ErrorableMessage<Partial<Storage>>;
   signOutRequest: undefined;
   signOutResponse: ErrorableMessage<undefined>;
+
+  /**
+   * WIP
+   */
+  htmlReplaceRequest: HTMLReplaceRequest;
+  htmlReplaceResponse: ErrorableMessage<ReplaceResponse[]>;
+  offscreenReadyRequest: undefined;
+  offscreenReadyResponse: ErrorableMessage<ISuccessful>;
+};
+
+export type HTMLReplaceRequest = {
+  strings: HTMLStringItem[];
+  syncStorage: SyncStorage;
+};
+
+export type HTMLReplaceResponse = ReplaceResponse[];
+
+type HTMLStringItem = {
+  html: string;
+  id: string;
+};
+
+type ReplaceResponse = {
+  id: string;
+  outputHTML: string;
 };
 
 export type ShowToastMessageOptions = {
@@ -78,4 +108,9 @@ export type WebAppMessageKindMap = {
   pingRequest: undefined;
   pingResponse: WebAppPingResponse;
   showToastMessage: ShowToastMessageOptions;
+
+  /**
+   * WIP
+   */
+  htmlReplaceResponse: ErrorableMessage<ReplaceResponse[]>;
 };

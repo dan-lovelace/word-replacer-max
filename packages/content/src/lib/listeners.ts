@@ -1,5 +1,12 @@
 import { debounce } from "@worm/shared";
-import { browser } from "@worm/shared/src/browser";
+import { browser, sendConnectMessage } from "@worm/shared/src/browser";
+import { storageGetByKeys } from "@worm/shared/src/storage";
+import {
+  ErrorableMessage,
+  HTMLReplaceResponse,
+  WebAppMessageData,
+  WebAppMessageKind,
+} from "@worm/types/src/message";
 
 import { renderContent } from "./render";
 
@@ -32,5 +39,53 @@ export function startContentListeners() {
     childList: true,
     subtree: true,
     characterData: true,
+  });
+
+  /**
+   * Listen for runtime messages.
+   */
+  browser.runtime.onMessage.addListener((message) => {
+    const event = message as WebAppMessageData<WebAppMessageKind>;
+
+    if (event.targets !== undefined && !event.targets.includes("content")) {
+      return;
+    }
+
+    switch (event.kind) {
+      case "htmlReplaceResponse": {
+        const { data, error } =
+          event.details as ErrorableMessage<HTMLReplaceResponse>;
+
+        console.log("replace response data", data);
+
+        // TODO: apply dom mutations from response
+        // TODO: make sure large amounts of mutations do not block
+
+        break;
+      }
+    }
+
+    return undefined;
+  });
+
+  storageGetByKeys().then((syncStorage) => {
+    sendConnectMessage(
+      "content",
+      "htmlReplaceRequest",
+      {
+        strings: [
+          {
+            html: "<div>hello</div>",
+            id: crypto.randomUUID(),
+          },
+          {
+            html: "<div>world</div>",
+            id: crypto.randomUUID(),
+          },
+        ],
+        syncStorage,
+      },
+      ["background"]
+    );
   });
 }

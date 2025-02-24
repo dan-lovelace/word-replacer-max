@@ -1,6 +1,10 @@
 import { v4 as uuidv4 } from "uuid";
 
-import { RuntimeMessage, RuntimeMessageKind } from "@worm/types/src/message";
+import {
+  ErrorableMessage,
+  RuntimeMessage,
+  RuntimeMessageKind,
+} from "@worm/types/src/message";
 import { UserTokens } from "@worm/types/src/permission";
 
 import { connectionManager, ConnectMessageSender } from "./connect";
@@ -42,9 +46,10 @@ export async function fetchAuthTokens(): Promise<FetchAuthTokensResponse> {
     const messageHandler = (event: RuntimeMessage<RuntimeMessageKind>) => {
       switch (event.data.kind) {
         case "authTokensResponse": {
-          const tokens = event.data.details?.data as UserTokens;
+          const apiResponse = event.data
+            .details as ErrorableMessage<UserTokens>;
 
-          doResolve(tokens);
+          doResolve(apiResponse.data);
           break;
         }
       }
