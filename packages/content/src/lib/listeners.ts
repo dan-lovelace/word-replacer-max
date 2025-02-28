@@ -1,4 +1,4 @@
-import { debounce } from "@worm/shared";
+import { debounce, logDebug } from "@worm/shared";
 import { browser, sendConnectMessage } from "@worm/shared/src/browser";
 import { storageGetByKeys } from "@worm/shared/src/storage";
 import {
@@ -68,24 +68,30 @@ export function startContentListeners() {
     return undefined;
   });
 
-  storageGetByKeys().then((syncStorage) => {
-    sendConnectMessage(
-      "content",
-      "htmlReplaceRequest",
-      {
-        strings: [
-          {
-            html: "<div>hello</div>",
-            id: crypto.randomUUID(),
-          },
-          {
-            html: "<div>world</div>",
-            id: crypto.randomUUID(),
-          },
-        ],
-        syncStorage,
-      },
-      ["background"]
-    );
-  });
+  storageGetByKeys()
+    .then((syncStorage) => {
+      // TODO: send initial strings for replacement
+
+      sendConnectMessage(
+        "content",
+        "htmlReplaceRequest",
+        {
+          strings: [
+            {
+              html: "<div>hello</div>",
+              id: crypto.randomUUID(),
+            },
+            {
+              html: "<div>world</div>",
+              id: crypto.randomUUID(),
+            },
+          ],
+          syncStorage,
+        },
+        ["background"]
+      );
+    })
+    .catch((error) => {
+      logDebug("Failed to initialize storage in content script", error);
+    });
 }

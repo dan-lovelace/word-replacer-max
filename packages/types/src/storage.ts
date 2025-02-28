@@ -10,6 +10,11 @@ export const schemaVersions = [1] as const;
 
 export const storageVersions = ["1.0.0", "1.1.0", "1.1.1", "1.2.0"] as const;
 
+export type FocusRule = {
+  field: keyof Pick<Matcher, "queries" | "replacement">;
+  matcher: Matcher["identifier"];
+};
+
 export type LocalStorage = Partial<{
   recentSuggestions: RecentSuggestions;
 
@@ -108,12 +113,20 @@ export type SyncStorage = Partial<{
   storageVersion: StorageVersion;
 }>;
 
+export type SyncStorageNew = {
+  domainList: string[];
+  exportLinks: ExportLink[];
+  [key: `matcher__${string}`]: Matcher;
+  preferences: SyncStoragePreferences;
+  replacementStyle: ReplacementStyle;
+  replacementSuggest: ReplacementSuggest;
+  ruleGroups: RuleGroups;
+  storageVersion: StorageVersion;
+};
+
 export type SyncStoragePreferences = {
   activeTab: PopupTab;
   domainListEffect: DomainEffect;
   extensionEnabled: boolean;
-  focusRule: {
-    field: keyof Pick<Matcher, "queries" | "replacement">;
-    matcher: Matcher["identifier"];
-  };
+  focusRule: FocusRule;
 };

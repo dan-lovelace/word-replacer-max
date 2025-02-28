@@ -30,7 +30,7 @@ export const renderCache: RenderCache = {
 };
 
 export async function renderContent(msg = "") {
-  const now = new Date().getTime();
+  const now = Date.now();
 
   if (now > renderCache.storage.expires) {
     const storage = await storageGetByKeys();
