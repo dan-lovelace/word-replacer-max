@@ -194,45 +194,64 @@ export class IngestionEngine {
   }
 
   /**
+   * Handles DOM mutations
+   * @param mutations - Array of MutationRecord objects
+   * @private
+   */
+  private async handleMutations(mutations: MutationRecord[]): Promise<void> {
+    if (mutations.length === 0) return;
+
+    await this.updateStorageFromCache();
+    const processedNodes = new Set<HTMLElement>();
+
+    for (const mutation of mutations) {
+      if (mutation.type === "characterData") {
+        this.processTextNode(mutation.target as Text, processedNodes);
+      } else {
+        this.processAddedNodes(Array.from(mutation.addedNodes), processedNodes);
+      }
+    }
+  }
+
+  /**
    * Initializes the replacer by performing initial replacements and setting up
    * observers
    * @private
    */
   private async init(): Promise<void> {
+    // Get latest storage
     await this.updateStorageFromCache();
 
     if (!this.store.preferences?.extensionEnabled) {
-      /**
-       * The extension is disabled, do not continue
-       */
+      // Extension is disabled, do not continue
       return;
     }
 
+    // Wait for the user's current page to become available
     await this.waitForDocument();
 
+    // Start listeners
     this.listenForMessages();
+    this.listenForMutations();
+
+    // Replace entire document during initialization
     this.replaceAllNodes();
   }
 
   /**
-   * Sets up a MutationObserver to watch for DOM changes
+   * Determines if a mutation is relevant for text replacement
+   * @param mutation - The MutationRecord to check
    * @private
    */
-  // private listenForChanges(): void {
-  //   const observer = new MutationObserver((mutations) => {
-  //     const textMutations = mutations.filter((mutation) =>
-  //       this.isRelevantMutation(mutation)
-  //     );
+  private isRelevantMutation(mutation: MutationRecord): boolean {
+    if (mutation.type === "characterData") return true;
 
-  //     this.handleMutations(textMutations);
-  //   });
-
-  //   observer.observe(this.startNode, {
-  //     characterData: true,
-  //     childList: true,
-  //     subtree: true,
-  //   });
-  // }
+    return Array.from(mutation.addedNodes).some(
+      (node) =>
+        node.nodeType === Node.TEXT_NODE ||
+        (node.nodeType === Node.ELEMENT_NODE && node.hasChildNodes())
+    );
+  }
 
   /**
    * Sets up a runtime message listener for communication within the extension
@@ -262,6 +281,46 @@ export class IngestionEngine {
 
       return undefined;
     });
+  }
+
+  /**
+   * Sets up a MutationObserver to watch for DOM changes
+   * @private
+   */
+  private listenForMutations(): void {
+    const observer = new MutationObserver((mutations) => {
+      const textMutations = mutations.filter((mutation) =>
+        this.isRelevantMutation(mutation)
+      );
+
+      this.handleMutations(textMutations);
+    });
+
+    observer.observe(this.startNode, {
+      characterData: true,
+      childList: true,
+      subtree: true,
+    });
+  }
+
+  /**
+   * Processes newly added nodes for text replacement
+   * @param nodes - Array of nodes to process
+   * @param processedNodes - Set of already processed nodes
+   * @private
+   */
+  private processAddedNodes(
+    nodes: Node[],
+    processedNodes: Set<HTMLElement>
+  ): void {
+    for (const node of nodes) {
+      if (node.nodeType === Node.TEXT_NODE) {
+        console.log("processing added", node.parentElement);
+        this.processTextNode(node as Text, processedNodes);
+      } else if (node.nodeType === Node.ELEMENT_NODE) {
+        this.walkTextNodes(node as HTMLElement, processedNodes);
+      }
+    }
   }
 
   private async processBatch(): Promise<void> {
@@ -316,13 +375,13 @@ export class IngestionEngine {
       id: crypto.randomUUID(),
     });
 
-    console.log(
-      "processing",
-      textNode.textContent,
-      JSON.stringify(textNode.textContent),
-      "in",
-      parentElement
-    );
+    // console.log(
+    //   "processing",
+    //   textNode.textContent,
+    //   JSON.stringify(textNode.textContent),
+    //   "in",
+    //   parentElement
+    // );
 
     if (this.batchContents.length >= this.batchSize) {
       await this.processBatch();
