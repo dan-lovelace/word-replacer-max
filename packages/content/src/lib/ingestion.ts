@@ -1,11 +1,14 @@
+import { Runtime } from "webextension-polyfill";
 import { z } from "zod";
 
-import { browser, sendConnectMessage } from "@worm/shared/src/browser";
+import { logDebug } from "@worm/shared/src/logging";
+import { createRuntimeMessage } from "@worm/shared/src/messaging";
+import { IBrowser } from "@worm/types/src/browser";
 import {
   ErrorableMessage,
+  HTMLReplaceRequest,
   HTMLReplaceResponse,
   HTMLStringItem,
-  WebAppMessage,
   WebAppMessageData,
   WebAppMessageKind,
 } from "@worm/types/src/message";
@@ -19,14 +22,17 @@ import {
 import {
   FocusRule,
   StorageArea,
+  StorageProvider,
   StorageVersion,
   SyncStorageNew,
   SyncStoragePreferences,
 } from "@worm/types/src/storage";
 
 interface IngestionEngineConfig {
+  browser: IBrowser;
   ignoreElements?: Set<string>;
   startNode?: HTMLElement;
+  storageArea: StorageProvider;
 }
 
 interface CacheStatus {
@@ -137,6 +143,7 @@ class IngestionEngineStorage {
     const parseResult = SyncStorageSchema.safeParse(currentStorage);
 
     if (parseResult.error) {
+      logDebug(parseResult.error.format());
       throw new Error("Error parsing current storage");
     }
 
@@ -168,30 +175,36 @@ export class IngestionEngine {
   private readonly startNode: HTMLElement;
 
   private batchContents: HTMLStringItem[] = [];
+  private browser: IBrowser;
   private batchSize = 50;
   private isProcessingBatch = false;
   private isProcessingStorage = false;
+  private runtimePort: Runtime.Port;
   private store: IngestionStorage;
   private storageProvider: IngestionEngineStorage;
 
   private sentParents: Map<string, HTMLElement> = new Map();
 
-  constructor(options: IngestionEngineConfig = {}) {
+  constructor(options: IngestionEngineConfig) {
     const {
+      browser,
       // TODO: make some of these user-defined?
       // TODO: add `code` element?
       ignoreElements = ["input", "script", "style", "textarea"],
       startNode = document.documentElement,
+      storageArea,
     } = options;
 
     this.store = {};
 
     this.storageProvider = new IngestionEngineStorage({
-      area: browser.storage.sync,
+      area: browser.storage[storageArea]!,
       ttlMs: 80,
     });
 
+    this.browser = browser;
     this.ignoreElements = new Set(ignoreElements);
+    this.runtimePort = browser.runtime.connect({ name: "ingestion" });
     this.startNode = startNode;
 
     this.init();
@@ -238,6 +251,13 @@ export class IngestionEngine {
     // Wait for the user's current page to become available
     await this.waitForDocument();
 
+    /**
+     * TODO: wait for runtime connect to finish
+     * @remarks
+     * There's a bug switching pages using back & forward button that fails to
+     * perform initial replacements.
+     */
+
     // Start listeners
     this.listenForMessages();
     this.listenForMutations();
@@ -266,7 +286,7 @@ export class IngestionEngine {
    * @private
    */
   private listenForMessages() {
-    browser.runtime.onMessage.addListener((message) => {
+    this.browser.runtime.onMessage.addListener((message) => {
       const event = message as WebAppMessageData<WebAppMessageKind>;
 
       if (event.targets !== undefined && !event.targets.includes("content")) {
@@ -368,15 +388,18 @@ export class IngestionEngine {
       const batchToProcess = [...this.batchContents];
       this.batchContents = [];
 
-      sendConnectMessage(
-        "content",
+      const replaceRequest: HTMLReplaceRequest = {
+        strings: batchToProcess,
+        syncStorage: this.store,
+      };
+
+      const replaceMessage = createRuntimeMessage(
         "htmlReplaceRequest",
-        {
-          strings: batchToProcess,
-          syncStorage: this.store,
-        },
+        replaceRequest,
         ["background"]
       );
+
+      this.runtimePort.postMessage({ data: replaceMessage });
     } finally {
       this.isProcessingBatch = false;
 

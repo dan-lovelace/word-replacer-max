@@ -7,7 +7,6 @@ import {
   WebAppMessageKindMap,
 } from "@worm/types/src/message";
 
-import { getEnvConfig } from "./config";
 import { elementIdentifiers } from "./selectors";
 
 export const TOAST_MESSAGE_DURATION_DEFAULT_MS = 4000;
@@ -44,12 +43,4 @@ export function getWebAppIFrame() {
   if (elementQuery && elementQuery.nodeName === "IFRAME") {
     return elementQuery as HTMLIFrameElement;
   }
-}
-
-export function isWebAppMessagingAllowed(location: Location) {
-  const envConfig = getEnvConfig();
-
-  return (
-    new URL(envConfig.VITE_SSM_WEBAPP_ORIGIN).hostname === location.hostname
-  );
 }

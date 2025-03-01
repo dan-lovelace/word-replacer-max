@@ -1,55 +1,29 @@
+import { Storage, Windows } from "webextension-polyfill";
+
 import {
-  Browser,
-  Events,
-  Runtime,
-  Storage,
-  Windows,
-} from "webextension-polyfill";
-
-type TBrowser = Omit<Browser, "runtime" | "storage" | "windows"> & {
-  runtime: TRuntime;
-  storage: TStorage;
-  windows: TWindows;
-};
-
-type TRuntime = Partial<Browser["runtime"]> & {
-  connect: (connectInfo?: TRuntimeConnectInfo) => Runtime.Port;
-  onConnect: TRuntimeConnectEvent;
-  onMessage: TRuntimeMessageEvent;
-};
-
-type TRuntimeConnectEvent = Events.Event<(port: Runtime.Port) => void>;
-
-type TRuntimeConnectInfo = {
-  name?: string;
-};
-
-type TRuntimeMessageEvent = Events.Event<TRuntimeMessageEventCallback>;
-
-type TRuntimeMessageEventCallback = (
-  message: any,
-  sender: Runtime.MessageSender,
-  sendResponse: (response?: any) => void
-) => void;
-
-type TStorage = Partial<Browser["storage"]>;
-
-type TStorageArea = keyof Pick<TStorage, "local" | "session" | "sync">;
-
-type TStorageInitialValues<T> = Partial<Record<TStorageArea, T>>;
-
-type TWindows = Partial<Browser["windows"]>;
+  IBrowser,
+  IRuntime,
+  IStorage,
+  TListenerCallback,
+  TMessageEvent,
+  TMessageSender,
+  TOnChangedEvent,
+  TPort,
+  TRuntimeConnectEvent,
+  TRuntimeConnectInfo,
+  TRuntimeMessageEvent,
+  TRuntimeMessageEventCallback,
+  TStorageArea,
+  TStorageInitialValues,
+  TStorageStatic,
+  TWindows,
+} from "@worm/types/src/browser";
 
 type Key<T> = keyof T;
 
 type KeyMap<T> = Partial<{
   [key in Key<T>]: T[key];
 }>;
-
-type ListenerCallback = (
-  changes: Storage.StorageAreaSyncOnChangedChangesType,
-  areaName: TStorageArea
-) => void;
 
 type MockBrowserProps<T> = {
   withStorage?: TStorageInitialValues<T>;
@@ -111,10 +85,10 @@ function deepEqual(obj1: any, obj2: any): boolean {
   return true;
 }
 
-class MockBrowser<T> implements Partial<TBrowser> {
-  runtime: TRuntime;
+class MockBrowser<T> implements Partial<IBrowser> {
+  runtime: IRuntime;
 
-  storage: TStorage;
+  storage: IStorage;
 
   windows: TWindows;
 
@@ -129,14 +103,14 @@ class MockBrowser<T> implements Partial<TBrowser> {
   }
 }
 
-class MockPort implements Runtime.Port {
+class MockPort implements TPort {
   name: string;
 
   private connected: boolean;
 
-  private disconnectListeners: Set<(port: Runtime.Port) => void>;
+  private disconnectListeners: Set<(port: TPort) => void>;
 
-  private listeners: Set<(message: any, port: Runtime.Port) => void>;
+  private listeners: Set<(message: any, port: TPort) => void>;
 
   constructor(name: string = "") {
     this.name = name;
@@ -156,17 +130,15 @@ class MockPort implements Runtime.Port {
     this.listeners.forEach((listener) => listener(message, this));
   }
 
-  get onMessage(): Events.Event<(message: any, port: Runtime.Port) => void> {
+  get onMessage(): TMessageEvent {
     return {
-      addListener: (callback: (message: any, port: Runtime.Port) => void) => {
+      addListener: (callback: (message: any, port: TPort) => void) => {
         this.listeners.add(callback);
       },
-      hasListener: (callback: (message: any, port: Runtime.Port) => void) => {
+      hasListener: (callback: (message: any, port: TPort) => void) => {
         return this.listeners.has(callback);
       },
-      removeListener: (
-        callback: (message: any, port: Runtime.Port) => void
-      ) => {
+      removeListener: (callback: (message: any, port: TPort) => void) => {
         this.listeners.delete(callback);
       },
     };
@@ -174,26 +146,26 @@ class MockPort implements Runtime.Port {
 
   get onDisconnect(): TRuntimeConnectEvent {
     return {
-      addListener: (callback: (port: Runtime.Port) => void) => {
+      addListener: (callback: (port: TPort) => void) => {
         this.disconnectListeners.add(callback);
       },
-      hasListener: (callback: (port: Runtime.Port) => void) => {
+      hasListener: (callback: (port: TPort) => void) => {
         return this.disconnectListeners.has(callback);
       },
-      removeListener: (callback: (port: Runtime.Port) => void) => {
+      removeListener: (callback: (port: TPort) => void) => {
         this.disconnectListeners.delete(callback);
       },
     };
   }
 }
 
-class MockRuntime implements TRuntime {
-  private connectListeners: Set<(port: Runtime.Port) => void>;
+class MockRuntime implements IRuntime {
+  private connectListeners: Set<(port: TPort) => void>;
 
   private messageListeners: Set<
     (
       message: any,
-      sender: Runtime.MessageSender,
+      sender: TMessageSender,
       sendResponse: (response?: any) => void
     ) => void | boolean
   >;
@@ -207,7 +179,23 @@ class MockRuntime implements TRuntime {
     return `/${path}`;
   }
 
-  connect(connectInfo?: TRuntimeConnectInfo): Runtime.Port {
+  connect(connectInfo?: TRuntimeConnectInfo | undefined): TPort;
+  connect(extensionId?: string, connectInfo?: TRuntimeConnectInfo): TPort;
+
+  connect(
+    arg1?: string | TRuntimeConnectInfo,
+    arg2?: TRuntimeConnectInfo
+  ): TPort {
+    let extensionId: string | undefined;
+    let connectInfo: TRuntimeConnectInfo | undefined;
+
+    if (typeof arg1 === "string") {
+      extensionId = arg1;
+      connectInfo = arg2;
+    } else {
+      connectInfo = arg1;
+    }
+
     const port = new MockPort(connectInfo?.name);
 
     this.connectListeners.forEach((listener) => listener(port));
@@ -217,13 +205,13 @@ class MockRuntime implements TRuntime {
 
   get onConnect(): TRuntimeConnectEvent {
     return {
-      addListener: (callback: (port: Runtime.Port) => void) => {
+      addListener: (callback: (port: TPort) => void) => {
         this.connectListeners.add(callback);
       },
-      hasListener: (callback: (port: Runtime.Port) => void) => {
+      hasListener: (callback: (port: TPort) => void) => {
         return this.connectListeners.has(callback);
       },
-      removeListener: (callback: (port: Runtime.Port) => void) => {
+      removeListener: (callback: (port: TPort) => void) => {
         this.connectListeners.delete(callback);
       },
     };
@@ -244,15 +232,15 @@ class MockRuntime implements TRuntime {
   }
 }
 
-class MockStorage<T> implements TStorage {
-  _onChanged: Events.Event<ListenerCallback> = {
-    addListener: (callback: ListenerCallback) => this._listeners.add(callback),
-    hasListener: (callback: ListenerCallback) => this._listeners.has(callback),
-    removeListener: (callback: ListenerCallback) =>
+class MockStorage<T> implements IStorage {
+  _onChanged: TOnChangedEvent = {
+    addListener: (callback: TListenerCallback) => this._listeners.add(callback),
+    hasListener: (callback: TListenerCallback) => this._listeners.has(callback),
+    removeListener: (callback: TListenerCallback) =>
       this._listeners.delete(callback),
   };
 
-  _listeners: Set<ListenerCallback> = new Set();
+  _listeners: Set<TListenerCallback> = new Set();
 
   _store: Record<TStorageArea, KeyMap<T>> = {
     local: {},
@@ -262,9 +250,9 @@ class MockStorage<T> implements TStorage {
 
   onChanged? = this._onChanged;
 
-  local?: Storage.Static["local"];
-  session?: Storage.Static["session"];
-  sync?: Storage.Static["sync"];
+  local?: TStorageStatic["local"];
+  session?: TStorageStatic["session"];
+  sync?: TStorageStatic["sync"];
 
   constructor(initialValues?: TStorageInitialValues<T>) {
     if (initialValues !== undefined) {
@@ -280,18 +268,18 @@ class MockStorage<T> implements TStorage {
     this.sync = this.getStorageArea("sync");
   }
 
-  getStorageArea(area: "local"): Storage.Static["local"];
+  getStorageArea(area: "local"): TStorageStatic["local"];
 
-  getStorageArea(area: "session"): Storage.Static["session"];
+  getStorageArea(area: "session"): TStorageStatic["session"];
 
-  getStorageArea(area: "sync"): Storage.Static["sync"];
+  getStorageArea(area: "sync"): TStorageStatic["sync"];
 
   getStorageArea(area: TStorageArea) {
     const baseProps = this.getStorageAreaBase(area);
 
     switch (area) {
       case "local": {
-        const localArea: Storage.Static["local"] = {
+        const localArea: TStorageStatic["local"] = {
           ...baseProps,
         };
 
@@ -299,7 +287,7 @@ class MockStorage<T> implements TStorage {
       }
 
       case "session": {
-        const sessionArea: Storage.StorageArea = {
+        const sessionArea: TStorageStatic["session"] = {
           ...baseProps,
         };
 
@@ -307,7 +295,7 @@ class MockStorage<T> implements TStorage {
       }
 
       case "sync": {
-        const syncArea: Storage.Static["sync"] = {
+        const syncArea: TStorageStatic["sync"] = {
           getBytesInUse: async () => 100,
           ...baseProps,
         };

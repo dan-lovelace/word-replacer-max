@@ -2,11 +2,8 @@ import { createContext, useContext, useEffect, useRef, useState } from "react";
 
 import Box from "@mui/material/Box/Box";
 
-import {
-  createWebAppMessage,
-  elementIdentifiers,
-  isWebAppMessagingAllowed,
-} from "@worm/shared";
+import { createWebAppMessage, elementIdentifiers } from "@worm/shared";
+import { isWebAppMessagingAllowed } from "@worm/shared/src/config/webapp";
 import { IdentificationError } from "@worm/types/src/identity";
 import {
   ShowToastMessageOptions,

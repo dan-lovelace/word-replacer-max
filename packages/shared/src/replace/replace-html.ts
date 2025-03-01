@@ -7,5 +7,6 @@ export function handleReplaceRequest(
   request: HTMLReplaceRequest
 ): HTMLReplaceResponse {
   console.log("replace request", request);
-  return [];
+
+  return request.strings;
 }
