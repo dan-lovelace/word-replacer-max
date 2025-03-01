@@ -56,7 +56,7 @@ export type RuntimeMessageKindMap = {
    * WIP
    */
   htmlReplaceRequest: HTMLReplaceRequest;
-  htmlReplaceResponse: ErrorableMessage<ReplaceResponse[]>;
+  htmlReplaceResponse: ErrorableMessage<HTMLReplaceResponse>;
   // offscreenReadyRequest: undefined;
   // offscreenReadyResponse: ErrorableMessage<ISuccessful>;
 };
@@ -66,16 +66,11 @@ export type HTMLReplaceRequest = {
   syncStorage: SyncStorage;
 };
 
-export type HTMLReplaceResponse = ReplaceResponse[];
+export type HTMLReplaceResponse = HTMLStringItem[];
 
 export type HTMLStringItem = {
   html: string;
   id: string;
-};
-
-type ReplaceResponse = {
-  id: string;
-  outputHTML: string;
 };
 
 export type ShowToastMessageOptions = {
@@ -112,7 +107,7 @@ export type WebAppMessageKindMap = {
   /**
    * WIP
    */
-  htmlReplaceResponse: ErrorableMessage<ReplaceResponse[]>;
+  htmlReplaceResponse: ErrorableMessage<HTMLReplaceResponse>;
   offscreenReadyRequest: undefined;
   offscreenReadyResponse: ErrorableMessage<ISuccessful>;
 };

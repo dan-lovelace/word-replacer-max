@@ -111,9 +111,10 @@ export async function getManifest(version: number): Promise<Manifest> {
       js: ["auth.js"],
     },
     {
-      matches: ["<all_urls>"],
+      css: ["content.css"],
       exclude_matches: authMatches,
       js: ["content.js"],
+      matches: ["<all_urls>"],
       run_at: "document_start",
     },
   ];

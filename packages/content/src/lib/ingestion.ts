@@ -174,8 +174,12 @@ export class IngestionEngine {
   private store: IngestionStorage;
   private storageProvider: IngestionEngineStorage;
 
+  private sentParents: Map<string, HTMLElement> = new Map();
+
   constructor(options: IngestionEngineConfig = {}) {
     const {
+      // TODO: make some of these user-defined?
+      // TODO: add `code` element?
       ignoreElements = ["input", "script", "style", "textarea"],
       startNode = document.documentElement,
     } = options;
@@ -210,6 +214,10 @@ export class IngestionEngine {
       } else {
         this.processAddedNodes(Array.from(mutation.addedNodes), processedNodes);
       }
+    }
+
+    if (this.batchContents.length > 0) {
+      await this.processBatch();
     }
   }
 
@@ -270,10 +278,32 @@ export class IngestionEngine {
           const { data, error } =
             event.details as ErrorableMessage<HTMLReplaceResponse>;
 
-          console.log("replace response data", data);
+          // console.log("replace response data", data);
 
-          // TODO: apply dom mutations from response
           // TODO: make sure large amounts of mutations do not block
+          const updates: Promise<void>[] = [];
+
+          if (data !== undefined) {
+            // TODO: apply dom mutations from response
+
+            for (const item of data) {
+              const parent = this.sentParents.get(item.id);
+              // console.log("got parent", parent);
+
+              if (!parent) continue;
+
+              const update = new Promise<void>((res) => {
+                parent.style.outline = "1px solid red";
+                // parent.dataset.noReplace = "true";
+
+                this.sentParents.delete(item.id);
+              });
+
+              updates.push(update);
+            }
+          }
+
+          Promise.all(updates);
 
           break;
         }
@@ -309,18 +339,22 @@ export class IngestionEngine {
    * @param processedNodes - Set of already processed nodes
    * @private
    */
-  private processAddedNodes(
+  private async processAddedNodes(
     nodes: Node[],
     processedNodes: Set<HTMLElement>
-  ): void {
+  ): Promise<void> {
     for (const node of nodes) {
       if (node.nodeType === Node.TEXT_NODE) {
-        console.log("processing added", node.parentElement);
+        // console.log("processing added", node.parentElement);
         this.processTextNode(node as Text, processedNodes);
       } else if (node.nodeType === Node.ELEMENT_NODE) {
         this.walkTextNodes(node as HTMLElement, processedNodes);
       }
     }
+
+    // if (this.batchContents.length > 0) {
+    //   await this.processBatch();
+    // }
   }
 
   private async processBatch(): Promise<void> {
@@ -370,10 +404,13 @@ export class IngestionEngine {
     const { parentElement } = textNode;
     processedParents.add(parentElement);
 
-    this.batchContents.push({
+    const batchItem: HTMLStringItem = {
       html: parentElement.outerHTML,
       id: crypto.randomUUID(),
-    });
+    };
+
+    this.batchContents.push(batchItem);
+    this.sentParents.set(batchItem.id, parentElement);
 
     // console.log(
     //   "processing",
@@ -463,6 +500,8 @@ export class IngestionEngine {
           }
         });
       }
+    }).finally(() => {
+      document.body.style.opacity = "1";
     });
   }
 
