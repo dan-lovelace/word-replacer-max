@@ -114,6 +114,9 @@ export type SyncStorage = Partial<{
 }>;
 
 export type SyncStorageNew = {
+  debug?: {
+    showParents: boolean;
+  };
   domainList: string[];
   exportLinks: ExportLink[];
   [key: `matcher__${string}`]: Matcher;

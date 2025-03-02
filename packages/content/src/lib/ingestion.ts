@@ -1,7 +1,7 @@
 import { Runtime } from "webextension-polyfill";
 import { z } from "zod";
 
-import { logDebug } from "@worm/shared/src/logging";
+import { logDebug, LOGGING_PREFIX } from "@worm/shared/src/logging";
 import { createRuntimeMessage } from "@worm/shared/src/messaging";
 import { IBrowser } from "@worm/types/src/browser";
 import {
@@ -101,6 +101,11 @@ const StorageVersionSchema: z.ZodType<StorageVersion> = z.union([
 ]);
 
 const SyncStorageSchema: z.ZodType<SyncStorageNew> = z.object({
+  debug: z
+    .object({
+      showParents: z.boolean(),
+    })
+    .optional(),
   domainList: z.array(z.string()),
   exportLinks: z.array(ExportLinkSchema),
   preferences: PreferencesSchema,
@@ -245,17 +250,28 @@ export class IngestionEngine {
 
     if (!this.store.preferences?.extensionEnabled) {
       // Extension is disabled, do not continue
+      this.showDocument();
       return;
     }
 
     // Wait for the user's current page to become available
+    const documentWaitTime = `${LOGGING_PREFIX} Document wait time`;
+
+    console.time(documentWaitTime);
     await this.waitForDocument();
+    console.timeEnd(documentWaitTime);
 
     /**
      * TODO: wait for runtime connect to finish
      * @remarks
      * There's a bug switching pages using back & forward button that fails to
      * perform initial replacements.
+     *
+     * @remarks
+     * I noticed today this happens when middle-clicking the back button on a
+     * window. The tab opened but was not focused. The service worker responded
+     * with replacements but I think the messages got sent to the wrong tab for
+     * replacement.
      */
 
     // Start listeners
@@ -313,8 +329,16 @@ export class IngestionEngine {
               if (!parent) continue;
 
               const update = new Promise<void>((res) => {
-                parent.style.outline = "1px solid red";
-                // parent.dataset.noReplace = "true";
+                if (parent.nodeName !== "BODY") {
+                  parent.setAttribute(
+                    "style",
+                    "border: 2px groove red !important; box-shadow: inset 0px 0px 0px 1px lime !important;"
+                  );
+                }
+
+                if (this.store.debug?.showParents) {
+                  // TODO: keep this?
+                }
 
                 this.sentParents.delete(item.id);
               });
@@ -486,6 +510,14 @@ export class IngestionEngine {
     }
 
     return true;
+  }
+
+  /**
+   * Removes any styles previously set using CSS to show the document
+   * @private
+   */
+  private showDocument(): void {
+    document.body.style.opacity = "1";
   }
 
   /**

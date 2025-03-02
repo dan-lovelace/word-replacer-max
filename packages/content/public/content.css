@@ -1,4 +1,11 @@
 body {
-  opacity: 1;
-  transition: opacity 40ms;
+  /* 
+   * NOTE: I'm not sure why, but having the body initially transparent
+   * increases the speed at which replacement mutations occur on the initial
+   * document scan. This means users are less likely to see the original
+   * versions of the text they're trying to replace. A small transition is
+   * applied which also helps some jumpiness in the DOM on first page load.
+   */
+  opacity: 0;
+  transition: opacity 10ms;
 }
