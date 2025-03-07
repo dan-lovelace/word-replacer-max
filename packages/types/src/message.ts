@@ -55,7 +55,7 @@ export type RuntimeMessageKindMap = {
   /**
    * WIP
    */
-  htmlReplaceRequest: HTMLReplaceRequest;
+  // htmlReplaceRequest: HTMLReplaceRequest;
   htmlReplaceResponse: ErrorableMessage<HTMLReplaceResponse>;
   // offscreenReadyRequest: undefined;
   // offscreenReadyResponse: ErrorableMessage<ISuccessful>;
@@ -107,6 +107,7 @@ export type WebAppMessageKindMap = {
   /**
    * WIP
    */
+  htmlReplaceRequest: HTMLReplaceRequest;
   htmlReplaceResponse: ErrorableMessage<HTMLReplaceResponse>;
   offscreenReadyRequest: undefined;
   offscreenReadyResponse: ErrorableMessage<ISuccessful>;

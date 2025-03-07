@@ -262,48 +262,48 @@ export function startConnectListener() {
           break;
         }
 
-        case "htmlReplaceRequest": {
-          const requestData = event.data.details as HTMLReplaceRequest;
-          const isManifestV3 =
-            browser.runtime.getManifest().manifest_version === 3;
+        // case "htmlReplaceRequest": {
+        //   const requestData = event.data.details as HTMLReplaceRequest;
+        //   const isManifestV3 =
+        //     browser.runtime.getManifest().manifest_version === 3;
 
-          if (isManifestV3) {
-            /**
-             * Manifest v3 does not expose DOMParser in the service worker. To
-             * perform replacements on request data, we send a message to an
-             * offscreen document and wait for it to send a response back
-             * containing the replacements.
-             */
-            await setupOffscreenDocument();
+        //   if (isManifestV3) {
+        //     /**
+        //      * Manifest v3 does not expose DOMParser in the service worker. To
+        //      * perform replacements on request data, we send a message to an
+        //      * offscreen document and wait for it to send a response back
+        //      * containing the replacements.
+        //      */
+        //     await setupOffscreenDocument();
 
-            sendConnectMessage(
-              "background",
-              "htmlReplaceRequest",
-              requestData,
-              ["offscreen"]
-            );
-          } else {
-            /**
-             * Manifest v2 in use so the service worker is embedded in a
-             * background HTML page where DOMParser is available directly. We
-             * are able to parse request data in this context without having to
-             * commit to using another document for replacement.
-             */
+        //     sendConnectMessage(
+        //       "background",
+        //       "htmlReplaceRequest",
+        //       requestData,
+        //       ["offscreen"]
+        //     );
+        //   } else {
+        //     /**
+        //      * Manifest v2 in use so the service worker is embedded in a
+        //      * background HTML page where DOMParser is available directly. We
+        //      * are able to parse request data in this context without having to
+        //      * commit to using another document for replacement.
+        //      */
 
-            // TODO: process html string
-            const responseData = handleReplaceRequest(requestData);
+        //     // TODO: process html string
+        //     const responseData = handleReplaceRequest(requestData);
 
-            sendTabMessage(
-              "htmlReplaceResponse",
-              {
-                data: responseData,
-              },
-              ["content"]
-            );
-          }
+        //     sendTabMessage(
+        //       "htmlReplaceResponse",
+        //       {
+        //         data: responseData,
+        //       },
+        //       ["content"]
+        //     );
+        //   }
 
-          break;
-        }
+        //   break;
+        // }
 
         case "htmlReplaceResponse": {
           /**
@@ -354,7 +354,7 @@ export function startConnectListener() {
 }
 
 export function startMessageListener() {
-  browser.runtime.onMessage.addListener(async (message) => {
+  browser.runtime.onMessage.addListener(async (message, sender) => {
     const event = message as WebAppMessageData<WebAppMessageKind>;
 
     switch (event.kind) {
@@ -458,6 +458,51 @@ export function startMessageListener() {
           }
 
           sendTabMessage("authUserResponse", { error: getError(error) });
+        }
+
+        break;
+      }
+
+      case "htmlReplaceRequest": {
+        const requestData = event.details as HTMLReplaceRequest;
+        const isManifestV3 =
+          browser.runtime.getManifest().manifest_version === 3;
+        const senderId = sender.tab?.id;
+
+        if (!senderId) {
+          throw new Error("Unable to find sender ID");
+        }
+
+        if (isManifestV3) {
+          /**
+           * Manifest v3 does not expose DOMParser in the service worker. To
+           * perform replacements on request data, we send a message to an
+           * offscreen document and wait for it to send a response back
+           * containing the replacements.
+           */
+          await setupOffscreenDocument();
+
+          sendConnectMessage("background", "htmlReplaceRequest", requestData, [
+            "offscreen",
+          ]);
+        } else {
+          /**
+           * Manifest v2 in use so the service worker is embedded in a
+           * background HTML page where DOMParser is available directly. We
+           * are able to parse request data in this context without having to
+           * commit to using another document for replacement.
+           */
+
+          // TODO: process html string
+          const responseData = handleReplaceRequest(requestData);
+
+          sendTabMessage(
+            "htmlReplaceResponse",
+            {
+              data: responseData,
+            },
+            ["content"]
+          );
         }
 
         break;
