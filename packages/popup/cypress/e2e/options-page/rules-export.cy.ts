@@ -10,7 +10,7 @@ const MODAL_WAIT_PERIOD_MS = 500;
 describe("rules export", () => {
   beforeEach(() => {
     cy.visitWithStorage();
-    s.optionsTab().click();
+    s.layout.tabs.sharing().click();
   });
 
   it("should open the export modal when clicking the export button", () => {

@@ -82,10 +82,10 @@ export const selectors = {
       domains: () => cy.findByTestId("domains-tab"),
       options: () => cy.findByTestId("options-tab"),
       rules: () => cy.findByTestId("rules-tab"),
+      sharing: () => cy.findByTestId("sharing-tab"),
       support: () => cy.findByTestId("support-tab"),
     },
   },
-  optionsTab: () => cy.findByTestId("options-tab"),
   options: {
     replacementSuggest: {
       apiUsage: {

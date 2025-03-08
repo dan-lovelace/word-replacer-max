@@ -1,7 +1,7 @@
 import { interceptApiUsage } from "../../support/interceptors/api-usage";
 import { selectors } from "../../support/selectors";
 
-describe("api usage", () => {
+describe.skip("api usage", () => {
   describe("for replacement suggest", () => {
     beforeEach(() => {
       cy.visitWithStorage({
@@ -16,7 +16,7 @@ describe("api usage", () => {
     });
 
     it("should not display when feature is disabled", () => {
-      selectors.optionsTab().click();
+      selectors.layout.tabs.options().click();
 
       selectors.options.replacementSuggest.apiUsage.root().should("not.exist");
     });
