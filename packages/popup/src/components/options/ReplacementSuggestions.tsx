@@ -6,10 +6,6 @@ import { Indented } from "../../containers/Indented";
 import { useAuth } from "../../store/Auth";
 import { useConfig } from "../../store/Config";
 
-import Slide from "../transition/Slide";
-
-import ApiUsage from "./ApiUsage";
-
 const INPUT_ID = "replacement-suggestion-enabled-checkbox";
 
 export default function ReplacementSuggestions() {
@@ -60,23 +56,12 @@ export default function ReplacementSuggestions() {
           Replacement suggestions
         </label>
       </div>
-      <Slide isOpen={!isActive}>
-        <Indented data-testid="replacement-suggestions-description">
-          <div className="fs-sm">
-            Need help finding the right words? Get replacement recommendations
-            in your preferred style.
-          </div>
-        </Indented>
-      </Slide>
-      <Slide isOpen={isActive}>
-        <Indented
-          className="py-1"
-          style={{ minHeight: 56 }}
-          data-testid="replacement-suggestions-options"
-        >
-          <ApiUsage />
-        </Indented>
-      </Slide>
+      <Indented data-testid="replacement-suggestions-description">
+        <div className="fs-sm">
+          Need help finding the right words? Get replacement recommendations in
+          your preferred style.
+        </div>
+      </Indented>
     </div>
   );
 }
