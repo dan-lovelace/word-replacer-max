@@ -9,7 +9,7 @@ export const BASELINE_STORAGE_VERSION: StorageVersion = "1.0.0";
 /**
  * The storage version currently in use.
  */
-export const CURRENT_STORAGE_VERSION: StorageVersion = "1.2.0";
+export const CURRENT_STORAGE_VERSION: StorageVersion = "1.3.0";
 
 export * from "./api";
 export * from "./migrations";

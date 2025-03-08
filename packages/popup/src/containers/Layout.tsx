@@ -57,6 +57,11 @@ const tabs: LayoutTab[] = [
     testId: "options-tab",
   },
   {
+    identifier: "sharing",
+    label: "Sharing",
+    testId: "sharing-tab",
+  },
+  {
     identifier: "support",
     label: "Help",
     testId: "support-tab",

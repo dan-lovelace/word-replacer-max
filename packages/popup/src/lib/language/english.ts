@@ -94,6 +94,17 @@ export default {
     RULES_CLIPBOARD_PASTE_ERROR:
       "Error pasting rules. Please check your browser's security settings.",
   },
+  ruleSync: {
+    warningModal: {
+      ALERT_TITLE: "Data loss possible",
+      ALERT_BODY_LOCAL:
+        "You will be able to store more of them but they will NOT be shared with other devices.",
+      ALERT_BODY_SYNC:
+        "You will not be able to store as many rules but you will be able to access them on other devices.",
+      CONFIRM_CHECKBOX_LABEL: "I understand my rules might be lost forever",
+      HEADING: "Change storage type",
+    },
+  },
   support: {
     CONTACT_SUPPORT_FORM_EMPTY_MESSAGE_ERROR: "Message is required",
     CONTACT_SUPPORT_FORM_MESSAGE_INPUT_PLACEHOLDER:

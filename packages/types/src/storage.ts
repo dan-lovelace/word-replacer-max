@@ -4,11 +4,17 @@ import { z } from "zod";
 import { ApiSuggestResponseData, ToneOption } from "./api";
 import { DomainEffect, ExportLink, PopupTab } from "./popup";
 import { ReplacementStyle, ReplacementSuggest, RuleGroups } from "./replace";
-import { Matcher, StorageMatcher } from "./rules";
+import { Matcher, RuleSync, StorageMatcher } from "./rules";
 
 export const schemaVersions = [1] as const;
 
-export const storageVersions = ["1.0.0", "1.1.0", "1.1.1", "1.2.0"] as const;
+export const storageVersions = [
+  "1.0.0",
+  "1.1.0",
+  "1.1.1",
+  "1.2.0",
+  "1.3.0",
+] as const;
 
 export type LocalStorage = Partial<{
   recentSuggestions: RecentSuggestions;
@@ -105,6 +111,7 @@ export type SyncStorage = Partial<{
   replacementStyle: ReplacementStyle;
   replacementSuggest: ReplacementSuggest;
   ruleGroups: RuleGroups;
+  ruleSync: RuleSync;
   storageVersion: StorageVersion;
 }>;
 
