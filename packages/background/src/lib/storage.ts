@@ -53,9 +53,9 @@ export async function initializeStorage() {
     initialStorage.exportLinks = [];
   }
 
-  const matchers = isRuleSyncActive
-    ? matchersFromStorage(syncStorage)
-    : matchersFromStorage(await localStorageProvider.get());
+  const matchers = matchersFromStorage(
+    isRuleSyncActive ? syncStorage : await localStorageProvider.get()
+  );
 
   if (matchers === undefined) {
     const defaultMatchers: Matcher[] = [

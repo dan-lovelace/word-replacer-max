@@ -1,6 +1,11 @@
 import { assert } from "@worm/shared/src/assert";
 import { matchersFromStorage } from "@worm/shared/src/browser/matchers";
 
+import {
+  generateMatchers,
+  TEST_MATCHER_ID_1,
+  TEST_MATCHER_ID_2,
+} from "../../support/generators/rules";
 import { selectors } from "../../support/selectors";
 
 function openConfirmationModal() {
@@ -192,7 +197,7 @@ describe("options page rule sync", () => {
   });
 
   describe("rule migration", () => {
-    beforeEach(() => {
+    it("should migrate rules from sync to local", () => {
       cy.visitWithStorage({
         sync: {
           preferences: {
@@ -206,9 +211,7 @@ describe("options page rule sync", () => {
 
       openConfirmationModal();
       selectors.options.ruleSync.modal.confirmationCheckbox().click();
-    });
 
-    it("should migrate rules from sync to local", () => {
       cy.getBrowser().then(async (browser) => {
         const localStorageBefore = await browser.storage.local?.get();
         const syncStorageBefore = await browser.storage.sync?.get();
@@ -240,6 +243,63 @@ describe("options page rule sync", () => {
 
           expect(localMatchersAfter?.length).to.eq(2);
           expect(syncMatchersAfter).to.eq(undefined);
+        });
+      });
+    });
+
+    it("should migrate rules from local to sync", () => {
+      cy.visitWithStorage({
+        local: generateMatchers(),
+        sync: {
+          preferences: {
+            activeTab: "options",
+          },
+          ruleSync: {
+            active: false,
+          },
+        },
+      });
+
+      openConfirmationModal();
+      selectors.options.ruleSync.modal.confirmationCheckbox().click();
+
+      cy.getBrowser().then(async (browser) => {
+        // NOTE: remove testing browser default matchers first
+        await browser.storage.sync?.remove([
+          TEST_MATCHER_ID_1,
+          TEST_MATCHER_ID_2,
+        ]);
+
+        const localStorageBefore = await browser.storage.local?.get();
+        const syncStorageBefore = await browser.storage.sync?.get();
+
+        assert(localStorageBefore !== undefined);
+        assert(syncStorageBefore !== undefined);
+
+        const localMatchersBefore = matchersFromStorage(localStorageBefore);
+        const syncMatchersBefore = matchersFromStorage(syncStorageBefore);
+
+        expect(localMatchersBefore?.length).to.eq(2);
+        expect(syncMatchersBefore).to.eq(undefined);
+
+        // migration occurs on this button click
+        selectors.options.ruleSync.modal.proceedButton().click();
+
+        // wait for operation(s) to fully complete
+        cy.wait(500).then(async () => {
+          selectors.options.ruleSync.modal.root().should("not.be.visible");
+
+          const localStorageAfter = await browser.storage.local?.get();
+          const syncStorageAfter = await browser.storage.sync?.get();
+
+          assert(localStorageAfter !== undefined);
+          assert(syncStorageAfter !== undefined);
+
+          const localMatchersAfter = matchersFromStorage(localStorageAfter);
+          const syncMatchersAfter = matchersFromStorage(syncStorageAfter);
+
+          expect(localMatchersAfter).to.eq(undefined);
+          expect(syncMatchersAfter?.length).to.eq(2);
         });
       });
     });
