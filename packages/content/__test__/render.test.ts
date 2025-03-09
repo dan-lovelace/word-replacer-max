@@ -4,6 +4,7 @@ import {
   generateMatchers,
   TEST_GROUP_ID_1,
   TEST_GROUP_ID_2,
+  TEST_MATCHER_ID_1,
 } from "@worm/popup/cypress/support/generators/rules";
 import { DEFAULT_REPLACEMENT_STYLE } from "@worm/shared/src/replace/lib/style";
 import { DeepPartial } from "@worm/types";
@@ -16,11 +17,15 @@ type MockStorage =
   | DeepPartial<SyncStorage>
   | Record<string, StorageMatcherGroup>;
 
-const testMatchers = Object.values(generateMatchers());
+const testMatchers = generateMatchers();
 
 const mockReplaceAll = jest.fn();
 const mockIsDomainAllowed = jest.fn();
 const mockGetMatcherGroups = jest.fn();
+const mockGetStorageProvider = {
+  get: jest.fn(),
+};
+const mockMatchersFromStorage = jest.fn();
 const mockStorageGetByKeys = jest.fn();
 const mockGetStylesheet = jest.fn(() => document.createElement("style"));
 
@@ -34,9 +39,12 @@ jest.mock("@worm/shared", () => ({
 jest.mock("@worm/shared/src/browser", () => ({
   getMatcherGroups: (...args: Parameters<typeof mockGetMatcherGroups>) =>
     mockGetMatcherGroups(...args),
+  matchersFromStorage: (...args: Parameters<typeof mockMatchersFromStorage>) =>
+    mockMatchersFromStorage(...args),
 }));
 
 jest.mock("@worm/shared/src/storage", () => ({
+  getStorageProvider: () => mockGetStorageProvider,
   storageGetByKeys: (...args: Parameters<typeof mockStorageGetByKeys>) =>
     mockStorageGetByKeys(...args),
 }));
@@ -74,19 +82,22 @@ describe("renderContent", () => {
         extensionEnabled: true,
       },
       domainList: [],
-      matchers: testMatchers,
       replacementStyle: DEFAULT_REPLACEMENT_STYLE,
       ruleGroups: { active: false },
+      ruleSync: { active: true },
+      ...testMatchers,
     };
+    const mockMatchers = Object.values(testMatchers);
 
     mockStorageGetByKeys.mockResolvedValue(mockStorage);
+    mockMatchersFromStorage.mockReturnValue(mockMatchers);
 
     await renderContent();
 
     expect(mockStorageGetByKeys).toHaveBeenCalledTimes(1);
     expect(mockReplaceAll).toHaveBeenCalledTimes(1);
     expect(mockReplaceAll).toHaveBeenCalledWith(
-      testMatchers,
+      mockMatchers,
       DEFAULT_REPLACEMENT_STYLE
     );
   });
@@ -97,12 +108,14 @@ describe("renderContent", () => {
         extensionEnabled: false,
       },
       domainList: [],
-      matchers: testMatchers,
       replacementStyle: DEFAULT_REPLACEMENT_STYLE,
       ruleGroups: { active: false },
+      ...testMatchers,
     };
+    const mockMatchers = Object.values(testMatchers);
 
     mockStorageGetByKeys.mockResolvedValue(mockStorage);
+    mockMatchersFromStorage.mockReturnValue(mockMatchers);
 
     await renderContent();
 
@@ -116,12 +129,14 @@ describe("renderContent", () => {
         extensionEnabled: true,
       },
       domainList: [],
-      matchers: testMatchers,
       replacementStyle: DEFAULT_REPLACEMENT_STYLE,
       ruleGroups: { active: false },
+      ...testMatchers,
     };
+    const mockMatchers = Object.values(testMatchers);
 
     mockStorageGetByKeys.mockResolvedValue(mockStorage);
+    mockMatchersFromStorage.mockReturnValue(mockMatchers);
 
     await renderContent();
     dateNowSpy.mockImplementation(() => 1050);
@@ -137,12 +152,14 @@ describe("renderContent", () => {
         extensionEnabled: true,
       },
       domainList: [],
-      matchers: testMatchers,
       replacementStyle: DEFAULT_REPLACEMENT_STYLE,
       ruleGroups: { active: false },
+      ...testMatchers,
     };
+    const mockMatchers = Object.values(testMatchers);
 
     mockStorageGetByKeys.mockResolvedValue(mockStorage);
+    mockMatchersFromStorage.mockReturnValue(mockMatchers);
 
     await renderContent();
     dateNowSpy.mockImplementation(() => 1150);
@@ -158,12 +175,12 @@ describe("renderContent", () => {
         extensionEnabled: true,
       },
       domainList: [],
-      matchers: [],
       replacementStyle: DEFAULT_REPLACEMENT_STYLE,
       ruleGroups: { active: false },
     };
 
     mockStorageGetByKeys.mockResolvedValue(mockStorage);
+    mockMatchersFromStorage.mockReturnValue([]);
 
     await renderContent();
 
@@ -176,10 +193,11 @@ describe("renderContent", () => {
         extensionEnabled: true,
       },
       domainList: [],
-      matchers: testMatchers,
       replacementStyle: DEFAULT_REPLACEMENT_STYLE,
       ruleGroups: { active: true },
+      ...testMatchers,
     };
+    const mockMatchers = Object.values(testMatchers);
 
     mockStorageGetByKeys.mockResolvedValue(mockStorage);
     mockGetMatcherGroups.mockImplementation(() => ({
@@ -191,13 +209,14 @@ describe("renderContent", () => {
         name: "Test Group 1",
       },
     }));
+    mockMatchersFromStorage.mockReturnValue(mockMatchers);
 
     await renderContent();
 
     expect(mockStorageGetByKeys).toHaveBeenCalledTimes(1);
     expect(mockReplaceAll).toHaveBeenCalledTimes(1);
     expect(mockReplaceAll).toHaveBeenCalledWith(
-      testMatchers,
+      mockMatchers,
       DEFAULT_REPLACEMENT_STYLE
     );
   });
@@ -208,7 +227,6 @@ describe("renderContent", () => {
         extensionEnabled: true,
       },
       domainList: [],
-      matchers: testMatchers,
       replacementStyle: DEFAULT_REPLACEMENT_STYLE,
       ruleGroups: { active: true },
       [TEST_GROUP_ID_1]: {
@@ -218,7 +236,9 @@ describe("renderContent", () => {
         matchers: [],
         name: "Test Group 1",
       },
+      ...testMatchers,
     };
+    const mockMatchers = Object.values(testMatchers);
 
     mockStorageGetByKeys.mockResolvedValue(mockStorage);
     mockGetMatcherGroups.mockImplementation(() => ({
@@ -230,6 +250,7 @@ describe("renderContent", () => {
         name: "Test Group 1",
       },
     }));
+    mockMatchersFromStorage.mockReturnValue(mockMatchers);
 
     await renderContent();
 
@@ -243,10 +264,11 @@ describe("renderContent", () => {
         extensionEnabled: true,
       },
       domainList: [],
-      matchers: testMatchers,
       replacementStyle: DEFAULT_REPLACEMENT_STYLE,
       ruleGroups: { active: true },
+      ...testMatchers,
     };
+    const mockMatchers = Object.values(testMatchers);
 
     mockStorageGetByKeys.mockResolvedValue(mockStorage);
     mockGetMatcherGroups.mockImplementation(() => ({
@@ -265,13 +287,14 @@ describe("renderContent", () => {
         name: "Test Group 2",
       },
     }));
+    mockMatchersFromStorage.mockReturnValue(mockMatchers);
 
     await renderContent();
 
     expect(mockStorageGetByKeys).toHaveBeenCalledTimes(1);
     expect(mockReplaceAll).toHaveBeenCalledTimes(1);
     expect(mockReplaceAll).toHaveBeenCalledWith(
-      [testMatchers[0]],
+      [testMatchers[TEST_MATCHER_ID_1]],
       DEFAULT_REPLACEMENT_STYLE
     );
   });
@@ -282,10 +305,11 @@ describe("renderContent", () => {
         extensionEnabled: true,
       },
       domainList: [],
-      matchers: testMatchers,
       replacementStyle: DEFAULT_REPLACEMENT_STYLE,
       ruleGroups: { active: true },
+      ...testMatchers,
     };
+    const mockMatchers = Object.values(testMatchers);
 
     mockStorageGetByKeys.mockResolvedValue(mockStorage);
     mockGetMatcherGroups.mockImplementation(() => ({
@@ -304,13 +328,14 @@ describe("renderContent", () => {
         name: "Test Group 2",
       },
     }));
+    mockMatchersFromStorage.mockReturnValue(mockMatchers);
 
     await renderContent();
 
     expect(mockStorageGetByKeys).toHaveBeenCalledTimes(1);
     expect(mockReplaceAll).toHaveBeenCalledTimes(1);
     expect(mockReplaceAll).toHaveBeenCalledWith(
-      [testMatchers[0]],
+      [testMatchers[TEST_MATCHER_ID_1]],
       DEFAULT_REPLACEMENT_STYLE
     );
   });
@@ -321,10 +346,11 @@ describe("renderContent", () => {
         extensionEnabled: true,
       },
       domainList: [],
-      matchers: testMatchers,
       replacementStyle: DEFAULT_REPLACEMENT_STYLE,
       ruleGroups: { active: true },
+      ...testMatchers,
     };
+    const mockMatchers = Object.values(testMatchers);
 
     mockStorageGetByKeys.mockResolvedValue(mockStorage);
     mockGetMatcherGroups.mockImplementation(() => ({
@@ -343,13 +369,14 @@ describe("renderContent", () => {
         name: "Test Group 2",
       },
     }));
+    mockMatchersFromStorage.mockReturnValue(mockMatchers);
 
     await renderContent();
 
     expect(mockStorageGetByKeys).toHaveBeenCalledTimes(1);
     expect(mockReplaceAll).toHaveBeenCalledTimes(1);
     expect(mockReplaceAll).toHaveBeenCalledWith(
-      [testMatchers[0], testMatchers[1]],
+      mockMatchers,
       DEFAULT_REPLACEMENT_STYLE
     );
   });
@@ -360,10 +387,11 @@ describe("renderContent", () => {
         extensionEnabled: true,
       },
       domainList: [],
-      matchers: testMatchers,
       replacementStyle: DEFAULT_REPLACEMENT_STYLE,
       ruleGroups: { active: true },
+      ...testMatchers,
     };
+    const mockMatchers = Object.values(testMatchers);
 
     mockStorageGetByKeys.mockResolvedValue(mockStorage);
     mockGetMatcherGroups.mockImplementation(() => ({
@@ -382,13 +410,14 @@ describe("renderContent", () => {
         name: "Test Group 2",
       },
     }));
+    mockMatchersFromStorage.mockReturnValue(mockMatchers);
 
     await renderContent();
 
     expect(mockStorageGetByKeys).toHaveBeenCalledTimes(1);
     expect(mockReplaceAll).toHaveBeenCalledTimes(1);
     expect(mockReplaceAll).toHaveBeenCalledWith(
-      [testMatchers[0], testMatchers[1]],
+      mockMatchers,
       DEFAULT_REPLACEMENT_STYLE
     );
   });

@@ -227,7 +227,7 @@ exports[`runStorageMigrations works with extension version v0.6.2 storage 1`] = 
     "active": false,
   },
   "ruleSync": {
-    "provider": "sync",
+    "active": true,
   },
   "storageVersion": "1.3.0",
 }

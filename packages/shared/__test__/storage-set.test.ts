@@ -82,6 +82,9 @@ const defaultSyncStorage: Record<string, any> = {
   [TEST_GROUP_IDENTIFIER_2]: mockAppMatcherGroups[1],
   [TEST_MATCHER_IDENTIFIER_1]: mockAppMatchers[0],
   [TEST_MATCHER_IDENTIFIER_2]: mockAppMatchers[1],
+  ruleSync: {
+    active: true,
+  },
 };
 
 const localStorage = getStorageProvider("local");
@@ -98,56 +101,6 @@ afterEach(async () => {
 });
 
 describe("storageSetByKeys", () => {
-  it("removes orphaned recent suggestions when updating matchers", async () => {
-    const keyToOrphan = "7890";
-
-    const testLocalValues: LocalStorage = {
-      ...defaultLocalStorage,
-      recentSuggestions: {
-        ...defaultLocalStorage.recentSuggestions,
-        [keyToOrphan]: {
-          identifier: "7890",
-          apiResponseData: {
-            suggestions: [{ text: "ipsum" }],
-            tone: "neutral",
-          },
-          selectedTone: "neutral",
-        },
-      },
-    };
-    await localStorage.set(testLocalValues);
-
-    const { recentSuggestions: recentSuggestionsBefore } =
-      await localStorage.get();
-    expect(Object.keys(recentSuggestionsBefore ?? {})).toHaveLength(3);
-    expect(recentSuggestionsBefore).toHaveProperty(keyToOrphan);
-
-    await storageSetByKeys({
-      matchers: mockAppMatchers,
-    });
-    expect(matchersFromStorage(await syncStorage.get())).toHaveLength(2);
-
-    const { recentSuggestions: recentSuggestionsAfter } =
-      await localStorage.get();
-    expect(recentSuggestionsAfter).toHaveProperty("1234");
-    expect(recentSuggestionsAfter).toHaveProperty("4567");
-    expect(recentSuggestionsAfter).not.toHaveProperty(keyToOrphan);
-  });
-
-  it("does not orphan rule group matchers when deleting all matchers", async () => {
-    await syncStorage.set(defaultSyncStorage);
-
-    const groupsBefore = getMatcherGroups(await syncStorage.get());
-    expect(groupsBefore?.[TEST_GROUP_IDENTIFIER_1].matchers?.length).toBe(2);
-
-    await storageSetByKeys({
-      matchers: [],
-    });
-
-    const groupsAfter = getMatcherGroups(await syncStorage.get());
-    expect(groupsAfter?.[TEST_GROUP_IDENTIFIER_1].matchers?.length).toBe(0);
-  });
-
   it("does not modify recent suggestions when matchers are not being updated", async () => {
     await syncStorage.set(defaultSyncStorage);
 
@@ -224,5 +177,42 @@ describe("storageRemoveByKeys", () => {
     expect(groupsAfter?.[TEST_GROUP_IDENTIFIER_1].matchers).not.toContain(
       "4567"
     );
+  });
+
+  it("removes orphaned recent suggestions when removing individual matchers", async () => {
+    const keyToOrphan = "7890";
+
+    const testLocalValues: LocalStorage = {
+      ...defaultLocalStorage,
+      recentSuggestions: {
+        ...defaultLocalStorage.recentSuggestions,
+        [keyToOrphan]: {
+          identifier: "7890",
+          apiResponseData: {
+            suggestions: [{ text: "ipsum" }],
+            tone: "neutral",
+          },
+          selectedTone: "neutral",
+        },
+      },
+    };
+    await localStorage.set(testLocalValues);
+
+    const { recentSuggestions: recentSuggestionsBefore } =
+      await localStorage.get();
+    expect(Object.keys(recentSuggestionsBefore ?? {})).toHaveLength(3);
+    expect(recentSuggestionsBefore).toHaveProperty(keyToOrphan);
+
+    await storageSetByKeys(defaultSyncStorage);
+    expect(matchersFromStorage(await syncStorage.get())).toHaveLength(2);
+
+    await storageRemoveByKeys([TEST_MATCHER_IDENTIFIER_1]);
+    expect(matchersFromStorage(await syncStorage.get())).toHaveLength(1);
+
+    const { recentSuggestions: recentSuggestionsAfter } =
+      await localStorage.get();
+    expect(recentSuggestionsAfter).toHaveProperty("1234");
+    expect(recentSuggestionsAfter).toHaveProperty("4567");
+    expect(recentSuggestionsAfter).not.toHaveProperty(keyToOrphan);
   });
 });
