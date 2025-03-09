@@ -56,13 +56,18 @@ export async function storageRemoveByKeys<Key extends SyncStorageKey | string>(
      * group matchers and recent suggestions before removing matcher keys from
      * the appropriate storage.
      */
+
+    // fetch both potential storages that hold matchers
     const syncStorage = (await storageGetByKeys()) as SyncStorage;
     const localStorage = (await localStorageProvider.get()) as LocalStorage;
 
+    // get the matchers from the correct storage
     const isSyncActive = Boolean(syncStorage.ruleSync?.active);
     const matcherStorage = isSyncActive ? syncStorage : localStorage;
-    const groups = getMatcherGroups(matcherStorage) ?? {};
     const allMatchers = matchersFromStorage(matcherStorage);
+
+    // groups always come from sync storage
+    const groups = getMatcherGroups(syncStorage) ?? {};
 
     // update any related rule group items
     for (const matcherKey of matcherKeys) {
