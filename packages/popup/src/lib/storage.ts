@@ -1,11 +1,7 @@
-import { sortMatchers, STORAGE_MATCHER_PREFIX } from "@worm/shared/src/browser";
-import { Matcher } from "@worm/types/src/rules";
 import {
   Storage,
   StorageChange,
-  StorageChangeOf,
   StorageProvider,
-  SyncStorage,
 } from "@worm/types/src/storage";
 
 /**
@@ -47,58 +43,10 @@ export const getUpdatedStorage = (
     }
   };
 
-  if (area === "sync") {
-    const prevSyncStorage = updatedArea as SyncStorage;
+  Object.entries(changes).forEach(([storedKey, change]) => {
+    commonUpdate(storedKey, change);
+  });
 
-    Object.entries(changes).forEach(([storedKey, change]) => {
-      if (storedKey.startsWith(STORAGE_MATCHER_PREFIX)) {
-        // Updating a matcher, modify the existing array of matchers
-        const { newValue, oldValue } = change as StorageChangeOf<Matcher>;
-
-        const newMatchers: Matcher[] = [...(prevSyncStorage.matchers || [])];
-
-        if (newValue === undefined) {
-          // Rule is being deleted
-          const existingIdx =
-            newMatchers.findIndex(
-              (matcher) => matcher.identifier === oldValue?.identifier
-            ) ?? -1;
-
-          if (existingIdx < 0) {
-            throw new Error("Unable to locate existing matcher during update");
-          }
-
-          newMatchers.splice(existingIdx, 1);
-        } else if (oldValue === undefined) {
-          // Rule is being added
-          newMatchers.push(newValue);
-        } else {
-          // Rule is being updated
-          const existingIdx =
-            newMatchers.findIndex(
-              (matcher) => matcher.identifier === oldValue?.identifier
-            ) ?? -1;
-
-          if (existingIdx < 0) {
-            throw new Error("Unable to locate existing matcher during update");
-          }
-
-          newMatchers[existingIdx] = newValue;
-        }
-
-        (updatedArea as SyncStorage).matchers = sortMatchers(newMatchers);
-      } else {
-        commonUpdate(storedKey, change);
-      }
-    });
-  } else {
-    // All other areas
-    Object.entries(changes).forEach(([storedKey, change]) => {
-      commonUpdate(storedKey, change);
-    });
-  }
-
-  // Return new storage object with updated area
   return {
     ...currentStorage,
     [area]: updatedArea,

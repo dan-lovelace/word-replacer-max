@@ -26,10 +26,12 @@ export default function AddNewRule({
   text = "New rule",
 }: AddNewRuleProps) {
   const {
+    matchers,
     storage: {
       sync,
-      sync: { preferences, matchers, ruleGroups },
+      sync: { preferences, ruleGroups },
     },
+    updateMatchers,
   } = useConfig();
   const { showToast } = useToast();
 
@@ -69,29 +71,17 @@ export default function AddNewRule({
       });
     }
 
-    storageSetByKeys(
+    updateMatchers([
+      ...(matchers ?? []),
       {
-        matchers: [
-          ...(matchers ?? []),
-          {
-            active: true,
-            identifier: newIdentifier,
-            queries: [],
-            queryPatterns: [],
-            replacement: "",
-            useGlobalReplacementStyle: DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE,
-          },
-        ],
+        active: true,
+        identifier: newIdentifier,
+        queries: [],
+        queryPatterns: [],
+        replacement: "",
+        useGlobalReplacementStyle: DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE,
       },
-      {
-        onError: (message) => {
-          showToast({
-            message,
-            options: { severity: "danger" },
-          });
-        },
-      }
-    );
+    ]);
   };
 
   return (

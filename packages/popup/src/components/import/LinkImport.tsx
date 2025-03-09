@@ -15,11 +15,7 @@ type LinkImportProps = {
 };
 
 export default function LinkImport({ setIsImportingLink }: LinkImportProps) {
-  const {
-    storage: {
-      sync: { matchers },
-    },
-  } = useConfig();
+  const { matchers } = useConfig();
   const language = useLanguage();
   const [importLink, setImportLink] = useState("");
   const [isLoading, setIsLoading] = useState(false);

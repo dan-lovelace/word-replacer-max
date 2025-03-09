@@ -1,33 +1,49 @@
 import { v4 as uuidv4 } from "uuid";
 
 import {
-  DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE,
-} from "@worm/shared/src/replace/lib/style";
+  matchersFromStorage,
+  matchersToStorage,
+} from "@worm/shared/src/browser";
+import { DEFAULT_RULE_SYNC } from "@worm/shared/src/replace/lib/rule-sync";
+import { DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE } from "@worm/shared/src/replace/lib/style";
 import {
   BASELINE_STORAGE_VERSION,
+  getStorageProvider,
+  localStorageProvider,
   runStorageMigrations,
-  storageGetByKeys,
-  storageSetByKeys,
 } from "@worm/shared/src/storage";
-import { Matcher } from "@worm/types/src/rules";
+import { Matcher, RuleSync } from "@worm/types/src/rules";
 import { SyncStorage } from "@worm/types/src/storage";
 
+const syncStorageProvider = getStorageProvider("sync");
+
 export async function initializeStorage() {
-  const { storageVersion } = await storageGetByKeys(["storageVersion"]);
+  const { ruleSync: storedRuleSync, storageVersion } =
+    (await syncStorageProvider.get([
+      "ruleSync",
+      "storageVersion",
+    ])) as SyncStorage;
+
+  const ruleSync: RuleSync = storedRuleSync ?? DEFAULT_RULE_SYNC;
+  const isRuleSyncActive = ruleSync.active;
+  const matcherStorageProvider = isRuleSyncActive
+    ? syncStorageProvider
+    : localStorageProvider;
+
+  if (ruleSync === undefined) {
+    await syncStorageProvider.set({
+      ruleSync,
+    });
+  }
 
   if (storageVersion === undefined) {
-    await storageSetByKeys({
+    await syncStorageProvider.set({
       storageVersion: BASELINE_STORAGE_VERSION,
     });
   }
 
-  const { domainList, exportLinks, matchers, preferences } =
-    await storageGetByKeys([
-      "domainList",
-      "exportLinks",
-      "matchers",
-      "preferences",
-    ]);
+  const syncStorage = await syncStorageProvider.get();
+  const { domainList, exportLinks, preferences } = syncStorage;
 
   const initialStorage: SyncStorage = {};
 
@@ -38,6 +54,10 @@ export async function initializeStorage() {
   if (exportLinks === undefined) {
     initialStorage.exportLinks = [];
   }
+
+  const matchers = isRuleSyncActive
+    ? matchersFromStorage(syncStorage)
+    : matchersFromStorage(await localStorageProvider.get());
 
   if (matchers === undefined) {
     const defaultMatchers: Matcher[] = [
@@ -59,7 +79,7 @@ export async function initializeStorage() {
       },
     ];
 
-    initialStorage.matchers = defaultMatchers;
+    await matcherStorageProvider.set(matchersToStorage(defaultMatchers));
   }
 
   if (preferences === undefined) {
@@ -74,6 +94,6 @@ export async function initializeStorage() {
     };
   }
 
-  await storageSetByKeys(initialStorage);
+  await syncStorageProvider.set(initialStorage);
   await runStorageMigrations();
 }

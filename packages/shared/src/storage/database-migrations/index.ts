@@ -14,7 +14,7 @@ import {
 import { STORAGE_MATCHER_PREFIX } from "../../browser";
 import { logDebug } from "../../logging";
 import { DEFAULT_RULE_GROUPS } from "../../replace/lib/groups";
-import { DEFAULT_MATCHER_STORAGE } from "../../replace/lib/storage";
+import { DEFAULT_RULE_SYNC } from "../../replace/lib/rule-sync";
 import { DEFAULT_REPLACEMENT_SUGGEST } from "../../replace/lib/suggest";
 
 import { BASELINE_STORAGE_VERSION, CURRENT_STORAGE_VERSION } from "../";
@@ -129,14 +129,18 @@ export const MIGRATIONS: StrictMigrations = {
       /**
        * **1.3.0** - Unlimited rules storage
        *
-       * Adds the property that tracks the user's chosen rule storage provider.
+       * Adds the property that tracks the user's chosen rule storage provider
+       * if it does not exist.
        */
       0: (storage) => {
-        const updatedValues: SyncStorage = {
-          ruleSync: {
-            provider: DEFAULT_MATCHER_STORAGE,
-          },
-        };
+        let updatedValues: SyncStorage = {};
+
+        if (storage.ruleSync === undefined) {
+          updatedValues = {
+            ruleSync: DEFAULT_RULE_SYNC,
+          };
+        }
+
         const merged = merge(storage, updatedValues);
 
         return merged;

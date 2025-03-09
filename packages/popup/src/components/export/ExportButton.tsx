@@ -28,8 +28,9 @@ export default function ExportButton({
   const [isLoading, setIsLoading] = useState(false);
 
   const {
+    matchers,
     storage: {
-      sync: { exportLinks, matchers },
+      sync: { exportLinks },
     },
   } = useConfig();
   const language = useLanguage();

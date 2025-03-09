@@ -84,7 +84,7 @@ export default function RuleSync({}: RuleSyncProps) {
   ) => {
     event.preventDefault();
 
-    const newValue = ruleSync?.provider === "local" ? true : false;
+    const newValue = !Boolean(ruleSync?.active);
     setNextValue(newValue);
 
     modalRef.current?.show();
@@ -100,7 +100,7 @@ export default function RuleSync({}: RuleSyncProps) {
     // TODO: migrate rules to new storage
 
     const newRuleSync = Object.assign({}, ruleSync);
-    newRuleSync.provider = nextValue ? "sync" : "local";
+    newRuleSync.active = Boolean(nextValue);
 
     storageSetByKeys(
       {
@@ -129,7 +129,7 @@ export default function RuleSync({}: RuleSyncProps) {
     });
   };
 
-  const isActive = Boolean(ruleSync?.provider === "sync");
+  const isActive = Boolean(ruleSync?.active);
   const prevProvider: StorageProvider = nextValue ? "local" : "sync";
   const nextProvider: StorageProvider = nextValue ? "sync" : "local";
 

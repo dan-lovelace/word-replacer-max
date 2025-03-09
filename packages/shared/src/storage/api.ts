@@ -1,6 +1,4 @@
-import { Matcher } from "@worm/types/src/rules";
 import {
-  LocalStorage,
   StorageProvider,
   StorageSetOptions,
   SyncStorage,
@@ -11,7 +9,6 @@ import {
   browser,
   getMatcherGroups,
   matchersFromStorage,
-  matchersToStorage,
   STORAGE_MATCHER_PREFIX,
 } from "../browser";
 import { logDebug } from "../logging";
@@ -20,62 +17,54 @@ const {
   storage: { sync },
 } = browser;
 
-const localStorageProvider = getStorageProvider("local");
+export const authStorageProvider = getStorageProvider("local");
+export const localStorageProvider = getStorageProvider("local");
 
 export const storageClear = sync.clear;
 export const storageGet = sync.get;
 export const storageRemove = sync.remove;
 export const storageSet = sync.set;
 
-export const authStorageProvider = getStorageProvider("local");
-
 export function getStorageProvider(providerName: StorageProvider = "sync") {
   return browser.storage[providerName];
 }
 
-export async function storageGetByKeys<T extends SyncStorageKey>(keys?: T[]) {
-  // fetch all storage keys regardless of parameters; we'll filter the results
-  const allStorage = (await storageGet()) as SyncStorage;
-  const queryKeys = [...(keys ?? [])];
+export async function storageGetByKeys<Key extends SyncStorageKey>(
+  keys?: Key[],
+  options?: StorageSetOptions
+) {
+  const storageProvider = getStorageProvider(options?.provider ?? "sync");
+  const storageResponse = (await storageProvider.get(keys)) as SyncStorage;
 
-  let results: SyncStorage = {};
-
-  if (!queryKeys.length) {
-    results = allStorage;
-    results.matchers = matchersFromStorage(allStorage);
-  } else {
-    for (const key of queryKeys) {
-      switch (key) {
-        case "matchers":
-          results.matchers = matchersFromStorage(allStorage);
-          break;
-
-        default:
-          results[key] = allStorage[key];
-      }
-    }
-  }
-
-  return results;
+  return storageResponse;
 }
 
 export async function storageRemoveByKeys<Key extends SyncStorageKey | string>(
-  keys: Key[]
+  keys: Key[],
+  options?: StorageSetOptions
 ) {
+  const storageProvider = getStorageProvider(options?.provider ?? "sync");
   const matcherKeys = keys.filter((key) =>
-    key.startsWith(`${STORAGE_MATCHER_PREFIX}`)
+    key.startsWith(STORAGE_MATCHER_PREFIX)
   ) as (keyof SyncStorage)[];
 
   if (matcherKeys.length > 0) {
     /**
-     * A matcher is being deleted. Clean up any associated rule group
-     * matchers.
+     * At least one matcher is being deleted. Clean up any associated rule
+     * group matchers before removing matcher keys from the appropriate
+     * storage.
      */
-    const allStorage = await storageGetByKeys();
+    const syncStorage = (await storageGetByKeys()) as SyncStorage;
+    const isSyncActive = Boolean(syncStorage.ruleSync?.active);
+    const allStorage = isSyncActive
+      ? syncStorage
+      : ((await localStorageProvider.get()) as SyncStorage);
     const groups = getMatcherGroups(allStorage) ?? {};
+    const allMatchers = matchersFromStorage(allStorage);
 
+    // update any related rule group items
     for (const matcherKey of matcherKeys) {
-      const matcher = allStorage.matchers?.find(
+      const matcher = allMatchers?.find(
         (matcher) =>
           `${STORAGE_MATCHER_PREFIX}${matcher.identifier}` === matcherKey
       );
@@ -88,84 +77,26 @@ export async function storageRemoveByKeys<Key extends SyncStorageKey | string>(
     }
 
     await storageSetByKeys(groups);
+
+    // now perform the remove operation
+    const matcherStorageProvider = getStorageProvider(
+      isSyncActive ? "sync" : "local"
+    );
+
+    await matcherStorageProvider.remove(matcherKeys);
   }
 
-  return storageRemove(keys);
+  return storageProvider.remove(keys);
 }
 
 export async function storageSetByKeys(
   keys: SyncStorage,
   options?: StorageSetOptions
 ) {
-  let storageMatchers: Record<string, Matcher> = {};
-
-  if (Object.prototype.hasOwnProperty.call(keys, "matchers")) {
-    const { matchers } = keys;
-
-    if (!matchers || matchers.length < 1) {
-      /**
-       * Matchers are being deleted. Look up all existing matchers in the flat
-       * storage structure and remove them.
-       */
-      const allStorage = await storageGet();
-      const storedMatchers = matchersFromStorage(allStorage);
-
-      if (storedMatchers) {
-        await storageRemoveByKeys(
-          storedMatchers.map(
-            (matcher) => `${STORAGE_MATCHER_PREFIX}${matcher.identifier}`
-          )
-        );
-      }
-
-      /**
-       * Clean up any associated rule group matchers.
-       */
-      const storedMatcherGroups = getMatcherGroups(allStorage) ?? {};
-      const groupsArray = Object.values(storedMatcherGroups ?? {});
-
-      for (const group of groupsArray) {
-        group.matchers = [];
-      }
-
-      await storageSetByKeys(storedMatcherGroups);
-    }
-
-    /**
-     * Matchers are being updated. We need to save them to storage in a flat
-     * structure to allow users to save the maximum amount of data using the
-     * `sync` storage area.
-     *
-     * See: https://github.com/dan-lovelace/word-replacer-max/issues/4
-     */
-    storageMatchers = matchersToStorage(matchers);
-
-    /**
-     * Clean up orphaned matchers from `local` storage.
-     */
-    const matchersSet = new Set(matchers?.map((matcher) => matcher.identifier));
-    const { recentSuggestions } =
-      (await localStorageProvider.get()) as LocalStorage;
-
-    if (recentSuggestions) {
-      Object.keys(recentSuggestions).forEach((key) => {
-        if (!matchersSet.has(key)) {
-          delete recentSuggestions[key];
-        }
-      });
-
-      await localStorageProvider.set({
-        recentSuggestions,
-      });
-    }
-
-    delete keys.matchers;
-  }
-
   try {
-    await storageSet({
+    const storageProvider = getStorageProvider(options?.provider ?? "sync");
+    await storageProvider.set({
       ...keys,
-      ...storageMatchers,
     });
 
     if (typeof options?.onSuccess === "function") {

@@ -1,4 +1,4 @@
-import { convertStoredMatchers } from "@worm/shared/src/browser/matchers";
+import { matchersFromStorage } from "@worm/shared/src/browser/matchers";
 
 import english from "../../../src/lib/language/english";
 
@@ -63,7 +63,7 @@ describe("danger zone", () => {
     // Verify rules exist in storage
     cy.getBrowser().then((browser) => {
       browser.storage.sync?.get().then((syncStorage) => {
-        const matchers = convertStoredMatchers(syncStorage);
+        const matchers = matchersFromStorage(syncStorage);
 
         expect(matchers).to.have.length(2);
       });
@@ -79,7 +79,7 @@ describe("danger zone", () => {
     // Verify rules were deleted from storage
     cy.getBrowser().then((browser) => {
       browser.storage.sync?.get().then((syncStorage) => {
-        const matchers = convertStoredMatchers(syncStorage);
+        const matchers = matchersFromStorage(syncStorage);
 
         expect(matchers).to.eq(undefined);
       });

@@ -2,12 +2,13 @@ import papaparse from "papaparse";
 import { v4 as uuidv4 } from "uuid";
 
 import { getSchemaByVersion } from "@worm/shared";
+import { matchersToStorage } from "@worm/shared/src/browser";
 import { DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE } from "@worm/shared/src/replace/lib/style";
-import { storageSetByKeys } from "@worm/shared/src/storage";
+import { getStorageProvider, storageSetByKeys } from "@worm/shared/src/storage";
 import { Matcher } from "@worm/types/src/rules";
-import { StorageSetOptions } from "@worm/types/src/storage";
+import { StorageSetOptions, SyncStorage } from "@worm/types/src/storage";
 
-export function importMatchersCSV(
+export async function importMatchersCSV(
   fromUserInput: string | ArrayBuffer | null,
   currentMatchers: Matcher[] | undefined,
   options: StorageSetOptions
@@ -68,13 +69,13 @@ export function importMatchersCSV(
   const matchersToAdd = csvMatchers.filter(
     (matcher) => matcher.queries.length > 0 || matcher.replacement.length > 0
   );
+  const storageMatchers = matchersToStorage(matchersToAdd);
+  const syncStorage = (await getStorageProvider("sync").get()) as SyncStorage;
 
-  return storageSetByKeys(
-    {
-      matchers: [...(currentMatchers ?? []), ...matchersToAdd],
-    },
-    options
-  );
+  return storageSetByKeys(storageMatchers, {
+    ...options,
+    provider: syncStorage.ruleSync?.active ? "sync" : "local",
+  });
 }
 
 export async function importMatchersJSON(
@@ -121,11 +122,11 @@ export async function importMatchersJSON(
       active: true,
     })
   );
+  const storageMatchers = matchersToStorage(enrichedMatchers);
+  const syncStorage = (await getStorageProvider("sync").get()) as SyncStorage;
 
-  return storageSetByKeys(
-    {
-      matchers: [...(currentMatchers ?? []), ...enrichedMatchers],
-    },
-    options
-  );
+  return storageSetByKeys(storageMatchers, {
+    ...options,
+    provider: syncStorage.ruleSync?.active ? "sync" : "local",
+  });
 }

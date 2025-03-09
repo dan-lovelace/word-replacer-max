@@ -65,11 +65,13 @@ export default function ReplacementInput({
 
   const { hasAccess } = useAuth();
   const {
+    matchers,
     storage: {
       local: { authIdToken },
       sync,
-      sync: { matchers, replacementStyle, replacementSuggest, ruleGroups },
+      sync: { replacementStyle, replacementSuggest, ruleGroups },
     },
+    updateMatchers,
   } = useConfig();
   const { showRefreshToast, showToast } = useToast();
 
@@ -143,9 +145,7 @@ export default function ReplacementInput({
       active && Boolean(queries.length) && !isReplacementEmpty(replacement)
     );
 
-    storageSetByKeys({
-      matchers: newMatchers,
-    });
+    updateMatchers(newMatchers);
   };
 
   const handleTextChange = (

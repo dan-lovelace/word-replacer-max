@@ -36,9 +36,11 @@ export default function RuleRow({
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
 
   const {
+    matchers,
     storage: {
-      sync: { matchers, preferences },
+      sync: { preferences },
     },
+    updateMatchers,
   } = useConfig();
   const language = useLanguage();
   const confirmingDeleteRef = useRef<boolean>();
@@ -120,9 +122,7 @@ export default function RuleRow({
       });
     }
 
-    storageSetByKeys({
-      matchers: newMatchers,
-    });
+    updateMatchers(newMatchers);
   };
 
   const handleMatcherInputChange = <K extends keyof Matcher>(
@@ -141,19 +141,7 @@ export default function RuleRow({
 
     newMatchers[matcherIdx][key] = newValue;
 
-    storageSetByKeys(
-      {
-        matchers: newMatchers,
-      },
-      {
-        onError: (message) => {
-          showToast({
-            message,
-            options: { severity: "danger" },
-          });
-        },
-      }
-    );
+    updateMatchers(newMatchers);
   };
 
   const handleDeleteClick = () => {
@@ -169,11 +157,6 @@ export default function RuleRow({
         });
       }
 
-      storageSetByKeys({
-        matchers: matchers?.filter(
-          (matcher) => matcher.identifier !== identifier
-        ),
-      });
       storageRemoveByKeys([`${STORAGE_MATCHER_PREFIX}${identifier}`]);
     } else {
       setIsConfirmingDelete(true);

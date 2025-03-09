@@ -10,11 +10,7 @@ import { useToast } from "../alert/useToast";
 import FileInput from "../FileInput";
 
 export default function FileImport() {
-  const {
-    storage: {
-      sync: { matchers },
-    },
-  } = useConfig();
+  const { matchers } = useConfig();
   const language = useLanguage();
   const { showToast } = useToast();
 

@@ -43,7 +43,7 @@ export type MatcherGroupInSync = Record<string, MatcherGroup>;
 export type MatcherInSync = Record<string, Matcher>;
 
 export type RuleSync = {
-  provider: StorageProvider;
+  active: boolean;
 };
 
 export type StorageMatcher = Sortable<Matcher>;

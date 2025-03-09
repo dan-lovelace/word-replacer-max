@@ -97,6 +97,7 @@ export type StorageProvider = keyof Pick<
 >;
 
 export type StorageSetOptions = {
+  provider?: StorageProvider;
   onError?: (message: string) => void;
   onSuccess?: () => void;
 };
@@ -106,7 +107,6 @@ export type StorageVersion = (typeof storageVersions)[number];
 export type SyncStorage = Partial<{
   domainList: string[];
   exportLinks: ExportLink[];
-  matchers: StorageMatcher[];
   preferences: SyncStoragePreferences;
   replacementStyle: ReplacementStyle;
   replacementSuggest: ReplacementSuggest;

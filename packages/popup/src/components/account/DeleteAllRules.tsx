@@ -1,9 +1,8 @@
 import { ChangeEvent } from "preact/compat";
 import { Dispatch, StateUpdater, useState } from "preact/hooks";
 
-import { storageSetByKeys } from "@worm/shared/src/storage";
-
 import { useLanguage } from "../../lib/language";
+import { useConfig } from "../../store/Config";
 
 import { useToast } from "../alert/useToast";
 import Alert from "../Alerts";
@@ -19,27 +18,19 @@ export default function DeleteAllRules({
 }: DeleteAllRulesProps) {
   const [hasConfirmedDelete, setHasConfirmedDelete] = useState(false);
 
+  const { updateMatchers } = useConfig();
   const { account: lang } = useLanguage();
   const { showToast } = useToast();
 
   const handleConfirmClick = () => {
-    storageSetByKeys(
-      { matchers: [] },
-      {
-        onError: (message) => {
-          showToast({
-            message,
-            options: { severity: "danger" },
-          });
-        },
-        onSuccess: () => {
-          showToast({
-            message: lang.DANGER_ZONE_DELETE_RULES_SUCCESS_MESSAGE,
-            options: { severity: "success", showRefresh: true },
-          });
-        },
-      }
-    );
+    updateMatchers([], {
+      onSuccess: () => {
+        showToast({
+          message: lang.DANGER_ZONE_DELETE_RULES_SUCCESS_MESSAGE,
+          options: { severity: "success", showRefresh: true },
+        });
+      },
+    });
 
     setIsConfirmingDelete(false);
     setHasConfirmedDelete(false);
