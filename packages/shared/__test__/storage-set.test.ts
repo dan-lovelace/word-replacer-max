@@ -1,7 +1,7 @@
 import { expect } from "@jest/globals";
 
 import {
-  getStorageProvider,
+  localStorageProvider,
   storageRemoveByKeys,
   storageSetByKeys,
   syncStorageProvider,
@@ -94,7 +94,7 @@ beforeEach(async () => {
 });
 
 afterEach(async () => {
-  await localStorage.clear();
+  await localStorageProvider.clear();
   await syncStorageProvider.clear();
 });
 
@@ -118,9 +118,9 @@ describe("storageSetByKeys", () => {
         },
       },
     };
-    await localStorage.set(testLocalValues);
+    await localStorageProvider.set(testLocalValues);
     expect(
-      Object.keys((await localStorage.get()).recentSuggestions ?? {})
+      Object.keys((await localStorageProvider.get()).recentSuggestions ?? {})
     ).toHaveLength(3);
 
     await storageSetByKeys({
@@ -130,7 +130,7 @@ describe("storageSetByKeys", () => {
       2
     );
 
-    const { recentSuggestions } = await localStorage.get();
+    const { recentSuggestions } = await localStorageProvider.get();
     expect(recentSuggestions).toHaveProperty("1234");
     expect(recentSuggestions).toHaveProperty("4567");
     expect(recentSuggestions).toHaveProperty(keyToRetain);
@@ -196,10 +196,10 @@ describe("storageRemoveByKeys", () => {
         },
       },
     };
-    await localStorage.set(testLocalValues);
+    await localStorageProvider.set(testLocalValues);
 
     const { recentSuggestions: recentSuggestionsBefore } =
-      await localStorage.get();
+      await localStorageProvider.get();
     expect(Object.keys(recentSuggestionsBefore ?? {})).toHaveLength(3);
     expect(recentSuggestionsBefore).toHaveProperty(keyToOrphan);
 
@@ -214,7 +214,7 @@ describe("storageRemoveByKeys", () => {
     );
 
     const { recentSuggestions: recentSuggestionsAfter } =
-      await localStorage.get();
+      await localStorageProvider.get();
     expect(recentSuggestionsAfter).toHaveProperty("1234");
     expect(recentSuggestionsAfter).toHaveProperty("4567");
     expect(recentSuggestionsAfter).not.toHaveProperty(keyToOrphan);

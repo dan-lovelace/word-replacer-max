@@ -44,6 +44,12 @@ jest.mock("@worm/shared/src/browser", () => ({
 }));
 
 jest.mock("@worm/shared/src/storage", () => ({
+  localStorageProvider: {
+    get: jest.fn(),
+  },
+  syncStorageProvider: {
+    get: jest.fn(),
+  },
   getStorageProvider: () => mockGetStorageProvider,
   storageGetByKeys: (...args: Parameters<typeof mockStorageGetByKeys>) =>
     mockStorageGetByKeys(...args),
