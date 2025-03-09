@@ -76,24 +76,15 @@ export function ConfigProvider({ children }: { children: PreactChildren }) {
         setStorage({
           local,
           session,
-          sync: {
-            ...sync,
-            // matchers: syncMatchers,
-          },
+          sync,
         });
 
         return;
       }
 
-      setStorage((prevStorage) => {
-        const newStorage = getUpdatedStorage(
-          prevStorage,
-          changes,
-          areaName as StorageProvider
-        );
-
-        return newStorage;
-      });
+      setStorage((prevStorage) =>
+        getUpdatedStorage(prevStorage, changes, areaName as StorageProvider)
+      );
     };
 
     updateStorage().then(() => {
@@ -138,8 +129,6 @@ export function ConfigProvider({ children }: { children: PreactChildren }) {
         ...options,
       });
     }
-
-    // TODO: orphaned recent suggestion matchers
   };
 
   const matchers = useMemo(() => {
