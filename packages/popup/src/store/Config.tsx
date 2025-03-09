@@ -8,7 +8,10 @@ import {
   POPUP_POPPED_OUT_PARAMETER_KEY,
   STORAGE_MATCHER_PREFIX,
 } from "@worm/shared/src/browser";
-import { getStorageProvider, storageSetByKeys } from "@worm/shared/src/storage";
+import {
+  storageRemoveByKeys,
+  storageSetByKeys,
+} from "@worm/shared/src/storage";
 import { Matcher } from "@worm/types/src/rules";
 import {
   Storage,
@@ -110,11 +113,20 @@ export function ConfigProvider({ children }: { children: PreactChildren }) {
        * Matchers are being deleted. Look up all existing matchers in the flat
        * storage structure and remove them.
        */
-      await getStorageProvider(provider).remove(
-        matchers.map(
-          (matcher) => `${STORAGE_MATCHER_PREFIX}${matcher.identifier}`
-        )
+      const allMatcherKeys = matchers.map(
+        (matcher) => `${STORAGE_MATCHER_PREFIX}${matcher.identifier}`
       );
+
+      await storageRemoveByKeys(allMatcherKeys, {
+        provider,
+        onError(message) {
+          showToast({
+            message,
+            options: { severity: "danger" },
+          });
+        },
+        ...options,
+      });
     } else {
       const updatedMatchers = matchersToStorage(newMatchers);
 
