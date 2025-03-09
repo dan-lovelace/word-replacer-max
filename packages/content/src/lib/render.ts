@@ -7,7 +7,10 @@ import {
   getStylesheet,
   STYLE_ELEMENT_ID,
 } from "@worm/shared/src/replace/lib/style";
-import { getStorageProvider, storageGetByKeys } from "@worm/shared/src/storage";
+import {
+  localStorageProvider,
+  storageGetByKeys,
+} from "@worm/shared/src/storage";
 import { Matcher } from "@worm/types/src/rules";
 import { SyncStorage } from "@worm/types/src/storage";
 
@@ -44,7 +47,7 @@ export async function renderContent(msg = "") {
     const syncStorage = await storageGetByKeys();
     const matcherStorage = syncStorage.ruleSync?.active
       ? syncStorage
-      : await getStorageProvider("local").get();
+      : await localStorageProvider.get();
     const matchers = matchersFromStorage(matcherStorage) ?? [];
     const storage: RenderStorage = {
       ...syncStorage,

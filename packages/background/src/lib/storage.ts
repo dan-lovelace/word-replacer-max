@@ -8,14 +8,12 @@ import { DEFAULT_RULE_SYNC } from "@worm/shared/src/replace/lib/rule-sync";
 import { DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE } from "@worm/shared/src/replace/lib/style";
 import {
   BASELINE_STORAGE_VERSION,
-  getStorageProvider,
   localStorageProvider,
   runStorageMigrations,
+  syncStorageProvider,
 } from "@worm/shared/src/storage";
 import { Matcher, RuleSync } from "@worm/types/src/rules";
 import { SyncStorage } from "@worm/types/src/storage";
-
-const syncStorageProvider = getStorageProvider("sync");
 
 export async function initializeStorage() {
   const { ruleSync: storedRuleSync, storageVersion } =

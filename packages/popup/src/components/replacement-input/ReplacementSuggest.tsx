@@ -12,7 +12,7 @@ import {
   DEFAULT_TONE_OPTION,
   toneOptions,
 } from "@worm/shared/src/replace/lib/suggest";
-import { getStorageProvider } from "@worm/shared/src/storage";
+import { localStorageProvider } from "@worm/shared/src/storage";
 import {
   ApiResponse,
   ApiSuggestRequest,
@@ -130,7 +130,7 @@ export default function ReplacementSuggest({
           },
         };
 
-        getStorageProvider("local").set({
+        localStorageProvider.set({
           recentSuggestions: newRecentSuggestions,
         });
       },
@@ -153,7 +153,7 @@ export default function ReplacementSuggest({
       },
     };
 
-    getStorageProvider("local").set({
+    localStorageProvider.set({
       recentSuggestions: newRecentSuggestions,
     });
   };

@@ -20,6 +20,7 @@ const {
 
 export const authStorageProvider = getStorageProvider("local");
 export const localStorageProvider = getStorageProvider("local");
+export const syncStorageProvider = getStorageProvider("sync");
 
 export const storageClear = sync.clear;
 export const storageGet = sync.get;

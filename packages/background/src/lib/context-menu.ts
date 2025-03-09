@@ -8,7 +8,7 @@ import {
 } from "@worm/shared/src/browser";
 import { DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE } from "@worm/shared/src/replace/lib/style";
 import {
-  getStorageProvider,
+  localStorageProvider,
   storageGetByKeys,
   storageSetByKeys,
 } from "@worm/shared/src/storage";
@@ -37,7 +37,7 @@ export function startContextMenuListener() {
         const { preferences, ruleSync } = syncStorage;
         const matcherStorage = ruleSync?.active
           ? syncStorage
-          : await getStorageProvider("local").get();
+          : await localStorageProvider.get();
         const matchers = matchersFromStorage(matcherStorage);
 
         const queries = [trimmed];
