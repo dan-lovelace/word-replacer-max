@@ -75,7 +75,7 @@ export function matchersFromStorage(
 }
 
 export function matchersToStorage(
-  matchers?: Matcher[]
+  matchers?: StorageMatcher[]
 ): Record<string, StorageMatcher> {
   if (matchers === undefined) {
     return {};
@@ -86,7 +86,7 @@ export function matchersToStorage(
       ...acc,
       [`${STORAGE_MATCHER_PREFIX}${val.identifier}`]: {
         ...val,
-        sortIndex: idx,
+        sortIndex: val.sortIndex ?? idx,
       },
     }),
     {} as Record<string, StorageMatcher>

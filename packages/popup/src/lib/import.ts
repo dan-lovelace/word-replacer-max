@@ -4,8 +4,11 @@ import { v4 as uuidv4 } from "uuid";
 import { getSchemaByVersion } from "@worm/shared";
 import { matchersToStorage } from "@worm/shared/src/browser";
 import { DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE } from "@worm/shared/src/replace/lib/style";
-import { getStorageProvider, storageSetByKeys } from "@worm/shared/src/storage";
-import { Matcher } from "@worm/types/src/rules";
+import {
+  storageSetByKeys,
+  syncStorageProvider,
+} from "@worm/shared/src/storage";
+import { Matcher, StorageMatcher } from "@worm/types/src/rules";
 import { StorageSetOptions, SyncStorage } from "@worm/types/src/storage";
 
 export async function importMatchersCSV(
@@ -25,16 +28,17 @@ export async function importMatchersCSV(
 
   const csvMatchers: Matcher[] = [];
 
-  for (const row of parsed.data) {
+  for (const [idx, row] of parsed.data.entries()) {
     if (!row || typeof row !== "object") continue;
 
     const currentRow = row as Record<string, string>;
-    const matcherToAdd: Matcher = {
+    const matcherToAdd: StorageMatcher = {
       active: true,
       identifier: uuidv4(),
       queries: [],
       queryPatterns: [],
       replacement: "",
+      sortIndex: idx,
       useGlobalReplacementStyle: DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE,
     };
 
@@ -66,11 +70,26 @@ export async function importMatchersCSV(
     csvMatchers.push(matcherToAdd);
   }
 
+  const sortIndexStart =
+    Math.max(
+      ...(currentMatchers?.map(
+        (matcher: StorageMatcher) => matcher.sortIndex ?? -1
+      ) ?? [])
+    ) + 1;
+
   const matchersToAdd = csvMatchers.filter(
     (matcher) => matcher.queries.length > 0 || matcher.replacement.length > 0
   );
-  const storageMatchers = matchersToStorage(matchersToAdd);
-  const syncStorage = (await getStorageProvider("sync").get()) as SyncStorage;
+
+  const enrichedMatchers = matchersToAdd.map((matcher, idx) => ({
+    ...matcher,
+    identifier: uuidv4(),
+    active: true,
+    sortIndex: sortIndexStart + idx,
+  }));
+
+  const storageMatchers = matchersToStorage(enrichedMatchers);
+  const syncStorage = (await syncStorageProvider.get()) as SyncStorage;
 
   return storageSetByKeys(storageMatchers, {
     ...options,
@@ -80,7 +99,7 @@ export async function importMatchersCSV(
 
 export async function importMatchersJSON(
   fromUserInput: any,
-  currentMatchers: Matcher[] | undefined,
+  currentMatchers: StorageMatcher[] | undefined,
   options: StorageSetOptions
 ) {
   const schema = getSchemaByVersion(fromUserInput.version);
@@ -115,15 +134,23 @@ export async function importMatchersJSON(
       )
   );
 
+  const sortIndexStart =
+    Math.max(
+      ...(currentMatchers?.map(
+        (matcher: StorageMatcher) => matcher.sortIndex ?? -1
+      ) ?? [])
+    ) + 1;
+
   const enrichedMatchers: Matcher[] = uniqueMatchers.map(
-    (matcher: Matcher) => ({
+    (matcher: Matcher, idx: number) => ({
       ...matcher,
       identifier: uuidv4(),
       active: true,
+      sortIndex: sortIndexStart + idx,
     })
   );
   const storageMatchers = matchersToStorage(enrichedMatchers);
-  const syncStorage = (await getStorageProvider("sync").get()) as SyncStorage;
+  const syncStorage = (await syncStorageProvider.get()) as SyncStorage;
 
   return storageSetByKeys(storageMatchers, {
     ...options,
