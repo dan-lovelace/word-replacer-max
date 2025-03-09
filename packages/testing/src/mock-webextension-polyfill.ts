@@ -207,7 +207,7 @@ class MockRuntime implements TRuntime {
   getManifest(): Manifest.WebExtensionManifest {
     return {
       manifest_version: 3,
-      name: "Word Replacer Max (TESTING)",
+      name: "Mock Extension (FOR TESTING PURPOSES ONLY)",
       version: "1.0.0",
     };
   }
