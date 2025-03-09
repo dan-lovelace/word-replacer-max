@@ -107,6 +107,20 @@ export const selectors = {
       linkImportUrlInput: () => cy.findByTestId("link-import-url-input"),
       uploadRedirect: () => cy.findByTestId("file-input__upload-redirect"),
     },
+    ruleSync: {
+      inputWrapper: () => cy.findByTestId("rule-sync-input-wrapper"),
+      modal: {
+        cancelButton: () => cy.findByRole("button", { name: /cancel/i }),
+        closeButton: () => cy.findByTestId("sync-confirm-modal-close-button"),
+        confirmationAlert: () =>
+          cy.findByTestId("rule-sync-confirmation-alert"),
+        confirmationCheckbox: () => cy.findByTestId("confirmation-checkbox"),
+        proceedButton: () => cy.findByRole("button", { name: /proceed/i }),
+        root: () => cy.findByTestId("sync-confirm-modal"),
+        sharingTabButton: () => cy.findByTestId("sharing-tab-button"),
+      },
+      toggleButton: () => cy.findByTestId("rule-sync-toggle-button"),
+    },
   },
   replacementStyles: {
     colorInputs: {

@@ -3,9 +3,15 @@ import { useEffect, useRef, useState } from "preact/hooks";
 import { JSXInternal } from "preact/src/jsx";
 
 import { Modal } from "bootstrap";
+import { v4 as uuidv4 } from "uuid";
 
-import { browser } from "@worm/shared/src/browser";
-import { storageSetByKeys } from "@worm/shared/src/storage";
+import {
+  browser,
+  matchersToStorage,
+  STORAGE_MATCHER_PREFIX,
+} from "@worm/shared/src/browser";
+import { getStorageProvider, storageSetByKeys } from "@worm/shared/src/storage";
+import { Matcher } from "@worm/types/src/rules";
 import { StorageProvider } from "@worm/types/src/storage";
 
 import { Indented } from "../../containers/Indented";
@@ -37,6 +43,7 @@ export default function RuleSync({}: RuleSyncProps) {
   const [nextValue, setNextValue] = useState<boolean>();
 
   const {
+    matchers,
     storage: {
       sync: { preferences, ruleSync },
     },
@@ -96,28 +103,76 @@ export default function RuleSync({}: RuleSyncProps) {
     setIsConfirmed(event.currentTarget.checked);
   };
 
-  const handleProceedClick = () => {
-    // TODO: migrate rules to new storage
+  const handleProceedClick = async () => {
+    /**
+     * Migrate rules to new storage and remove from old.
+     */
+    const newProvider = getStorageProvider(nextValue ? "sync" : "local");
+    const oldProvider = getStorageProvider(nextValue ? "local" : "sync");
 
-    const newRuleSync = Object.assign({}, ruleSync);
-    newRuleSync.active = Boolean(nextValue);
+    const allInserts: Matcher[] = [];
 
-    storageSetByKeys(
-      {
-        ruleSync: newRuleSync,
-      },
-      {
-        onError(message) {
-          showToast({
-            message,
-            options: { severity: "danger" },
-          });
-        },
-        onSuccess() {
-          modalRef.current?.hide();
-        },
+    try {
+      /**
+       * Insert rules one-by-one into the new storage. It's done this way to
+       * ensure the maximum number of items are added without exceeding
+       * capacity.
+       */
+      for (const [idx, matcher] of matchers.entries()) {
+        const storageMatcher = matchersToStorage([
+          {
+            ...matcher,
+            identifier: uuidv4(), // NOTE: always generate a new identifier
+            sortIndex: idx, // NOTE: override the sort index typically set by `matchersToStorage`
+          },
+        ]);
+
+        await newProvider.set(storageMatcher);
+
+        allInserts.push(matcher);
       }
-    );
+    } catch (error) {
+      /**
+       * Something went wrong setting keys in the new storage. To avoid hitting
+       * capacity limits, we create empty space by deleting the last few
+       * inserted rules.
+       */
+      const deleteDepth = 5;
+      const keysToDelete = allInserts
+        .splice(-deleteDepth)
+        .map((matcher) => matcher.identifier);
+
+      await newProvider.remove(keysToDelete);
+    } finally {
+      /**
+       * Regardless of errors inserting new rules, we remove the old ones.
+       */
+      const matcherKeys = matchers.map(
+        (matcher) => `${STORAGE_MATCHER_PREFIX}${matcher.identifier}`
+      );
+
+      await oldProvider.remove(matcherKeys);
+
+      const newRuleSync = Object.assign({}, ruleSync);
+      newRuleSync.active = Boolean(nextValue);
+
+      storageSetByKeys(
+        {
+          ruleSync: newRuleSync,
+        },
+        {
+          onError(message) {
+            showToast({
+              message,
+              options: { severity: "danger" },
+            });
+          },
+          onSuccess() {
+            modalRef.current?.hide();
+          },
+        }
+      );
+    }
   };
 
   const handleVisitSharingClick = () => {
@@ -188,6 +243,7 @@ export default function RuleSync({}: RuleSyncProps) {
                 aria-label="Close"
                 className="btn-close"
                 data-bs-dismiss="modal"
+                data-testid="sync-confirm-modal-close-button"
                 type="button"
               ></button>
             </div>
@@ -210,6 +266,7 @@ export default function RuleSync({}: RuleSyncProps) {
               <Alert
                 severity="danger"
                 title={language.ruleSync.warningModal.ALERT_TITLE}
+                data-testid="rule-sync-confirmation-alert"
               >
                 <p>
                   When changing storage types, it is possible to lose your rules
@@ -221,6 +278,7 @@ export default function RuleSync({}: RuleSyncProps) {
                     style={{
                       cursor: "pointer",
                     }}
+                    data-testid="sharing-tab-button"
                   >
                     on the sharing tab
                   </span>{" "}
