@@ -5,6 +5,7 @@ import { JSXInternal } from "preact/src/jsx";
 import { Modal } from "bootstrap";
 import { v4 as uuidv4 } from "uuid";
 
+import { logDebug } from "@worm/shared";
 import {
   browser,
   matchersToStorage,
@@ -123,7 +124,7 @@ export default function RuleSync({}: RuleSyncProps) {
           {
             ...matcher,
             identifier: uuidv4(), // NOTE: always generate a new identifier
-            sortIndex: idx, // NOTE: override the sort index typically set by `matchersToStorage`
+            sortIndex: idx, // NOTE: override the sort index otherwise set by `matchersToStorage`
           },
         ]);
 
@@ -151,27 +152,37 @@ export default function RuleSync({}: RuleSyncProps) {
         (matcher) => `${STORAGE_MATCHER_PREFIX}${matcher.identifier}`
       );
 
-      await oldProvider.remove(matcherKeys);
+      await oldProvider
+        .remove(matcherKeys)
+        .then(() => {
+          const newRuleSync = Object.assign({}, ruleSync);
+          newRuleSync.active = Boolean(nextValue);
 
-      const newRuleSync = Object.assign({}, ruleSync);
-      newRuleSync.active = Boolean(nextValue);
+          storageSetByKeys(
+            {
+              ruleSync: newRuleSync,
+            },
+            {
+              onError(message) {
+                showToast({
+                  message,
+                  options: { severity: "danger" },
+                });
+              },
+              onSuccess() {
+                modalRef.current?.hide();
+              },
+            }
+          );
+        })
+        .catch((error) => {
+          logDebug("Error removing old rules", error);
 
-      storageSetByKeys(
-        {
-          ruleSync: newRuleSync,
-        },
-        {
-          onError(message) {
-            showToast({
-              message,
-              options: { severity: "danger" },
-            });
-          },
-          onSuccess() {
-            modalRef.current?.hide();
-          },
-        }
-      );
+          showToast({
+            message: "Something went wrong removing your old rules",
+            options: { severity: "danger" },
+          });
+        });
     }
   };
 

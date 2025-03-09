@@ -89,11 +89,11 @@ export async function importMatchersCSV(
   }));
 
   const storageMatchers = matchersToStorage(enrichedMatchers);
-  const syncStorage = (await syncStorageProvider.get()) as SyncStorage;
+  const { ruleSync } = (await syncStorageProvider.get()) as SyncStorage;
 
   return storageSetByKeys(storageMatchers, {
     ...options,
-    provider: syncStorage.ruleSync?.active ? "sync" : "local",
+    provider: ruleSync?.active ? "sync" : "local",
   });
 }
 
