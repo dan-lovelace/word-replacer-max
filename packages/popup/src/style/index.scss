@@ -87,18 +87,6 @@ input[type="text"] {
   z-index: $zindex-toast;
 }
 
-@include media-breakpoint-up(xxl) {
-  .rule-row-wrapper:nth-of-type(odd)::after {
-    border-right: 1px solid $border-color;
-    content: " ";
-    display: inline-block;
-    height: calc(100% + 1rem);
-    position: absolute;
-    right: 0;
-    top: 0;
-  }
-}
-
 .rule-row-actions {
   .btn {
     min-height: calc($inputHeight + 2px);

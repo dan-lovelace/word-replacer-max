@@ -3,7 +3,9 @@ import { v4 as uuidv4 } from "uuid";
 
 import { getSchemaByVersion } from "@worm/shared";
 import { matchersToStorage } from "@worm/shared/src/browser";
-import { DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE } from "@worm/shared/src/replace/lib/style";
+import {
+  DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE,
+} from "@worm/shared/src/replace/lib/style";
 import {
   storageSetByKeys,
   syncStorageProvider,
@@ -70,12 +72,10 @@ export async function importMatchersCSV(
     csvMatchers.push(matcherToAdd);
   }
 
-  const sortIndexStart =
-    Math.max(
-      ...(currentMatchers?.map(
-        (matcher: StorageMatcher) => matcher.sortIndex ?? -1
-      ) ?? [])
-    ) + 1;
+  const currentSortIndexes =
+    currentMatchers?.map((matcher: StorageMatcher) => matcher.sortIndex ?? 0) ??
+    [];
+  const sortIndexStart = Math.max(...currentSortIndexes, 0) + 1;
 
   const matchersToAdd = csvMatchers.filter(
     (matcher) => matcher.queries.length > 0 || matcher.replacement.length > 0
@@ -134,12 +134,10 @@ export async function importMatchersJSON(
       )
   );
 
-  const sortIndexStart =
-    Math.max(
-      ...(currentMatchers?.map(
-        (matcher: StorageMatcher) => matcher.sortIndex ?? -1
-      ) ?? [])
-    ) + 1;
+  const currentSortIndexes =
+    currentMatchers?.map((matcher: StorageMatcher) => matcher.sortIndex ?? 0) ??
+    [];
+  const sortIndexStart = Math.max(...currentSortIndexes, 0) + 1;
 
   const enrichedMatchers: Matcher[] = uniqueMatchers.map(
     (matcher: Matcher, idx: number) => ({

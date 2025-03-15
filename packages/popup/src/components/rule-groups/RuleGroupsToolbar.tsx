@@ -100,7 +100,7 @@ export default function RuleGroupsToolbar() {
 
   return (
     <div
-      className="bg-white d-flex align-items-center gap-2 position-sticky mx-n1 pt-2 pb-1 top-0 z-3"
+      className="bg-white d-flex align-items-center gap-2 position-sticky pt-2 pb-1 top-0 z-3"
       data-testid="rule-groups-toolbar"
     >
       <IconButton

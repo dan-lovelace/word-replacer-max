@@ -23,6 +23,7 @@ type RuleRowProps = {
 };
 
 export default function RuleRow({
+  disabled = false,
   matcher: {
     active,
     identifier,
@@ -31,7 +32,6 @@ export default function RuleRow({
     replacement,
     useGlobalReplacementStyle,
   },
-  disabled = false,
 }: RuleRowProps) {
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
 
@@ -167,31 +167,34 @@ export default function RuleRow({
     <div
       className={cx("row", disabled && "pe-none flex-fill")}
       data-testid="rule-row"
-      style={{
-        marginLeft: "-14px",
-      }}
     >
       {!disabled && (
         <div
-          className="col-auto form-check form-switch pe-0 pt-2"
-          style={{ paddingLeft: 11 }}
+          className="col-auto pe-0"
+          style={{
+            marginLeft: 1,
+            marginRight: -1,
+            paddingLeft: 11,
+          }}
         >
-          <input
-            checked={active}
-            className="form-check-input m-0"
-            data-testid="active-toggle"
-            id={`active-check-${identifier}`}
-            role="switch"
-            title={active ? "Rule enabled" : "Rule disabled"}
-            type="checkbox"
-            onChange={handleActiveChange(identifier)}
-          />
-          <label
-            className="form-check-label visually-hidden"
-            for={`active-check-${identifier}`}
-          >
-            Active
-          </label>
+          <div className="form-check form-switch px-0 pt-2">
+            <input
+              checked={active}
+              className="form-check-input m-0"
+              data-testid="active-toggle"
+              id={`active-check-${identifier}`}
+              role="switch"
+              title={active ? "Rule enabled" : "Rule disabled"}
+              type="checkbox"
+              onChange={handleActiveChange(identifier)}
+            />
+            <label
+              className="form-check-label visually-hidden"
+              for={`active-check-${identifier}`}
+            >
+              Active
+            </label>
+          </div>
         </div>
       )}
       <div className="col">
