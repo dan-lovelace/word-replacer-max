@@ -15,6 +15,7 @@ import { useToast } from "../alert/useToast";
 import DropdownButton from "../menu/DropdownButton";
 import DropdownMenuContainer from "../menu/DropdownMenuContainer";
 import MenuItem from "../menu/MenuItem";
+import Spinner from "../progress/Spinner";
 
 type ExportButtonProps = {
   selectedRules?: SelectedRule[];
@@ -168,12 +169,7 @@ export default function ExportButton({
       componentProps={{
         children: isLoading ? (
           <>
-            <span
-              className="spinner-border spinner-border-sm me-1"
-              role="status"
-            >
-              <span className="visually-hidden">Loading...</span>
-            </span>
+            <Spinner className="me-1" size="sm" />
             Exporting
           </>
         ) : (

@@ -1,5 +1,7 @@
 import type { JSXInternal } from "preact/src/jsx";
 
+import { useState } from "preact/hooks";
+
 import { getFileExtension, logDebug } from "@worm/shared";
 
 import { importMatchersCSV, importMatchersJSON } from "../../lib/import";
@@ -10,6 +12,8 @@ import { useToast } from "../alert/useToast";
 import FileInput from "../FileInput";
 
 export default function FileImport() {
+  const [isLoading, setIsLoading] = useState(false);
+
   const { matchers } = useConfig();
   const language = useLanguage();
   const { showToast } = useToast();
@@ -31,6 +35,8 @@ export default function FileImport() {
       const { result } = fileReader;
       const extension = getFileExtension(file);
 
+      setIsLoading(true);
+
       if (extension === "csv") {
         return importMatchersCSV(result, matchers, {
           onError(message) {
@@ -45,6 +51,8 @@ export default function FileImport() {
               options: { severity: "success" },
             });
           },
+        }).finally(() => {
+          setIsLoading(false);
         });
       }
 
@@ -73,6 +81,8 @@ export default function FileImport() {
           message: language.options.CORRUPTED_IMPORT_CONTENT,
           options: { severity: "danger", showContactSupport: true },
         });
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -80,5 +90,5 @@ export default function FileImport() {
     input.value = ""; // clear value to allow uploading same file more than once
   };
 
-  return <FileInput onChange={handleImport} />;
+  return <FileInput isLoading={isLoading} onChange={handleImport} />;
 }

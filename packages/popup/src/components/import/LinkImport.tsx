@@ -9,6 +9,7 @@ import { useConfig } from "../../store/Config";
 
 import { useToast } from "../alert/useToast";
 import Button from "../button/Button";
+import Spinner from "../progress/Spinner";
 
 type LinkImportProps = {
   setIsImportingLink: Dispatch<StateUpdater<boolean>>;
@@ -102,12 +103,7 @@ export default function LinkImport({ setIsImportingLink }: LinkImportProps) {
       >
         {isLoading ? (
           <>
-            <span
-              className="spinner-border spinner-border-sm me-1"
-              role="status"
-            >
-              <span className="visually-hidden">Loading...</span>
-            </span>
+            <Spinner className="me-1" size="sm" />
             Importing
           </>
         ) : (

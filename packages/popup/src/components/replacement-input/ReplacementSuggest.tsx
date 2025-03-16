@@ -35,6 +35,7 @@ import DropdownButton from "../menu/DropdownButton";
 import DropdownMenuContainer from "../menu/DropdownMenuContainer";
 import MenuItem from "../menu/MenuItem";
 import MenuItemContainer from "../menu/MenuItemContainer";
+import Spinner from "../progress/Spinner";
 
 import { INPUT_BUTTON_WIDTH } from "./ReplacementInput";
 
@@ -268,12 +269,7 @@ export default function ReplacementSuggest({
                       backgroundColor: "rgba(255, 255, 255, 0.8)",
                     }}
                   >
-                    <div
-                      className="spinner-border text-secondary"
-                      role="status"
-                    >
-                      <span className="visually-hidden">Loading...</span>
-                    </div>
+                    <Spinner className="text-secondary" />
                   </div>
                 </div>
               )}
