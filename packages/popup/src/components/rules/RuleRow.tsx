@@ -18,8 +18,9 @@ import QueryInput from "../query-input/QueryInput";
 import ReplacementInput from "../replacement-input/ReplacementInput";
 
 type RuleRowProps = {
-  matcher: Matcher;
   disabled?: boolean;
+  matcher: Matcher;
+  handleSizeChange: () => void;
 };
 
 export default function RuleRow({
@@ -32,6 +33,7 @@ export default function RuleRow({
     replacement,
     useGlobalReplacementStyle,
   },
+  handleSizeChange,
 }: RuleRowProps) {
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
 
@@ -141,7 +143,13 @@ export default function RuleRow({
 
     newMatchers[matcherIdx][key] = newValue;
 
-    updateMatchers(newMatchers);
+    updateMatchers(newMatchers, {
+      onSuccess() {
+        if (key === "queries") {
+          handleSizeChange();
+        }
+      },
+    });
   };
 
   const handleDeleteClick = () => {
@@ -157,7 +165,11 @@ export default function RuleRow({
         });
       }
 
-      storageRemoveByKeys([`${STORAGE_MATCHER_PREFIX}${identifier}`]);
+      storageRemoveByKeys([`${STORAGE_MATCHER_PREFIX}${identifier}`], {
+        onSuccess() {
+          handleSizeChange();
+        },
+      });
     } else {
       setIsConfirmingDelete(true);
     }
