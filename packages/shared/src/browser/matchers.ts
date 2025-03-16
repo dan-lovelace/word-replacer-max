@@ -86,7 +86,7 @@ export function matchersToStorage(
       ...acc,
       [`${STORAGE_MATCHER_PREFIX}${val.identifier}`]: {
         ...val,
-        sortIndex: val.sortIndex ?? idx,
+        sortIndex: val.sortIndex ?? idx + 1,
       },
     }),
     {} as Record<string, StorageMatcher>
