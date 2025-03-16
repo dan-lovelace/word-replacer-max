@@ -70,12 +70,10 @@ export async function importMatchersCSV(
     csvMatchers.push(matcherToAdd);
   }
 
-  const sortIndexStart =
-    Math.max(
-      ...(currentMatchers?.map(
-        (matcher: StorageMatcher) => matcher.sortIndex ?? -1
-      ) ?? [])
-    ) + 1;
+  const currentIndexes =
+    currentMatchers?.map((matcher: StorageMatcher) => matcher.sortIndex ?? 0) ??
+    [];
+  const sortIndexStart = Math.max(...currentIndexes, 0) + 1;
 
   const matchersToAdd = csvMatchers.filter(
     (matcher) => matcher.queries.length > 0 || matcher.replacement.length > 0
@@ -134,12 +132,10 @@ export async function importMatchersJSON(
       )
   );
 
-  const sortIndexStart =
-    Math.max(
-      ...(currentMatchers?.map(
-        (matcher: StorageMatcher) => matcher.sortIndex ?? -1
-      ) ?? [])
-    ) + 1;
+  const currentIndexes =
+    currentMatchers?.map((matcher: StorageMatcher) => matcher.sortIndex ?? 0) ??
+    [];
+  const sortIndexStart = Math.max(...currentIndexes, 0) + 1;
 
   const enrichedMatchers: Matcher[] = uniqueMatchers.map(
     (matcher: Matcher, idx: number) => ({
