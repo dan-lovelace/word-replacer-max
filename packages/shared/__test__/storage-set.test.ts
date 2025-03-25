@@ -215,8 +215,10 @@ describe("storageRemoveByKeys", () => {
 
     const { recentSuggestions: recentSuggestionsAfter } =
       await localStorageProvider.get();
-    expect(recentSuggestionsAfter).toHaveProperty("1234");
-    expect(recentSuggestionsAfter).toHaveProperty("4567");
-    expect(recentSuggestionsAfter).not.toHaveProperty(keyToOrphan);
+
+    expect(recentSuggestionsAfter).toHaveProperty("4567"); // matcher that still exists
+
+    expect(recentSuggestionsAfter).not.toHaveProperty("1234"); // identifier of `TEST_MATCHER_IDENTIFIER_1`
+    expect(recentSuggestionsAfter).not.toHaveProperty(keyToOrphan); // identifier passively cleaned up
   });
 });
