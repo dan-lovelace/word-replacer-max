@@ -55,6 +55,18 @@ export const getMatcherGroups = (allStorage: Record<string, any>) => {
   return Object.keys(storedGroups).length ? storedGroups : undefined;
 };
 
+export function getSortIndexOffset(matchers?: Matcher[]): number {
+  if (matchers === undefined || matchers.length === 0) {
+    return 0;
+  }
+
+  const currentIndexes =
+    matchers.map((matcher: StorageMatcher) => matcher.sortIndex ?? 0) ?? [];
+  const highestSortIndex = Math.max(...currentIndexes, 0);
+
+  return highestSortIndex === undefined ? 0 : highestSortIndex + 1;
+}
+
 /**
  * Crawls a storage object looking for items that look like matchers and
  * returns them as an array.
@@ -86,7 +98,7 @@ export function matchersToStorage(
       ...acc,
       [`${STORAGE_MATCHER_PREFIX}${val.identifier}`]: {
         ...val,
-        sortIndex: val.sortIndex ?? idx + 1,
+        sortIndex: val.sortIndex ?? idx,
       },
     }),
     {} as Record<string, StorageMatcher>

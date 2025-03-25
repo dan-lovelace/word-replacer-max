@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import { getSchemaByVersion } from "@worm/shared";
 import { matchersToStorage } from "@worm/shared/src/browser";
+import { getSortIndexOffset } from "@worm/shared/src/browser/matchers";
 import { DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE } from "@worm/shared/src/replace/lib/style";
 import {
   storageSetByKeys,
@@ -102,10 +103,7 @@ export async function importMatchersCSV(
   }
 
   // Calculate the beginning sort index based on existing rules
-  const currentIndexes =
-    currentMatchers?.map((matcher: StorageMatcher) => matcher.sortIndex ?? 0) ??
-    [];
-  const sortIndexStart = Math.max(...currentIndexes, 0) + 1;
+  const sortIndexOffset = getSortIndexOffset(currentMatchers);
 
   // Only add rules that do not already exist and that are not empty
   const uniqueMatchers = getUniqueMatchers(csvMatchers, currentMatchers);
@@ -118,7 +116,7 @@ export async function importMatchersCSV(
     ...matcher,
     identifier: uuidv4(),
     active: true,
-    sortIndex: sortIndexStart + idx,
+    sortIndex: idx + sortIndexOffset,
   }));
 
   const storageMatchers = matchersToStorage(enrichedMatchers);
@@ -150,10 +148,7 @@ export async function importMatchersJSON(
   }
 
   // Calculate the beginning sort index based on existing rules
-  const currentIndexes =
-    currentMatchers?.map((matcher: StorageMatcher) => matcher.sortIndex ?? 0) ??
-    [];
-  const sortIndexStart = Math.max(...currentIndexes, 0) + 1;
+  const sortIndexOffset = getSortIndexOffset(currentMatchers);
 
   // Only add rules that do not already exist
   const uniqueMatchers = getUniqueMatchers(importedMatchers, currentMatchers);
@@ -164,7 +159,7 @@ export async function importMatchersJSON(
       ...matcher,
       identifier: uuidv4(),
       active: true,
-      sortIndex: sortIndexStart + idx,
+      sortIndex: idx + sortIndexOffset,
     })
   );
   const storageMatchers = matchersToStorage(enrichedMatchers);
