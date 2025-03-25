@@ -86,14 +86,17 @@ export async function storageRemoveByKeys<Key extends SyncStorageKey | string>(
     await storageSetByKeys(groups);
 
     // update any related recent suggestions
-    const matchersSet = new Set<string>(
+    const allIdentifiers = new Set<string>(
       allMatchers?.map((matcher) => matcher.identifier)
+    );
+    const deletingIdentifiers = new Set(
+      matcherKeys.map((key) => key.replace(STORAGE_MATCHER_PREFIX, ""))
     );
     const { recentSuggestions } = localStorage;
 
     if (recentSuggestions) {
       Object.keys(recentSuggestions).forEach((key) => {
-        if (!matchersSet.has(key)) {
+        if (!allIdentifiers.has(key) || deletingIdentifiers.has(key)) {
           delete recentSuggestions[key];
         }
       });
@@ -111,7 +114,18 @@ export async function storageRemoveByKeys<Key extends SyncStorageKey | string>(
     await matcherStorageProvider.remove(matcherKeys);
   }
 
-  return storageProvider.remove(keys);
+  return storageProvider
+    .remove(keys)
+    .then(() => {
+      options?.onSuccess?.();
+    })
+    .catch((error) => {
+      options?.onError?.(
+        error instanceof Error
+          ? error.message
+          : "Something went wrong removing keys"
+      );
+    });
 }
 
 export async function storageSetByKeys(
