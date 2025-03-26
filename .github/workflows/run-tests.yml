@@ -24,6 +24,9 @@ jobs:
           cache: yarn
       - run: yarn install
 
+      - name: Build Vite plugins
+        run: yarn workspace @worm/plugins build
+
       - name: Run Jest tests
         id: jest
         run: yarn test:jest --json --outputFile=jest-results.json
