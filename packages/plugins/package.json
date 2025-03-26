@@ -2,8 +2,15 @@
   "name": "@worm/plugins",
   "version": "0.0.0",
   "author": "dan-lovelace",
-  "main": "dist/index",
-  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "types": "./dist/index.d.ts",
   "scripts": {
     "build": "yarn clean && tsc",
     "clean": "rimraf ./dist",

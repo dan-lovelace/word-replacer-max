@@ -1,12 +1,13 @@
 {
-  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "allowJs": true,
     "declaration": true,
-    "declarationMap": true,
-    "emitDeclarationOnly": true,
-    "noEmit": false,
-    "outDir": "dist"
+    "esModuleInterop": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "outDir": "dist/",
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "ES2019"
   },
-  "include": ["src/**/*"]
+  "files": ["./src/index.ts"]
 }
