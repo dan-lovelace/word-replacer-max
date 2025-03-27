@@ -4,22 +4,22 @@ import { QueryPattern } from "@worm/types/src/replace";
 import { Matcher } from "@worm/types/src/rules";
 import { SchemaVersion1, SchemaVersionMapper } from "@worm/types/src/storage";
 
-export const validatedMatcher: z.ZodType<Matcher> = z.lazy(() =>
-  z.object({
-    active: z.boolean(),
-    identifier: z.string(),
-    queries: z.array(z.string()),
-    queryPatterns: z.array(validatedQueryPattern),
-    replacement: z.string(),
-    useGlobalReplacementStyle: z
-      .boolean()
-      /**
-       * Made optional during initial rollout of styled replacements to avoid
-       * breaking import validation of existing exports. This should be removed
-       * at a later time.
-       */
-      .optional(),
-  })
+export const validatedMatcher: z.ZodType<Omit<Matcher, "identifier">> = z.lazy(
+  () =>
+    z.object({
+      active: z.boolean(),
+      queries: z.array(z.string()),
+      queryPatterns: z.array(validatedQueryPattern),
+      replacement: z.string(),
+      useGlobalReplacementStyle: z
+        .boolean()
+        /**
+         * Made optional during initial rollout of styled replacements to avoid
+         * breaking import validation of existing exports. This should be removed
+         * at a later time.
+         */
+        .optional(),
+    })
 );
 
 export const validatedQueryPattern: z.ZodType<QueryPattern> = z.lazy(() =>

@@ -66,7 +66,7 @@ export type SchemaVersionMapper = {
 export type SchemaVersion1 = {
   version: 1;
   data?: {
-    matchers?: Matcher[];
+    matchers?: Omit<Matcher, "identifier">[];
   };
 };
 
