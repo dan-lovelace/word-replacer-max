@@ -1,6 +1,7 @@
 import {
   Browser,
   Events,
+  Manifest,
   Runtime,
   Storage,
   Windows,
@@ -201,6 +202,14 @@ class MockRuntime implements TRuntime {
   constructor() {
     this.connectListeners = new Set();
     this.messageListeners = new Set();
+  }
+
+  getManifest(): Manifest.WebExtensionManifest {
+    return {
+      manifest_version: 3,
+      name: "Mock Extension (FOR TESTING PURPOSES ONLY)",
+      version: "1.0.0",
+    };
   }
 
   getURL(path: string) {

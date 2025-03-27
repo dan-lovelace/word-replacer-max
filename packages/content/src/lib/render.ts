@@ -1,10 +1,17 @@
 import { isDomainAllowed, replaceAll } from "@worm/shared";
-import { getMatcherGroups } from "@worm/shared/src/browser";
+import {
+  getMatcherGroups,
+  matchersFromStorage,
+} from "@worm/shared/src/browser";
 import {
   getStylesheet,
   STYLE_ELEMENT_ID,
 } from "@worm/shared/src/replace/lib/style";
-import { storageGetByKeys } from "@worm/shared/src/storage";
+import {
+  localStorageProvider,
+  storageGetByKeys,
+} from "@worm/shared/src/storage";
+import { Matcher } from "@worm/types/src/rules";
 import { SyncStorage } from "@worm/types/src/storage";
 
 type Cacheable<T> = {
@@ -13,8 +20,12 @@ type Cacheable<T> = {
 };
 
 type RenderCache = {
-  storage: Cacheable<SyncStorage>;
+  storage: Cacheable<RenderStorage>;
   styleElement: Cacheable<Element>;
+};
+
+type RenderStorage = SyncStorage & {
+  matchers: Matcher[];
 };
 
 const RENDER_STORAGE_CACHE_LENGTH_MS = 100;
@@ -33,7 +44,15 @@ export async function renderContent(msg = "") {
   const now = new Date().getTime();
 
   if (now > renderCache.storage.expires) {
-    const storage = await storageGetByKeys();
+    const syncStorage = await storageGetByKeys();
+    const matcherStorage = syncStorage.ruleSync?.active
+      ? syncStorage
+      : await localStorageProvider.get();
+    const matchers = matchersFromStorage(matcherStorage) ?? [];
+    const storage: RenderStorage = {
+      ...syncStorage,
+      matchers,
+    };
 
     renderCache.storage.expires = now + RENDER_STORAGE_CACHE_LENGTH_MS;
     renderCache.storage.value = storage;

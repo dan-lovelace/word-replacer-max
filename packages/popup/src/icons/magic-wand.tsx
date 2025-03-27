@@ -1,7 +1,7 @@
 export default (
   <div
     className="d-flex align-items-center justify-content-center"
-    style={{ height: 24, padding: 4, width: 24 }}
+    style={{ height: 24, marginTop: 1, padding: 4, width: 24 }}
   >
     <img
       alt="magic wand"

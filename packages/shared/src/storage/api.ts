@@ -1,4 +1,3 @@
-import { Matcher } from "@worm/types/src/rules";
 import {
   LocalStorage,
   StorageProvider,
@@ -11,7 +10,6 @@ import {
   browser,
   getMatcherGroups,
   matchersFromStorage,
-  matchersToStorage,
   STORAGE_MATCHER_PREFIX,
 } from "../browser";
 import { logDebug } from "../logging";
@@ -20,62 +18,60 @@ const {
   storage: { sync },
 } = browser;
 
-const localStorageProvider = getStorageProvider("local");
+export const authStorageProvider = getStorageProvider("local");
+export const localStorageProvider = getStorageProvider("local");
+export const syncStorageProvider = getStorageProvider("sync");
 
 export const storageClear = sync.clear;
 export const storageGet = sync.get;
 export const storageRemove = sync.remove;
 export const storageSet = sync.set;
 
-export const authStorageProvider = getStorageProvider("local");
-
 export function getStorageProvider(providerName: StorageProvider = "sync") {
   return browser.storage[providerName];
 }
 
-export async function storageGetByKeys<T extends SyncStorageKey>(keys?: T[]) {
-  // fetch all storage keys regardless of parameters; we'll filter the results
-  const allStorage = (await storageGet()) as SyncStorage;
-  const queryKeys = [...(keys ?? [])];
+export async function storageGetByKeys<Key extends SyncStorageKey>(
+  keys?: Key[],
+  options?: StorageSetOptions
+) {
+  const storageProvider = getStorageProvider(options?.provider ?? "sync");
+  const storageResponse = (await storageProvider.get(keys)) as SyncStorage;
 
-  let results: SyncStorage = {};
-
-  if (!queryKeys.length) {
-    results = allStorage;
-    results.matchers = matchersFromStorage(allStorage);
-  } else {
-    for (const key of queryKeys) {
-      switch (key) {
-        case "matchers":
-          results.matchers = matchersFromStorage(allStorage);
-          break;
-
-        default:
-          results[key] = allStorage[key];
-      }
-    }
-  }
-
-  return results;
+  return storageResponse;
 }
 
 export async function storageRemoveByKeys<Key extends SyncStorageKey | string>(
-  keys: Key[]
+  keys: Key[],
+  options?: StorageSetOptions
 ) {
+  const storageProvider = getStorageProvider(options?.provider ?? "sync");
   const matcherKeys = keys.filter((key) =>
-    key.startsWith(`${STORAGE_MATCHER_PREFIX}`)
+    key.startsWith(STORAGE_MATCHER_PREFIX)
   ) as (keyof SyncStorage)[];
 
   if (matcherKeys.length > 0) {
     /**
-     * A matcher is being deleted. Clean up any associated rule group
-     * matchers.
+     * At least one matcher is being deleted. Clean up any associated rule
+     * group matchers and recent suggestions before removing matcher keys from
+     * the appropriate storage.
      */
-    const allStorage = await storageGetByKeys();
-    const groups = getMatcherGroups(allStorage) ?? {};
 
+    // fetch both potential storages that hold matchers
+    const syncStorage = (await storageGetByKeys()) as SyncStorage;
+    const localStorage = (await localStorageProvider.get()) as LocalStorage;
+
+    // get the matchers from the correct storage
+    const isSyncActive = Boolean(syncStorage.ruleSync?.active);
+    const matcherStorage = isSyncActive ? syncStorage : localStorage;
+    const allMatchers = matchersFromStorage(matcherStorage);
+
+    // groups always come from sync storage
+    const groups = getMatcherGroups(syncStorage) ?? {};
+
+    // update any related rule group items
     for (const matcherKey of matcherKeys) {
-      const matcher = allStorage.matchers?.find(
+      const matcher = allMatchers?.find(
         (matcher) =>
           `${STORAGE_MATCHER_PREFIX}${matcher.identifier}` === matcherKey
       );
@@ -88,68 +84,19 @@ export async function storageRemoveByKeys<Key extends SyncStorageKey | string>(
     }
 
     await storageSetByKeys(groups);
-  }
 
-  return storageRemove(keys);
-}
-
-export async function storageSetByKeys(
-  keys: SyncStorage,
-  options?: StorageSetOptions
-) {
-  let storageMatchers: Record<string, Matcher> = {};
-
-  if (Object.prototype.hasOwnProperty.call(keys, "matchers")) {
-    const { matchers } = keys;
-
-    if (!matchers || matchers.length < 1) {
-      /**
-       * Matchers are being deleted. Look up all existing matchers in the flat
-       * storage structure and remove them.
-       */
-      const allStorage = await storageGet();
-      const storedMatchers = matchersFromStorage(allStorage);
-
-      if (storedMatchers) {
-        await storageRemoveByKeys(
-          storedMatchers.map(
-            (matcher) => `${STORAGE_MATCHER_PREFIX}${matcher.identifier}`
-          )
-        );
-      }
-
-      /**
-       * Clean up any associated rule group matchers.
-       */
-      const storedMatcherGroups = getMatcherGroups(allStorage) ?? {};
-      const groupsArray = Object.values(storedMatcherGroups ?? {});
-
-      for (const group of groupsArray) {
-        group.matchers = [];
-      }
-
-      await storageSetByKeys(storedMatcherGroups);
-    }
-
-    /**
-     * Matchers are being updated. We need to save them to storage in a flat
-     * structure to allow users to save the maximum amount of data using the
-     * `sync` storage area.
-     *
-     * See: https://github.com/dan-lovelace/word-replacer-max/issues/4
-     */
-    storageMatchers = matchersToStorage(matchers);
-
-    /**
-     * Clean up orphaned matchers from `local` storage.
-     */
-    const matchersSet = new Set(matchers?.map((matcher) => matcher.identifier));
-    const { recentSuggestions } =
-      (await localStorageProvider.get()) as LocalStorage;
+    // update any related recent suggestions
+    const allIdentifiers = new Set<string>(
+      allMatchers?.map((matcher) => matcher.identifier)
+    );
+    const deletingIdentifiers = new Set(
+      matcherKeys.map((key) => key.replace(STORAGE_MATCHER_PREFIX, ""))
+    );
+    const { recentSuggestions } = localStorage;
 
     if (recentSuggestions) {
       Object.keys(recentSuggestions).forEach((key) => {
-        if (!matchersSet.has(key)) {
+        if (!allIdentifiers.has(key) || deletingIdentifiers.has(key)) {
           delete recentSuggestions[key];
         }
       });
@@ -159,33 +106,56 @@ export async function storageSetByKeys(
       });
     }
 
-    delete keys.matchers;
+    // now perform the remove operation
+    const matcherStorageProvider = getStorageProvider(
+      isSyncActive ? "sync" : "local"
+    );
+
+    await matcherStorageProvider.remove(matcherKeys);
   }
 
-  try {
-    await storageSet({
-      ...keys,
-      ...storageMatchers,
+  return storageProvider
+    .remove(keys)
+    .then(() => {
+      options?.onSuccess?.();
+    })
+    .catch((error) => {
+      options?.onError?.(
+        error instanceof Error
+          ? error.message
+          : "Something went wrong removing keys"
+      );
     });
+}
 
-    if (typeof options?.onSuccess === "function") {
-      options.onSuccess();
-    }
-  } catch (error: unknown) {
-    logDebug("Something went wrong updating storage", error);
+export async function storageSetByKeys(
+  keys: SyncStorage,
+  options?: StorageSetOptions
+) {
+  const storageProvider = getStorageProvider(options?.provider ?? "sync");
 
-    if (error instanceof Error && typeof options?.onError === "function") {
-      let { message } = error;
-
-      switch (message) {
-        case "QUOTA_BYTES quota exceeded": // chrome
-        case "QuotaExceededError: storage.sync API call exceeded its quota limitations.": // firefox
-          message =
-            "Action could not be completed as it exceeds your storage capacity.";
-          break;
+  await storageProvider
+    .set(keys)
+    .then(() => {
+      if (typeof options?.onSuccess === "function") {
+        options.onSuccess();
       }
+    })
+    .catch((error: unknown) => {
+      logDebug("Something went wrong updating storage", error);
 
-      options.onError(message);
-    }
-  }
+      if (error instanceof Error && typeof options?.onError === "function") {
+        let { message } = error;
+
+        switch (message) {
+          case "QUOTA_BYTES quota exceeded": // chrome
+          case "QuotaExceededError: storage.sync API call exceeded its quota limitations.": // firefox
+            message =
+              "Action could not be completed as it exceeds your storage capacity.";
+            break;
+        }
+
+        options.onError(message);
+      }
+    });
 }

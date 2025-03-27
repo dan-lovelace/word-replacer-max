@@ -73,6 +73,9 @@ export default {
     FILE_IMPORT_SUCCESS: "Rules from file imported successfully.",
     GENERATE_SHARE_LINK_FAILED:
       "Something went wrong creating your share link.",
+    IMPORT_ALERT_BODY:
+      "Something went wrong during your import. See details below.",
+    IMPORT_ALERT_TITLE: "Error importing",
     INVALID_IMPORT_LINK:
       "Invalid import link. Check your URL format and try again.",
     LINK_EXPORT_SUCCESS: "Success! Your link is ready on the Options page.",
@@ -83,6 +86,7 @@ export default {
       "Not allowed to copy link to clipboard.",
     SHAREABLE_LINK_CLIPBOARD_COPY_SUCCESS:
       "Shareable link copied to clipboard.",
+    SYSTEM_ERROR_MESSAGE: "Internal system error.",
   },
   ruleGroups: {
     NEW_GROUP_FORM_NAME_INPUT_PLACEHOLDER: "Group name",
@@ -93,6 +97,18 @@ export default {
     REFRESH_REQUIRED: "You must refresh the page to see these changes.",
     RULES_CLIPBOARD_PASTE_ERROR:
       "Error pasting rules. Please check your browser's security settings.",
+  },
+  ruleSync: {
+    warningModal: {
+      ALERT_BODY_LOCAL:
+        "You will be able to store more of them but they will NOT be shared with other devices.",
+      ALERT_BODY_SYNC:
+        "You will not be able to store as many rules but you will be able to access them on other devices.",
+      ALERT_TITLE: "Data loss possible",
+      CONFIRM_CHECKBOX_LABEL: "I understand my rules might be lost forever",
+      HEADING: "Change storage type",
+      TOAST_MESSAGE_SUCCESS: "Your rules were migrated successfully",
+    },
   },
   support: {
     CONTACT_SUPPORT_FORM_EMPTY_MESSAGE_ERROR: "Message is required",

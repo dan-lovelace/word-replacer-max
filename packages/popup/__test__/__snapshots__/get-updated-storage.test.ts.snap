@@ -123,26 +123,24 @@ exports[`getUpdatedStorage multiple storage areas handles changes across all sto
     "authRefreshToken": "XXXX",
   },
   "sync": {
-    "matchers": [
-      {
-        "active": true,
-        "identifier": "matcher__1234",
-        "queries": [
-          "lorem",
-        ],
-        "queryPatterns": [],
-        "replacement": "sit",
-      },
-      {
-        "active": true,
-        "identifier": "matcher__4567",
-        "queries": [
-          "dolor",
-        ],
-        "queryPatterns": [],
-        "replacement": "ipsum",
-      },
-    ],
+    "matcher__1234": {
+      "active": true,
+      "identifier": "matcher__1234",
+      "queries": [
+        "lorem",
+      ],
+      "queryPatterns": [],
+      "replacement": "sit",
+    },
+    "matcher__4567": {
+      "active": true,
+      "identifier": "matcher__4567",
+      "queries": [
+        "dolor",
+      ],
+      "queryPatterns": [],
+      "replacement": "ipsum",
+    },
   },
 }
 `;
@@ -171,26 +169,24 @@ exports[`getUpdatedStorage multiple storage areas handles complex matcher update
     "authRefreshToken": "XXXX",
   },
   "sync": {
-    "matchers": [
-      {
-        "active": false,
-        "identifier": "matcher__1234",
-        "queries": [
-          "updated-lorem",
-        ],
-        "queryPatterns": [],
-        "replacement": "sit",
-      },
-      {
-        "active": true,
-        "identifier": "matcher__4567",
-        "queries": [
-          "dolor",
-        ],
-        "queryPatterns": [],
-        "replacement": "updated-ipsum",
-      },
-    ],
+    "matcher__1234": {
+      "active": false,
+      "identifier": "matcher__1234",
+      "queries": [
+        "updated-lorem",
+      ],
+      "queryPatterns": [],
+      "replacement": "sit",
+    },
+    "matcher__4567": {
+      "active": true,
+      "identifier": "matcher__4567",
+      "queries": [
+        "dolor",
+      ],
+      "queryPatterns": [],
+      "replacement": "updated-ipsum",
+    },
   },
 }
 `;
@@ -221,17 +217,15 @@ exports[`getUpdatedStorage multiple storage areas handles empty changes in some 
     "authRefreshToken": "XXXX",
   },
   "sync": {
-    "matchers": [
-      {
-        "active": true,
-        "identifier": "matcher__1234",
-        "queries": [
-          "lorem",
-        ],
-        "queryPatterns": [],
-        "replacement": "sit",
-      },
-    ],
+    "matcher__1234": {
+      "active": true,
+      "identifier": "matcher__1234",
+      "queries": [
+        "lorem",
+      ],
+      "queryPatterns": [],
+      "replacement": "sit",
+    },
   },
 }
 `;
@@ -249,17 +243,15 @@ exports[`getUpdatedStorage multiple storage areas handles multiple changes withi
     "newSessionKey": "session-value",
   },
   "sync": {
-    "matchers": [
-      {
-        "active": true,
-        "identifier": "matcher__4567",
-        "queries": [
-          "dolor",
-        ],
-        "queryPatterns": [],
-        "replacement": "ipsum",
-      },
-    ],
+    "matcher__4567": {
+      "active": true,
+      "identifier": "matcher__4567",
+      "queries": [
+        "dolor",
+      ],
+      "queryPatterns": [],
+      "replacement": "ipsum",
+    },
     "storageVersion": "2.0.0",
   },
 }
@@ -336,17 +328,15 @@ exports[`getUpdatedStorage sync area matcher changes adds a single value when no
   "local": {},
   "session": {},
   "sync": {
-    "matchers": [
-      {
-        "active": true,
-        "identifier": "matcher__1234",
-        "queries": [
-          "lorem",
-        ],
-        "queryPatterns": [],
-        "replacement": "sit",
-      },
-    ],
+    "matcher__1234": {
+      "active": true,
+      "identifier": "matcher__1234",
+      "queries": [
+        "lorem",
+      ],
+      "queryPatterns": [],
+      "replacement": "sit",
+    },
   },
 }
 `;
@@ -356,26 +346,24 @@ exports[`getUpdatedStorage sync area matcher changes adds a single value when ot
   "local": {},
   "session": {},
   "sync": {
-    "matchers": [
-      {
-        "active": true,
-        "identifier": "matcher__1234",
-        "queries": [
-          "lorem",
-        ],
-        "queryPatterns": [],
-        "replacement": "sit",
-      },
-      {
-        "active": true,
-        "identifier": "matcher__4567",
-        "queries": [
-          "dolor",
-        ],
-        "queryPatterns": [],
-        "replacement": "ipsum",
-      },
-    ],
+    "matcher__1234": {
+      "active": true,
+      "identifier": "matcher__1234",
+      "queries": [
+        "lorem",
+      ],
+      "queryPatterns": [],
+      "replacement": "sit",
+    },
+    "matcher__4567": {
+      "active": true,
+      "identifier": "matcher__4567",
+      "queries": [
+        "dolor",
+      ],
+      "queryPatterns": [],
+      "replacement": "ipsum",
+    },
   },
 }
 `;
@@ -384,9 +372,7 @@ exports[`getUpdatedStorage sync area matcher changes removes items when the new 
 {
   "local": {},
   "session": {},
-  "sync": {
-    "matchers": [],
-  },
+  "sync": {},
 }
 `;
 
@@ -395,26 +381,24 @@ exports[`getUpdatedStorage sync area matcher changes returns an unmodified copy 
   "local": {},
   "session": {},
   "sync": {
-    "matchers": [
-      {
-        "active": true,
-        "identifier": "matcher__1234",
-        "queries": [
-          "lorem",
-        ],
-        "queryPatterns": [],
-        "replacement": "sit",
-      },
-      {
-        "active": true,
-        "identifier": "matcher__4567",
-        "queries": [
-          "dolor",
-        ],
-        "queryPatterns": [],
-        "replacement": "ipsum",
-      },
-    ],
+    "matcher__1234": {
+      "active": true,
+      "identifier": "matcher__1234",
+      "queries": [
+        "lorem",
+      ],
+      "queryPatterns": [],
+      "replacement": "sit",
+    },
+    "matcher__4567": {
+      "active": true,
+      "identifier": "matcher__4567",
+      "queries": [
+        "dolor",
+      ],
+      "queryPatterns": [],
+      "replacement": "ipsum",
+    },
   },
 }
 `;
@@ -424,17 +408,15 @@ exports[`getUpdatedStorage sync area matcher changes updates an existing value 1
   "local": {},
   "session": {},
   "sync": {
-    "matchers": [
-      {
-        "active": false,
-        "identifier": "matcher__1234",
-        "queries": [
-          "lorem",
-        ],
-        "queryPatterns": [],
-        "replacement": "sit",
-      },
-    ],
+    "matcher__1234": {
+      "active": false,
+      "identifier": "matcher__1234",
+      "queries": [
+        "lorem",
+      ],
+      "queryPatterns": [],
+      "replacement": "sit",
+    },
   },
 }
 `;

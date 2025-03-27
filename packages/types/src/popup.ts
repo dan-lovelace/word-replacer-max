@@ -7,4 +7,10 @@ export type ExportLink = {
 
 export type PopupAlertSeverity = "danger" | "info" | "success" | "warning";
 
-export type PopupTab = "account" | "domains" | "options" | "rules" | "support";
+export type PopupTab =
+  | "account"
+  | "domains"
+  | "options"
+  | "rules"
+  | "sharing"
+  | "support";

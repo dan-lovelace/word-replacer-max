@@ -3,7 +3,7 @@ import { selectors as s } from "../../support/selectors";
 describe("rules import", () => {
   beforeEach(() => {
     cy.visitWithStorage();
-    s.optionsTab().click();
+    s.layout.tabs.sharing().click();
   });
 
   it("should add rules from a csv file", () => {

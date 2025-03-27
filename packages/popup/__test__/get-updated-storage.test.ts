@@ -3,6 +3,7 @@ import { merge } from "ts-deepmerge";
 import { expect } from "@jest/globals";
 
 import { getUpdatedStorage } from "@worm/popup/src/lib/storage";
+import { STORAGE_MATCHER_PREFIX } from "@worm/shared/src/browser";
 import { Matcher, MatcherInSync } from "@worm/types/src/rules";
 import {
   RecentSuggestions,
@@ -43,7 +44,7 @@ const generateAppMatchers = (overrides: Matcher[] = []) => [
   ...overrides,
 ];
 
-const defaultStoredMatchers: MatcherInSync = {
+const defaultMatcher1: Record<string, Matcher> = {
   [TEST_MATCHER_IDENTIFIER_1]: {
     active: true,
     identifier: TEST_MATCHER_IDENTIFIER_1,
@@ -51,6 +52,10 @@ const defaultStoredMatchers: MatcherInSync = {
     queryPatterns: [],
     replacement: "sit",
   },
+};
+
+const defaultStoredMatchers: MatcherInSync = {
+  ...defaultMatcher1,
   [TEST_MATCHER_IDENTIFIER_2]: {
     active: true,
     identifier: TEST_MATCHER_IDENTIFIER_2,
@@ -429,9 +434,7 @@ describe("getUpdatedStorage", () => {
         const prevStorage: Storage = {
           local: {},
           session: {},
-          sync: {
-            matchers: generateAppMatchers(),
-          },
+          sync: generateStoredMatchers(),
         };
 
         const testResult = getUpdatedStorage(
@@ -445,6 +448,7 @@ describe("getUpdatedStorage", () => {
           TEST_AREA_NAME
         );
 
+        expect(testResult).toEqual(prevStorage);
         expect(testResult).toMatchSnapshot();
       });
 
@@ -462,6 +466,7 @@ describe("getUpdatedStorage", () => {
           TEST_AREA_NAME
         );
 
+        expect(testResult).toHaveProperty(`sync.${TEST_MATCHER_IDENTIFIER_1}`);
         expect(testResult).toMatchSnapshot();
       });
 
@@ -469,9 +474,7 @@ describe("getUpdatedStorage", () => {
         const prevStorage: Storage = {
           local: {},
           session: {},
-          sync: {
-            matchers: [TEST_MATCHER_1],
-          },
+          sync: defaultMatcher1,
         };
 
         const testResult = getUpdatedStorage(
@@ -485,6 +488,7 @@ describe("getUpdatedStorage", () => {
           TEST_AREA_NAME
         );
 
+        expect(testResult).toHaveProperty(`sync.${TEST_MATCHER_IDENTIFIER_2}`);
         expect(testResult).toMatchSnapshot();
       });
 
@@ -492,9 +496,7 @@ describe("getUpdatedStorage", () => {
         const prevStorage: Storage = {
           local: {},
           session: {},
-          sync: {
-            matchers: [TEST_MATCHER_1],
-          },
+          sync: defaultMatcher1,
         };
 
         const testResult = getUpdatedStorage(
@@ -515,9 +517,7 @@ describe("getUpdatedStorage", () => {
         const prevStorage: Storage = {
           local: {},
           session: {},
-          sync: {
-            matchers: [TEST_MATCHER_1],
-          },
+          sync: defaultMatcher1,
         };
 
         const testResult = getUpdatedStorage(
@@ -543,9 +543,7 @@ describe("getUpdatedStorage", () => {
           recentSuggestions: generateRecentSuggestions(),
         },
         session: generateSessionStorage(),
-        sync: {
-          matchers: [TEST_MATCHER_1],
-        },
+        sync: defaultMatcher1,
       };
 
       const oldLocalValue = defaultRecentSuggestions[TEST_MATCHER_IDENTIFIER_1];
@@ -593,7 +591,7 @@ describe("getUpdatedStorage", () => {
         },
         session: generateSessionStorage(),
         sync: {
-          matchers: [TEST_MATCHER_1],
+          ...defaultMatcher1,
           storageVersion: "1.0.0",
         },
       };
@@ -660,9 +658,7 @@ describe("getUpdatedStorage", () => {
           recentSuggestions: generateRecentSuggestions(),
         },
         session: generateSessionStorage(),
-        sync: {
-          matchers: [TEST_MATCHER_1],
-        },
+        sync: defaultMatcher1,
       };
 
       const withLocalChanges = getUpdatedStorage(
@@ -707,9 +703,7 @@ describe("getUpdatedStorage", () => {
           recentSuggestions: generateRecentSuggestions(),
         },
         session: generateSessionStorage(),
-        sync: {
-          matchers: [TEST_MATCHER_1, TEST_MATCHER_2],
-        },
+        sync: defaultStoredMatchers,
       };
 
       const oldLocalValue = defaultRecentSuggestions[TEST_MATCHER_IDENTIFIER_1];

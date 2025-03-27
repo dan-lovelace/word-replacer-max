@@ -37,11 +37,7 @@ function refineMatchers(
 export default function ExportModal() {
   const [selectedRules, setSelectedRules] = useState<SelectedRule[]>();
 
-  const {
-    storage: {
-      sync: { matchers },
-    },
-  } = useConfig();
+  const { matchers } = useConfig();
   const hideModalButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {

@@ -9,7 +9,7 @@ describe("styled replacements", () => {
   describe("option toggle", () => {
     beforeEach(() => {
       cy.visitWithStorage();
-      s.optionsTab().click();
+      s.layout.tabs.options().click();
     });
 
     it("should not show options when disabled", () => {

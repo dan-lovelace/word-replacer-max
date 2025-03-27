@@ -1,5 +1,6 @@
 import { Sortable } from "./";
 import { QueryPattern } from "./replace";
+import { StorageProvider } from "./storage";
 
 export type Matcher = {
   active: boolean;
@@ -40,6 +41,10 @@ export type MatcherGroupInSync = Record<string, MatcherGroup>;
  * A Matcher as stored in the `sync` storage area.
  */
 export type MatcherInSync = Record<string, Matcher>;
+
+export type RuleSync = {
+  active: boolean;
+};
 
 export type StorageMatcher = Sortable<Matcher>;
 

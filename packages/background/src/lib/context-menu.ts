@@ -1,8 +1,17 @@
 import { v4 as uuidv4 } from "uuid";
 
-import { browser, popoutExtension } from "@worm/shared/src/browser";
+import {
+  browser,
+  matchersFromStorage,
+  matchersToStorage,
+  popoutExtension,
+} from "@worm/shared/src/browser";
 import { DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE } from "@worm/shared/src/replace/lib/style";
-import { storageGetByKeys, storageSetByKeys } from "@worm/shared/src/storage";
+import {
+  localStorageProvider,
+  storageGetByKeys,
+  storageSetByKeys,
+} from "@worm/shared/src/storage";
 import { QueryPattern } from "@worm/types/src/replace";
 
 const ADD_NEW_RULE_ID = "add-new-rule";
@@ -24,10 +33,12 @@ export function startContextMenuListener() {
 
         if (!trimmed || trimmed.length < 1) break;
 
-        const { matchers, preferences } = await storageGetByKeys([
-          "matchers",
-          "preferences",
-        ]);
+        const syncStorage = await storageGetByKeys();
+        const { preferences, ruleSync } = syncStorage;
+        const matcherStorage = ruleSync?.active
+          ? syncStorage
+          : await localStorageProvider.get();
+        const matchers = matchersFromStorage(matcherStorage);
 
         const queries = [trimmed];
         const queryPatterns: QueryPattern[] = [];
@@ -74,10 +85,15 @@ export function startContextMenuListener() {
           };
         }
 
+        const storageMatchers = matchersToStorage(newMatchers);
+
+        await storageSetByKeys(storageMatchers, {
+          provider: ruleSync?.active ? "sync" : "local",
+        });
+
         newPreferences.activeTab = "rules";
 
         storageSetByKeys({
-          matchers: newMatchers,
           preferences: newPreferences,
         });
 

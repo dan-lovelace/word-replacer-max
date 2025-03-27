@@ -1,5 +1,7 @@
 import type { JSXInternal } from "preact/src/jsx";
 
+import { Dispatch, StateUpdater, useState } from "preact/hooks";
+
 import { getFileExtension, logDebug } from "@worm/shared";
 
 import { importMatchersCSV, importMatchersJSON } from "../../lib/import";
@@ -9,18 +11,22 @@ import { useConfig } from "../../store/Config";
 import { useToast } from "../alert/useToast";
 import FileInput from "../FileInput";
 
-export default function FileImport() {
-  const {
-    storage: {
-      sync: { matchers },
-    },
-  } = useConfig();
+type FileImportProps = {
+  setFormError: Dispatch<StateUpdater<string | undefined>>;
+};
+
+export default function FileImport({ setFormError }: FileImportProps) {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { matchers } = useConfig();
   const language = useLanguage();
   const { showToast } = useToast();
 
   const handleImport = (
     event: JSXInternal.TargetedInputEvent<HTMLInputElement>
   ) => {
+    setFormError(undefined);
+
     const input = event.target as HTMLInputElement;
     const { files } = input;
 
@@ -34,6 +40,8 @@ export default function FileImport() {
     fileReader.onloadend = async () => {
       const { result } = fileReader;
       const extension = getFileExtension(file);
+
+      setIsLoading(true);
 
       if (extension === "csv") {
         return importMatchersCSV(result, matchers, {
@@ -49,6 +57,8 @@ export default function FileImport() {
               options: { severity: "success" },
             });
           },
+        }).finally(() => {
+          setIsLoading(false);
         });
       }
 
@@ -57,10 +67,7 @@ export default function FileImport() {
 
         importMatchersJSON(parsedJson, matchers, {
           onError: (message) => {
-            showToast({
-              message,
-              options: { severity: "danger" },
-            });
+            setFormError(message);
           },
           onSuccess: () => {
             showToast({
@@ -73,10 +80,19 @@ export default function FileImport() {
         logDebug("`handleImport`", error);
         logDebug("Received file contents", result);
 
+        const message =
+          error instanceof Error
+            ? error.message
+            : language.options.SYSTEM_ERROR_MESSAGE;
+
+        setFormError(message);
+
         showToast({
           message: language.options.CORRUPTED_IMPORT_CONTENT,
           options: { severity: "danger", showContactSupport: true },
         });
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -84,5 +100,5 @@ export default function FileImport() {
     input.value = ""; // clear value to allow uploading same file more than once
   };
 
-  return <FileInput onChange={handleImport} />;
+  return <FileInput isLoading={isLoading} onChange={handleImport} />;
 }

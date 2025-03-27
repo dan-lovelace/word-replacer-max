@@ -11,32 +11,35 @@ import {
 } from "../lib/routes";
 
 import MaterialIcon from "./icon/MaterialIcon";
+import Spinner from "./progress/Spinner";
 
 type FileUploadProps = {
+  isLoading?: boolean;
   onChange: (event: JSXInternal.TargetedInputEvent<HTMLInputElement>) => void;
 };
 
 const WRAPPER_CLASSNAME = "btn btn-outline-secondary";
 
-function Content() {
+function Content({ isLoading = false }: { isLoading?: boolean }) {
   return (
     <span className="d-flex align-items-center gap-2">
-      <MaterialIcon name="download" />
+      {isLoading ? <Spinner size="sm" /> : <MaterialIcon name="download" />}
       Import from file
     </span>
   );
 }
 
-export default function FileInput({ onChange }: FileUploadProps) {
+export default function FileInput({ isLoading, onChange }: FileUploadProps) {
   const canUploadDirect = useMemo(getCanUploadDirect, []);
   const language = useLanguage();
   const message = encodeURIComponent(language.options.DIRECT_UPLOAD_DISALLOWED);
 
   return canUploadDirect ? (
     <label className={WRAPPER_CLASSNAME} data-testid="file-input__label">
-      <Content />
+      <Content isLoading={isLoading} />
       <input
         accept=".json,.csv"
+        disabled={isLoading}
         hidden
         type="file"
         onChange={onChange}

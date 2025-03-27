@@ -4,7 +4,6 @@ import { JSXInternal } from "preact/src/jsx";
 import { storageSetByKeys } from "@worm/shared/src/storage";
 
 import { Indented } from "../../containers/Indented";
-import { useAuth } from "../../store/Auth";
 import { useConfig } from "../../store/Config";
 
 type ReplacementGroupsProps = ComponentProps<"div"> & {};
@@ -12,7 +11,6 @@ type ReplacementGroupsProps = ComponentProps<"div"> & {};
 const INPUT_ID = "rule-groups-enabled-checkbox";
 
 export default function RuleGroups({}: ReplacementGroupsProps) {
-  const { hasAccess } = useAuth();
   const {
     storage: {
       sync: { ruleGroups },
@@ -57,9 +55,9 @@ export default function RuleGroups({}: ReplacementGroupsProps) {
       </div>
       <Indented data-testid="rule-groups-description">
         <div className="fs-sm">
-          Group your rules into categories and easily switch between them. Hold
-          Ctrl (Windows) or Command (Mac) to select multiple groups and combine
-          their replacements.
+          Group your rules into categories and easily switch between them. If
+          you want to select multiple groups, hold Ctrl (Windows) or Command
+          (Mac) when clicking a group.
         </div>
       </Indented>
     </div>

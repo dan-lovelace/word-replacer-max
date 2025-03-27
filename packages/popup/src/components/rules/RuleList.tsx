@@ -5,7 +5,6 @@ import { getActiveMatchers } from "@worm/shared/src/browser/matchers";
 import { StorageMatcher } from "@worm/types/src/rules";
 
 import { useLanguage } from "../../lib/language";
-import { useAuth } from "../../store/Auth";
 import { useConfig } from "../../store/Config";
 
 import Alert, { ALERT_SIZES } from "../Alerts";
@@ -17,16 +16,17 @@ import AddNewRule from "./AddNewRule";
 
 export default function RuleList() {
   const {
+    matchers,
     storage: {
       sync,
-      sync: { matchers, ruleGroups },
+      sync: { ruleGroups },
     },
   } = useConfig();
   const { rules: lang } = useLanguage();
 
   const renderedMatchers: StorageMatcher[] | undefined = useMemo(
-    () => getActiveMatchers(sync),
-    [sync]
+    () => getActiveMatchers(matchers, sync),
+    [matchers, sync]
   );
 
   const canGroupRules = Boolean(ruleGroups?.active);

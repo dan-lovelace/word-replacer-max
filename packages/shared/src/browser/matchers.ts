@@ -10,37 +10,15 @@ export const STORAGE_MATCHER_GROUP_PREFIX = "group__";
 export const STORAGE_MATCHER_PREFIX = "matcher__";
 
 /**
- * Translates a flat list of stored matchers to an array. This is a mutational
- * operation as it removes keys from the storage object whose names begin with
- * `matcher__`.
- */
-export const convertStoredMatchers = (allStorage: Record<string, any>) => {
-  const storedMatchers: StorageMatcher[] = Object.keys(allStorage).reduce(
-    (acc, val) => {
-      const isMatcher = val.startsWith(STORAGE_MATCHER_PREFIX);
-
-      if (!isMatcher) return acc;
-
-      const matcherValue = allStorage[val];
-      delete allStorage[val];
-
-      return [...acc, matcherValue];
-    },
-    [] as StorageMatcher[]
-  );
-
-  const sorted = sortMatchers(storedMatchers);
-
-  return sorted && sorted.length > 0 ? sorted : undefined;
-};
-
-/**
  * Constructs a list of active matchers considering other storage
  * configurations such as rule groups.
  */
-export const getActiveMatchers = (allStorage: Record<string, any>) => {
-  const { matchers, ruleGroups } = allStorage as SyncStorage;
-  const activeGroups = getActiveMatcherGroups(allStorage);
+export const getActiveMatchers = (
+  matchers: Matcher[],
+  syncStorage: Record<string, any>
+) => {
+  const { ruleGroups } = syncStorage as SyncStorage;
+  const activeGroups = getActiveMatcherGroups(syncStorage);
   const storedMatchers = sortMatchers(matchers);
 
   if (!ruleGroups?.active || !activeGroups.length) {
@@ -77,12 +55,39 @@ export const getMatcherGroups = (allStorage: Record<string, any>) => {
   return Object.keys(storedGroups).length ? storedGroups : undefined;
 };
 
-export function matchersFromStorage(allStorage: Record<string, any>) {
-  return convertStoredMatchers(allStorage);
+export function getSortIndexOffset(matchers?: Matcher[]): number {
+  if (matchers === undefined || matchers.length === 0) {
+    return 0;
+  }
+
+  const currentIndexes =
+    matchers.map((matcher: StorageMatcher) => matcher.sortIndex ?? 0) ?? [];
+  const highestSortIndex = Math.max(...currentIndexes, 0);
+
+  return highestSortIndex === undefined ? 0 : highestSortIndex + 1;
+}
+
+/**
+ * Crawls a storage object looking for items that look like matchers and
+ * returns them as an array.
+ * @param allStorage - The storage object to crawl
+ */
+export function matchersFromStorage(
+  allStorage: Record<string, any>
+): Matcher[] | undefined {
+  const storedMatchers: StorageMatcher[] = Object.keys(allStorage).reduce(
+    (acc, val) =>
+      val.startsWith(STORAGE_MATCHER_PREFIX) ? [...acc, allStorage[val]] : acc,
+    [] as StorageMatcher[]
+  );
+
+  const sorted = sortMatchers(storedMatchers);
+
+  return sorted && sorted.length > 0 ? sorted : undefined;
 }
 
 export function matchersToStorage(
-  matchers?: Matcher[]
+  matchers?: StorageMatcher[]
 ): Record<string, StorageMatcher> {
   if (matchers === undefined) {
     return {};
@@ -93,7 +98,7 @@ export function matchersToStorage(
       ...acc,
       [`${STORAGE_MATCHER_PREFIX}${val.identifier}`]: {
         ...val,
-        sortIndex: idx,
+        sortIndex: val.sortIndex ?? idx,
       },
     }),
     {} as Record<string, StorageMatcher>

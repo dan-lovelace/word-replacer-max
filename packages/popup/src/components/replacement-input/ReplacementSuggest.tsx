@@ -12,7 +12,7 @@ import {
   DEFAULT_TONE_OPTION,
   toneOptions,
 } from "@worm/shared/src/replace/lib/suggest";
-import { getStorageProvider } from "@worm/shared/src/storage";
+import { localStorageProvider } from "@worm/shared/src/storage";
 import {
   ApiResponse,
   ApiSuggestRequest,
@@ -35,6 +35,7 @@ import DropdownButton from "../menu/DropdownButton";
 import DropdownMenuContainer from "../menu/DropdownMenuContainer";
 import MenuItem from "../menu/MenuItem";
 import MenuItemContainer from "../menu/MenuItemContainer";
+import Spinner from "../progress/Spinner";
 
 import { INPUT_BUTTON_WIDTH } from "./ReplacementInput";
 
@@ -130,7 +131,7 @@ export default function ReplacementSuggest({
           },
         };
 
-        getStorageProvider("local").set({
+        localStorageProvider.set({
           recentSuggestions: newRecentSuggestions,
         });
       },
@@ -153,7 +154,7 @@ export default function ReplacementSuggest({
       },
     };
 
-    getStorageProvider("local").set({
+    localStorageProvider.set({
       recentSuggestions: newRecentSuggestions,
     });
   };
@@ -268,12 +269,7 @@ export default function ReplacementSuggest({
                       backgroundColor: "rgba(255, 255, 255, 0.8)",
                     }}
                   >
-                    <div
-                      className="spinner-border text-secondary"
-                      role="status"
-                    >
-                      <span className="visually-hidden">Loading...</span>
-                    </div>
+                    <Spinner className="text-secondary" />
                   </div>
                 </div>
               )}
