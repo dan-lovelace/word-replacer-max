@@ -1,6 +1,6 @@
 import type { JSXInternal } from "preact/src/jsx";
 
-import { useState } from "preact/hooks";
+import { Dispatch, StateUpdater, useState } from "preact/hooks";
 
 import { getFileExtension, logDebug } from "@worm/shared";
 
@@ -11,7 +11,11 @@ import { useConfig } from "../../store/Config";
 import { useToast } from "../alert/useToast";
 import FileInput from "../FileInput";
 
-export default function FileImport() {
+type FileImportProps = {
+  setFormError: Dispatch<StateUpdater<string | undefined>>;
+};
+
+export default function FileImport({ setFormError }: FileImportProps) {
   const [isLoading, setIsLoading] = useState(false);
 
   const { matchers } = useConfig();
@@ -21,6 +25,8 @@ export default function FileImport() {
   const handleImport = (
     event: JSXInternal.TargetedInputEvent<HTMLInputElement>
   ) => {
+    setFormError(undefined);
+
     const input = event.target as HTMLInputElement;
     const { files } = input;
 
@@ -61,10 +67,7 @@ export default function FileImport() {
 
         importMatchersJSON(parsedJson, matchers, {
           onError: (message) => {
-            showToast({
-              message,
-              options: { severity: "danger" },
-            });
+            setFormError(message);
           },
           onSuccess: () => {
             showToast({
@@ -76,6 +79,13 @@ export default function FileImport() {
       } catch (error) {
         logDebug("`handleImport`", error);
         logDebug("Received file contents", result);
+
+        const message =
+          error instanceof Error
+            ? error.message
+            : language.options.SYSTEM_ERROR_MESSAGE;
+
+        setFormError(message);
 
         showToast({
           message: language.options.CORRUPTED_IMPORT_CONTENT,

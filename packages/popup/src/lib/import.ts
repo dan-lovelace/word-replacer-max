@@ -1,14 +1,18 @@
 import papaparse from "papaparse";
 import { v4 as uuidv4 } from "uuid";
+import { ZodError } from "zod";
 
 import { getSchemaByVersion } from "@worm/shared";
 import { matchersToStorage } from "@worm/shared/src/browser";
 import { getSortIndexOffset } from "@worm/shared/src/browser/matchers";
-import { DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE } from "@worm/shared/src/replace/lib/style";
+import {
+  DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE,
+} from "@worm/shared/src/replace/lib/style";
 import {
   storageSetByKeys,
   syncStorageProvider,
 } from "@worm/shared/src/storage";
+import { formatValidationErrors } from "@worm/shared/src/validation";
 import { Matcher, StorageMatcher } from "@worm/types/src/rules";
 import { StorageSetOptions, SyncStorage } from "@worm/types/src/storage";
 
@@ -137,36 +141,50 @@ export async function importMatchersJSON(
   currentMatchers: StorageMatcher[] | undefined,
   options: StorageSetOptions
 ) {
-  const schema = getSchemaByVersion(fromUserInput.version);
-  const rulesExport = schema.parse(fromUserInput);
-  const {
-    data: { matchers: importedMatchers },
-  } = rulesExport;
+  try {
+    const schema = getSchemaByVersion(fromUserInput.version);
+    const rulesExport = schema.parse(fromUserInput);
 
-  if (!importedMatchers || !Boolean(importedMatchers.length)) {
-    return;
+    const {
+      data: { matchers: importedMatchers },
+    } = rulesExport;
+
+    if (!importedMatchers || !Boolean(importedMatchers.length)) {
+      return;
+    }
+
+    // Calculate the beginning sort index based on existing rules
+    const sortIndexOffset = getSortIndexOffset(currentMatchers);
+
+    // Only add rules that do not already exist
+    const uniqueMatchers = getUniqueMatchers(importedMatchers, currentMatchers);
+
+    // Enrich each rule by adding a unique identifier and appropriate sort index
+    const enrichedMatchers: Matcher[] = uniqueMatchers.map(
+      (matcher: Matcher, idx: number) => ({
+        ...matcher,
+        identifier: uuidv4(),
+        active: true,
+        sortIndex: idx + sortIndexOffset,
+      })
+    );
+    const storageMatchers = matchersToStorage(enrichedMatchers);
+    const syncStorage = (await syncStorageProvider.get()) as SyncStorage;
+
+    return storageSetByKeys(storageMatchers, {
+      ...options,
+      provider: syncStorage.ruleSync?.active ? "sync" : "local",
+    });
+  } catch (error) {
+    if (error instanceof ZodError) {
+      options.onError?.(JSON.stringify(formatValidationErrors(error)));
+    } else {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Something went wrong importing from JSON";
+
+      options.onError?.(message);
+    }
   }
-
-  // Calculate the beginning sort index based on existing rules
-  const sortIndexOffset = getSortIndexOffset(currentMatchers);
-
-  // Only add rules that do not already exist
-  const uniqueMatchers = getUniqueMatchers(importedMatchers, currentMatchers);
-
-  // Enrich each rule by adding a unique identifier and appropriate sort index
-  const enrichedMatchers: Matcher[] = uniqueMatchers.map(
-    (matcher: Matcher, idx: number) => ({
-      ...matcher,
-      identifier: uuidv4(),
-      active: true,
-      sortIndex: idx + sortIndexOffset,
-    })
-  );
-  const storageMatchers = matchersToStorage(enrichedMatchers);
-  const syncStorage = (await syncStorageProvider.get()) as SyncStorage;
-
-  return storageSetByKeys(storageMatchers, {
-    ...options,
-    provider: syncStorage.ruleSync?.active ? "sync" : "local",
-  });
 }
