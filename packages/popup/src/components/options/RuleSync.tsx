@@ -111,13 +111,12 @@ export default function RuleSync({}: RuleSyncProps) {
     const newProvider = getStorageProvider(nextValue ? "sync" : "local");
     const oldProvider = getStorageProvider(nextValue ? "local" : "sync");
 
-    const allInserts: Matcher[] = [];
-
     try {
       /**
-       * Insert rules one-by-one into the new storage. It's done this way to
-       * ensure the maximum number of items are added without exceeding
-       * capacity.
+       * Attempt to insert all rules at once. This could be optimized to insert
+       * batches but consideration must be taken around `sync` storage's write
+       * quota limits. When exceeded, the extension becomes unresponsive and
+       * the user is stuck until closing and re-opening.
        */
       const newMatchers: Matcher[] = matchers.map((matcher, idx) => ({
         ...matcher,
@@ -128,16 +127,11 @@ export default function RuleSync({}: RuleSyncProps) {
       await newProvider.set(matchersToStorage(newMatchers));
     } catch (error) {
       /**
-       * Something went wrong setting keys in the new storage. To avoid hitting
-       * capacity limits, we create empty space by deleting the last few
-       * inserted rules.
+       * Something went wrong setting keys in the new storage. Log an error
+       * message and continue. The user has accepted risks around changing
+       * providers so any errors are expected.
        */
-      const deleteDepth = 5;
-      const keysToDelete = allInserts
-        .splice(-deleteDepth)
-        .map((matcher) => matcher.identifier);
-
-      await newProvider.remove(keysToDelete);
+      logDebug("Error migrating", error);
     } finally {
       /**
        * Regardless of errors inserting new rules, we remove the old ones.
@@ -255,7 +249,7 @@ export default function RuleSync({}: RuleSyncProps) {
                 data-bs-dismiss="modal"
                 data-testid="sync-confirm-modal-close-button"
                 type="button"
-              ></button>
+              />
             </div>
             <div className="modal-body">
               <p>
