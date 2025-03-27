@@ -119,19 +119,13 @@ export default function RuleSync({}: RuleSyncProps) {
        * ensure the maximum number of items are added without exceeding
        * capacity.
        */
-      for (const [idx, matcher] of matchers.entries()) {
-        const storageMatcher = matchersToStorage([
-          {
-            ...matcher,
-            identifier: uuidv4(), // NOTE: always generate a new identifier
-            sortIndex: idx, // NOTE: override the sort index otherwise set by `matchersToStorage`
-          },
-        ]);
+      const newMatchers: Matcher[] = matchers.map((matcher, idx) => ({
+        ...matcher,
+        identifier: uuidv4(), // NOTE: always generate a new identifier
+        sortIndex: idx, // NOTE: override the sort index otherwise set by `matchersToStorage`
+      }));
 
-        await newProvider.set(storageMatcher);
-
-        allInserts.push(matcher);
-      }
+      await newProvider.set(matchersToStorage(newMatchers));
     } catch (error) {
       /**
        * Something went wrong setting keys in the new storage. To avoid hitting
@@ -171,6 +165,11 @@ export default function RuleSync({}: RuleSyncProps) {
               },
               onSuccess() {
                 modalRef.current?.hide();
+
+                showToast({
+                  message: language.ruleSync.warningModal.TOAST_MESSAGE_SUCCESS,
+                  options: { severity: "success" },
+                });
               },
             }
           );

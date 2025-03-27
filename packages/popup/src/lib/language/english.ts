@@ -103,6 +103,7 @@ export default {
         "You will not be able to store as many rules but you will be able to access them on other devices.",
       CONFIRM_CHECKBOX_LABEL: "I understand my rules might be lost forever",
       HEADING: "Change storage type",
+      TOAST_MESSAGE_SUCCESS: "Your rules were migrated successfully",
     },
   },
   support: {
