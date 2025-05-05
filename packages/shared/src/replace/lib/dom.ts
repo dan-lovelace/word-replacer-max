@@ -7,6 +7,7 @@ export const nodeNameBlocklist: Set<Node["nodeName"]> = new Set([
   "img",
   "link",
   "meta",
+  "noscript",
   "script",
   "style",
   "svg",
