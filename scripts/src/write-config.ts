@@ -15,17 +15,16 @@ async function main() {
   const {
     env: { NODE_ENV },
   } = process;
-  assert(NODE_ENV, "NODE_ENV is required");
   configureNodeEnvironment(NODE_ENV);
 
-  const authConfiguration = await fetchAuthConfig(NODE_ENV);
+  const authConfiguration = await fetchAuthConfig(NODE_ENV!);
   const envRecords: Record<string, string> = {};
 
   for (const key of Object.keys(authConfiguration)) {
     envRecords[`VITE_${key}`] = authConfiguration[key];
   }
 
-  const currentConfigFileName = path.join(configDir, `.env.${NODE_ENV}`);
+  const currentConfigFileName = path.join(configDir, `.env.${NODE_ENV!}`);
   assert(fs.existsSync(currentConfigFileName), "Unable to locate config file");
 
   const currentConfigFileContents = fs.readFileSync(

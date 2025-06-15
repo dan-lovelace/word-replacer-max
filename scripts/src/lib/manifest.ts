@@ -9,8 +9,6 @@ import {
   ManifestV3,
 } from "@worm/types/src/manifest";
 
-import { configureNodeEnvironment } from "./config";
-
 const commonProps: ManifestBase = {
   description: "Seamlessly replace text on any web page.",
   homepage_url: PUBLIC_GITHUB_REPOSITORY_URL,
@@ -64,21 +62,13 @@ const manifestV3Base: ManifestV3 = {
   ],
 };
 
+// The environment has always been configured before this function is called.
 export async function getManifest(version: number): Promise<Manifest> {
-  assert(process.env.NODE_ENV, "NODE_ENV is required");
-  configureNodeEnvironment(process.env.NODE_ENV);
-
-  const validVersions = [2, 3];
-  assert(validVersions.includes(version), "Invalid manifest version");
-
   let manifestBase: Manifest;
-  switch (version) {
-    case 2:
-      manifestBase = manifestV2Base;
-      break;
-
-    default:
-      manifestBase = manifestV3Base;
+  if (version == 2) {
+    manifestBase = manifestV2Base;
+  } else {
+    manifestBase = manifestV3Base;
   }
 
   /**
