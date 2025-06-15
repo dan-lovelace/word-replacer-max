@@ -9,6 +9,7 @@ import ThemeProvider from "@mui/material/styles/ThemeProvider";
 import Layout from "./containers/Layout";
 import { ROUTES } from "./lib/routes";
 import HomePage from "./pages/HomePage";
+import ImportMigratorPage from "./pages/ImportMigratorPage";
 import LoginCallbackPage from "./pages/LoginCallbackPage";
 import LoginPage from "./pages/LoginPage";
 import LoginSuccessPage from "./pages/LoginSuccessPage";
@@ -31,6 +32,7 @@ function AppRoutes() {
   return (
     <Routes>
       <Route path={ROUTES.HOME} element={<HomePage />} />
+      <Route path={ROUTES.IMPORT_MIGRATOR} element={<ImportMigratorPage />} />
       <Route path={ROUTES.LOGIN} element={<LoginPage />} />
       <Route path={ROUTES.LOGIN_CALLBACK} element={<LoginCallbackPage />} />
       <Route path={ROUTES.LOGIN_SUCCESS} element={<LoginSuccessPage />} />
