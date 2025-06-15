@@ -113,6 +113,7 @@ export async function getManifest(version: number): Promise<Manifest> {
       exclude_matches: authMatches,
       js: ["content.js"],
       run_at: "document_start",
+      all_frames: true,
     },
   ];
   manifestBase.content_scripts = contentScripts;

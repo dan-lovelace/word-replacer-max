@@ -30,7 +30,7 @@ export function getReplacementHTML(
 ) {
   const { replacement, useGlobalReplacementStyle } = matcher;
 
-  if (targetElement.nodeName === "TITLE") {
+  if (targetElement.parentElement?.nodeName === "TITLE") {
     return replacement;
   }
 
