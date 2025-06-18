@@ -116,6 +116,41 @@ const userReviews: UserReview[] = [
     rating: 5,
     text: "Jan 25, 2025",
   },
+  {
+    author: "Firefox user",
+    rating: 5,
+    text: "Feb 14, 2025",
+  },
+  {
+    author: "Chrome user",
+    rating: 5,
+    text: "Mar 9, 2025",
+  },
+  {
+    author: "Firefox user",
+    rating: 5,
+    text: "Mar 11, 2025",
+  },
+  {
+    author: "Chrome user",
+    rating: 5,
+    text: "Apr 8, 2025",
+  },
+  {
+    author: "Chrome user",
+    rating: 5,
+    text: "Apr 24, 2025",
+  },
+  {
+    author: "Chrome user",
+    rating: 5,
+    text: "May 14, 2025",
+  },
+  {
+    author: "Firefox user",
+    rating: 5,
+    text: "May 22, 2025",
+  },
 ];
 
 export default function UserReviews() {
