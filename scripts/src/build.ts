@@ -4,15 +4,13 @@ import { exec } from "node:child_process";
 import fs from "node:fs";
 import { join } from "node:path";
 
-import { Environment, environments } from "@worm/types/src/config";
-
 import { configureNodeEnvironment, distDir } from "./lib/config";
 import { getManifest } from "./lib/manifest";
+import { getValidatedManifestVersion } from "./lib/user-input";
 
-function writeManifest() {
+function writeManifest(manifestVersion: number) {
   return new Promise<void>(async (resolve) => {
-    const [, , manifestVersion] = process.argv;
-    const manifest = await getManifest(Number(manifestVersion));
+    const manifest = await getManifest(manifestVersion);
 
     fs.writeFileSync(
       join(distDir, "manifest.json"),
@@ -25,13 +23,8 @@ function writeManifest() {
 }
 
 function main() {
+  const manifestVersion = getValidatedManifestVersion(); 
   const { NODE_ENV } = process.env;
-
-  assert(
-    NODE_ENV && environments.includes(NODE_ENV as Environment),
-    `NODE_ENV must be one of: ${environments.join(", ")}`
-  );
-
   configureNodeEnvironment(NODE_ENV);
 
   if (!fs.existsSync(distDir)) {
@@ -45,7 +38,7 @@ function main() {
       process.exit(1);
     }
 
-    writeManifest().then(() => {
+    writeManifest(manifestVersion).then(() => {
       console.log(stdout);
     });
   });

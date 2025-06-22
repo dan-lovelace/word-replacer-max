@@ -5,6 +5,8 @@ import { config } from "dotenv";
 
 import { SSMClient, GetParameterCommand } from "@aws-sdk/client-ssm";
 
+import { validateNodeEnvironment } from "./user-input";
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export const rootDir = join(__dirname, "..", "..", "..");
@@ -24,9 +26,10 @@ async function fetchParameter(name: string) {
   return response.Parameter?.Value;
 }
 
-export function configureNodeEnvironment(nodeEnv: string) {
+export function configureNodeEnvironment(nodeEnv: string | undefined) {
+  validateNodeEnvironment(nodeEnv);
   config({ path: join(configDir, ".env") });
-  config({ path: join(configDir, `.env.${nodeEnv}`) });
+  config({ path: join(configDir, `.env.${nodeEnv!}`) });
 }
 
 export async function fetchAuthConfig(mode: string) {
