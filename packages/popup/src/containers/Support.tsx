@@ -13,9 +13,7 @@ import {
   MAILTO_CONTACT_SUPPORT_URL,
   SUBMIT_NEW_TICKET_URL,
 } from "@worm/shared/src/support";
-import {
-  CONTACT_SUPPORT_MAXIMUM_MESSAGE_LENGTH,
-} from "@worm/shared/src/validation/contact";
+import { CONTACT_SUPPORT_MAXIMUM_MESSAGE_LENGTH } from "@worm/shared/src/validation/contact";
 import {
   ApiContactSupportRequest,
   ApiContactSupportResponse,
@@ -226,7 +224,7 @@ export default function Support() {
                   <li>The website URL where you're experiencing issues</li>
                   <li>
                     Your exported rulesets (you can export these from the
-                    Options tab)
+                    Sharing tab)
                   </li>
                   <li>
                     A brief description of what you expected to happen vs. what

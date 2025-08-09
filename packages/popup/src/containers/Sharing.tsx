@@ -39,8 +39,8 @@ export default function Sharing() {
             <div className="fw-bold fs-5">Rules Import</div>
             <ColumnContent>
               <div className="fs-sm mb-2">
-                Import new rules from a file or link to add to your current
-                settings. This will add to, not overwrite, your existing rules.
+                Import new rules from a file or link. You choose to either add
+                to your current settings or replace them entirely.
               </div>
               <Import />
             </ColumnContent>

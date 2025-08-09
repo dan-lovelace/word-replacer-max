@@ -6,6 +6,7 @@ import {
 } from "@worm/shared/src/browser";
 import { DEFAULT_RULE_SYNC } from "@worm/shared/src/replace/lib/rule-sync";
 import { DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE } from "@worm/shared/src/replace/lib/style";
+import { DEFAULT_IMPORT_EFFECT } from "@worm/shared/src/sharing";
 import {
   BASELINE_STORAGE_VERSION,
   localStorageProvider,
@@ -89,6 +90,7 @@ export async function initializeStorage() {
         field: "replacement",
         matcher: "",
       },
+      importEffect: DEFAULT_IMPORT_EFFECT,
     };
   }
 

@@ -9,6 +9,7 @@ import {
   StorageVersion,
   storageVersions,
   SyncStorage,
+  SyncStoragePreferences,
 } from "@worm/types/src/storage";
 
 import { STORAGE_MATCHER_PREFIX } from "../../browser";
@@ -16,6 +17,7 @@ import { logDebug } from "../../logging";
 import { DEFAULT_RULE_GROUPS } from "../../replace/lib/groups";
 import { DEFAULT_RULE_SYNC } from "../../replace/lib/rule-sync";
 import { DEFAULT_REPLACEMENT_SUGGEST } from "../../replace/lib/suggest";
+import { DEFAULT_IMPORT_EFFECT } from "../../sharing";
 
 import { BASELINE_STORAGE_VERSION, CURRENT_STORAGE_VERSION } from "../";
 import { storageGet, storageSet } from "../api";
@@ -144,6 +146,25 @@ export const MIGRATIONS: StrictMigrations = {
         const merged = merge(storage, updatedValues);
 
         return merged;
+      },
+    },
+    4: {
+      /**
+       * **1.4.0** - Import overwrite option
+       *
+       * Adds a user preference to allow overwriting existing rules during
+       * import.
+       */
+      0: (storage) => {
+        const newStorage = { ...storage };
+        const newPreferences = {
+          ...newStorage.preferences,
+        } as SyncStoragePreferences;
+
+        newPreferences.importEffect = DEFAULT_IMPORT_EFFECT;
+        newStorage.preferences = newPreferences;
+
+        return newStorage;
       },
     },
   },

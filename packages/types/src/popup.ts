@@ -5,6 +5,8 @@ export type ExportLink = {
   url: string;
 };
 
+export type ImportEffect = "add" | "overwrite";
+
 export type PopupAlertSeverity = "danger" | "info" | "success" | "warning";
 
 export type PopupTab =

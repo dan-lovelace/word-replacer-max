@@ -2,7 +2,7 @@ import { Storage as BrowserStorage } from "webextension-polyfill";
 import { z } from "zod";
 
 import { ApiSuggestResponseData, ToneOption } from "./api";
-import { DomainEffect, ExportLink, PopupTab } from "./popup";
+import { DomainEffect, ExportLink, ImportEffect, PopupTab } from "./popup";
 import { ReplacementStyle, ReplacementSuggest, RuleGroups } from "./replace";
 import { Matcher, RuleSync, StorageMatcher } from "./rules";
 
@@ -14,6 +14,7 @@ export const storageVersions = [
   "1.1.1",
   "1.2.0",
   "1.3.0",
+  "1.4.0",
 ] as const;
 
 export type LocalStorage = Partial<{
@@ -123,4 +124,5 @@ export type SyncStoragePreferences = {
     field: keyof Pick<Matcher, "queries" | "replacement">;
     matcher: Matcher["identifier"];
   };
+  importEffect: ImportEffect;
 };
