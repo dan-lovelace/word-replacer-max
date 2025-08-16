@@ -12,10 +12,6 @@ const browser = testBrowser as Browser;
 
 describe("render content", () => {
   beforeEach(() => {
-    cy.visitMock({
-      targetContents: "Lorem ipsum dolor",
-    });
-
     browser.storage.sync.set({
       matcher__1234: {
         active: true,
@@ -25,29 +21,30 @@ describe("render content", () => {
         replacement: "sit",
       },
     });
-  });
 
-  it("runs replacements on page load", async () => {
-    cy.document().then(($doc) => {
-      new Renderer(browser, $doc.documentElement);
-
-      selectors.target().contains("Lorem sit dolor");
+    cy.visitMock({
+      targetContents: "Lorem ipsum dolor",
     });
+
+    cy.wait(50);
   });
 
   it("re-runs replacements when page content changes", () => {
     cy.document().then(($doc) => {
       const renderer = new Renderer(browser, $doc.documentElement);
 
+      // wait for document ready state render
+      cy.wait(DEFAULT_RENDER_RATE_MS + 10);
+
       // change the target element's text to trigger a mutation observer event
       selectors.target().then(($target) => {
-        $target[0].textContent = "Lorem ipsum dolor";
+        $target[0].textContent = "Lorem ipsum dolor sit";
       });
 
       // this runs before the mutation occurs, ensure it hasn't been replaced yet
       selectors
         .target()
-        .contains("Lorem ipsum dolor")
+        .contains("Lorem ipsum dolor sit")
         .then(() => {
           expect(renderer.renderCount).to.equal(1);
         });
@@ -55,10 +52,18 @@ describe("render content", () => {
       // use cypress inherent waits to wait for the mutation
       selectors
         .target()
-        .contains("Lorem sit dolor")
+        .contains("Lorem sit dolor sit")
         .then(() => {
           expect(renderer.renderCount).to.equal(2);
         });
+    });
+  });
+
+  it("runs replacements on page load", async () => {
+    cy.document().then(($doc) => {
+      new Renderer(browser, $doc.documentElement);
+
+      selectors.target().contains("Lorem sit dolor");
     });
   });
 
