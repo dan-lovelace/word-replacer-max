@@ -94,7 +94,6 @@ export default function RenderRate() {
   };
 
   const isActive = Boolean(renderRate?.active);
-  const isCustom = Boolean(Number(rangeValue) > MAX_RENDER_RATE_MS);
 
   return (
     <div data-testid="render-rate">
