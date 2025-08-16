@@ -25,7 +25,8 @@ const debouncedFrequencyUpdate = debounce(
       renderRate: newRenderRate,
     });
   },
-  () => 200
+  () => 200,
+  false
 );
 
 export default function RenderRate() {

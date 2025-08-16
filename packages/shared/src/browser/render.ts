@@ -29,7 +29,7 @@ interface RenderStorage extends SyncStorage {
 }
 
 export class Renderer {
-  private readonly OBSERVE_PARAMS = {
+  private readonly OBSERVE_PARAMS: MutationObserverInit = {
     childList: true,
     subtree: true,
   };
