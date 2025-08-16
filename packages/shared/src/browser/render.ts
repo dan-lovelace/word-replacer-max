@@ -1,3 +1,5 @@
+import { Browser } from "webextension-polyfill";
+
 import { Matcher, RenderRate } from "@worm/types/src/rules";
 import { SyncStorage } from "@worm/types/src/storage";
 
@@ -9,9 +11,7 @@ import {
   DEFAULT_RENDER_RATE_MS,
 } from "../replace/lib/render";
 import { getStylesheet, STYLE_ELEMENT_ID } from "../replace/lib/style";
-import { localStorageProvider, storageGetByKeys } from "../storage";
 
-import { browser } from "./browser";
 import { getMatcherGroups, matchersFromStorage } from "./matchers";
 
 interface Cacheable<T> {
@@ -28,20 +28,19 @@ interface RenderStorage extends SyncStorage {
   matchers: Matcher[];
 }
 
-const OBSERVE_PARAMS = {
-  childList: true,
-  subtree: true,
-};
-
-const RENDER_STORAGE_CACHE_LENGTH_MS = 100;
-const RENDER_STYLE_CACHE_LENGTH_MS = 1000;
-
 export class Renderer {
+  private readonly OBSERVE_PARAMS = {
+    childList: true,
+    subtree: true,
+  };
+  private readonly RENDER_STORAGE_CACHE_LENGTH_MS = 100;
+  private readonly RENDER_STYLE_CACHE_LENGTH_MS = 1000;
+
   private isInitialRender = true;
 
   private mutationObserver: MutationObserver | null = null;
 
-  private observedElement: HTMLElement = document.documentElement;
+  private observedElement: HTMLElement;
 
   private renderCache: RenderCache = {
     storage: {
@@ -52,27 +51,38 @@ export class Renderer {
     },
   };
 
-  private renderFrequency: number = DEFAULT_RENDER_RATE.frequency;
+  private renderRate: RenderRate = DEFAULT_RENDER_RATE;
 
-  constructor() {
+  public browser: Browser;
+
+  public renderCount = 0;
+
+  constructor(browser: Browser, element: HTMLElement) {
+    this.browser = browser;
+    this.observedElement = element;
+
     this.init();
   }
 
   private init() {
+    if (document.readyState === "complete") {
+      this.renderContent("document ready");
+    }
+
     document.addEventListener("readystatechange", () => {
-      this.renderContent("document state change");
+      this.renderContent("document ready state change");
     });
 
     /**
      * Re-render whenever storage changes.
      */
-    browser.storage.onChanged.addListener((event) => {
+    this.browser.storage.onChanged.addListener((event) => {
       const renderRateKey: keyof SyncStorage = "renderRate";
 
       if (Object.keys(event).includes(renderRateKey)) {
         const newRenderRate = event[renderRateKey].newValue as RenderRate;
 
-        this.renderFrequency = newRenderRate.frequency;
+        this.renderRate = newRenderRate;
       }
 
       this.renderContent();
@@ -81,12 +91,14 @@ export class Renderer {
     /**
      * Configured custom render rate if one exists.
      */
-    storageGetByKeys(["renderRate"]).then((data) => {
+    this.browser.storage.sync.get("renderRate").then((data) => {
       if (data.renderRate !== undefined) {
-        const storedFrequency = Number(data.renderRate?.frequency);
+        const storedFrequency = Number(
+          (data.renderRate as RenderRate).frequency
+        );
 
         if (!isNaN(storedFrequency)) {
-          this.renderFrequency = storedFrequency;
+          this.renderRate.frequency = storedFrequency;
         }
       }
 
@@ -96,9 +108,15 @@ export class Renderer {
     /**
      * Listen for changes to the document and render when they occur.
      */
-    const mutationRender = debounce(this.renderContent, () =>
-      this.isInitialRender ? DEFAULT_RENDER_RATE_MS : this.renderFrequency
-    );
+    const mutationRender = debounce(this.renderContent, () => {
+      if (this.isInitialRender) {
+        return DEFAULT_RENDER_RATE_MS;
+      }
+
+      return this.renderRate.active
+        ? this.renderRate.frequency
+        : DEFAULT_RENDER_RATE_MS;
+    });
 
     this.mutationObserver = new MutationObserver((mutationList) => {
       for (const mutation of mutationList) {
@@ -109,28 +127,30 @@ export class Renderer {
       }
     });
 
-    this.mutationObserver.observe(this.observedElement, OBSERVE_PARAMS);
+    this.mutationObserver.observe(this.observedElement, this.OBSERVE_PARAMS);
   }
 
-  private renderContent = async (message = "") => {
+  public renderContent = async (message = "") => {
     const now = new Date().getTime();
 
     if (now > this.renderCache.storage.expires) {
-      const syncStorage = await storageGetByKeys();
+      const syncStorage =
+        (await this.browser.storage.sync.get()) as SyncStorage;
       const matcherStorage = syncStorage.ruleSync?.active
         ? syncStorage
-        : await localStorageProvider.get();
+        : await this.browser.storage.local.get();
       const matchers = matchersFromStorage(matcherStorage) ?? [];
       const storage: RenderStorage = {
         ...syncStorage,
         matchers,
       };
 
-      this.renderCache.storage.expires = now + RENDER_STORAGE_CACHE_LENGTH_MS;
+      this.renderCache.storage.expires =
+        now + this.RENDER_STORAGE_CACHE_LENGTH_MS;
       this.renderCache.storage.value = storage;
 
       if (now > this.renderCache.styleElement.expires) {
-        const renderCacheExpires = now + RENDER_STYLE_CACHE_LENGTH_MS;
+        const renderCacheExpires = now + this.RENDER_STYLE_CACHE_LENGTH_MS;
         const existingStyleElement = document.head.querySelector(
           `#${STYLE_ELEMENT_ID}`
         );
@@ -207,9 +227,10 @@ export class Renderer {
     this.mutationObserver?.disconnect();
 
     try {
-      replaceAll(renderedMatchers, replacementStyle);
+      replaceAll(renderedMatchers, replacementStyle, this.observedElement);
     } finally {
-      this.mutationObserver?.observe(this.observedElement, OBSERVE_PARAMS);
+      this.renderCount++;
+      this.mutationObserver?.observe(this.observedElement, this.OBSERVE_PARAMS);
     }
   };
 }
