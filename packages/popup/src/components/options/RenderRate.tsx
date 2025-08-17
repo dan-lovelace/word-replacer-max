@@ -128,7 +128,6 @@ export default function RenderRate() {
       <Slide isOpen={isActive}>
         <Indented className="py-1" data-testid="render-rate-options">
           <div style={{ maxWidth: 300 }}>
-            <div className="d-flex align-items-center"></div>
             <div className="input-group">
               <div className="input-group-text">Fast</div>
               <div className="form-control flex-fill d-flex align-items-center">
