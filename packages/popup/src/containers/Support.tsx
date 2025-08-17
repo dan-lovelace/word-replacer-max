@@ -226,7 +226,7 @@ export default function Support() {
                   <li>The website URL where you're experiencing issues</li>
                   <li>
                     Your exported rulesets (you can export these from the
-                    Options tab)
+                    Sharing tab)
                   </li>
                   <li>
                     A brief description of what you expected to happen vs. what
