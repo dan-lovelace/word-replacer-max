@@ -95,6 +95,10 @@ export const selectors = {
       toggleButton: () =>
         cy.findByTestId("replacement-suggestions-toggle-button"),
     },
+    renderRate: {
+      inputWrapper: () => cy.findByTestId("render-rate-input-wrapper"),
+      toggleButton: () => cy.findByTestId("render-rate-toggle-button"),
+    },
     ruleGroups: {
       inputWrapper: () => cy.findByTestId("rule-groups-input-wrapper"),
       toggleButton: () => cy.findByTestId("rule-groups-toggle-button"),

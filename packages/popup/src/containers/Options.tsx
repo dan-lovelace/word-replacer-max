@@ -1,3 +1,4 @@
+import RenderRate from "../components/options/RenderRate";
 import ReplacementStyles from "../components/options/ReplacementStyles";
 import ReplacementSuggestions from "../components/options/ReplacementSuggestions";
 import RuleGroups from "../components/options/RuleGroups";
@@ -31,6 +32,7 @@ export default function Options() {
             <ColumnContent>
               <div className="d-flex flex-column gap-2">
                 <RuleSync />
+                <RenderRate />
               </div>
             </ColumnContent>
           </div>
