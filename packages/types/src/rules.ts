@@ -42,6 +42,11 @@ export type MatcherGroupInSync = Record<string, MatcherGroup>;
  */
 export type MatcherInSync = Record<string, Matcher>;
 
+export type RenderRate = {
+  active: boolean;
+  frequency: number;
+};
+
 export type RuleSync = {
   active: boolean;
 };

@@ -4,7 +4,7 @@ import { z } from "zod";
 import { ApiSuggestResponseData, ToneOption } from "./api";
 import { DomainEffect, ExportLink, PopupTab } from "./popup";
 import { ReplacementStyle, ReplacementSuggest, RuleGroups } from "./replace";
-import { Matcher, RuleSync, StorageMatcher } from "./rules";
+import { Matcher, RenderRate, RuleSync } from "./rules";
 
 export const schemaVersions = [1] as const;
 
@@ -14,6 +14,7 @@ export const storageVersions = [
   "1.1.1",
   "1.2.0",
   "1.3.0",
+  "1.4.0",
 ] as const;
 
 export type LocalStorage = Partial<{
@@ -110,6 +111,7 @@ export type SyncStorage = Partial<{
   preferences: SyncStoragePreferences;
   replacementStyle: ReplacementStyle;
   replacementSuggest: ReplacementSuggest;
+  renderRate: RenderRate;
   ruleGroups: RuleGroups;
   ruleSync: RuleSync;
   storageVersion: StorageVersion;

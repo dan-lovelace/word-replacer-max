@@ -1,3 +1,4 @@
+import { DEFAULT_RENDER_RATE } from "@worm/shared/src/replace/lib/render";
 import { DEFAULT_RULE_SYNC } from "@worm/shared/src/replace/lib/rule-sync";
 import { DEFAULT_REPLACEMENT_STYLE } from "@worm/shared/src/replace/lib/style";
 import { Storage } from "@worm/types/src/storage";
@@ -35,6 +36,7 @@ const mockSyncStorage: Record<string, any> = {
       matcher: "",
     },
   },
+  renderRate: DEFAULT_RENDER_RATE,
   replacementStyle: DEFAULT_REPLACEMENT_STYLE,
   ruleSync: DEFAULT_RULE_SYNC,
 };
