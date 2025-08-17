@@ -25,7 +25,7 @@ function searchAndReplace(
 export function replaceAll(
   matchers: Matcher[],
   replacementStyle: ReplacementStyle | undefined,
-  startDocument = document
+  startDocument: Document | HTMLElement = document
 ) {
   const body = startDocument.querySelector("body");
   if (!body) {

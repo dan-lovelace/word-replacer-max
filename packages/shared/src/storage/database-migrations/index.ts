@@ -14,6 +14,7 @@ import {
 import { STORAGE_MATCHER_PREFIX } from "../../browser";
 import { logDebug } from "../../logging";
 import { DEFAULT_RULE_GROUPS } from "../../replace/lib/groups";
+import { DEFAULT_RENDER_RATE } from "../../replace/lib/render";
 import { DEFAULT_RULE_SYNC } from "../../replace/lib/rule-sync";
 import { DEFAULT_REPLACEMENT_SUGGEST } from "../../replace/lib/suggest";
 
@@ -141,6 +142,25 @@ export const MIGRATIONS: StrictMigrations = {
           };
         }
 
+        const merged = merge(storage, updatedValues);
+
+        return merged;
+      },
+    },
+    4: {
+      /**
+       * **1.4.0** - Adjustable render rate
+       *
+       * Allows user to choose their own re-render frequency for dynamic web
+       * pages. Helps resolve performance issues.
+       *
+       * @see
+       * https://github.com/dan-lovelace/word-replacer-max/issues/90
+       */
+      0: (storage) => {
+        const updatedValues: SyncStorage = {
+          renderRate: DEFAULT_RENDER_RATE,
+        };
         const merged = merge(storage, updatedValues);
 
         return merged;

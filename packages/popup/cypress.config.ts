@@ -4,9 +4,7 @@ import { fileURLToPath } from "node:url";
 import { defineConfig } from "cypress";
 import { loadEnv } from "vite";
 
-import { envDir } from "@worm/plugins";
-
-const publicEnv = loadEnv("test", envDir);
+const publicEnv = loadEnv("test", "../../config");
 
 /**
  * Create the file `cypress/.env.private` and populate it with necessary
