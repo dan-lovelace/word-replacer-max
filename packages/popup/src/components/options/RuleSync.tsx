@@ -231,9 +231,8 @@ export default function RuleSync({}: RuleSyncProps) {
       <div
         aria-hidden="true"
         aria-labelledby="sync-confirm-modal-label"
-        className="modal fade z-modal"
+        className="modal fade"
         data-testid="sync-confirm-modal"
-        data-bs-backdrop="static"
         id="sync-confirm-modal"
         tabindex={-1}
       >

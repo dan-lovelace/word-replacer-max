@@ -50,7 +50,7 @@ export default function RuleList() {
               ))}
             </div>
             <div
-              className="position-sticky bottom-0 z-3"
+              className="position-sticky bottom-0 z-sticky"
               data-testid="rule-list-actions"
             >
               <div

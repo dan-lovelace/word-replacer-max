@@ -79,7 +79,7 @@ export default function RuleGroupsModal() {
 
   return (
     <div
-      className="modal fade z-modal"
+      className="modal fade"
       id="rule-groups-modal"
       aria-hidden="true"
       aria-labelledby="rule-groups-modal-label"
