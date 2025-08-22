@@ -11,7 +11,6 @@ import { SyncStoragePreferences } from "@worm/types/src/storage";
 import { PreactChildren } from "../../lib/types";
 import { useConfig } from "../../store/Config";
 
-import { useToast } from "../alert/useToast";
 import MaterialIcon from "../icon/MaterialIcon";
 
 type AddNewRuleProps = {
@@ -33,11 +32,18 @@ export default function AddNewRule({
     },
     updateMatchers,
   } = useConfig();
-  const { showToast } = useToast();
 
   const handleNewRuleClick = async () => {
     const activeGroups = getActiveMatcherGroups(sync);
     const newIdentifier = uuidv4();
+
+    const focusRule: SyncStoragePreferences["focusRule"] = {
+      field: "queries",
+      matcher: newIdentifier,
+    };
+    const focusPreferences = Object.assign({}, preferences, {
+      focusRule,
+    });
 
     if (ruleGroups?.active && activeGroups.length) {
       /**
@@ -57,17 +63,14 @@ export default function AddNewRule({
         {}
       );
 
-      const focusRule: SyncStoragePreferences["focusRule"] = {
-        field: "queries",
-        matcher: newIdentifier,
-      };
-
       await storageSetByKeys({
         ...deactivatedGroups,
-        preferences: Object.assign({}, preferences, {
-          focusRule,
-        }),
+        preferences: focusPreferences,
         ruleGroups: Object.assign({}, ruleGroups, { isFiltered: false }),
+      });
+    } else {
+      await storageSetByKeys({
+        preferences: focusPreferences,
       });
     }
 

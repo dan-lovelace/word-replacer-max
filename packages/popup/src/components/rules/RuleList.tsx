@@ -50,11 +50,19 @@ export default function RuleList() {
               ))}
             </div>
             <div
-              className="pt-2"
-              style={{ paddingLeft: 43 }}
+              className="position-sticky bottom-0 z-3"
               data-testid="rule-list-actions"
             >
-              <AddNewRule />
+              <div
+                className="bg-body py-2"
+                style={{
+                  paddingLeft: 55,
+                  marginLeft: "-12px",
+                  marginRight: "-12px",
+                }}
+              >
+                <AddNewRule />
+              </div>
             </div>
           </>
         ) : (
