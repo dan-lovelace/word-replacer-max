@@ -93,7 +93,7 @@ export default function ExportModal() {
     <div
       aria-hidden="true"
       aria-labelledby="export-modal-label"
-      className="modal fade z-modal"
+      className="modal fade"
       data-testid="export-modal"
       id="export-modal"
     >
