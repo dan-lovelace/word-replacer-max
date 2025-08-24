@@ -614,4 +614,56 @@ describe("home page rule groups", () => {
       });
     });
   });
+
+  describe("rules list", () => {
+    describe("functionality", () => {
+      const testMatcherGroups: MatcherGroupInSync = {
+        [TEST_GROUP_ID_1]: {
+          active: false,
+          color: "red",
+          identifier: "1234",
+          matchers: [testRules[TEST_MATCHER_ID_1].identifier],
+          name: "Override Group 1",
+        },
+        [TEST_GROUP_ID_2]: {
+          active: false,
+          color: "green",
+          identifier: "5678",
+          matchers: [testRules[TEST_MATCHER_ID_2].identifier],
+          name: "Override Group 2",
+        },
+      };
+
+      beforeEach(() => {
+        cy.visitWithStorage({
+          sync: {
+            ...generateMatcherGroups(testMatcherGroups),
+            ruleGroups: {
+              active: true,
+            },
+          },
+        });
+      });
+
+      it("should add new rules to the selected group when one is selected", () => {
+        selectors.ruleGroups.toolbar.groupToggles().eq(0).click();
+        selectors.ruleRows().should("have.length", 1);
+
+        selectors.addNewRuleButton().click();
+        selectors.ruleRows().should("have.length", 2);
+      });
+
+      it("should add new rules to the selected group when more than one is selected", () => {
+        selectors.ruleGroups.toolbar.groupToggles().eq(0).click();
+        selectors.ruleGroups.toolbar
+          .groupToggles()
+          .eq(1)
+          .click({ ctrlKey: true });
+        selectors.ruleRows().should("have.length", 2);
+
+        selectors.addNewRuleButton().click();
+        selectors.ruleRows().should("have.length", 3);
+      });
+    });
+  });
 });
