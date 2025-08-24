@@ -37,7 +37,7 @@ export default function RuleList() {
       <div className={cx(canGroupRules ? "pt-1" : "pt-2")}>
         {matchers?.length ? (
           <>
-            <div className="row gx-3 gy-2" data-testid="rule-list-wrapper">
+            <div className="row gx-3 gy-2 pb-1" data-testid="rule-list-wrapper">
               {renderedMatchers?.map((matcher) => (
                 <div
                   key={matcher.identifier}
@@ -54,7 +54,7 @@ export default function RuleList() {
               data-testid="rule-list-actions"
             >
               <div
-                className="bg-body py-2"
+                className="bg-body pt-1 pb-2"
                 style={{
                   paddingLeft: 55,
                   marginLeft: "-12px",
