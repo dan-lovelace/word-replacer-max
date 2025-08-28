@@ -5,10 +5,10 @@ import { createWebAppMessage } from "../messaging";
 
 import { ensureOffscreenDocument } from "./offscreen";
 
-export async function processReplacements(
-  event: WebAppMessageData<WebAppMessageKind>,
+export const processReplacements = async (
+  event: WebAppMessageData<"processReplacementsRequest">,
   sendResponse: (message: unknown) => void
-) {
+) => {
   if (browser.runtime.getManifest().manifest_version === 3) {
     // process DOM in offscreen document
     await ensureOffscreenDocument();
@@ -20,8 +20,8 @@ export async function processReplacements(
   }
 
   const responseMessage = createWebAppMessage("processReplacementsResponse", {
-    data: { foo: "bar" },
+    data: event.details,
   });
   console.log("sending response", responseMessage);
   sendResponse(responseMessage);
-}
+};

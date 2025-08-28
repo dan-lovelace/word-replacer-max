@@ -6,10 +6,10 @@ import testBrowser from "@worm/testing/src/test-browser";
 const browser = testBrowser as Browser;
 
 describe("Messenger", () => {
-  const FIXED_TIMESTAMP = 1735689600000;
+  const TEST_UUID = "e8347f40-2466-42d2-9645-bb1b4be9fcf2";
 
   beforeEach(() => {
-    cy.stub(Date, "now").as("dateNow").returns(FIXED_TIMESTAMP);
+    cy.stub(crypto, "randomUUID").as("randomID").returns(TEST_UUID);
   });
 
   it("should handle empty element arrays gracefully", () => {
@@ -30,18 +30,29 @@ describe("Messenger", () => {
       const callbackSpy = cy.spy().as("callbackSpy");
       const messenger = new Messenger(browser, callbackSpy);
 
-      const mockResponse = [
-        {
-          id: `${FIXED_TIMESTAMP}-0`, // id's are time-based
-          createdAt: FIXED_TIMESTAMP,
-          html: "updated",
+      const mockResponse = {
+        details: {
+          data: [
+            {
+              id: `${TEST_UUID}-0`,
+              createdAt: TEST_UUID,
+              element: testElement,
+              html: "updated",
+            },
+          ],
         },
-      ];
+      };
       cy.stub(browser.runtime, "sendMessage").resolves(mockResponse);
 
       cy.wrap(messenger.sendReplacementRequest([testElement])).then(() => {
-        cy.wrap(browser.runtime.sendMessage).should("have.been.calledOnce"); // stubbed previously
-        cy.get("@callbackSpy").should("have.been.calledWith", mockResponse);
+        cy.wrap(browser.runtime.sendMessage)
+          .should("have.been.calledOnce")
+          .then(() => {
+            cy.get("@callbackSpy").should(
+              "have.been.calledWith",
+              mockResponse.details.data
+            );
+          });
       });
 
       cy.then(() => {
@@ -63,25 +74,31 @@ describe("Messenger", () => {
       const callbackSpy = cy.spy().as("callbackSpy");
       const messenger = new Messenger(browser, callbackSpy);
 
-      const runtimeResponse = [
-        {
-          id: `${FIXED_TIMESTAMP}-0`,
-          createdAt: FIXED_TIMESTAMP,
-          html: "updated 1",
+      const runtimeResponse = {
+        details: {
+          data: [
+            {
+              id: `${TEST_UUID}-0`,
+              createdAt: TEST_UUID,
+              element: testElement1,
+              html: "updated 1",
+            },
+            {
+              id: `nonexistent-id`,
+              createdAt: TEST_UUID,
+              element: testElement2,
+              html: "updated 2",
+            },
+          ],
         },
-        {
-          id: `nonexistent-id`,
-          createdAt: FIXED_TIMESTAMP,
-          html: "updated 2",
-        },
-      ];
+      };
       cy.stub(browser.runtime, "sendMessage").resolves(runtimeResponse);
 
       cy.wrap(
         messenger.sendReplacementRequest([testElement1, testElement2])
       ).then(() => {
         cy.get("@callbackSpy").should("have.been.calledWith", [
-          runtimeResponse[0],
+          runtimeResponse.details.data[0],
         ]);
       });
 
@@ -122,25 +139,31 @@ describe("Messenger", () => {
       const callbackSpy = cy.spy().as("callbackSpy");
       const messenger = new Messenger(browser, callbackSpy);
 
-      const runtimeResponse = [
-        {
-          id: `${FIXED_TIMESTAMP}-0`,
-          createdAt: FIXED_TIMESTAMP,
-          html: "updated 1",
+      const runtimeResponse = {
+        details: {
+          data: [
+            {
+              id: `${TEST_UUID}-0`,
+              createdAt: TEST_UUID,
+              element: testElement,
+              html: "updated 1",
+            },
+            {
+              id: `${TEST_UUID}-1`,
+              createdAt: TEST_UUID,
+              element: testElement,
+              html: "updated 2",
+            },
+          ],
         },
-        {
-          id: `${FIXED_TIMESTAMP}-1`,
-          createdAt: FIXED_TIMESTAMP,
-          html: "updated 2",
-        },
-      ];
+      };
       cy.stub(browser.runtime, "sendMessage").resolves(runtimeResponse);
 
       cy.wrap(
         messenger.sendReplacementRequest([testElement, testElement])
       ).then(() => {
         cy.get("@callbackSpy").should("have.been.calledWith", [
-          runtimeResponse[0],
+          runtimeResponse.details.data[1],
         ]);
       });
 
@@ -159,8 +182,8 @@ describe("Messenger", () => {
       const callbackSpy = cy.spy().as("callbackSpy");
       const messenger = new Messenger(browser, callbackSpy);
 
-      const firstTimestamp = FIXED_TIMESTAMP;
-      const secondTimestamp = FIXED_TIMESTAMP + 100;
+      const firstTimestamp = TEST_UUID;
+      const secondTimestamp = TEST_UUID + 100;
 
       let firstResolver: ((value: unknown) => void) | undefined,
         secondResolver: ((value: unknown) => void) | undefined;
@@ -174,29 +197,34 @@ describe("Messenger", () => {
       });
 
       // send first request
-      cy.get("@dateNow")
+      cy.get("@randomID")
         .invoke("restore")
         .then(() => {
-          cy.stub(Date, "now").as("dateFirst").returns(firstTimestamp);
+          cy.stub(crypto, "randomUUID").as("dateFirst").returns(firstTimestamp);
           const firstRequest = messenger.sendReplacementRequest([testElement]);
 
           // send second request (newer timestamp)
           cy.get("@dateFirst")
             .invoke("restore")
             .then(() => {
-              cy.stub(Date, "now").returns(secondTimestamp);
+              cy.stub(crypto, "randomUUID").returns(secondTimestamp);
               const secondRequest = messenger.sendReplacementRequest([
                 testElement,
               ]);
 
               // resolve the second (newer) request first
-              const secondResponse = [
-                {
-                  id: `${secondTimestamp}-0`,
-                  createdAt: secondTimestamp,
-                  html: "Newer update",
+              const secondResponse = {
+                details: {
+                  data: [
+                    {
+                      id: `${secondTimestamp}-0`,
+                      createdAt: secondTimestamp,
+                      element: testElement,
+                      html: "Newer update",
+                    },
+                  ],
                 },
-              ];
+              };
               secondResolver?.(secondResponse);
 
               // wait for second request to complete
@@ -205,18 +233,23 @@ describe("Messenger", () => {
                 cy.get("@callbackSpy").should("have.been.calledOnce");
                 cy.get("@callbackSpy").should(
                   "have.been.calledWith",
-                  secondResponse
+                  secondResponse.details.data
                 );
               });
 
               // now resolve the first (older) request
-              const firstResponse = [
-                {
-                  id: `${firstTimestamp}-0`,
-                  createdAt: firstTimestamp,
-                  html: "Older update",
+              const firstResponse = {
+                details: {
+                  data: [
+                    {
+                      id: `${firstTimestamp}-0`,
+                      createdAt: firstTimestamp,
+                      element: testElement,
+                      html: "Older update",
+                    },
+                  ],
                 },
-              ];
+              };
               firstResolver?.(firstResponse);
 
               // wait for first request to complete and verify it's ignored

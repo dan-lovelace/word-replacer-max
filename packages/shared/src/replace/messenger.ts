@@ -4,6 +4,8 @@ import { createWebAppMessage } from "@worm/shared/src/messaging";
 import {
   ReplacementMessageId,
   ReplacementMessageItem,
+  ReplacerMutationResult,
+  WebAppMessageData,
 } from "@worm/types/src/message";
 
 export class Messenger {
@@ -14,11 +16,11 @@ export class Messenger {
   >;
   private messageElements: Map<ReplacementMessageId, HTMLElement>;
 
-  private callback: (items: ReplacementMessageItem[]) => void;
+  private callback: (items: ReplacerMutationResult[]) => void;
 
   constructor(
     browser: Browser,
-    callback: (messages: ReplacementMessageItem[]) => void
+    callback: (messages: ReplacerMutationResult[]) => void
   ) {
     this.browser = browser;
     this.elementData = new WeakMap<
@@ -30,12 +32,13 @@ export class Messenger {
     this.callback = callback;
   }
 
-  private buildReplacementRequest(elements: HTMLElement[]) {
+  private buildReplacementRequest = (elements: HTMLElement[]) => {
     const createdAt = Date.now();
     const messageItems: ReplacementMessageItem[] = [];
+    const requestId = crypto.randomUUID();
 
     for (const [idx, element] of elements.entries()) {
-      const id = `${createdAt}-${idx}`;
+      const id = `${requestId}-${idx}`;
 
       this.messageElements.set(id, element);
       this.elementData.set(element, { createdAt, id });
@@ -53,10 +56,10 @@ export class Messenger {
     );
 
     return replacementRequest;
-  }
+  };
 
-  private handleReplacementResponse(results: ReplacementMessageItem[]) {
-    const callbackItems: ReplacementMessageItem[] = [];
+  private handleReplacementResponse = (results: ReplacementMessageItem[]) => {
+    const callbackItems: ReplacerMutationResult[] = [];
 
     for (const result of results) {
       const { createdAt: messageCreatedAt, id: messageId } = result;
@@ -76,10 +79,7 @@ export class Messenger {
         continue;
       }
 
-      if (
-        queuedData.id !== messageId &&
-        queuedData.createdAt > messageCreatedAt
-      ) {
+      if (queuedData.id !== messageId) {
         // element has received a newer message, ignore this one and delete it
         this.messageElements.delete(messageId);
         continue;
@@ -88,7 +88,10 @@ export class Messenger {
       this.messageElements.delete(messageId); // element definitely exists
       this.elementData.delete(queuedElement); // data definitely exist
 
-      callbackItems.push(result);
+      callbackItems.push({
+        ...result,
+        element: queuedElement,
+      });
     }
 
     if (callbackItems.length === 0) {
@@ -96,23 +99,34 @@ export class Messenger {
     }
 
     this.callback(callbackItems);
-  }
+  };
 
-  public getMessages() {
+  public getMessages = () => {
     return {
       messageElements: this.messageElements,
       elementData: this.elementData,
     };
-  }
+  };
 
-  public async sendReplacementRequest(elements: HTMLElement[]) {
+  public sendReplacementRequest = async (elements: HTMLElement[]) => {
     if (elements.length === 0) return;
 
     const replacementRequest = this.buildReplacementRequest(elements);
-    const result = await this.browser.runtime.sendMessage(replacementRequest);
+    const result = await this.browser.runtime.sendMessage<
+      WebAppMessageData<"processReplacementsRequest">,
+      WebAppMessageData<"processReplacementsResponse">
+    >(replacementRequest);
+    console.log("result", result);
+    if (
+      !result ||
+      !result.details ||
+      !result.details.data ||
+      !Array.isArray(result.details.data) ||
+      result.details.data.length === 0
+    ) {
+      return;
+    }
 
-    if (!result || !Array.isArray(result) || result.length === 0) return;
-
-    this.handleReplacementResponse(result as ReplacementMessageItem[]);
-  }
+    this.handleReplacementResponse(result.details.data);
+  };
 }

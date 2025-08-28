@@ -287,7 +287,10 @@ export function startMessageListener() {
       }
 
       case "processReplacementsRequest": {
-        processReplacements(event, sendResponse);
+        const processEvent =
+          event as WebAppMessageData<"processReplacementsRequest">;
+
+        processReplacements(processEvent, sendResponse);
         return true;
       }
     }

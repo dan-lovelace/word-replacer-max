@@ -1,32 +1,42 @@
 import { Browser } from "webextension-polyfill";
 
-import { Ingest } from "@worm/shared/src/replace/ingest";
-import { Messenger } from "@worm/shared/src/replace/messenger";
-import { ReplacementMessageItem } from "@worm/types/src/message";
+import { ReplacerMutationResult } from "@worm/types/src/message";
+
+import { Ingest } from "./ingest";
+import { Messenger } from "./messenger";
+import { Mutator } from "./mutator";
 
 export class Replacer {
   private browser: Browser;
-  private documentElement: HTMLElement;
+  private document: Document;
   private ingest: Ingest;
   private messenger: Messenger;
+  private mutator: Mutator;
 
-  constructor(browser: Browser, documentElement: HTMLElement) {
+  constructor(browser: Browser, document: Document) {
     this.browser = browser;
-    this.documentElement = documentElement;
+    this.document = document;
 
-    this.ingest = new Ingest(this.documentElement, this.handleIngest);
     this.messenger = new Messenger(this.browser, this.handleMessages);
+    this.ingest = new Ingest(this.document.documentElement, this.handleIngest);
+    this.mutator = new Mutator(this.document, this.handleMutationsComplete);
   }
 
-  public start() {
+  public start = () => {
+    // TODO: do not start if extension is OFF
     this.ingest.start();
-  }
+  };
 
-  private handleIngest(found: HTMLElement[]) {
+  private handleIngest = (found: HTMLElement[]) => {
     this.messenger.sendReplacementRequest(found);
-  }
+  };
 
-  private async handleMessages(messages: ReplacementMessageItem[]) {
-    // TODO: perform mutations
-  }
+  private handleMessages = (messages: ReplacerMutationResult[]) => {
+    this.ingest.stopObserver();
+    this.mutator.executeMutations(messages);
+  };
+
+  private handleMutationsComplete = (results: ReplacerMutationResult[]) => {
+    this.ingest.startObserver();
+  };
 }

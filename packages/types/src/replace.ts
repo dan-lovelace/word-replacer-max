@@ -1,3 +1,5 @@
+import { ReplacementMessageId } from "./message";
+
 const queryPatterns = ["case", "default", "regex", "wholeWord"] as const;
 
 /**
@@ -29,6 +31,15 @@ export type ReplacementSuggest = {
 export type ReplacementSuggestion = {
   text: string;
 };
+
+export type ReplacerElementData = {
+  createdAt: number;
+  id: ReplacementMessageId;
+};
+
+export type ReplacerElementMap = WeakMap<HTMLElement, ReplacerElementData>;
+
+export type ReplacerMessageMap = Map<ReplacementMessageId, HTMLElement>;
 
 export type RuleGroups = {
   active: boolean;

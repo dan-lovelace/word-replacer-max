@@ -1,4 +1,5 @@
 interface IngestConfig {
+  batchDebounceMs?: number;
   batchSize?: number;
   ignoreElements?: Set<TagName>;
 }
@@ -6,11 +7,14 @@ interface IngestConfig {
 type TagName = keyof HTMLElementTagNameMap;
 
 export class Ingest implements IngestConfig {
+  private debounceTimer: NodeJS.Timeout | undefined;
   private batchContents = new Set<HTMLElement>();
+  private observer: MutationObserver | undefined;
   private startNode: Node;
 
   private callback: (items: HTMLElement[]) => void;
 
+  batchDebounceMs: number;
   batchSize: number;
   ignoreElements: Set<TagName>;
 
@@ -24,6 +28,7 @@ export class Ingest implements IngestConfig {
     this.callback = callback;
 
     // optional
+    this.batchDebounceMs = config?.batchDebounceMs ?? 20;
     this.batchSize = config?.batchSize ?? 50;
     this.ignoreElements =
       config?.ignoreElements ??
@@ -31,8 +36,28 @@ export class Ingest implements IngestConfig {
   }
 
   public start() {
-    this.listenForMutations();
+    this.startObserver();
     this.walkNode(this.startNode);
+  }
+
+  public startObserver() {
+    this.observer = new MutationObserver((mutations) => {
+      const textMutations = mutations.filter((mutation) =>
+        this.isRelevantMutation(mutation)
+      );
+
+      this.handleMutations(textMutations);
+    });
+
+    this.observer.observe(this.startNode, {
+      characterData: true,
+      childList: true,
+      subtree: true,
+    });
+  }
+
+  public stopObserver() {
+    this.observer?.disconnect();
   }
 
   private analyzeAddedNodes(nodes: Node[]) {
@@ -54,8 +79,28 @@ export class Ingest implements IngestConfig {
     this.batchContents.add(parentElement);
 
     if (this.batchContents.size >= this.batchSize) {
+      this.flushBatch();
+    } else {
       this.processBatch();
     }
+  }
+
+  private clearDebounceTimer() {
+    if (this.debounceTimer !== undefined) {
+      clearTimeout(this.debounceTimer);
+      this.debounceTimer = undefined;
+    }
+  }
+
+  private flushBatch() {
+    if (this.batchContents.size === 0) return;
+
+    this.clearDebounceTimer();
+
+    const processed = Array.from(this.batchContents);
+    this.batchContents.clear();
+
+    this.callback(processed);
   }
 
   private handleMutations(mutations: MutationRecord[]) {
@@ -99,37 +144,30 @@ export class Ingest implements IngestConfig {
     return true;
   }
 
-  private listenForMutations(): void {
-    const observer = new MutationObserver((mutations) => {
-      const textMutations = mutations.filter((mutation) =>
-        this.isRelevantMutation(mutation)
-      );
-
-      this.handleMutations(textMutations);
-    });
-
-    observer.observe(this.startNode, {
-      characterData: true,
-      childList: true,
-      subtree: true,
-    });
-  }
-
   private processBatch() {
     if (this.batchContents.size === 0) return;
 
-    const processed = Array.from(this.batchContents);
-    this.batchContents.clear();
+    this.clearDebounceTimer();
 
-    this.callback(processed);
+    this.debounceTimer = setTimeout(() => {
+      this.flushBatch();
+    }, this.batchDebounceMs);
   }
 
   private shouldIgnoreElement(element: HTMLElement): boolean {
-    return this.ignoreElements.has(element.tagName.toLowerCase() as TagName);
+    const { tagName = "" } = element;
+
+    if (!tagName) {
+      return true;
+    }
+
+    return this.ignoreElements.has(tagName.toLowerCase() as TagName);
   }
 
   private walkNode(node: Node) {
-    if (this.shouldIgnoreElement(node as HTMLElement)) return;
+    if (this.shouldIgnoreElement(node as HTMLElement)) {
+      return;
+    }
 
     const walker = document.createTreeWalker(node, NodeFilter.SHOW_TEXT);
 
@@ -138,7 +176,5 @@ export class Ingest implements IngestConfig {
     while ((currentNode = walker.nextNode() as Text)) {
       this.analyzeTextNode(currentNode);
     }
-
-    this.processBatch();
   }
 }

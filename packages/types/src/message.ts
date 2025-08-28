@@ -29,7 +29,11 @@ export type ReplacementMessageId = string;
 export type ReplacementMessageItem = {
   createdAt: number;
   html: string;
-  id: string;
+  id: ReplacementMessageId;
+};
+
+export type ReplacerMutationResult = ReplacementMessageItem & {
+  element: HTMLElement;
 };
 
 export type RuntimeMessage<T extends RuntimeMessageKind> = BaseMessage<
