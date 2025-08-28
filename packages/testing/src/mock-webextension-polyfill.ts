@@ -224,6 +224,77 @@ class MockRuntime implements TRuntime {
     return port;
   }
 
+  sendMessage<T>(
+    extensionId: string | any,
+    message?: T,
+    options?: Runtime.SendMessageOptionsType,
+    responseCallback?: (response: any) => void
+  ): Promise<T | undefined> {
+    // shift overloaded parameters
+    let actualExtensionId: string | undefined;
+    let actualMessage: any;
+    let actualOptions: Runtime.SendMessageOptionsType | undefined;
+    let actualCallback: ((response: any) => void) | undefined;
+
+    if (typeof extensionId === "string") {
+      actualExtensionId = extensionId;
+      actualMessage = message;
+      actualOptions = options;
+      actualCallback = responseCallback;
+    } else {
+      actualMessage = extensionId;
+      actualOptions = message as Runtime.SendMessageOptionsType;
+      actualCallback = options as unknown as (response: any) => void;
+    }
+
+    const sender: Runtime.MessageSender = {
+      id: actualExtensionId,
+      url: window.location.href,
+    };
+
+    let responseHandled = false;
+    const sendResponse = (response?: any) => {
+      if (responseHandled) return;
+      responseHandled = true;
+
+      if (actualCallback) {
+        actualCallback(response);
+      }
+    };
+
+    // mocked async message handling
+    setTimeout(() => {
+      let asyncResponse = false;
+
+      this.messageListeners.forEach((listener) => {
+        const result = listener(actualMessage, sender, sendResponse);
+
+        if (result === true) {
+          asyncResponse = true;
+        }
+      });
+
+      // if no listener returned true for async response, call sendResponse with undefined
+      if (!asyncResponse && !responseHandled) {
+        sendResponse();
+      }
+    }, 0);
+
+    // return promise if no callback provided
+    if (!actualCallback) {
+      return new Promise((resolve) => {
+        actualCallback = resolve;
+
+        sendResponse();
+      });
+    }
+
+    return new Promise((resolve) => {
+      sendResponse();
+      resolve(undefined);
+    });
+  }
+
   get onConnect(): TRuntimeConnectEvent {
     return {
       addListener: (callback: (port: Runtime.Port) => void) => {

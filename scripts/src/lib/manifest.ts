@@ -56,6 +56,7 @@ const manifestV3Base: ManifestV3 = {
     service_worker: "background.js",
   },
   manifest_version: 3,
+  permissions: [...commonProps.permissions, "offscreen"],
   web_accessible_resources: [
     {
       resources: ["assets/*"],

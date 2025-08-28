@@ -24,6 +24,14 @@ export type ErrorableMessage<T> = {
   };
 };
 
+export type ReplacementMessageId = string;
+
+export type ReplacementMessageItem = {
+  createdAt: number;
+  html: string;
+  id: string;
+};
+
 export type RuntimeMessage<T extends RuntimeMessageKind> = BaseMessage<
   T,
   RuntimeMessageKindMap
@@ -74,5 +82,7 @@ export type WebAppMessageKindMap = {
   contentInitialize: undefined;
   pingRequest: undefined;
   pingResponse: WebAppPingResponse;
+  processReplacementsRequest: ReplacementMessageItem[];
+  processReplacementsResponse: ErrorableMessage<ReplacementMessageItem[]>;
   showToastMessage: ShowToastMessageOptions;
 };

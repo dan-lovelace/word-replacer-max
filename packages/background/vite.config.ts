@@ -5,9 +5,17 @@ import { buildConfig } from "@worm/plugins";
 export default defineConfig({
   build: {
     rollupOptions: {
-      input: "src/index.ts",
+      input: ["src/index.ts", "offscreen.html"],
       output: {
-        entryFileNames: "background.js",
+        entryFileNames: (chunk) => {
+          switch (chunk.name) {
+            case "index":
+              return "background.js";
+
+            default:
+              return `[name].js`;
+          }
+        },
       },
     },
   },

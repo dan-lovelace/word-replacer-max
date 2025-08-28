@@ -7,6 +7,7 @@ import {
 } from "@worm/shared";
 import { getApiEndpoint } from "@worm/shared/src/api";
 import { browser } from "@worm/shared/src/browser";
+import { processReplacements } from "@worm/shared/src/service-worker";
 import { authStorageProvider } from "@worm/shared/src/storage";
 import { ApiAuthTokens } from "@worm/types/src/api";
 import { IdentificationError } from "@worm/types/src/identity";
@@ -164,22 +165,22 @@ export function startConnectListener() {
 }
 
 export function startMessageListener() {
-  browser.runtime.onMessage.addListener(async (message) => {
+  browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
     const event = message as WebAppMessageData<WebAppMessageKind>;
 
     switch (event.kind) {
       case "authSignOutRequest": {
-        try {
-          await signOut();
+        signOut()
+          .then(() => {
+            sendTabMessage("authSignOutResponse", { data: true });
+          })
+          .catch((error) => {
+            logDebug(error);
 
-          sendTabMessage("authSignOutResponse", { data: true });
-        } catch (error) {
-          logDebug(error);
-
-          sendTabMessage("authSignOutResponse", {
-            error: getError(error),
+            sendTabMessage("authSignOutResponse", {
+              error: getError(error),
+            });
           });
-        }
 
         break;
       }
@@ -188,87 +189,93 @@ export function startMessageListener() {
         /**
          * Auth tokens received from auth.js script.
          */
-        try {
-          const tokens = event.details as ApiAuthTokens;
+        const tokens = event.details as ApiAuthTokens;
 
-          if (!tokens) {
-            throw new IdentificationError("MissingTokens");
-          }
+        if (!tokens) {
+          const error = new IdentificationError("MissingTokens");
 
-          /**
-           * Ensure protected API requests succeed with the received token.
-           */
-          const response = await fetch(getApiEndpoint("GET:authWhoAmI"), {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${tokens.accessToken}`,
-            },
-          });
-
-          if (!response.ok) {
-            throw new IdentificationError();
-          }
-
-          /**
-           * Update storage using our own keys, not Amplify's. These are
-           * translated in the custom token provider.
-           */
-          await authStorageProvider.set({
-            authAccessToken: tokens.accessToken,
-            authIdToken: tokens.idToken,
-            authLastAuthUser: decodeJWT(
-              String(tokens.idToken)
-            ).payload.email?.toString(),
-            authRefreshToken: tokens.refreshToken,
-          });
-
-          /**
-           * Now that storage is updated, ensure fetching the Amplify session
-           * succeeds.
-           */
-          await getCurrentUser();
-
-          sendTabMessage("authUpdateTokensResponse", {
-            data: {
-              accessToken: tokens.accessToken,
-              idToken: tokens.accessToken,
-            },
-          });
-        } catch (error) {
           logDebug(error);
-
           sendTabMessage("authUpdateTokensResponse", {
             error: getError(error),
           });
         }
 
+        /**
+         * Ensure protected API requests succeed with the received token.
+         */
+        fetch(getApiEndpoint("GET:authWhoAmI"), {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${tokens.accessToken}`,
+          },
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new IdentificationError();
+            }
+
+            /**
+             * Update storage using our own keys, not Amplify's. These are
+             * translated in the custom token provider.
+             */
+            return authStorageProvider.set({
+              authAccessToken: tokens.accessToken,
+              authIdToken: tokens.idToken,
+              authLastAuthUser: decodeJWT(
+                String(tokens.idToken)
+              ).payload.email?.toString(),
+              authRefreshToken: tokens.refreshToken,
+            });
+          })
+          .then(() => {
+            /**
+             * Now that storage is updated, ensure fetching the Amplify session
+             * succeeds.
+             */
+            return getCurrentUser();
+          })
+          .then(() => {
+            sendTabMessage("authUpdateTokensResponse", {
+              data: {
+                accessToken: tokens.accessToken,
+                idToken: tokens.accessToken,
+              },
+            });
+          })
+          .catch((error) => {
+            logDebug(error);
+            sendTabMessage("authUpdateTokensResponse", {
+              error: getError(error),
+            });
+          });
+
         break;
       }
 
       case "authUserRequest": {
-        try {
-          const currentUser = await getCurrentUser();
+        getCurrentUser()
+          .then((currentUser) => {
+            if (!currentUser) {
+              throw new IdentificationError("UserNotLoggedIn");
+            }
 
-          if (!currentUser) {
-            throw new IdentificationError("UserNotLoggedIn");
-          }
+            sendTabMessage("authUserResponse", {
+              data: currentUser,
+            });
+          })
+          .catch((error) => {
+            if (
+              error instanceof IdentificationError &&
+              error.name !== "UserNotLoggedIn"
+            ) {
+              /**
+               * An unexpected identification error was thrown.
+               */
+              logDebug(error);
+            }
 
-          sendTabMessage("authUserResponse", {
-            data: currentUser,
+            sendTabMessage("authUserResponse", { error: getError(error) });
           });
-        } catch (error) {
-          if (
-            error instanceof IdentificationError &&
-            error.name !== "UserNotLoggedIn"
-          ) {
-            /**
-             * An unexpected identification error was thrown.
-             */
-            logDebug(error);
-          }
-
-          sendTabMessage("authUserResponse", { error: getError(error) });
-        }
 
         break;
       }
@@ -278,6 +285,13 @@ export function startMessageListener() {
 
         break;
       }
+
+      case "processReplacementsRequest": {
+        processReplacements(event, sendResponse);
+        return true;
+      }
     }
+
+    return undefined;
   });
 }
