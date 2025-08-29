@@ -18,7 +18,7 @@ export class Replacer {
     this.document = document;
 
     this.messenger = new Messenger(this.browser, this.handleMessages);
-    this.ingest = new Ingest(this.document.documentElement, this.handleIngest);
+    this.ingest = new Ingest(this.document, this.handleIngest);
     this.mutator = new Mutator(this.document, this.handleMutationsComplete);
   }
 

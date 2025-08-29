@@ -18,7 +18,7 @@ describe("ingest", () => {
         })
         .as("handleItems");
 
-      const ingest = new Ingest($document.documentElement, handleItems);
+      const ingest = new Ingest($document, handleItems);
       ingest.start();
 
       cy.get("@handleItems")
@@ -43,7 +43,7 @@ describe("ingest", () => {
         })
         .as("handleItems");
 
-      const ingest = new Ingest($document.documentElement, handleItems);
+      const ingest = new Ingest($document, handleItems);
       ingest.start();
 
       cy.get("@handleItems")
@@ -73,7 +73,7 @@ describe("ingest", () => {
         })
         .as("handleItems");
 
-      const ingest = new Ingest($document.documentElement, handleItems, {
+      const ingest = new Ingest($document, handleItems, {
         batchSize,
       });
       ingest.start();
@@ -99,7 +99,7 @@ describe("ingest", () => {
         })
         .as("handleItems");
 
-      const ingest = new Ingest($document.documentElement, handleItems);
+      const ingest = new Ingest($document, handleItems);
       ingest.start();
 
       cy.get("@handleItems")
@@ -131,7 +131,7 @@ describe("ingest", () => {
         })
         .as("handleItems");
 
-      const ingest = new Ingest($document.documentElement, handleItems);
+      const ingest = new Ingest($document, handleItems);
       ingest.start();
 
       cy.get("@handleItems")
@@ -176,7 +176,7 @@ describe("ingest", () => {
         })
         .as("handleItems");
 
-      const ingest = new Ingest($document.documentElement, handleItems);
+      const ingest = new Ingest($document, handleItems);
       ingest.start();
 
       cy.get("@handleItems")
@@ -202,7 +202,7 @@ describe("ingest", () => {
         })
         .as("handleItems");
 
-      const ingest = new Ingest($document.documentElement, handleItems);
+      const ingest = new Ingest($document, handleItems);
       ingest.start();
 
       cy.get("@handleItems")
@@ -228,7 +228,7 @@ describe("ingest", () => {
         })
         .as("handleItems");
 
-      const ingest = new Ingest($document.documentElement, handleItems);
+      const ingest = new Ingest($document, handleItems);
       ingest.start();
 
       cy.get("@handleItems")
@@ -263,7 +263,7 @@ describe("ingest", () => {
         })
         .as("handleItems");
 
-      const ingest = new Ingest($document.documentElement, handleItems);
+      const ingest = new Ingest($document, handleItems);
       ingest.start();
 
       cy.get("@handleItems")
@@ -288,7 +288,7 @@ describe("ingest", () => {
         })
         .as("handleItems");
 
-      const ingest = new Ingest($document.documentElement, handleItems, {
+      const ingest = new Ingest($document, handleItems, {
         batchSize: 100,
         ignoreElements: new Set<keyof HTMLElementTagNameMap>(["script"]),
       });
@@ -326,7 +326,7 @@ describe("ingest", () => {
         .as("handleItems");
 
       const debounceMs = 50;
-      const ingest = new Ingest($document.documentElement, handleItems, {
+      const ingest = new Ingest($document, handleItems, {
         batchDebounceMs: debounceMs,
         batchSize: 100, // high batch size to avoid size-based flushing
         ignoreElements: new Set<keyof HTMLElementTagNameMap>(["script"]),
@@ -398,7 +398,7 @@ describe("ingest", () => {
         })
         .as("handleItems");
 
-      const ingest = new Ingest($document.documentElement, handleItems, {
+      const ingest = new Ingest($document, handleItems, {
         batchDebounceMs: 100, // long debounce time
         batchSize: 3, // small batch size
         ignoreElements: new Set<keyof HTMLElementTagNameMap>(["script"]),
@@ -457,7 +457,7 @@ describe("ingest", () => {
         })
         .as("handleItems");
 
-      const ingest = new Ingest($document.documentElement, handleItems, {
+      const ingest = new Ingest($document, handleItems, {
         ignoreElements: new Set<keyof HTMLElementTagNameMap>(["script"]),
       });
       ingest.start();
@@ -480,7 +480,7 @@ describe("ingest", () => {
         })
         .as("handleItems");
 
-      const ingest = new Ingest($document.documentElement, handleItems);
+      const ingest = new Ingest($document, handleItems);
       ingest.start();
 
       ingest.stopObserver();
@@ -504,7 +504,7 @@ describe("ingest", () => {
         })
         .as("handleItems");
 
-      const ingest = new Ingest($document.documentElement, handleItems);
+      const ingest = new Ingest($document, handleItems);
       ingest.start();
 
       cy.get("@handleItems")

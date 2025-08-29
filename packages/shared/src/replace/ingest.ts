@@ -1,38 +1,41 @@
-interface IngestConfig {
+export interface IngestConfig {
   batchDebounceMs?: number;
   batchSize?: number;
   ignoreElements?: Set<TagName>;
+  startNode?: Node;
 }
 
-type TagName = keyof HTMLElementTagNameMap;
+export type TagName = keyof HTMLElementTagNameMap;
 
 export class Ingest implements IngestConfig {
+  private readonly document: Document;
+  private readonly callback: (items: HTMLElement[]) => void;
+
   private debounceTimer: NodeJS.Timeout | undefined;
   private batchContents = new Set<HTMLElement>();
   private observer: MutationObserver | undefined;
-  private startNode: Node;
 
-  private callback: (items: HTMLElement[]) => void;
-
+  // optional configuration
   batchDebounceMs: number;
   batchSize: number;
   ignoreElements: Set<TagName>;
+  startNode: Node;
 
   constructor(
-    startNode: Node,
+    document: Document,
     callback: (items: HTMLElement[]) => void,
     config?: Partial<IngestConfig>
   ) {
-    // required
-    this.startNode = startNode;
+    this.document = document;
     this.callback = callback;
 
-    // optional
+    // options and defaults
     this.batchDebounceMs = config?.batchDebounceMs ?? 20;
     this.batchSize = config?.batchSize ?? 50;
     this.ignoreElements =
       config?.ignoreElements ??
       new Set<TagName>(["input", "script", "style", "textarea"]);
+    this.startNode = config?.startNode ?? this.document.documentElement;
   }
 
   public start() {
@@ -97,10 +100,10 @@ export class Ingest implements IngestConfig {
 
     this.clearDebounceTimer();
 
-    const processed = Array.from(this.batchContents);
+    const found = Array.from(this.batchContents);
     this.batchContents.clear();
 
-    this.callback(processed);
+    this.callback(found);
   }
 
   private handleMutations(mutations: MutationRecord[]) {
@@ -169,7 +172,7 @@ export class Ingest implements IngestConfig {
       return;
     }
 
-    const walker = document.createTreeWalker(node, NodeFilter.SHOW_TEXT);
+    const walker = this.document.createTreeWalker(node, NodeFilter.SHOW_TEXT);
 
     let currentNode: Text | null;
 
