@@ -3,6 +3,7 @@ export interface IngestConfig {
   batchSize?: number;
   ignoreElements?: Set<TagName>;
   startNode?: Node;
+  visualProtection?: boolean;
 }
 
 export type TagName = keyof HTMLElementTagNameMap;
@@ -20,6 +21,7 @@ export class Ingest implements IngestConfig {
   batchSize: number;
   ignoreElements: Set<TagName>;
   startNode: Node;
+  visualProtection: boolean;
 
   constructor(
     document: Document,
@@ -36,11 +38,20 @@ export class Ingest implements IngestConfig {
       config?.ignoreElements ??
       new Set<TagName>(["input", "script", "style", "textarea"]);
     this.startNode = config?.startNode ?? this.document.documentElement;
+    this.visualProtection = config?.visualProtection ?? false;
   }
 
   public start() {
+    if (!this.visualProtection) {
+      this.stopVisualProtection(this.document.body);
+    }
+
     this.startObserver();
     this.walkNode(this.startNode);
+
+    if (this.visualProtection) {
+      this.stopVisualProtection(this.document.body);
+    }
   }
 
   public startObserver() {
@@ -79,6 +90,11 @@ export class Ingest implements IngestConfig {
     }
 
     const { parentElement } = node;
+
+    if (this.visualProtection) {
+      this.startVisualProtection(parentElement);
+    }
+
     this.batchContents.add(parentElement);
 
     if (this.batchContents.size >= this.batchSize) {
@@ -166,6 +182,20 @@ export class Ingest implements IngestConfig {
 
     return this.ignoreElements.has(tagName.toLowerCase() as TagName);
   }
+
+  private startVisualProtection(element: HTMLElement) {
+    element.style.removeProperty("transition");
+    element.style.setProperty("opacity", "0", "important");
+  }
+
+  private stopVisualProtection = (element: HTMLElement) => {
+    element.style.setProperty(
+      "transition",
+      "opacity 120ms ease-out",
+      "important"
+    );
+    element.style.setProperty("opacity", "1", "important");
+  };
 
   private walkNode(node: Node) {
     if (this.shouldIgnoreElement(node as HTMLElement)) {

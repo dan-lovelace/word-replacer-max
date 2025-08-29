@@ -18,8 +18,12 @@ export class Replacer {
     this.document = document;
 
     this.messenger = new Messenger(this.browser, this.handleMessages);
-    this.ingest = new Ingest(this.document, this.handleIngest);
-    this.mutator = new Mutator(this.document, this.handleMutationsComplete);
+    this.ingest = new Ingest(this.document, this.handleIngest, {
+      visualProtection: true,
+    });
+    this.mutator = new Mutator(this.document, this.handleMutationsComplete, {
+      visualProtection: true,
+    });
   }
 
   public start = () => {
