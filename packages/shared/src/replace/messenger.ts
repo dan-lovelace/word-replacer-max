@@ -1,28 +1,28 @@
-import { Browser } from "webextension-polyfill";
-
-import { createWebAppMessage } from "@worm/shared/src/messaging";
 import {
   ReplacementMessageId,
   ReplacementMessageItem,
   ReplacerMutationResult,
-  WebAppMessageData,
 } from "@worm/types/src/message";
+import {
+  ReplacerElementMap,
+  ReplacerMessageMap,
+} from "@worm/types/src/replace";
 
 export class Messenger {
-  private browser: Browser;
-  private elementData: WeakMap<
-    HTMLElement,
-    { createdAt: number; id: ReplacementMessageId }
-  >;
-  private messageElements: Map<ReplacementMessageId, HTMLElement>;
+  private elementData: ReplacerElementMap;
+  private messageElements: ReplacerMessageMap;
 
   private callback: (items: ReplacerMutationResult[]) => void;
+  private sendMessage: (
+    request: ReplacementMessageItem[]
+  ) => Promise<ReplacementMessageItem[] | undefined>;
 
   constructor(
-    browser: Browser,
+    sendMessage: (
+      request: ReplacementMessageItem[]
+    ) => Promise<ReplacementMessageItem[] | undefined>,
     callback: (messages: ReplacerMutationResult[]) => void
   ) {
-    this.browser = browser;
     this.elementData = new WeakMap<
       HTMLElement,
       { createdAt: number; id: ReplacementMessageId }
@@ -30,9 +30,12 @@ export class Messenger {
     this.messageElements = new Map<ReplacementMessageId, HTMLElement>();
 
     this.callback = callback;
+    this.sendMessage = sendMessage;
   }
 
-  private buildReplacementRequest = (elements: HTMLElement[]) => {
+  private buildReplacementRequest = (
+    elements: HTMLElement[]
+  ): ReplacementMessageItem[] => {
     const createdAt = Date.now();
     const messageItems: ReplacementMessageItem[] = [];
     const requestId = crypto.randomUUID();
@@ -50,15 +53,12 @@ export class Messenger {
       });
     }
 
-    const replacementRequest = createWebAppMessage(
-      "processReplacementsRequest",
-      messageItems
-    );
-
-    return replacementRequest;
+    return messageItems;
   };
 
-  private handleReplacementResponse = (results: ReplacementMessageItem[]) => {
+  private handleReplacementResponse = (
+    results: ReplacementMessageItem[]
+  ): void => {
     const callbackItems: ReplacerMutationResult[] = [];
 
     for (const result of results) {
@@ -101,32 +101,19 @@ export class Messenger {
     this.callback(callbackItems);
   };
 
-  public getMessages = () => {
-    return {
-      messageElements: this.messageElements,
-      elementData: this.elementData,
-    };
-  };
-
-  public sendReplacementRequest = async (elements: HTMLElement[]) => {
+  public sendReplacementRequest = async (
+    elements: HTMLElement[]
+  ): Promise<void> => {
     if (elements.length === 0) return;
 
     const replacementRequest = this.buildReplacementRequest(elements);
-    const result = await this.browser.runtime.sendMessage<
-      WebAppMessageData<"processReplacementsRequest">,
-      WebAppMessageData<"processReplacementsResponse">
-    >(replacementRequest);
 
-    if (
-      !result ||
-      !result.details ||
-      !result.details.data ||
-      !Array.isArray(result.details.data) ||
-      result.details.data.length === 0
-    ) {
+    const result = await this.sendMessage(replacementRequest);
+
+    if (!result || !Array.isArray(result) || result.length === 0) {
       return;
     }
 
-    this.handleReplacementResponse(result.details.data);
+    this.handleReplacementResponse(result);
   };
 }

@@ -5,11 +5,26 @@ export interface MutatorConfig {
 }
 
 const colorMap: Record<number, [string, string]> = {
-  0: ["red", "lime"],
-  1: ["blue", "tomato"],
-  2: ["green", "pink"],
-  3: ["yellow", "steelblue"],
-  4: ["purple", "thistle"],
+  0: ["crimson", "lime"],
+  1: ["royalblue", "orange"],
+  2: ["magenta", "springgreen"],
+  3: ["darkorange", "dodgerblue"],
+  4: ["hotpink", "limegreen"],
+  5: ["#FF1493", "#00FF7F"],
+  6: ["#FF4500", "#1E90FF"],
+  7: ["#FF69B4", "#32CD32"],
+  8: ["#DC143C", "#00CED1"],
+  9: ["#FF6347", "#4169E1"],
+  10: ["#FF20FF", "#7FFF00"],
+  11: ["#FF8C00", "#0080FF"],
+  12: ["#E91E63", "#00FF40"],
+  13: ["#FF5722", "#2196F3"],
+  14: ["#9C27B0", "#8BC34A"],
+  15: ["#F44336", "#00BCD4"],
+  16: ["#FF9800", "#3F51B5"],
+  17: ["#E100FF", "#40E0D0"],
+  18: ["#FF3030", "#00FA9A"],
+  19: ["#FF1100", "#00BFFF"],
 };
 
 export class Mutator implements MutatorConfig {
@@ -30,43 +45,6 @@ export class Mutator implements MutatorConfig {
   }
 
   public executeMutations = async (messages: ReplacerMutationResult[]) => {
-    // console.log("mutating", messages.length);
-
-    // const results: ReplacerMutationResult[] = [];
-
-    // for (const message of messages) {
-    //   const { element, html } = message;
-
-    //   if (!element) {
-    //     continue;
-    //   }
-
-    //   // element.textContent = `${element.textContent}+`;
-
-    //   const mutateCount = Number(element.dataset["mutateCount"] ?? 0);
-    //   const colors = colorMap[mutateCount];
-
-    //   element.dataset["mutateCount"] = (mutateCount + 1).toString();
-
-    //   if (this.visualProtection) {
-    //     element.style.setProperty(
-    //       "transition",
-    //       "opacity 150ms ease-out",
-    //       "important"
-    //     );
-    //     element.style.setProperty("opacity", "1", "important");
-    //   }
-    //   element.setAttribute(
-    //     "style",
-    //     `border: 2px groove ${colors[0]} !important; box-shadow: inset 0px 0px 0px 1px ${colors[1]} !important;`
-    //   );
-    //   element.style.filter = "none";
-
-    //   results.push({
-    //     ...message,
-    //   });
-    // }
-
     const promises = messages.map(
       (message) =>
         new Promise<ReplacerMutationResult>((resolve) => {
@@ -75,8 +53,6 @@ export class Mutator implements MutatorConfig {
           if (!element) {
             resolve(message);
           }
-
-          // element.textContent = `${element.textContent}+`;
 
           let mutateCount = Number(element.dataset["mutateCount"] ?? 0);
 
@@ -91,23 +67,29 @@ export class Mutator implements MutatorConfig {
           if (this.visualProtection) {
             element.style.setProperty(
               "transition",
-              "opacity 150ms ease-out",
+              "opacity 100ms ease-out",
               "important"
             );
             element.style.setProperty("opacity", "1", "important");
           }
-          element.setAttribute(
-            "style",
-            `border: 2px groove ${colors[0]} !important; box-shadow: inset 0px 0px 0px 1px ${colors[1]} !important;`
+
+          element.style.setProperty(
+            "outline",
+            `2px groove ${colors[0]}`,
+            "important"
           );
-          element.style.filter = "none";
+          element.style.setProperty(
+            "box-shadow",
+            `inset 0px 0px 0px 1px ${colors[1]}`,
+            "important"
+          );
 
           resolve(message);
         })
     );
 
     const results = await Promise.all(promises);
-    // console.log("results", results);
+
     this.callback(results);
   };
 }

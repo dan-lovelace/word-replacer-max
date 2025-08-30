@@ -1,33 +1,57 @@
 import { Browser } from "webextension-polyfill";
 
-import { ReplacerMutationResult } from "@worm/types/src/message";
+import {
+  ReplacementMessageItem,
+  ReplacerMutationResult,
+  WebAppMessageData,
+} from "@worm/types/src/message";
+
+import { createWebAppMessage } from "../messaging";
 
 import { Ingest } from "./ingest";
 import { Messenger } from "./messenger";
 import { Mutator } from "./mutator";
 
-export class Replacer {
+export interface ReplacerConfig {
+  isEnabled?: boolean;
+}
+
+export class WebExtensionReplacer implements ReplacerConfig {
+  public readonly DEFAULT_CONFIG: Required<ReplacerConfig> = {
+    isEnabled: true,
+  };
+
   private browser: Browser;
   private document: Document;
   private ingest: Ingest;
   private messenger: Messenger;
   private mutator: Mutator;
 
-  constructor(browser: Browser, document: Document) {
+  isEnabled: boolean;
+
+  constructor(browser: Browser, document: Document, config?: ReplacerConfig) {
     this.browser = browser;
     this.document = document;
 
-    this.messenger = new Messenger(this.browser, this.handleMessages);
+    // configuration
+    this.isEnabled = config?.isEnabled ?? this.DEFAULT_CONFIG.isEnabled;
+
+    // replacer classes
     this.ingest = new Ingest(this.document, this.handleIngest, {
-      visualProtection: true,
+      visualProtection: false,
     });
+    this.messenger = new Messenger(
+      this.sendRuntimeMessage,
+      this.handleMessages
+    );
     this.mutator = new Mutator(this.document, this.handleMutationsComplete, {
-      visualProtection: true,
+      visualProtection: false,
     });
   }
 
   public start = () => {
-    // TODO: do not start if extension is OFF
+    if (!this.isEnabled) return;
+
     this.ingest.start();
   };
 
@@ -42,5 +66,20 @@ export class Replacer {
 
   private handleMutationsComplete = (results: ReplacerMutationResult[]) => {
     this.ingest.startObserver();
+  };
+
+  private sendRuntimeMessage = async (
+    message: ReplacementMessageItem[]
+  ): Promise<ReplacementMessageItem[] | undefined> => {
+    const replacementRequest = createWebAppMessage(
+      "processReplacementsRequest",
+      message
+    );
+    const result = await this.browser.runtime.sendMessage<
+      WebAppMessageData<"processReplacementsRequest">,
+      WebAppMessageData<"processReplacementsResponse">
+    >(replacementRequest);
+
+    return result.details?.data;
   };
 }
