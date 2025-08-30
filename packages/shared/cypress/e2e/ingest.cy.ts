@@ -1,5 +1,20 @@
 import { Ingest } from "@worm/shared/src/replace/ingest";
 
+const addElement = (
+  documentObject: Document,
+  delay: number,
+  content: string
+) => {
+  return new Promise<void>((resolve) => {
+    setTimeout(() => {
+      const element = documentObject.createElement("span");
+      element.innerHTML = content;
+      querySelectors.target(documentObject).appendChild(element);
+      resolve();
+    }, delay);
+  });
+};
+
 const querySelectors: Record<string, (document: Document) => HTMLElement> = {
   subTarget: (document) =>
     document.querySelector("[data-testid='sub-target']")!,
@@ -290,7 +305,6 @@ describe("ingest", () => {
 
       const ingest = new Ingest($document, handleItems, {
         batchSize: 100,
-        ignoreElements: new Set<keyof HTMLElementTagNameMap>(["script"]),
       });
       ingest.start();
 
@@ -328,40 +342,20 @@ describe("ingest", () => {
       const debounceMs = 50;
       const ingest = new Ingest($document, handleItems, {
         batchDebounceMs: debounceMs,
+        batchMaxWaitMs: 500, // high max wait time to avoid time-based flushing
         batchSize: 100, // high batch size to avoid size-based flushing
-        ignoreElements: new Set<keyof HTMLElementTagNameMap>(["script"]),
       });
       ingest.start();
 
       const startTime = Date.now();
-
-      // add elements at different intervals to test debouncing
-      const addElement = (delay: number, content: string) => {
-        return new Promise<void>((resolve) => {
-          setTimeout(() => {
-            const element = document.createElement("span");
-            element.innerHTML = content;
-            querySelectors.target($document).appendChild(element);
-            resolve();
-          }, delay);
-        });
-      };
-
-      /**
-       * Element schedule:
-       *   - First at 0ms
-       *   - Second at 10ms (should extend debounce)
-       *   - Third at 30ms (should extend debounce)
-       *   - Fourth at 100ms (should trigger new batch after first completes)
-       */
-      const elementPromises = [
-        addElement(0, "first"),
-        addElement(10, "second"),
-        addElement(30, "third"),
-        addElement(100, "fourth"),
+      const elementSchedule = [
+        addElement($document, 0, "first"), // begin debounce
+        addElement($document, 10, "second"), // extend debouce
+        addElement($document, 30, "third"), // extend debouce, trigger after `debounceMs`
+        addElement($document, 100, "fourth"), // begin debounce, trigger after `debounceMs`
       ];
 
-      cy.wrap(Promise.all(elementPromises)).then(() => {
+      cy.wrap(Promise.all(elementSchedule)).then(() => {
         // wait enough time for all debounced calls to complete
         cy.wait(200).then(() => {
           cy.get("@handleItems")
@@ -400,8 +394,8 @@ describe("ingest", () => {
 
       const ingest = new Ingest($document, handleItems, {
         batchDebounceMs: 100, // long debounce time
+        batchMaxWaitMs: 500, // high max wait time
         batchSize: 3, // small batch size
-        ignoreElements: new Set<keyof HTMLElementTagNameMap>(["script"]),
       });
       ingest.start();
 
@@ -438,6 +432,125 @@ describe("ingest", () => {
 
             // second batch should have the remaining 2 items
             expect(itemCounts[1]).to.equal(2);
+          });
+        });
+      });
+    });
+  });
+
+  it("should flush batch after maximum wait time regardless of ongoing mutations", () => {
+    cy.visitMock();
+
+    cy.document().then(($document) => {
+      const callTimes: number[] = [];
+      const itemCounts: number[] = [];
+
+      const handleItems = cy
+        .spy((items: HTMLElement[]) => {
+          callTimes.push(Date.now());
+          itemCounts.push(items.length);
+        })
+        .as("handleItems");
+
+      const debounceMs = 30;
+      const maxWaitMs = 80;
+      const ingest = new Ingest($document, handleItems, {
+        batchDebounceMs: debounceMs,
+        batchMaxWaitMs: maxWaitMs,
+        batchSize: 100, // high batch size to avoid size-based flushing
+      });
+      ingest.start();
+
+      const startTime = Date.now();
+      const elementSchedule = [
+        addElement($document, 0, "first"), // begin debounce and maxWait timers
+        addElement($document, 15, "second"), // extend debounce
+        addElement($document, 30, "third"), // extend debounce
+        addElement($document, 45, "fourth"), // extend debounce
+        addElement($document, 60, "fifth"), // extend debounce, trigger after `maxWaitMs`
+        addElement($document, 120, "sixth"), // begin debounce, trigger after `debounceMs`
+      ];
+
+      cy.wrap(Promise.all(elementSchedule)).then(() => {
+        // wait enough time for all operations to complete
+        cy.wait(300).then(() => {
+          cy.get("@handleItems")
+            .should("have.been.calledTwice")
+            .then(() => {
+              // first call should happen at maxWaitMs (~80ms)
+              const firstCallTime = callTimes[0] - startTime;
+              expect(firstCallTime).to.be.within(70, 100);
+              expect(itemCounts[0]).to.equal(5); // first 5 elements
+
+              // second call should happen after debounce for the sixth element
+              const secondCallTime = callTimes[1] - startTime;
+              expect(secondCallTime).to.be.within(140, 170); // 120ms + 30ms = ~150ms
+              expect(itemCounts[1]).to.equal(1); // sixth element
+
+              // verify time between calls was less than max wait
+              expect(secondCallTime - firstCallTime).to.be.lessThan(
+                maxWaitMs - 5 // small tolerance
+              );
+            });
+        });
+      });
+    });
+  });
+
+  it("should reset max wait timer when batch is flushed due to size limit", () => {
+    cy.visitMock();
+
+    cy.document().then(($document) => {
+      const callTimes: number[] = [];
+      const itemCounts: number[] = [];
+
+      const handleItems = cy
+        .spy((items: HTMLElement[]) => {
+          callTimes.push(Date.now());
+          itemCounts.push(items.length);
+        })
+        .as("handleItems");
+
+      const maxWaitMs = 100;
+      const ingest = new Ingest($document, handleItems, {
+        batchDebounceMs: 50,
+        batchMaxWaitMs: maxWaitMs,
+        batchSize: 3, // small batch size to trigger size-based flush
+        ignoreElements: new Set<keyof HTMLElementTagNameMap>(["script"]),
+      });
+      ingest.start();
+
+      const startTime = Date.now();
+      const elementSchedule = [
+        addElement($document, 0, "first"), // begin debounce and maxWait timers
+        addElement($document, 5, "second"), // extend debounce
+        addElement($document, 10, "third"), // trigger after `batchSize`, reset maxWait
+        addElement($document, 95, "fourth"), // begin debounce and maxWait timers
+        addElement($document, 110, "fifth"), // extend debouce, trigger after `batchDebounceMs`
+      ];
+
+      cy.wrap(Promise.all(elementSchedule)).then(() => {
+        cy.wait(200).then(() => {
+          cy.get("@handleItems").should("have.callCount", 2);
+
+          cy.then(() => {
+            // first call should happen immediately when batch size reached (~10ms)
+            const firstCallTime = callTimes[0] - startTime;
+            expect(firstCallTime).to.be.within(5, 20);
+            expect(itemCounts[0]).to.equal(3);
+
+            // second call should happen after debounce for remaining elements
+            // NOT after maxWait from the original start time (~100ms)
+            const secondCallTime = callTimes[1] - startTime;
+            expect(secondCallTime).to.be.within(155, 170);
+            expect(itemCounts[1]).to.equal(2);
+
+            // flush should have occurred slower than max wait meaning
+            // the max wait was not the trigger for it
+            const timeBetweenFlushes = secondCallTime - firstCallTime;
+            expect(
+              maxWaitMs + 5 // small tolerance
+            ).to.be.lessThan(timeBetweenFlushes);
           });
         });
       });

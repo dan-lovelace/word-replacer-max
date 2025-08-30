@@ -116,7 +116,7 @@ export class Messenger {
       WebAppMessageData<"processReplacementsRequest">,
       WebAppMessageData<"processReplacementsResponse">
     >(replacementRequest);
-    console.log("result", result);
+
     if (
       !result ||
       !result.details ||

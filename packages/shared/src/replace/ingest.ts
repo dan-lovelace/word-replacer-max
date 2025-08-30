@@ -1,5 +1,6 @@
 export interface IngestConfig {
   batchDebounceMs?: number;
+  batchMaxWaitMs?: number;
   batchSize?: number;
   ignoreElements?: Set<TagName>;
   startNode?: Node;
@@ -13,11 +14,13 @@ export class Ingest implements IngestConfig {
   private readonly callback: (items: HTMLElement[]) => void;
 
   private debounceTimer: NodeJS.Timeout | undefined;
+  private maxWaitTimer: NodeJS.Timeout | undefined;
   private batchContents = new Set<HTMLElement>();
   private observer: MutationObserver | undefined;
 
   // optional configuration
   batchDebounceMs: number;
+  batchMaxWaitMs: number;
   batchSize: number;
   ignoreElements: Set<TagName>;
   startNode: Node;
@@ -33,6 +36,7 @@ export class Ingest implements IngestConfig {
 
     // options and defaults
     this.batchDebounceMs = config?.batchDebounceMs ?? 20;
+    this.batchMaxWaitMs = config?.batchMaxWaitMs ?? 100;
     this.batchSize = config?.batchSize ?? 50;
     this.ignoreElements =
       config?.ignoreElements ??
@@ -111,10 +115,19 @@ export class Ingest implements IngestConfig {
     }
   }
 
+  private clearTimers() {
+    this.clearDebounceTimer();
+
+    if (this.maxWaitTimer !== undefined) {
+      clearTimeout(this.maxWaitTimer);
+      this.maxWaitTimer = undefined;
+    }
+  }
+
   private flushBatch() {
     if (this.batchContents.size === 0) return;
 
-    this.clearDebounceTimer();
+    this.clearTimers();
 
     const found = Array.from(this.batchContents);
     this.batchContents.clear();
@@ -165,6 +178,12 @@ export class Ingest implements IngestConfig {
 
   private processBatch() {
     if (this.batchContents.size === 0) return;
+
+    if (this.batchContents.size === 1 && this.maxWaitTimer === undefined) {
+      this.maxWaitTimer = setTimeout(() => {
+        this.flushBatch();
+      }, this.batchMaxWaitMs);
+    }
 
     this.clearDebounceTimer();
 

@@ -30,7 +30,7 @@ export class Mutator implements MutatorConfig {
   }
 
   public executeMutations = async (messages: ReplacerMutationResult[]) => {
-    console.log("mutating", messages.length);
+    // console.log("mutating", messages.length);
 
     // const results: ReplacerMutationResult[] = [];
 
@@ -78,7 +78,12 @@ export class Mutator implements MutatorConfig {
 
           // element.textContent = `${element.textContent}+`;
 
-          const mutateCount = Number(element.dataset["mutateCount"] ?? 0);
+          let mutateCount = Number(element.dataset["mutateCount"] ?? 0);
+
+          if (!colorMap[mutateCount]) {
+            mutateCount = 0;
+          }
+
           const colors = colorMap[mutateCount];
 
           element.dataset["mutateCount"] = (mutateCount + 1).toString();
