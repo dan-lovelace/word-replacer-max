@@ -1,5 +1,6 @@
 import assert from "node:assert";
-import { readFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
 
 import { PUBLIC_GITHUB_REPOSITORY_URL } from "@worm/shared/src/support";
 import {
@@ -9,7 +10,7 @@ import {
   ManifestV3,
 } from "@worm/types/src/manifest";
 
-import { configureNodeEnvironment } from "./config";
+import { configureNodeEnvironment, distDir } from "./config";
 
 const commonProps: ManifestBase = {
   description: "Seamlessly replace text on any web page.",
@@ -69,8 +70,7 @@ export async function getManifest(version: number): Promise<Manifest> {
   assert(process.env.NODE_ENV, "NODE_ENV is required");
   configureNodeEnvironment(process.env.NODE_ENV);
 
-  const validVersions = [2, 3];
-  assert(validVersions.includes(version), "Invalid manifest version");
+  validateVersion(version);
 
   let manifestBase: Manifest;
   switch (version) {
@@ -153,4 +153,36 @@ export async function getManifest(version: number): Promise<Manifest> {
   );
 
   return manifestBase;
+}
+
+export function validateVersion(input: string | number) {
+  const version = Number(input);
+
+  const validVersions = [2, 3];
+  assert(
+    validVersions.includes(version),
+    `Manifest version must be one of: ${validVersions.join(" | ")}`
+  );
+
+  return version;
+}
+
+export function writeManifest() {
+  return new Promise<void>(async (resolve) => {
+    const [, , manifestVersion] = process.argv;
+
+    const manifest = await getManifest(Number(manifestVersion));
+
+    if (!existsSync(distDir)) {
+      mkdirSync(distDir, { recursive: true });
+    }
+
+    writeFileSync(
+      join(distDir, "manifest.json"),
+      JSON.stringify(manifest, null, 2),
+      "utf-8"
+    );
+
+    resolve();
+  });
 }

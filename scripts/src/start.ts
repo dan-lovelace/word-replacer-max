@@ -1,7 +1,7 @@
 import { prepareBuild } from "./lib/config";
 
 function main() {
-  prepareBuild();
+  prepareBuild(true);
 }
 
 main();

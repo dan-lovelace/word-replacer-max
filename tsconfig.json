@@ -13,6 +13,7 @@
       "@worm/auth": ["./packages/auth"],
       "@worm/background": ["./packages/background"],
       "@worm/content": ["./packages/content"],
+      "@worm/ofscreen": ["./packages/ofscreen"],
       "@worm/plugins": ["./packages/plugins"],
       "@worm/popup": ["./packages/popup"],
       "@worm/shared": ["./packages/shared"],
