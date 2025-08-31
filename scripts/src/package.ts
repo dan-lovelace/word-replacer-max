@@ -7,6 +7,7 @@ import path from "node:path";
 import archiver from "archiver";
 
 import { distDir, versionsDir } from "./lib/config";
+import { validateVersion } from "./lib/manifest";
 
 function main() {
   assert(
@@ -14,7 +15,7 @@ function main() {
     "NODE_ENV must be 'production' to package"
   );
 
-  const manifestVersion = process.argv[2];
+  const manifestVersion = validateVersion(process.argv[2]);
   const packageJson = fs.readFileSync("package.json", "utf-8");
   const { name, version: packageVersion } = JSON.parse(packageJson);
   const outputFile = path.join(
@@ -36,7 +37,7 @@ function main() {
       fs.mkdirSync(versionsDir);
     }
 
-    if (manifestVersion === "2") {
+    if (manifestVersion === 2) {
       // remove development settings from manifest
       const manifestLocation = path.join(distDir, "manifest.json");
       const versionJSON = JSON.parse(

@@ -13,18 +13,16 @@
   ],
   "private": true,
   "scripts": {
-    "build": "yarn clean && tsx scripts/src/build.ts",
+    "prebuild": "yarn clean",
+    "build": "tsx scripts/src/build.ts",
     "clean": "rimraf dist",
     "package": "tsx scripts/src/package.ts",
+    "prestart": "yarn clean",
     "start": "tsx scripts/src/start.ts",
-    "start:2": "yarn run clean && yarn write-manifest:2 && yarn start 2 --ignore=@worm/offscreen --ignore=@worm/webapp",
-    "start:3": "yarn run clean && yarn write-manifest:3 && yarn start 3 --ignore=@worm/webapp",
     "test:all": "yarn test:jest && yarn test:lerna",
     "test:jest": "yarn jest",
     "test:lerna": "lerna run test",
-    "write-config": "tsx scripts/src/write-config.ts",
-    "write-manifest:2": "tsx scripts/src/write-manifest.ts 2",
-    "write-manifest:3": "tsx scripts/src/write-manifest.ts 3"
+    "write-config": "tsx scripts/src/write-config.ts"
   },
   "engines": {
     "node": ">=20.0.0"

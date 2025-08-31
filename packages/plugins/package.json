@@ -2,14 +2,10 @@
   "name": "@worm/plugins",
   "version": "0.0.0",
   "author": "dan-lovelace",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "files": [
-    "./dist"
-  ],
+  "main": "src/index.ts",
+  "type": "module",
   "scripts": {
-    "build": "yarn clean && tsc",
-    "clean": "rimraf ./dist",
+    "build": "echo \"Error: no build specified\" && exit 0",
     "test": "echo \"Error: no test specified\" && exit 0"
   }
 }
