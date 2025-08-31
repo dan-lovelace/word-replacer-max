@@ -15,8 +15,8 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
       const responseMessage = createWebAppMessage("offscreenReadyResponse", {
         data: { success: true },
       });
-      sendResponse(responseMessage);
 
+      sendResponse(responseMessage);
       return true;
     }
 
@@ -27,20 +27,47 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
       const messages = eventData.details ?? [];
       const replacer = new Replacer(document, {
         // fake rules
+        location: {
+          effect: "deny",
+          hrefs: [],
+          useGlobalSettings: true,
+        },
         rules: [
           {
             identifier: crypto.randomUUID(),
             isEnabled: true,
+            mergeInlineElements: true,
+            normalizeWhitespace: true,
             queries: ["comments"],
             queryPatterns: [],
             replacements: ["replies", "thoughts"],
+            replacementStyle: {
+              isBold: false,
+            },
           },
           {
             identifier: crypto.randomUUID(),
             isEnabled: true,
+            mergeInlineElements: true,
+            normalizeWhitespace: true,
             queries: ["hide"],
             queryPatterns: [],
             replacements: ["banish", "delete"],
+            replacementStyle: {
+              isBold: false,
+            },
+          },
+          {
+            identifier: crypto.randomUUID(),
+            isEnabled: true,
+            mergeInlineElements: true,
+            normalizeWhitespace: true,
+            queries: ["lorem ipsum"],
+            queryPatterns: [],
+            replacements: ["sit"],
+            replacementStyle: {
+              isBold: false,
+            },
           },
         ],
       });
@@ -52,9 +79,9 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
       );
 
       sendResponse(responseMessage);
-
       return true;
     }
   }
+
   return undefined;
 });
