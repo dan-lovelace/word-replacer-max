@@ -1,85 +1,147 @@
-import { Browser } from "webextension-polyfill";
-
-import {
-  ReplacementMessageItem,
-  ReplacerMutationResult,
-  WebAppMessageData,
-} from "@worm/types/src/message";
-
-import { createWebAppMessage } from "../messaging";
-
-import { Ingest } from "./ingest";
-import { Messenger } from "./messenger";
-import { Mutator } from "./mutator";
+import { ReplacementMessageItem } from "@worm/types/src/message";
+import { QueryPattern } from "@worm/types/src/replace";
 
 export interface ReplacerConfig {
-  isEnabled?: boolean;
+  rules?: ReplacerRule[];
 }
 
-export class WebExtensionReplacer implements ReplacerConfig {
-  public readonly DEFAULT_CONFIG: Required<ReplacerConfig> = {
-    isEnabled: true,
-  };
-
-  private browser: Browser;
-  private document: Document;
-  private ingest: Ingest;
-  private messenger: Messenger;
-  private mutator: Mutator;
-
+export interface ReplacerRule {
+  identifier: ReplacerRuleId;
   isEnabled: boolean;
+  queries: ReplacerQuery[];
+  queryPatterns: QueryPattern[];
+  replacements: ReplacerReplacement[];
+}
 
-  constructor(browser: Browser, document: Document, config?: ReplacerConfig) {
-    this.browser = browser;
+export type ReplacerQuery = string;
+
+export type ReplacerReplacement = string;
+
+export type ReplacerRuleId = string;
+
+export class Replacer {
+  private compiledRegEx = new Map<
+    ReplacerRule["identifier"],
+    Map<ReplacerQuery, RegExp>
+  >();
+  private document: Document;
+  private enabledRules: ReplacerRule[] = [];
+  private templateElement: HTMLElement;
+
+  rules: ReplacerRule[];
+
+  constructor(document: Document, config?: ReplacerConfig) {
     this.document = document;
+    this.templateElement = this.document.createElement("div");
 
-    // configuration
-    this.isEnabled = config?.isEnabled ?? this.DEFAULT_CONFIG.isEnabled;
-
-    // replacer classes
-    this.ingest = new Ingest(this.document, this.handleIngest, {
-      visualProtection: false,
-    });
-    this.messenger = new Messenger(
-      this.sendRuntimeMessage,
-      this.handleMessages
-    );
-    this.mutator = new Mutator(this.document, this.handleMutationsComplete, {
-      visualProtection: false,
-    });
+    this.rules = config?.rules ?? [];
   }
 
-  public start = () => {
-    if (!this.isEnabled) return;
+  public handleMessages = (
+    messages: ReplacementMessageItem[]
+  ): ReplacementMessageItem[] => {
+    this.updateEnabledRules();
 
-    this.ingest.start();
+    if (this.enabledRules.length === 0) {
+      return messages;
+    }
+
+    this.compileRegExes();
+
+    const results = messages.map((message) => {
+      const { html } = message;
+
+      this.templateElement.innerHTML = html;
+
+      if (!this.templateElement.innerText.trim()) {
+        // do not consider elements without rendered text
+        return message;
+      }
+
+      const htmlWalker = this.document.createTreeWalker(
+        this.templateElement,
+        NodeFilter.SHOW_TEXT
+      );
+
+      let currentNode: Node | null;
+
+      while ((currentNode = htmlWalker.nextNode())) {
+        if (!currentNode.textContent?.trim()) {
+          continue;
+        }
+
+        for (const rule of this.enabledRules) {
+          const queryRegEx = this.compiledRegEx.get(rule.identifier);
+          if (!queryRegEx) {
+            continue;
+          }
+
+          for (const query of rule.queries) {
+            if (query.length === 0) {
+              continue;
+            }
+
+            const expression = queryRegEx.get(query);
+            if (!expression) {
+              continue;
+            }
+
+            const matches = currentNode.textContent?.match(expression);
+            if (currentNode.textContent === null || !matches) {
+              continue;
+            }
+
+            const replacementCandidates = rule.replacements.filter(Boolean);
+            if (replacementCandidates.length === 0) {
+              continue;
+            }
+
+            const replacementIdx =
+              replacementCandidates.length > 1
+                ? Math.floor(Math.random() * replacementCandidates.length)
+                : 0;
+
+            const newText = currentNode.textContent
+              .replace(query, replacementCandidates[replacementIdx])
+              .toString();
+
+            currentNode.textContent = newText;
+          }
+        }
+      }
+
+      return {
+        createdAt: message.createdAt,
+        html: this.templateElement.innerHTML,
+        id: message.id,
+      };
+    });
+
+    return results;
   };
 
-  private handleIngest = (found: HTMLElement[]) => {
-    this.messenger.sendReplacementRequest(found);
+  private compileRegExes = () => {
+    this.compiledRegEx?.clear();
+
+    for (const rule of this.rules) {
+      const ruleRegEx = new Map<ReplacerQuery, RegExp>();
+
+      for (const query of rule.queries) {
+        if (query.length > 0) {
+          ruleRegEx.set(query, new RegExp(query, "g"));
+        }
+      }
+
+      this.compiledRegEx.set(rule.identifier, ruleRegEx);
+    }
   };
 
-  private handleMessages = (messages: ReplacerMutationResult[]) => {
-    this.ingest.stopObserver();
-    this.mutator.executeMutations(messages);
-  };
-
-  private handleMutationsComplete = (results: ReplacerMutationResult[]) => {
-    this.ingest.startObserver();
-  };
-
-  private sendRuntimeMessage = async (
-    message: ReplacementMessageItem[]
-  ): Promise<ReplacementMessageItem[] | undefined> => {
-    const replacementRequest = createWebAppMessage(
-      "processReplacementsRequest",
-      message
+  private updateEnabledRules = () => {
+    this.enabledRules = this.rules.filter(
+      (rule) =>
+        rule.isEnabled &&
+        rule.queries.length > 0 &&
+        rule.replacements.length > 0
     );
-    const result = await this.browser.runtime.sendMessage<
-      WebAppMessageData<"processReplacementsRequest">,
-      WebAppMessageData<"processReplacementsResponse">
-    >(replacementRequest);
-
-    return result.details?.data;
   };
 }

@@ -12,16 +12,23 @@ export const processReplacements = async (
   if (browser.runtime.getManifest().manifest_version === 3) {
     // process DOM in offscreen document
     await ensureOffscreenDocument();
-    console.log("offscreen document ready");
+    // console.log("offscreen document ready");
+
+    const offscreenResponse = await browser.runtime.sendMessage<
+      WebAppMessageData<"processReplacementsRequest">,
+      WebAppMessageData<"processReplacementsResponse">
+    >(createWebAppMessage("processReplacementsRequest"));
+
+    sendResponse(offscreenResponse.details?.data);
   } else {
     // process DOM locally
     const element = document.createElement("div");
     console.log("element", element);
-  }
 
-  const responseMessage = createWebAppMessage("processReplacementsResponse", {
-    data: event.details,
-  });
-  console.log("sending response", responseMessage);
-  sendResponse(responseMessage);
+    const responseMessage = createWebAppMessage("processReplacementsResponse", {
+      data: event.details,
+    });
+    console.log("sending response", responseMessage);
+    sendResponse(responseMessage);
+  }
 };

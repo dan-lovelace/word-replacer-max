@@ -1,7 +1,9 @@
 import "@worm/shared/vite-env.d.ts";
 
 import { browser, Renderer } from "@worm/shared/src/browser";
-import { WebExtensionReplacer } from "@worm/shared/src/replace/replacer";
+import {
+  WebExtensionReplacer,
+} from "@worm/shared/src/replace/extension-replacer";
 import { runStorageMigrations } from "@worm/shared/src/storage";
 
 runStorageMigrations();
