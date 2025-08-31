@@ -9,12 +9,17 @@ export interface BaseMessage<T extends string, K extends Record<T, unknown>>
   data: {
     details?: K[T];
     kind: T;
+    targets?: BaseMessageTargets;
   };
 }
 
 export interface ISuccessful {
   success: boolean;
 }
+
+export type BaseMessageTarget = "background" | "content" | "offscreen";
+
+export type BaseMessageTargets = BaseMessageTarget[];
 
 export type ErrorableMessage<T> = {
   data?: T;
@@ -84,6 +89,8 @@ export type WebAppMessageKindMap = {
   authUserRequest: undefined;
   authUserResponse: ErrorableMessage<AppUser>;
   contentInitialize: undefined;
+  offscreenReadyRequest: undefined;
+  offscreenReadyResponse: ErrorableMessage<ISuccessful>;
   pingRequest: undefined;
   pingResponse: WebAppPingResponse;
   processReplacementsRequest: ReplacementMessageItem[];

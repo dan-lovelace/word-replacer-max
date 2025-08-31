@@ -45,7 +45,7 @@ export class Mutator implements MutatorConfig {
       (message) =>
         new Promise<ReplacerMutationResult>((resolve) => {
           const { element, html } = message;
-          console.log("html", html);
+
           if (!element) {
             resolve(message);
           }
@@ -61,31 +61,35 @@ export class Mutator implements MutatorConfig {
           const newElement = this.document.createElement("div");
           newElement.innerHTML = html;
 
-          // if (element.parentElement) {
-          //   const { parentElement } = element;
+          if (element.parentElement) {
+            //   const { parentElement } = element;
 
-          //   parentElement.dataset["mutateCount"] = (mutateCount + 1).toString();
+            //   parentElement.dataset["mutateCount"] = (mutateCount + 1).toString();
 
-          //   if (this.visualProtection) {
-          //     parentElement.style.setProperty(
-          //       "transition",
-          //       "opacity 100ms ease-out",
-          //       "important"
-          //     );
-          //     parentElement.style.setProperty("opacity", "1", "important");
-          //   }
+            if (this.visualProtection) {
+              element.parentElement.style.setProperty(
+                "transition",
+                "opacity 100ms ease-out",
+                "important"
+              );
+              element.parentElement.style.setProperty(
+                "opacity",
+                "1",
+                "important"
+              );
+            }
 
-          //   parentElement.style.setProperty(
-          //     "outline",
-          //     `2px groove ${colors[0]}`,
-          //     "important"
-          //   );
-          //   parentElement.style.setProperty(
-          //     "box-shadow",
-          //     `inset 0px 0px 0px 1px ${colors[1]}`,
-          //     "important"
-          //   );
-          // }
+            //   parentElement.style.setProperty(
+            //     "outline",
+            //     `2px groove ${colors[0]}`,
+            //     "important"
+            //   );
+            //   parentElement.style.setProperty(
+            //     "box-shadow",
+            //     `inset 0px 0px 0px 1px ${colors[1]}`,
+            //     "important"
+            //   );
+          }
 
           const fragment = this.document.createDocumentFragment();
           fragment.append(...newElement.childNodes);

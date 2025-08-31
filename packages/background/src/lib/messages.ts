@@ -168,6 +168,10 @@ export function startMessageListener() {
   browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
     const event = message as WebAppMessageData<WebAppMessageKind>;
 
+    if (event.targets && !event.targets?.includes("background")) {
+      return;
+    }
+
     switch (event.kind) {
       case "authSignOutRequest": {
         signOut()

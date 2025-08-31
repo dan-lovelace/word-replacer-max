@@ -1,34 +1,60 @@
-import { WebAppMessageData, WebAppMessageKind } from "@worm/types/src/message";
+import { Replacer } from "@worm/shared/src/replace/replacer";
+import {
+  ReplacementMessageItem,
+  WebAppMessageData,
+} from "@worm/types/src/message";
 
 import { browser } from "../browser";
 import { createWebAppMessage } from "../messaging";
 
-import { ensureOffscreenDocument } from "./offscreen";
+import { setupOffscreenDocument } from "./offscreen";
 
 export const processReplacements = async (
   event: WebAppMessageData<"processReplacementsRequest">,
-  sendResponse: (message: unknown) => void
+  sendResponse: (message: ReplacementMessageItem[] | undefined) => void
 ) => {
   if (browser.runtime.getManifest().manifest_version === 3) {
-    // process DOM in offscreen document
-    await ensureOffscreenDocument();
-    // console.log("offscreen document ready");
+    // can only parse DOM in offscreen document
+    await setupOffscreenDocument();
 
+    const offscreenMessage = createWebAppMessage(
+      "processReplacementsRequest",
+      event.details,
+      ["offscreen"]
+    );
     const offscreenResponse = await browser.runtime.sendMessage<
       WebAppMessageData<"processReplacementsRequest">,
       WebAppMessageData<"processReplacementsResponse">
-    >(createWebAppMessage("processReplacementsRequest"));
+    >(offscreenMessage);
 
     sendResponse(offscreenResponse.details?.data);
   } else {
-    // process DOM locally
-    const element = document.createElement("div");
-    console.log("element", element);
-
-    const responseMessage = createWebAppMessage("processReplacementsResponse", {
-      data: event.details,
+    // can parse DOM locally
+    const replacer = new Replacer(document, {
+      // fake rules
+      rules: [
+        {
+          identifier: crypto.randomUUID(),
+          isEnabled: true,
+          queries: ["comments"],
+          queryPatterns: [],
+          replacements: ["replies", "thoughts"],
+        },
+        {
+          identifier: crypto.randomUUID(),
+          isEnabled: true,
+          queries: ["hide"],
+          queryPatterns: [],
+          replacements: ["banish", "delete"],
+        },
+      ],
     });
-    console.log("sending response", responseMessage);
-    sendResponse(responseMessage);
+
+    const results = replacer.handleMessages(event.details ?? []);
+    const responseMessage = createWebAppMessage("processReplacementsResponse", {
+      data: results,
+    });
+
+    sendResponse(responseMessage.details?.data);
   }
 };

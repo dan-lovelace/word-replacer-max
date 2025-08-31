@@ -76,14 +76,15 @@ export class WebExtensionReplacer implements WebExtensionReplacerConfig {
   ): Promise<ReplacementMessageItem[] | undefined> => {
     const replacementRequest = createWebAppMessage(
       "processReplacementsRequest",
-      message
+      message,
+      ["background"]
     );
 
     const result = await this.browser.runtime.sendMessage<
       WebAppMessageData<"processReplacementsRequest">,
-      WebAppMessageData<"processReplacementsResponse">
+      ReplacementMessageItem[] | undefined
     >(replacementRequest);
 
-    return result.details?.data;
+    return result;
   };
 }
