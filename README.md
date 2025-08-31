@@ -52,12 +52,12 @@ export NODE_ENV=development
 
 # Developing
 
-After following the dependency installation instructions above, use the
-`start:*` command to start a development server using a given manifest version.
-For version 2:
+After following the dependency installation instructions above, use the `start`
+command to start a development server using a given manifest version. For
+version 2:
 
 ```
-NODE_ENV=development yarn start:2
+NODE_ENV=development yarn start 2
 ```
 
 File changes can be seen in real-time and may require the extension to be
