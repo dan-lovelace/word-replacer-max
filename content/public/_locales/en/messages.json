@@ -1,0 +1,18 @@
+{
+  "extensionAuthor": {
+    "message": "dan@wordreplacermax.com",
+    "description": "Name of the extension author as it appears in the store."
+  },
+  "extensionDescription": {
+    "message": "Seamlessly replace text on any web page.",
+    "description": "Description of the extension as it appears in the store."
+  },
+  "extensionName": {
+    "message": "Word Replacer Max",
+    "description": "Name of the extension as it appears in the store."
+  },
+  "extensionTagline": {
+    "message": " | Advanced text replacer trusted by thousands",
+    "description": "Tagline displayed after the extension name in the store."
+  }
+}

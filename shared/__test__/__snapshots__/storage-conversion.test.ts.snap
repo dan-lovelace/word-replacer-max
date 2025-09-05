@@ -1,0 +1,109 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`matchersFromStorage converts a raw storage object's matchers to a shape expected by the rest of the system 1`] = `
+[
+  {
+    "active": true,
+    "identifier": "b7fce47e-58e8-4409-adf4-08da053e713d",
+    "queries": [
+      "my jaw dropped",
+      "I was shocked",
+    ],
+    "queryPatterns": [],
+    "replacement": "I was surprised",
+  },
+  {
+    "active": true,
+    "identifier": "34eb8c78-402e-4006-b5a9-b1b15af7a037",
+    "queries": [
+      "This.",
+      "literally",
+    ],
+    "queryPatterns": [
+      "case",
+      "wholeWord",
+    ],
+    "replacement": "",
+  },
+]
+`;
+
+exports[`matchersFromStorage gracefully handles misconfigured stored legacy matchers 1`] = `
+[
+  {
+    "active": true,
+    "identifier": "1234",
+    "queries": [
+      "Hello",
+    ],
+    "queryPatterns": [
+      "case",
+      "wholeWord",
+    ],
+    "replacement": "Hi",
+    "useGlobalReplacementStyle": true,
+  },
+]
+`;
+
+exports[`matchersFromStorage returns matchers in the correct order 1`] = `
+[
+  {
+    "active": true,
+    "identifier": "001",
+    "queries": [
+      "my jaw dropped",
+      "I was shocked",
+    ],
+    "queryPatterns": [],
+    "replacement": "I was surprised",
+    "sortIndex": 0,
+  },
+  {
+    "active": true,
+    "identifier": "000",
+    "queries": [
+      "This.",
+      "literally",
+    ],
+    "queryPatterns": [
+      "case",
+      "wholeWord",
+    ],
+    "replacement": "",
+    "sortIndex": 1,
+  },
+]
+`;
+
+exports[`matchersToStorage converts an array of matchers to a shape acceptable for storage 1`] = `
+{
+  "matcher__34eb8c78-402e-4006-b5a9-b1b15af7a037": {
+    "active": true,
+    "identifier": "34eb8c78-402e-4006-b5a9-b1b15af7a037",
+    "queries": [
+      "This.",
+      "literally",
+    ],
+    "queryPatterns": [
+      "case",
+      "wholeWord",
+    ],
+    "replacement": "",
+    "sortIndex": 1,
+    "useGlobalReplacementStyle": true,
+  },
+  "matcher__b7fce47e-58e8-4409-adf4-08da053e713d": {
+    "active": true,
+    "identifier": "b7fce47e-58e8-4409-adf4-08da053e713d",
+    "queries": [
+      "my jaw dropped",
+      "I was shocked",
+    ],
+    "queryPatterns": [],
+    "replacement": "I was surprised",
+    "sortIndex": 0,
+    "useGlobalReplacementStyle": true,
+  },
+}
+`;
