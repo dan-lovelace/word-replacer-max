@@ -1,0 +1,16 @@
+{
+  "name": "@web-extension/testing",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "type": "module",
+  "devDependencies": {
+    "@testing-library/cypress": "^10.0.2",
+    "@types/jest": "^30.0.0",
+    "@wordreplacermax/types": "*",
+    "cypress": "^15.0.0",
+    "jest": "^30.1.2",
+    "jest-environment-jsdom": "^30.1.2",
+    "ts-deepmerge": "^7.0.2",
+    "ts-jest": "^29.2.5"
+  }
+}

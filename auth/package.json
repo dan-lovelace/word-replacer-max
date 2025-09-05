@@ -1,0 +1,17 @@
+{
+  "name": "@web-extension/auth",
+  "version": "0.0.0",
+  "author": "dan-lovelace",
+  "main": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc && yarn vite:tsx build --mode ${NODE_ENV:-production}",
+    "start": ": ${NODE_ENV:=development} && yarn build --watch",
+    "test": "echo \"Error: no test specified\" && exit 0",
+    "vite:tsx": "NODE_OPTIONS='--import tsx' vite"
+  },
+  "dependencies": {
+    "@web-extension/shared": "*",
+    "@wordreplacermax/types": "*"
+  }
+}

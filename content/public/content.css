@@ -1,0 +1,10 @@
+body {
+  filter: blur(2px);
+  animation: wrmFadeIn 90ms ease-in forwards;
+}
+
+@keyframes wrmFadeIn {
+  to {
+    filter: blur(0px);
+  }
+}

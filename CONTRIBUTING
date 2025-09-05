@@ -1,0 +1,21 @@
+# Contributing
+
+This project is not currently accepting external contributions.
+
+## Why?
+
+This repository contains only a subset of source code extracted from a larger
+monorepo. It's not designed to be maintained as a standalone project, and
+contributions here wouldn't integrate back into the main codebase. We appreciate
+your interest in the project.
+
+## Questions?
+
+For questions about the project itself, feel free to open an issue. While we
+won't accept pull requests, we're happy to discuss the project's direction or
+clarify implementation details.
+
+## Future Changes
+
+This policy may change in the future. Watch the repository if you'd like to be
+notified of any updates to our contribution guidelines.
