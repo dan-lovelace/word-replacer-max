@@ -1,0 +1,10 @@
+body {
+  filter: blur(2px);
+  animation: wormFadeIn 90ms ease-in forwards;
+}
+
+@keyframes wormFadeIn {
+  to {
+    filter: blur(0px);
+  }
+}
