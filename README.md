@@ -1,3 +1,7 @@
+⚠️ This is a subset of the Word Replacer Max browser extension source code and
+cannot be built without the core libraries. See our
+[contribution guidelines](./CONTRIBUTING) for more details.
+
 # <img alt="Word Replace Max" src="./assets/word-replacer-max-logo_26.png" /> Word Replacer Max
 
 A browser extension for replacing text on webpages.
@@ -52,12 +56,12 @@ export NODE_ENV=development
 
 # Developing
 
-After following the dependency installation instructions above, use the
-`start:*` command to start a development server using a given manifest version.
-For version 2:
+After following the dependency installation instructions above, use the `start`
+command to start a development server using a given manifest version. For
+version 2:
 
 ```
-NODE_ENV=development yarn start:2
+NODE_ENV=development yarn start 2
 ```
 
 File changes can be seen in real-time and may require the extension to be
@@ -76,7 +80,7 @@ To run all tests:
 
 1. Start the Popup development server in test mode
    ```sh
-   VITE_MODE=test yarn workspace @worm/popup dev
+   VITE_MODE=test yarn workspace @web-extension/popup dev
    ```
 1. Use the "test all" command
    ```sh

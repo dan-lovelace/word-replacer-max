@@ -1,0 +1,35 @@
+{
+  "name": "@web-extension/shared",
+  "version": "0.0.0",
+  "author": "dan-lovelace",
+  "main": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "build": "echo \"Info: no build specified\"",
+    "cypress:open": "cypress open --e2e --browser chrome",
+    "cypress:run": "cypress run",
+    "test": "if [ \"$CI\" != \"true\" ]; then yarn run cypress:run; fi"
+  },
+  "dependencies": {
+    "aws-amplify": "^6.11.0",
+    "axios": "^1.7.9",
+    "uuid": "^11.0.3",
+    "webextension-polyfill": "^0.12.0",
+    "zod": "^4.1.5"
+  },
+  "devDependencies": {
+    "@types/archiver": "^6.0.3",
+    "@types/uuid": "^10.0.0",
+    "@types/webextension-polyfill": "0.12.1",
+    "@web-extension/plugins": "*",
+    "@web-extension/testing": "*",
+    "@wordreplacermax/types": "*",
+    "archiver": "^7.0.1",
+    "lerna": "^8.1.9",
+    "rimraf": "^6.0.1",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vite": "^7.1.4"
+  }
+}

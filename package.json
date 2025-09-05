@@ -1,30 +1,10 @@
 {
-  "name": "word-replacer-max",
+  "name": "@dan-lovelace/word-replacer-max",
   "author": {
     "name": "Dan Lovelace",
     "url": "https://github.com/dan-lovelace/word-replacer-max"
   },
   "version": "0.18.1",
   "license": "GPL-3.0-or-later",
-  "description": "A browser extension for replacing text on web pages",
-  "type": "module",
-  "workspaces": [
-    "packages/*"
-  ],
-  "private": true,
-  "scripts": {
-    "build": "yarn clean && tsx scripts/src/build.ts",
-    "clean": "rimraf dist",
-    "package": "tsx scripts/src/package.ts",
-    "start": "lerna run start",
-    "start:2": "yarn build 2 && yarn start",
-    "start:3": "yarn build 3 && yarn start",
-    "test:all": "yarn test:jest && yarn test:lerna",
-    "test:jest": "yarn jest",
-    "test:lerna": "lerna run test",
-    "write-config": "tsx scripts/src/write-config.ts"
-  },
-  "engines": {
-    "node": ">=20.0.0"
-  }
+  "description": "A browser extension for replacing text on web pages"
 }
