@@ -2,6 +2,7 @@
  * Bootstrap configuration
  */
 $enable-negative-margins: true;
+$primary: #3366ff;
 $tooltip-max-width: 300px;
 
 @import "bootstrap/scss/bootstrap";
@@ -116,4 +117,18 @@ input[type="text"] {
   .btn {
     min-height: calc($inputHeight + 2px);
   }
+}
+
+.wrm-menu-item {
+  &:active,
+  &:hover,
+  &:focus {
+    background-color: $light-border-subtle !important;
+
+    &.dark {
+      background-color: $light-border-subtle-dark !important;
+    }
+  }
+
+  transition: background-color 150ms;
 }

@@ -1,5 +1,3 @@
-import "./Dropdown.scss";
-
 import { ComponentProps } from "preact";
 import { useMemo } from "preact/hooks";
 import { JSXInternal } from "preact/src/jsx";

@@ -49,27 +49,6 @@ export default function AccountDetails() {
             />
           </div>
         </div>
-        <div>
-          <div className="fw-medium">Feature access</div>
-          <div className="d-flex flex-column gap-1">
-            <FeatureItem
-              icon="check_circle"
-              label="Replacement suggestions"
-              color="success"
-            />
-            <FeatureItem
-              icon="check_circle"
-              label="Priority support"
-              color="success"
-            />
-            <FeatureItem
-              icon="cancel"
-              label="Cloud sync"
-              color="secondary"
-              tooltip="Optionally sync all extension data with your Word Replacer Max account"
-            />
-          </div>
-        </div>
       </div>
     </div>
   );
