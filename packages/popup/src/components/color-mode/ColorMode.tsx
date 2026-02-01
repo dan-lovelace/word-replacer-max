@@ -21,7 +21,7 @@ export default function ColorMode() {
     },
   } = useConfig();
 
-  const handleChange = async (event: ChangeEvent<HTMLSelectElement>) => {
+  const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const newValue = event.currentTarget.value as TColorMode;
     const newStorage: LocalStorage = {
       colorMode: newValue,
@@ -29,13 +29,16 @@ export default function ColorMode() {
 
     setIsLoading(true);
 
-    await localStorageProvider.set(newStorage).finally(() => {
-      updateDocumentColorMode(
-        newValue === "system" ? getSystemColorMode() : newValue
-      );
-
-      setIsLoading(false);
-    });
+    localStorageProvider
+      .set(newStorage)
+      .then(() => {
+        updateDocumentColorMode(
+          newValue === "system" ? getSystemColorMode() : newValue
+        );
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   const selectValue = savedValue || DEFAULT_COLOR_MODE;

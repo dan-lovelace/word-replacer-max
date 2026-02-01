@@ -8,8 +8,8 @@ import { useEffect, useState } from "preact/hooks";
 
 import { POPUP_ROUTES } from "@worm/shared/src/browser";
 import {
-  COLOR_MODE_ATTRIBUTE,
   getSystemColorMode,
+  updateDocumentColorMode,
 } from "@worm/shared/src/color";
 import { storageSetByKeys } from "@worm/shared/src/storage";
 
@@ -48,24 +48,9 @@ export function App() {
       }
 
       if (colorMode) {
-        switch (colorMode) {
-          case "dark":
-          case "light": {
-            document.documentElement.setAttribute(
-              COLOR_MODE_ATTRIBUTE,
-              colorMode
-            );
-            break;
-          }
-
-          case "system": {
-            document.documentElement.setAttribute(
-              COLOR_MODE_ATTRIBUTE,
-              getSystemColorMode()
-            );
-            break;
-          }
-        }
+        updateDocumentColorMode(
+          colorMode === "system" ? getSystemColorMode() : colorMode
+        );
       }
 
       setIsInitialized(true);
