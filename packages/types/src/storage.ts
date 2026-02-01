@@ -13,9 +13,14 @@ export const storageVersions = [
   "1.2.0",
   "1.3.0",
   "1.4.0",
+  "1.5.0",
 ] as const;
 
+export type ColorMode = "dark" | "light" | "system";
+
 export type LocalStorage = Partial<{
+  colorMode?: ColorMode;
+
   /**
    * Auth keys are mapped using their respective names from Amplify. A custom
    * token provider exists to translate Amplify's version to our own.

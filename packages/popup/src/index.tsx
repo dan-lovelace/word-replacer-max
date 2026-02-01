@@ -7,6 +7,10 @@ import { LocationProvider, Route, Router } from "preact-iso";
 import { useEffect, useState } from "preact/hooks";
 
 import { POPUP_ROUTES } from "@worm/shared/src/browser";
+import {
+  COLOR_MODE_ATTRIBUTE,
+  getSystemColorMode,
+} from "@worm/shared/src/color";
 import { storageSetByKeys } from "@worm/shared/src/storage";
 
 import ToastContainer from "./components/alert/ToastContainer";
@@ -23,6 +27,7 @@ export function App() {
 
   const {
     storage: {
+      local: { colorMode },
       sync: { preferences },
     },
   } = useConfig();
@@ -40,6 +45,27 @@ export function App() {
         await storageSetByKeys({
           preferences: newPreferences,
         });
+      }
+
+      if (colorMode) {
+        switch (colorMode) {
+          case "dark":
+          case "light": {
+            document.documentElement.setAttribute(
+              COLOR_MODE_ATTRIBUTE,
+              colorMode
+            );
+            break;
+          }
+
+          case "system": {
+            document.documentElement.setAttribute(
+              COLOR_MODE_ATTRIBUTE,
+              getSystemColorMode()
+            );
+            break;
+          }
+        }
       }
 
       setIsInitialized(true);

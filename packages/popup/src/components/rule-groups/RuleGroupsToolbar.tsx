@@ -2,7 +2,7 @@ import { useMemo } from "preact/hooks";
 import { Fragment } from "preact/jsx-runtime";
 import { JSXInternal } from "preact/src/jsx";
 
-import { cx } from "@worm/shared";
+import { cx, getCurrentColorMode } from "@worm/shared";
 import {
   getMatcherGroups,
   sortMatcherGroups,
@@ -20,11 +20,14 @@ import RuleGroupColor from "./RuleGroupColor";
 export default function RuleGroupsToolbar() {
   const {
     storage: {
+      local: { colorMode },
       sync,
       sync: { ruleGroups },
     },
   } = useConfig();
   const { showRefreshToast } = useToast();
+
+  const currentColorMode = getCurrentColorMode(colorMode);
 
   const handleChange =
     (identifier: string) =>
@@ -100,7 +103,7 @@ export default function RuleGroupsToolbar() {
 
   return (
     <div
-      className="bg-white d-flex align-items-center gap-2 position-sticky mx-n1 pt-2 pb-1 top-0 z-3"
+      className="bg-body d-flex align-items-center gap-2 position-sticky mx-n1 pt-2 pb-1 top-0 z-3"
       data-testid="rule-groups-toolbar"
     >
       <IconButton
@@ -139,7 +142,8 @@ export default function RuleGroupsToolbar() {
                 />
                 <label
                   className={cx(
-                    "btn btn-light btn-sm py-0 d-flex align-items-center gap-2 text-nowrap"
+                    "btn btn-sm py-0 d-flex align-items-center gap-2 text-nowrap",
+                    currentColorMode === "light" ? "btn-light" : "btn-dark"
                   )}
                   htmlFor={inputId}
                   role="checkbox"

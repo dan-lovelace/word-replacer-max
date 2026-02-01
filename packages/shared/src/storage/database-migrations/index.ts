@@ -6,19 +6,21 @@ import {
 } from "@worm/shared/src/replace/lib/style";
 import { Matcher } from "@worm/types/src/rules";
 import {
+  LocalStorage,
   StorageVersion,
   storageVersions,
   SyncStorage,
 } from "@worm/types/src/storage";
 
 import { STORAGE_MATCHER_PREFIX } from "../../browser";
+import { DEFAULT_COLOR_MODE } from "../../color";
 import { logDebug } from "../../logging";
 import { DEFAULT_RULE_GROUPS } from "../../replace/lib/groups";
 import { DEFAULT_RENDER_RATE } from "../../replace/lib/render";
 import { DEFAULT_RULE_SYNC } from "../../replace/lib/rule-sync";
 
 import { BASELINE_STORAGE_VERSION, CURRENT_STORAGE_VERSION } from "../";
-import { storageGet, storageSet } from "../api";
+import { localStorageProvider, storageGet, storageSet } from "../api";
 
 type ParseVersion<T extends string> =
   T extends `${infer Major}.${infer Minor}.${infer Patch}`
@@ -46,10 +48,14 @@ type StrictMigrations = {
   };
 };
 
-export type MigrateFn = (storage: SyncStorage) => SyncStorage;
+export type MigrateFn = (
+  storage: SyncStorage
+) => SyncStorage | Promise<SyncStorage>;
 
 export type Migrations = {
-  [major: number]: { [minor: number]: { [patch: number]: MigrateFn } };
+  [major: number]: {
+    [minor: number]: { [patch: number]: MigrateFn };
+  };
 };
 
 export const MIGRATIONS: StrictMigrations = {
@@ -149,6 +155,21 @@ export const MIGRATIONS: StrictMigrations = {
         const merged = merge(storage, updatedValues);
 
         return merged;
+      },
+    },
+    5: {
+      /**
+       * **1.5.0** - Color mode
+       *
+       * Allows users to change the popup's color theme.
+       */
+      0: async (storage) => {
+        const localUpdate: LocalStorage = {
+          colorMode: DEFAULT_COLOR_MODE,
+        };
+        await localStorageProvider.set(localUpdate);
+
+        return storage;
       },
     },
   },
@@ -270,7 +291,7 @@ export async function migrate(
      * Execute the migration and increment the version.
      */
     logDebug("Migrating from", storageVersion, "to", version);
-    const newStorage = migrateFn(currentStorage);
+    const newStorage = await migrateFn(currentStorage);
     newStorage.storageVersion = version;
 
     /**

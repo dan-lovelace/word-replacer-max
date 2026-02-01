@@ -1,3 +1,51 @@
+const colorModesEnum = {
+  dark: "Dark",
+  light: "Light",
+  system: "System",
+} satisfies Record<string, string>;
+
+export type ColorMode = keyof typeof colorModesEnum;
+
+export const allColorModes: {
+  label: string;
+  value: ColorMode;
+}[] = [
+  {
+    label: colorModesEnum.light,
+    value: "light",
+  },
+  {
+    label: colorModesEnum.dark,
+    value: "dark",
+  },
+  {
+    label: colorModesEnum.system,
+    value: "system",
+  },
+];
+
+export const COLOR_MODE_ATTRIBUTE = "data-bs-theme";
+export const COLOR_MODE_QUERY = "(prefers-color-scheme: dark)";
+export const DEFAULT_COLOR_MODE: ColorMode = "light";
+
+export function getCurrentColorMode(
+  storedMode?: ColorMode
+): Extract<ColorMode, "dark" | "light"> {
+  if (storedMode && storedMode !== "system") {
+    return storedMode;
+  }
+
+  return getSystemColorMode();
+}
+
+export function getSystemColorMode(): Extract<ColorMode, "dark" | "light"> {
+  return window.matchMedia(COLOR_MODE_QUERY).matches ? "dark" : "light";
+}
+
+export function updateDocumentColorMode(newMode: ColorMode) {
+  document.documentElement.setAttribute(COLOR_MODE_ATTRIBUTE, newMode);
+}
+
 class ColorGenerator {
   private recentHues: number[] = [];
   private readonly HUE_DIFFERENCE_THRESHOLD = 30;
