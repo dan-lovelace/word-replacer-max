@@ -8,7 +8,7 @@ import { useEffect, useState } from "preact/hooks";
 
 import { POPUP_ROUTES } from "@worm/shared/src/browser";
 import {
-  getSystemColorMode,
+  getCurrentColorMode,
   updateDocumentColorMode,
 } from "@worm/shared/src/color";
 import { storageSetByKeys } from "@worm/shared/src/storage";
@@ -48,9 +48,7 @@ export function App() {
       }
 
       if (colorMode) {
-        updateDocumentColorMode(
-          colorMode === "system" ? getSystemColorMode() : colorMode
-        );
+        updateDocumentColorMode(getCurrentColorMode(colorMode));
       }
 
       setIsInitialized(true);
