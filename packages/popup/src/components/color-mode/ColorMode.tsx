@@ -51,6 +51,7 @@ export default function ColorMode() {
           className="form-select w-auto"
           disabled={isLoading}
           value={selectValue}
+          style={{ minWidth: 170 }}
           onChange={handleChange}
         >
           {allColorModes.map(({ label, value }) => (
