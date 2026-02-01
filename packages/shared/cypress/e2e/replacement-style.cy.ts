@@ -46,7 +46,7 @@ describe("replacement style", () => {
           .then((color) => expect(color).to.eq("400"));
         s.replacedText()
           .invoke("css", "text-decoration")
-          .then((color) => expect(color).to.eq("none solid rgb(0, 0, 0)"));
+          .then((color) => expect(color).to.eq("none"));
       });
     });
   });
@@ -75,7 +75,7 @@ describe("replacement style", () => {
           .then((color) => expect(color).to.eq("400"));
         s.replacedText()
           .invoke("css", "text-decoration")
-          .then((color) => expect(color).to.eq("none solid rgb(0, 0, 0)"));
+          .then((color) => expect(color).to.eq("none"));
       });
     });
   });
@@ -115,9 +115,7 @@ describe("replacement style", () => {
           .then((color) => expect(color).to.eq("700"));
         s.replacedText()
           .invoke("css", "text-decoration")
-          .then((color) =>
-            expect(color).to.eq("underline line-through solid rgb(0, 0, 255)")
-          );
+          .then((color) => expect(color).to.eq("underline line-through"));
       });
     });
   });

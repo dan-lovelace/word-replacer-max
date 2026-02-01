@@ -13,7 +13,8 @@ export type IconButtonProps = Omit<ComponentProps<"button">, "icon"> & {
   iconProps?: Omit<MaterialIconProps, "default" | "name">;
 };
 
-export const ICON_BUTTON_BASE_CLASS = "btn btn-light bg-transparent border-0";
+export const ICON_BUTTON_BASE_CLASS =
+  "btn btn-light bg-transparent border-0 text-body";
 
 export default function IconButton({
   className,

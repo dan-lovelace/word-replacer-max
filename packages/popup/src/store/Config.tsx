@@ -9,11 +9,18 @@ import {
   STORAGE_MATCHER_PREFIX,
 } from "@worm/shared/src/browser";
 import {
+  COLOR_MODE_QUERY,
+  getSystemColorMode,
+  updateDocumentColorMode,
+} from "@worm/shared/src/color";
+import {
+  localStorageProvider,
   storageRemoveByKeys,
   storageSetByKeys,
 } from "@worm/shared/src/storage";
 import { Matcher } from "@worm/types/src/rules";
 import {
+  LocalStorage,
   Storage,
   StorageChange,
   StorageProvider,
@@ -98,6 +105,30 @@ export function ConfigProvider({ children }: { children: PreactChildren }) {
 
     return () => {
       browser.storage.onChanged.removeListener(updateStorage);
+    };
+  }, []);
+
+  useEffect(() => {
+    const updateColorMode = async () => {
+      const storedMode = ((await localStorageProvider.get()) as LocalStorage)
+        .colorMode;
+
+      if (storedMode !== "system") {
+        // ignore this event since user has chosen specific mode
+        return;
+      }
+
+      updateDocumentColorMode(getSystemColorMode());
+    };
+
+    window
+      .matchMedia(COLOR_MODE_QUERY)
+      .addEventListener("change", updateColorMode);
+
+    return () => {
+      window
+        .matchMedia(COLOR_MODE_QUERY)
+        .removeEventListener("change", updateColorMode);
     };
   }, []);
 

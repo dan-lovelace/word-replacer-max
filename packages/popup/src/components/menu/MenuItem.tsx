@@ -1,10 +1,10 @@
-import "./Dropdown.scss";
-
 import { ComponentProps } from "preact";
 import { useMemo } from "preact/hooks";
 import { JSXInternal } from "preact/src/jsx";
 
-import { cx } from "@worm/shared";
+import { cx, getCurrentColorMode } from "@worm/shared";
+
+import { useConfig } from "../../store/Config";
 
 import MaterialIcon from "../icon/MaterialIcon";
 
@@ -25,6 +25,11 @@ export default function MenuItem({
   onClick,
   ...props
 }: MenuItemProps) {
+  const {
+    storage: {
+      local: { colorMode },
+    },
+  } = useConfig();
   const { closeDropdown } = useDropdown();
 
   const handleClick = (
@@ -33,6 +38,8 @@ export default function MenuItem({
     onClick?.(event);
     closeDropdown();
   };
+
+  const currentColorMode = getCurrentColorMode(colorMode);
 
   const MemoizedComponent = useMemo(
     () => () => {
@@ -45,6 +52,7 @@ export default function MenuItem({
             "btn btn-link rounded-0 px-3",
             "text-body text-decoration-none text-start",
             dense ? "py-1" : "py-2",
+            currentColorMode,
             props.className
           )}
           onClick={handleClick}

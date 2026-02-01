@@ -11,7 +11,6 @@ import {
 import { storageSetByKeys } from "@worm/shared/src/storage";
 import { Matcher } from "@worm/types/src/rules";
 
-import { useAuth } from "../../store/Auth";
 import { useConfig } from "../../store/Config";
 
 import { useToast } from "../alert/useToast";
@@ -27,8 +26,6 @@ import MenuItem from "../menu/MenuItem";
 import MenuItemContainer from "../menu/MenuItemContainer";
 import RuleGroupColor from "../rule-groups/RuleGroupColor";
 import Tooltip from "../Tooltip";
-
-import ReplacementSuggest from "./ReplacementSuggest";
 
 type ReplacementInputProps = Pick<
   Matcher,
@@ -63,13 +60,11 @@ export default function ReplacementInput({
 }: ReplacementInputProps) {
   const [value, setValue] = useState(replacement);
 
-  const { hasAccess } = useAuth();
   const {
     matchers,
     storage: {
-      local: { authIdToken },
       sync,
-      sync: { replacementStyle, replacementSuggest, ruleGroups },
+      sync: { replacementStyle, ruleGroups },
     },
     updateMatchers,
   } = useConfig();
@@ -181,16 +176,10 @@ export default function ReplacementInput({
     };
   }, [sync]);
 
-  const canSuggest = useMemo(
-    () => replacementSuggest?.active && hasAccess("api:post:Suggest"),
-    [authIdToken, replacementSuggest?.active]
-  );
-
   const canGroupRules = Boolean(ruleGroups?.active);
   const inputWidth =
     INPUT_WIDTH_BASE -
-    ((canSuggest ? INPUT_BUTTON_WIDTH - 1 : 0) +
-      (replacementStyle?.active ? INPUT_BUTTON_WIDTH - 1 : 0) +
+    ((replacementStyle?.active ? INPUT_BUTTON_WIDTH - 1 : 0) +
       (ruleGroups?.active ? INPUT_BUTTON_WIDTH - 1 : 0));
 
   return (
@@ -204,7 +193,7 @@ export default function ReplacementInput({
           <input
             className={cx(
               "form-control border-0",
-              (canSuggest || replacementStyle?.active || ruleGroups?.active) &&
+              (replacementStyle?.active || ruleGroups?.active) &&
                 "rounded-end-0"
             )}
             disabled={disabled}
@@ -227,18 +216,6 @@ export default function ReplacementInput({
             }}
             data-testid="replacement-text-input"
           />
-          <div className={cx(!canSuggest && "d-none")}>
-            <ReplacementSuggest
-              active={active}
-              disabled={disabled}
-              identifier={identifier}
-              queries={queries}
-              replacement={replacement}
-              value={value}
-              onReplacementChange={onChange}
-              setValue={setValue}
-            />
-          </div>
           {replacementStyle?.active && (
             <div class="d-flex">
               <IconButton

@@ -1,6 +1,8 @@
 import { ComponentProps } from "preact";
 
-import { cx } from "@worm/shared";
+import { cx, getCurrentColorMode } from "@worm/shared";
+
+import { useConfig } from "../store/Config";
 
 import Button from "./button/Button";
 import MaterialIcon from "./icon/MaterialIcon";
@@ -17,12 +19,21 @@ export default function Chip({
   onRemove,
   ...rest
 }: ChipProps) {
+  const {
+    storage: {
+      local: { colorMode },
+    },
+  } = useConfig();
+
+  const currentColorMode = getCurrentColorMode(colorMode);
+
   return (
     <span
       className={cx(
         "badge",
         "d-flex align-items-center flex-fill-0 pe-0",
-        "fs-6 text-bg-light text-start text-wrap"
+        "fs-6 text-start text-wrap",
+        currentColorMode === "light" ? "text-bg-light" : "bg-light-subtle"
       )}
       {...rest}
     >

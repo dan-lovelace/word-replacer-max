@@ -87,14 +87,6 @@ export const selectors = {
     },
   },
   options: {
-    replacementSuggest: {
-      apiUsage: {
-        refillAlertMessage: () => cy.findByTestId("refill-alert-message"),
-        root: () => cy.findByTestId("api-usage"),
-      },
-      toggleButton: () =>
-        cy.findByTestId("replacement-suggestions-toggle-button"),
-    },
     renderRate: {
       inputWrapper: () => cy.findByTestId("render-rate-input-wrapper"),
       toggleButton: () => cy.findByTestId("render-rate-toggle-button"),
@@ -180,20 +172,6 @@ export const selectors = {
     replacementInput: {
       root: () => cy.findByTestId("replacement-input-form"),
       textInput: () => cy.findByTestId("replacement-text-input"),
-    },
-    replacementSuggest: {
-      dropdownMenu: {
-        configuration: () => cy.findByTestId("suggestions-configuration"),
-        resultsItems: () => cy.findAllByTestId("suggestions-list-item"),
-        resultsList: () => cy.findByTestId("suggestions-list"),
-        resultsListSpinner: () => cy.findByTestId("suggestions-list-spinner"),
-        resultsTone: () => cy.findByTestId("suggestions-tone-label"),
-        root: () => cy.findByTestId("suggestions-dropdown-menu"),
-        submitButton: () => cy.findByTestId("generate-suggestions-button"),
-        toneSelectInput: () => cy.findByTestId("tone-select"),
-        toneSelectOption: () => cy.findByTestId("tone-option"),
-      },
-      dropdownToggle: () => cy.findByTestId("suggestions-dropdown-toggle"),
     },
     ruleGroups: {
       addToGroupMenu: {

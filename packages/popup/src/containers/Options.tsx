@@ -1,6 +1,7 @@
+import ColorMode from "../components/color-mode/ColorMode";
+import Divider from "../components/divider/Divider";
 import RenderRate from "../components/options/RenderRate";
 import ReplacementStyles from "../components/options/ReplacementStyles";
-import ReplacementSuggestions from "../components/options/ReplacementSuggestions";
 import RuleGroups from "../components/options/RuleGroups";
 import RuleSync from "../components/options/RuleSync";
 import { COPY_CONTAINER_COL_CLASS } from "../lib/classnames";
@@ -20,8 +21,10 @@ export default function Options() {
             <ColumnContent>
               <div className="d-flex flex-column gap-2">
                 <ReplacementStyles />
+                <Divider />
                 <RuleGroups />
-                <ReplacementSuggestions />
+                <Divider />
+                <ColorMode />
               </div>
             </ColumnContent>
           </div>
@@ -32,6 +35,7 @@ export default function Options() {
             <ColumnContent>
               <div className="d-flex flex-column gap-2">
                 <RuleSync />
+                <Divider />
                 <RenderRate />
               </div>
             </ColumnContent>

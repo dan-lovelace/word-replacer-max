@@ -96,7 +96,7 @@ export default function ToastContainer() {
       aria-live="polite"
       className={cx(
         "toast fade d-flex align-items-center",
-        "text-bg-light",
+        "text-bg-body",
         "position-fixed end-0 bottom-0 w-auto",
         "me-1 mb-1",
         "z-toast",

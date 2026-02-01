@@ -13,9 +13,7 @@ import {
   MAILTO_CONTACT_SUPPORT_URL,
   SUBMIT_NEW_TICKET_URL,
 } from "@worm/shared/src/support";
-import {
-  CONTACT_SUPPORT_MAXIMUM_MESSAGE_LENGTH,
-} from "@worm/shared/src/validation/contact";
+import { CONTACT_SUPPORT_MAXIMUM_MESSAGE_LENGTH } from "@worm/shared/src/validation/contact";
 import {
   ApiContactSupportRequest,
   ApiContactSupportResponse,
@@ -220,20 +218,18 @@ export default function Support() {
                 Having trouble with Word Replacer Max? We're here to help! Get
                 support by sending us an email or opening an issue on GitHub.
               </p>
-              <p>
-                When reaching out, please include:
-                <ol>
-                  <li>The website URL where you're experiencing issues</li>
-                  <li>
-                    Your exported rulesets (you can export these from the
-                    Sharing tab)
-                  </li>
-                  <li>
-                    A brief description of what you expected to happen vs. what
-                    actually happened
-                  </li>
-                </ol>
-              </p>
+              <p>When reaching out, please include:</p>
+              <ol>
+                <li>The website URL where you're experiencing issues</li>
+                <li>
+                  Your exported rulesets (you can export these from the Sharing
+                  tab)
+                </li>
+                <li>
+                  A brief description of what you expected to happen vs. what
+                  actually happened
+                </li>
+              </ol>
             </div>
           </div>
           <div className="row">

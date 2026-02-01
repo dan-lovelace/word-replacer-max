@@ -21,12 +21,7 @@ const features = [
     id: "share",
     subheading: "Share your replacement rules with friends and teammates",
   },
-  {
-    color: "#00f5d4",
-    heading: "Replacement Suggestions",
-    id: "suggestions",
-    subheading: "Get replacement recommendations when you need inspiration",
-  },
+  // NOTE: Next color: "#00f5d4"
   // NOTE: Next color: "#9b5de5"
 ];
 

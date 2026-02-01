@@ -2,7 +2,7 @@
  * Bootstrap configuration
  */
 $enable-negative-margins: true;
-$primary: #025ade;
+$primary: #3366ff;
 $tooltip-max-width: 300px;
 
 @import "bootstrap/scss/bootstrap";
@@ -30,8 +30,19 @@ html {
 }
 
 body {
-  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    "Open Sans",
+    "Helvetica Neue",
+    sans-serif;
 
   min-width: 800px; // this is not an arbitrary number; test changes on all browsers
 
@@ -106,4 +117,18 @@ input[type="text"] {
   .btn {
     min-height: calc($inputHeight + 2px);
   }
+}
+
+.wrm-menu-item {
+  &:active,
+  &:hover,
+  &:focus {
+    background-color: $light-border-subtle !important;
+
+    &.dark {
+      background-color: $light-border-subtle-dark !important;
+    }
+  }
+
+  transition: background-color 150ms;
 }

@@ -6,8 +6,8 @@ A browser extension for replacing text on webpages.
 
 <img alt="replace words and phrases" src="./assets/store-page-1.png" style="max-width: 100%; width: 410px"></img>
 <img alt="flexible domain settings" src="./assets/store-page-2.png" style="max-width: 100%; width: 410px"></img>
-<img alt="ruleset sharing" src="./assets/store-page-3.png" style="max-width: 100%; width: 410px"></img>
-<img alt="highlight and replace" src="./assets/store-page-5.png" style="max-width: 100%; width: 410px"></img>
+<img alt="ruleset sharing" src="./assets/store-page-4.png" style="max-width: 100%; width: 410px"></img>
+<img alt="highlight and replace" src="./assets/store-page-3.png" style="max-width: 100%; width: 410px"></img>
 
 # Building locally
 
@@ -29,9 +29,11 @@ export NODE_ENV=development
 ### Steps
 
 1. Install dependencies
+
    ```
    yarn install
    ```
+
    - ⚠️ IMPORTANT: In order to test in Firefox, you need to build AmplifyJS
      locally and link its `@aws-amplify/core` package to this project (bug
      report here: https://github.com/aws-amplify/amplify-js/pull/14180):
@@ -42,6 +44,7 @@ export NODE_ENV=development
      1. Change back into the WRM repository
      1. Run `yarn link @aws-amplify/core`
      1. Run `yarn install` (use with the `--force` flag when `unlink`ing)
+
 1. Run the `build` command using whichever manifest version you desire (`2` or
    `3`)
    ```
