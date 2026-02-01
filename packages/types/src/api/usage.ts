@@ -13,8 +13,6 @@ export type ApiAccountUsage = Partial<
 
 export type ApiAccountUsageResponse = ApiResponse<ApiAccountUsage>;
 
-export type ApiUsageIdentifier = "replacement-suggestions";
-
 export type ApiUsageLimit = {
   period: ApiUsageLimitPeriod;
   threshold: number;

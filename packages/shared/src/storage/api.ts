@@ -53,8 +53,7 @@ export async function storageRemoveByKeys<Key extends SyncStorageKey | string>(
   if (matcherKeys.length > 0) {
     /**
      * At least one matcher is being deleted. Clean up any associated rule
-     * group matchers and recent suggestions before removing matcher keys from
-     * the appropriate storage.
+     * group matchers before removing matcher keys from the appropriate storage.
      */
 
     // fetch both potential storages that hold matchers

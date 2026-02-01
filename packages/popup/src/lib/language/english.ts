@@ -37,13 +37,6 @@ export default {
         GENERAL_ERROR: "Something went wrong getting your usage",
       },
     },
-    suggest: {
-      GENERAL_ERROR: "Something went wrong generating your suggestions.",
-      MISSING_DATA:
-        "Your request was successful but the response is missing information.",
-      USAGE_LIMIT_EXCEEDED:
-        "You have exceeded your usage limit for this period. Check the Options page for more details.",
-    },
   },
   auth: {
     TERMS_ACCEPTANCE_REQUIRED_MESSAGE: "Please review and accept our latest",
