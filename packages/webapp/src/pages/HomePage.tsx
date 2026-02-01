@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from "react";
 import Box from "@mui/material/Box/Box";
 import heroColor from "@mui/material/colors/blueGrey";
 import Container from "@mui/material/Container/Container";
-import useTheme from "@mui/material/styles/useTheme";
 import Typography from "@mui/material/Typography/Typography";
 
 import Features from "../components/feature/Features";

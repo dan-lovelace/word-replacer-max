@@ -3,10 +3,9 @@ import { merge } from "ts-deepmerge";
 import { expect } from "@jest/globals";
 
 import { getUpdatedStorage } from "@worm/popup/src/lib/storage";
-import { STORAGE_MATCHER_PREFIX } from "@worm/shared/src/browser";
 import { Matcher, MatcherInSync } from "@worm/types/src/rules";
 import {
-  RecentSuggestions,
+  LocalStorage,
   SessionStorage,
   Storage,
   StorageProvider,
@@ -15,6 +14,46 @@ import {
 jest.mock("@worm/shared/src/config/values", () => ({
   VITE_API_ORIGIN: "https://dev-api.wordreplacermax.com",
 }));
+
+type ApiSuggestResponseData = {
+  suggestions: ReplacementSuggestion[];
+  tone: ToneOption;
+};
+
+type RecentSuggestions = Partial<{
+  [key: string]: Pick<Matcher, "identifier"> & {
+    /**
+     * Raw response data from the `POST:suggest` endpoint.
+     */
+    apiResponseData: ApiSuggestResponseData;
+
+    /**
+     * The user's tone selection in the UI. This could be different than the
+     * one in the API response because they might select a different option but
+     * never run the generate command. The response's tone is surfaced above
+     * the list of its suggestions in the UI so the user can see which tone the
+     * list is referring.
+     */
+    selectedTone: ToneOption;
+  };
+}>;
+
+type ReplacementSuggest = {
+  active: boolean;
+};
+
+type ReplacementSuggestion = {
+  text: string;
+};
+
+type ToneOption =
+  | "casual"
+  | "emotional"
+  | "neutral"
+  | "poetic"
+  | "professional"
+  | "technical"
+  | "witty";
 
 const TEST_MATCHER_IDENTIFIER_1 = "matcher__1234";
 const TEST_MATCHER_IDENTIFIER_2 = "matcher__4567";
@@ -111,7 +150,7 @@ describe("getUpdatedStorage", () => {
       const prevStorage: Storage = {
         local: {
           recentSuggestions: generateRecentSuggestions(),
-        },
+        } as LocalStorage,
         session: {},
         sync: {},
       };
@@ -150,7 +189,7 @@ describe("getUpdatedStorage", () => {
         generateStorage({
           [TEST_AREA_NAME]: {
             recentSuggestions: generateRecentSuggestions(),
-          },
+          } as LocalStorage,
         }),
         {
           lorem: {
@@ -175,7 +214,7 @@ describe("getUpdatedStorage", () => {
         generateStorage({
           [TEST_AREA_NAME]: {
             recentSuggestions: oldValue,
-          },
+          } as LocalStorage,
         }),
         {
           recentSuggestions: {
@@ -195,7 +234,7 @@ describe("getUpdatedStorage", () => {
         generateStorage({
           [TEST_AREA_NAME]: {
             recentSuggestions: oldValue,
-          },
+          } as LocalStorage,
         }),
         {
           recentSuggestions: {
@@ -541,7 +580,7 @@ describe("getUpdatedStorage", () => {
       const prevStorage: Storage = {
         local: {
           recentSuggestions: generateRecentSuggestions(),
-        },
+        } as LocalStorage,
         session: generateSessionStorage(),
         sync: defaultMatcher1,
       };
@@ -588,7 +627,7 @@ describe("getUpdatedStorage", () => {
       const prevStorage: Storage = {
         local: {
           recentSuggestions: generateRecentSuggestions(),
-        },
+        } as LocalStorage,
         session: generateSessionStorage(),
         sync: {
           ...defaultMatcher1,
@@ -656,7 +695,7 @@ describe("getUpdatedStorage", () => {
       const prevStorage: Storage = {
         local: {
           recentSuggestions: generateRecentSuggestions(),
-        },
+        } as LocalStorage,
         session: generateSessionStorage(),
         sync: defaultMatcher1,
       };
@@ -701,7 +740,7 @@ describe("getUpdatedStorage", () => {
       const prevStorage: Storage = {
         local: {
           recentSuggestions: generateRecentSuggestions(),
-        },
+        } as LocalStorage,
         session: generateSessionStorage(),
         sync: defaultStoredMatchers,
       };

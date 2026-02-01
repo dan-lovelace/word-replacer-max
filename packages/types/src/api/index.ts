@@ -65,5 +65,4 @@ export * from "./errors";
 export * from "./event";
 export * from "./marketing";
 export * from "./share";
-export * from "./suggest";
 export * from "./usage";

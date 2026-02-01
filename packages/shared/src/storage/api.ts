@@ -85,27 +85,6 @@ export async function storageRemoveByKeys<Key extends SyncStorageKey | string>(
 
     await storageSetByKeys(groups);
 
-    // update any related recent suggestions
-    const allIdentifiers = new Set<string>(
-      allMatchers?.map((matcher) => matcher.identifier)
-    );
-    const deletingIdentifiers = new Set(
-      matcherKeys.map((key) => key.replace(STORAGE_MATCHER_PREFIX, ""))
-    );
-    const { recentSuggestions } = localStorage;
-
-    if (recentSuggestions) {
-      Object.keys(recentSuggestions).forEach((key) => {
-        if (!allIdentifiers.has(key) || deletingIdentifiers.has(key)) {
-          delete recentSuggestions[key];
-        }
-      });
-
-      await localStorageProvider.set({
-        recentSuggestions,
-      });
-    }
-
     // now perform the remove operation
     const matcherStorageProvider = getStorageProvider(
       isSyncActive ? "sync" : "local"

@@ -22,14 +22,6 @@ export type ReplacementStyleOption =
   | "strikethrough"
   | "underline";
 
-export type ReplacementSuggest = {
-  active: boolean;
-};
-
-export type ReplacementSuggestion = {
-  text: string;
-};
-
 export type RuleGroups = {
   active: boolean;
 };

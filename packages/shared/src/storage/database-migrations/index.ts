@@ -16,7 +16,6 @@ import { logDebug } from "../../logging";
 import { DEFAULT_RULE_GROUPS } from "../../replace/lib/groups";
 import { DEFAULT_RENDER_RATE } from "../../replace/lib/render";
 import { DEFAULT_RULE_SYNC } from "../../replace/lib/rule-sync";
-import { DEFAULT_REPLACEMENT_SUGGEST } from "../../replace/lib/suggest";
 
 import { BASELINE_STORAGE_VERSION, CURRENT_STORAGE_VERSION } from "../";
 import { storageGet, storageSet } from "../api";
@@ -85,20 +84,6 @@ export const MIGRATIONS: StrictMigrations = {
               DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE;
           }
         }
-
-        return merged;
-      },
-      /**
-       * **1.1.1** - Replacement suggestions
-       *
-       * Initializes replacement suggestions by creating a new storage
-       * property with default values.
-       */
-      1: (storage) => {
-        const updatedValues: SyncStorage = {
-          replacementSuggest: DEFAULT_REPLACEMENT_SUGGEST,
-        };
-        const merged = merge(storage, updatedValues);
 
         return merged;
       },

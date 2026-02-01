@@ -224,9 +224,6 @@ exports[`runStorageMigrations works with extension version v0.6.2 storage 1`] = 
       "backgroundColor",
     ],
   },
-  "replacementSuggest": {
-    "active": false,
-  },
   "ruleGroups": {
     "active": false,
   },
