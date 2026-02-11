@@ -18,15 +18,10 @@ To get started, you'll need:
 
 ## Instructions
 
-## Configure environment
-
-Set your desired target environment using `NODE_ENV`:
-
-```
-export NODE_ENV=development
-```
-
-### Steps
+1. Set the target environment
+   There are three different possible environments: `production`, `development` and `test`.
+   You have to set your desired target environment using the environment variable `NODE_ENV` to one of those three values in order to build the project (like `export NODE_ENV=development`).
+   The selected environment only changes linked the origin website & API endpoints for the integrated account system: While `production` connects the extension to to the production API, `development` and `test` allow it to connect to a local running API for debugging and testing purposes.
 
 1. Install dependencies
 
@@ -50,6 +45,7 @@ export NODE_ENV=development
    ```
    yarn build 3
    ```
+
 1. The resulting build exists in the `dist` directory which can be used to load
    an unpacked extension in your browser
 

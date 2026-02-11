@@ -11,3 +11,4 @@ versions
 
 # Cypress
 downloads/
+**/cypress/screenshots

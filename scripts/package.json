@@ -1,6 +1,7 @@
 {
   "name": "scripts",
   "version": "1.0.0",
+  "private": true,
   "scripts": {
     "build": "echo \"INFO: No build specified\" && exit 0"
   },
