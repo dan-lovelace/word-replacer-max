@@ -4,6 +4,8 @@ import { CONTENTS_PROPERTY } from "./lib";
 import { nodeNameBlocklist } from "./lib/dom";
 import { getRegexFlags, patternRegex } from "./lib/regex";
 
+type FindTextOptions = { allowContentEditable?: boolean };
+
 /**
  * Recursively crawls an element in search of a given query and returns a list
  * of matching Text nodes.
@@ -12,7 +14,8 @@ export function findText(
   element: HTMLElement,
   query: string,
   queryPatterns: QueryPattern[],
-  found: Text[] = []
+  found: Text[] = [],
+  options: FindTextOptions = {}
 ) {
   const elementContents = String(element[CONTENTS_PROPERTY]);
   let containsText = false;
@@ -49,14 +52,17 @@ export function findText(
     const childElements = Array.from(element.childNodes) as HTMLElement[];
 
     for (const child of childElements) {
-      findText(child, query, queryPatterns, found);
+      findText(child, query, queryPatterns, found, options);
     }
   }
 
   if (
     element.nodeType === Node.TEXT_NODE &&
     !element.parentElement?.dataset["isReplaced"] &&
-    !nodeNameBlocklist.has(String(element.parentNode?.nodeName.toLowerCase()))
+    !nodeNameBlocklist.has(
+      String(element.parentNode?.nodeName.toLowerCase())
+    ) &&
+    (!element.parentElement?.isContentEditable || options.allowContentEditable)
   ) {
     found.push(element as unknown as Text);
   }

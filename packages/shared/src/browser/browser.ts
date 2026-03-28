@@ -8,14 +8,9 @@ export type BrowserName = "chrome" | "firefox" | "edge" | "unknown";
 export type ShortcutKey = string;
 
 export function detectBrowser(): BrowserName {
-  if (
-    typeof (window as any).browser !== "undefined" &&
-    (window as any).browser?.runtime
-  ) {
-    return "firefox";
-  }
-
   const ua = navigator.userAgent;
+
+  if (ua.includes("Firefox/")) return "firefox";
   if (ua.includes("Edg/")) return "edge";
   if (ua.includes("Chrome/")) return "chrome";
 
