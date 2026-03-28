@@ -2,6 +2,7 @@ import "./lib/auth/amplify";
 
 import { browser } from "@worm/shared/src/browser";
 
+import { startCommandsListener } from "./lib/commands";
 import {
   initializeContextMenu,
   startContextMenuListener,
@@ -20,6 +21,7 @@ browser.runtime.onInstalled.addListener(async () => {
   initializeStorage();
 });
 
+startCommandsListener();
 startContextMenuListener();
 startConnectListener();
 startMessageListener();

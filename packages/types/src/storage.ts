@@ -2,7 +2,7 @@ import { Storage as BrowserStorage } from "webextension-polyfill";
 import { z } from "zod";
 
 import { DomainEffect, ExportLink, PopupTab } from "./popup";
-import { ReplacementStyle, RuleGroups } from "./replace";
+import { InputReplacement, ReplacementStyle, RuleGroups } from "./replace";
 import { Matcher, RenderRate, RuleSync } from "./rules";
 
 export const schemaVersions = [1] as const;
@@ -14,6 +14,7 @@ export const storageVersions = [
   "1.3.0",
   "1.4.0",
   "1.5.0",
+  "1.6.0",
 ] as const;
 
 export type ColorMode = "dark" | "light" | "system";
@@ -102,4 +103,5 @@ export type SyncStoragePreferences = {
     field: keyof Pick<Matcher, "queries" | "replacement">;
     matcher: Matcher["identifier"];
   };
+  inputReplacement?: InputReplacement;
 };

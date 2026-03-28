@@ -12,6 +12,15 @@ import {
 import { configureNodeEnvironment } from "./config";
 
 const commonProps: ManifestBase = {
+  commands: {
+    "input-replacement": {
+      description: "Execute replacements on all input elements",
+      suggested_key: {
+        default: "Ctrl+Shift+E",
+        mac: "Command+Shift+E",
+      },
+    },
+  },
   description: "Seamlessly replace text on any web page.",
   homepage_url: PUBLIC_GITHUB_REPOSITORY_URL,
   icons: {
