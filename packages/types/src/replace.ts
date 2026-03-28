@@ -5,7 +5,7 @@ export type InputReplacement = {
   mode: InputReplacementMode;
 };
 
-export type InputReplacementMode = "on-demand" | "realtime";
+export type InputReplacementMode = "on-demand" | "real-time";
 
 /**
  * PCRE case modes for use in regex replacements.

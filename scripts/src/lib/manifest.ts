@@ -1,6 +1,7 @@
 import assert from "node:assert";
 import { readFileSync } from "node:fs";
 
+import { BROWSER_COMMANDS } from "@worm/shared/src/browser/commands";
 import { PUBLIC_GITHUB_REPOSITORY_URL } from "@worm/shared/src/support";
 import {
   Manifest,
@@ -12,15 +13,7 @@ import {
 import { configureNodeEnvironment } from "./config";
 
 const commonProps: ManifestBase = {
-  commands: {
-    "input-replacement": {
-      description: "Execute replacements on all input elements",
-      suggested_key: {
-        default: "Ctrl+Shift+E",
-        mac: "Command+Shift+E",
-      },
-    },
-  },
+  commands: BROWSER_COMMANDS,
   description: "Seamlessly replace text on any web page.",
   homepage_url: PUBLIC_GITHUB_REPOSITORY_URL,
   icons: {
