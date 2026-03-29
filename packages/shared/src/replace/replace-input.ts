@@ -62,7 +62,7 @@ function applyQueryReplacement(
   return result;
 }
 
-export function replaceHTMLValue(element: HTMLElement, matchers: Matcher[]) {
+function replaceHTMLValue(element: HTMLElement, matchers: Matcher[]) {
   const valueProperty: keyof Pick<HTMLElement, "innerHTML"> = "innerHTML";
   const lastReplaced = (element as HTMLElement).dataset[LAST_VALUE_DATA_KEY];
 
@@ -88,7 +88,7 @@ export function replaceHTMLValue(element: HTMLElement, matchers: Matcher[]) {
   element.dataset[LAST_VALUE_DATA_KEY] = hashValue(value);
 }
 
-export function replaceInputValue(
+function replaceInputValue(
   element: HTMLInputElement | HTMLTextAreaElement,
   matchers: Matcher[]
 ) {
