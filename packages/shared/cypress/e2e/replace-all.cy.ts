@@ -1,8 +1,6 @@
 import { replaceAll } from "@worm/shared/src/replace";
 
-import {
-  DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE,
-} from "../../src/replace/lib/style";
+import { DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE } from "../../src/replace/lib/style";
 
 import { selectors as s } from "../support/selectors";
 
@@ -294,7 +292,7 @@ describe("replaceAll", () => {
       });
     });
 
-    it("works for elements that have the 'contenteditable' attribute", () => {
+    it("does not automatically replace elements that have the 'contenteditable' attribute", () => {
       cy.visitMock({
         bodyContents: `
           <div data-testid="target" contenteditable>Lorem ipsum dolor</div>
@@ -317,7 +315,7 @@ describe("replaceAll", () => {
           document
         );
 
-        s.target().should("have.text", "Lorem sit dolor");
+        s.target().should("have.text", "Lorem ipsum dolor");
       });
     });
 

@@ -4,7 +4,7 @@ import { CONTENTS_PROPERTY } from "./lib";
 import { nodeNameBlocklist } from "./lib/dom";
 import { getRegexFlags, patternRegex } from "./lib/regex";
 
-type FindTextOptions = { allowContentEditable?: boolean };
+export type FindTextOptions = { allowContentEditable?: boolean };
 
 /**
  * Recursively crawls an element in search of a given query and returns a list

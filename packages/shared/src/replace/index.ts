@@ -3,7 +3,7 @@ import { Matcher } from "@worm/types/src/rules";
 
 import { logDebug } from "../logging";
 
-import { findText } from "./find-text";
+import { findText, FindTextOptions } from "./find-text";
 import { replaceInputElements } from "./replace-input";
 import { replaceText } from "./replace-text";
 
@@ -12,10 +12,11 @@ function searchAndReplace(
   query: string,
   matcher: Matcher,
   replacementStyle: ReplacementStyle | undefined,
-  options: { allowContentEditable?: boolean } = {}
+  options: FindTextOptions = {}
 ) {
   const { queryPatterns } = matcher;
-  const searchResults = findText(element, query, queryPatterns, [], options) || [];
+  const searchResults =
+    findText(element, query, queryPatterns, [], options) || [];
 
   for (let position = 0; position < searchResults.length; position++) {
     const textElement = searchResults[position];
