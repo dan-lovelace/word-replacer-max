@@ -37,8 +37,8 @@ export function getReplacementHTML(
   const now = new Date().getTime().toString();
   const wrapper = document.createElement(REPLACEMENT_WRAPPER_ELEMENT);
   wrapper[CONTENTS_PROPERTY] = replacement;
-  wrapper.dataset["isReplaced"] = now;
-  wrapper.dataset["query"] = query;
+  wrapper.dataset["wrmIsReplaced"] = now;
+  wrapper.dataset["wrmQuery"] = query;
 
   if (Boolean(useGlobalReplacementStyle)) {
     styleReplacement(wrapper, replacementStyle);

@@ -13,7 +13,7 @@ function searchAndReplace(
   replacementStyle: ReplacementStyle | undefined
 ) {
   const { queryPatterns } = matcher;
-  const searchResults = findText(element, query, queryPatterns) || [];
+  const searchResults = findText(element, query, queryPatterns, []) || [];
 
   for (let position = 0; position < searchResults.length; position++) {
     const textElement = searchResults[position];
@@ -56,4 +56,5 @@ export function replaceAll(
 
 export * from "./find-text";
 export * from "./lib";
+export * from "./replace-input";
 export * from "./replace-text";

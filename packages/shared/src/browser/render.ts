@@ -5,7 +5,7 @@ import { SyncStorage } from "@worm/types/src/storage";
 
 import { debounce } from "../debounce";
 import { isDomainAllowed } from "../domains";
-import { replaceAll } from "../replace";
+import { replaceAll, replaceAllInputElements } from "../replace";
 import {
   DEFAULT_RENDER_RATE,
   DEFAULT_RENDER_RATE_MS,
@@ -130,6 +130,34 @@ export class Renderer {
     this.mutationObserver.observe(this.observedElement, this.OBSERVE_PARAMS);
   }
 
+  private isReplaceAllowed(): boolean {
+    if (!this.renderCache.storage.value) {
+      return false;
+    }
+
+    const {
+      storage: {
+        value: { domainList = [], preferences },
+      },
+    } = this.renderCache;
+
+    return (
+      preferences?.extensionEnabled === true &&
+      isDomainAllowed(domainList, preferences)
+    );
+  }
+
+  public replaceInputElements() {
+    if (!this.isReplaceAllowed()) {
+      return;
+    }
+
+    replaceAllInputElements(
+      this.renderCache.storage.value?.matchers ?? [],
+      this.observedElement
+    );
+  }
+
   public renderContent = async (message = "") => {
     const now = new Date().getTime();
 
@@ -181,24 +209,12 @@ export class Renderer {
     const {
       storage: {
         value: syncStorage,
-        value: {
-          domainList = [],
-          matchers = [],
-          preferences,
-          replacementStyle,
-          ruleGroups,
-        },
+        value: { matchers = [], replacementStyle, ruleGroups },
       },
     } = this.renderCache;
 
-    if (preferences) {
-      if (!preferences.extensionEnabled) {
-        return;
-      }
-
-      if (!isDomainAllowed(domainList, preferences)) {
-        return;
-      }
+    if (!this.isReplaceAllowed()) {
+      return;
     }
 
     let renderedMatchers = [...matchers];

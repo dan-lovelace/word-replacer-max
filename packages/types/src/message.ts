@@ -72,6 +72,7 @@ export type WebAppMessageKindMap = {
   authUserRequest: undefined;
   authUserResponse: ErrorableMessage<AppUser>;
   contentInitialize: undefined;
+  inputReplacementRequest: undefined;
   pingRequest: undefined;
   pingResponse: WebAppPingResponse;
   showToastMessage: ShowToastMessageOptions;

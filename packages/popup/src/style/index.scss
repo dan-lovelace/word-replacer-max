@@ -61,6 +61,10 @@ input[type="text"] {
   min-height: $inputHeight;
 }
 
+kbd {
+  font-family: inherit;
+}
+
 .form-check {
   margin-bottom: 0;
 }

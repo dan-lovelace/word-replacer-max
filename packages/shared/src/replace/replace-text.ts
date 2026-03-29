@@ -34,7 +34,7 @@ export function replaceText(
    * that has already been completed.
    */
   const replacedElements = parentNode?.querySelectorAll<HTMLElement>(
-    `${REPLACEMENT_WRAPPER_ELEMENT}[data-is-replaced]`
+    `${REPLACEMENT_WRAPPER_ELEMENT}[data-wrm-is-replaced]`
   );
 
   /**
@@ -47,7 +47,7 @@ export function replaceText(
       replacedElement[CONTENTS_PROPERTY] !== replacement
         ? false
         : replacedItem === undefined &&
-          query === replacedElement.dataset["query"]
+          query === replacedElement.dataset["wrmQuery"]
   );
 
   if (isAlreadyReplaced > -1) return;

@@ -55,8 +55,11 @@ export function findText(
 
   if (
     element.nodeType === Node.TEXT_NODE &&
-    !element.parentElement?.dataset["isReplaced"] &&
-    !nodeNameBlocklist.has(String(element.parentNode?.nodeName.toLowerCase()))
+    !element.parentElement?.dataset["wrmIsReplaced"] &&
+    !nodeNameBlocklist.has(
+      String(element.parentNode?.nodeName.toLowerCase())
+    ) &&
+    !element.parentElement?.isContentEditable
   ) {
     found.push(element as unknown as Text);
   }

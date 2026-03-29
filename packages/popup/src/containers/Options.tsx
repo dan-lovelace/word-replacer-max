@@ -1,5 +1,6 @@
 import ColorMode from "../components/color-mode/ColorMode";
 import Divider from "../components/divider/Divider";
+import InputReplacement from "../components/options/InputReplacement";
 import RenderRate from "../components/options/RenderRate";
 import ReplacementStyles from "../components/options/ReplacementStyles";
 import RuleGroups from "../components/options/RuleGroups";
@@ -19,7 +20,9 @@ export default function Options() {
           <div className={COPY_CONTAINER_COL_CLASS}>
             <div className="fw-bold fs-5">General Settings</div>
             <ColumnContent>
-              <div className="d-flex flex-column gap-2">
+              <div className="d-flex flex-column gap-2 pt-2">
+                <InputReplacement />
+                <Divider />
                 <ReplacementStyles />
                 <Divider />
                 <RuleGroups />
@@ -33,7 +36,7 @@ export default function Options() {
           <div className={COPY_CONTAINER_COL_CLASS}>
             <div className="fw-bold fs-5">Advanced Settings</div>
             <ColumnContent>
-              <div className="d-flex flex-column gap-2">
+              <div className="d-flex flex-column gap-2 pt-2">
                 <RuleSync />
                 <Divider />
                 <RenderRate />
