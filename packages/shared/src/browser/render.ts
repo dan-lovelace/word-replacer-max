@@ -130,14 +130,32 @@ export class Renderer {
     this.mutationObserver.observe(this.observedElement, this.OBSERVE_PARAMS);
   }
 
+  private isReplaceAllowed(): boolean {
+    if (!this.renderCache.storage.value) {
+      return false;
+    }
+
+    const {
+      storage: {
+        value: { domainList = [], preferences },
+      },
+    } = this.renderCache;
+
+    return (
+      preferences?.extensionEnabled === true &&
+      isDomainAllowed(domainList, preferences)
+    );
+  }
+
   public replaceInputElements() {
-    const storage = this.renderCache.storage.value;
+    if (!this.isReplaceAllowed()) {
+      return;
+    }
 
-    if (!storage) return;
-
-    const { matchers = [] } = storage;
-
-    replaceAllInputElements(matchers, this.observedElement);
+    replaceAllInputElements(
+      this.renderCache.storage.value?.matchers ?? [],
+      this.observedElement
+    );
   }
 
   public renderContent = async (message = "") => {
@@ -191,24 +209,12 @@ export class Renderer {
     const {
       storage: {
         value: syncStorage,
-        value: {
-          domainList = [],
-          matchers = [],
-          preferences,
-          replacementStyle,
-          ruleGroups,
-        },
+        value: { matchers = [], replacementStyle, ruleGroups },
       },
     } = this.renderCache;
 
-    if (preferences) {
-      if (!preferences.extensionEnabled) {
-        return;
-      }
-
-      if (!isDomainAllowed(domainList, preferences)) {
-        return;
-      }
+    if (!this.isReplaceAllowed()) {
+      return;
     }
 
     let renderedMatchers = [...matchers];
