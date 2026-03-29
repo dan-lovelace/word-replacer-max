@@ -4,7 +4,6 @@ import {
   matchersFromStorage,
   matchersToStorage,
 } from "@worm/shared/src/browser";
-import { DEFAULT_INPUT_REPLACEMENT } from "@worm/shared/src/replace/lib/input-replacement";
 import { DEFAULT_RULE_SYNC } from "@worm/shared/src/replace/lib/rule-sync";
 import { DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE } from "@worm/shared/src/replace/lib/style";
 import {
@@ -90,7 +89,6 @@ export async function initializeStorage() {
         field: "replacement",
         matcher: "",
       },
-      inputReplacement: DEFAULT_INPUT_REPLACEMENT,
     };
   }
 

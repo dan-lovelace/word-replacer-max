@@ -21,13 +21,13 @@ export default function Options() {
             <div className="fw-bold fs-5">General Settings</div>
             <ColumnContent>
               <div className="d-flex flex-column gap-2">
-                <InputReplacement />
-                <Divider />
                 <ReplacementStyles />
                 <Divider />
                 <RuleGroups />
                 <Divider />
                 <ColorMode />
+                <Divider />
+                <InputReplacement />
               </div>
             </ColumnContent>
           </div>

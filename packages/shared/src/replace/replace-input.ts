@@ -82,6 +82,10 @@ export function replaceInputValue(
   element: HTMLInputElement | HTMLTextAreaElement,
   matchers: Matcher[]
 ) {
+  const lastReplaced = (element as HTMLElement).dataset["wormReplaced"];
+
+  if (lastReplaced !== undefined && lastReplaced === element.value) return;
+
   const selectionStart = element.selectionStart ?? 0;
   const selectionEnd = element.selectionEnd ?? 0;
 
@@ -101,127 +105,7 @@ export function replaceInputValue(
 
   element.value = value;
   element.setSelectionRange(selectionStart + delta, selectionEnd + delta);
-}
-
-/**
- * Saves the caret position inside a contenteditable element as a plain-text
- * character offset, executes `fn`, then restores the caret adjusted for the
- * text-length delta introduced by `fn`.
- *
- * Cursor restoration is aware of `[data-is-replaced]` spans: if the adjusted
- * offset lands inside one of those spans, the caret is placed *after* the span
- * element instead of inside it. This prevents subsequent keystrokes from
- * expanding the replacement span rather than appending new text outside it.
- *
- * Using `element.ownerDocument.defaultView` for the selection means this works
- * correctly for both main-document contenteditable elements and for contenteditable
- * elements inside cross-context iframes (where `document.getSelection()` would
- * return the wrong selection object).
- */
-export function replaceEditableValue(element: HTMLElement, fn: () => void) {
-  const win = element.ownerDocument.defaultView;
-
-  if (!win) {
-    fn();
-    return;
-  }
-
-  const selection = win.getSelection();
-
-  if (!selection || selection.rangeCount === 0) {
-    fn();
-    return;
-  }
-
-  const range = selection.getRangeAt(0);
-
-  // measure cursor offset as plain-text character count from start of element
-  const preStart = range.cloneRange();
-  preStart.selectNodeContents(element);
-  preStart.setEnd(range.startContainer, range.startOffset);
-  const startOffset = preStart.toString().length;
-
-  const lengthBefore = element.textContent?.length ?? 0;
-
-  fn();
-
-  const delta = (element.textContent?.length ?? 0) - lengthBefore;
-  const targetOffset = Math.max(0, startOffset + delta);
-
-  restoreCaretAfterReplacement(element, targetOffset, win);
-}
-
-/**
- * Places the caret at `targetOffset` plain-text characters from the start of
- * `element`. `[data-is-replaced]` spans are treated as opaque units: their
- * character length is counted normally, but if the target falls inside one the
- * caret is placed immediately after the span element so that subsequent typing
- * continues outside it.
- */
-function restoreCaretAfterReplacement(
-  element: HTMLElement,
-  targetOffset: number,
-  win: Window
-): void {
-  const selection = win.getSelection();
-  if (!selection) return;
-
-  const doc = element.ownerDocument;
-  const newRange = doc.createRange();
-  let charIndex = 0;
-  let placed = false;
-
-  function walk(node: Node): void {
-    if (placed) return;
-
-    if (node.nodeType === Node.ELEMENT_NODE) {
-      const el = node as HTMLElement;
-
-      if (el.dataset["isReplaced"] !== undefined) {
-        /**
-         * Count the span's text as a unit; place cursor after it if target
-         * falls within its range rather than stepping into the span's
-         * children.
-         */
-        const len = el.textContent?.length ?? 0;
-
-        if (charIndex + len >= targetOffset) {
-          const parent = el.parentNode!;
-          const idx = Array.from(parent.childNodes).findIndex((n) => n === el);
-          newRange.setStart(parent, idx + 1);
-          newRange.setEnd(parent, idx + 1);
-          placed = true;
-        } else {
-          charIndex += len;
-        }
-
-        return;
-      }
-
-      for (const child of Array.from(node.childNodes)) {
-        walk(child);
-        if (placed) break;
-      }
-    } else if (node.nodeType === Node.TEXT_NODE) {
-      const len = node.textContent?.length ?? 0;
-
-      if (charIndex + len >= targetOffset) {
-        const offset = targetOffset - charIndex;
-        newRange.setStart(node, offset);
-        newRange.setEnd(node, offset);
-        placed = true;
-      } else {
-        charIndex += len;
-      }
-    }
-  }
-
-  walk(element);
-
-  if (placed) {
-    selection.removeAllRanges();
-    selection.addRange(newRange);
-  }
+  (element as HTMLElement).dataset["wormReplaced"] = value;
 }
 
 /**

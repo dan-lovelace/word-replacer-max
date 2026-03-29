@@ -1,12 +1,5 @@
 const queryPatterns = ["case", "default", "regex", "wholeWord"] as const;
 
-export type InputReplacement = {
-  enabled: boolean;
-  mode: InputReplacementMode;
-};
-
-export type InputReplacementMode = "on-demand" | "real-time";
-
 /**
  * PCRE case modes for use in regex replacements.
  */

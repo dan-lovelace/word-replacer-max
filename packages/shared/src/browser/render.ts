@@ -5,20 +5,12 @@ import { SyncStorage } from "@worm/types/src/storage";
 
 import { debounce } from "../debounce";
 import { isDomainAllowed } from "../domains";
-import {
-  replaceAll,
-  replaceAllInputElements,
-  replaceElement,
-} from "../replace";
+import { replaceAll, replaceAllInputElements } from "../replace";
 import {
   DEFAULT_RENDER_RATE,
   DEFAULT_RENDER_RATE_MS,
 } from "../replace/lib/render";
 import { getStylesheet, STYLE_ELEMENT_ID } from "../replace/lib/style";
-import {
-  replaceEditableValue,
-  replaceInputValue,
-} from "../replace/replace-input";
 
 import { getMatcherGroups, matchersFromStorage } from "./matchers";
 
@@ -46,60 +38,9 @@ export class Renderer {
 
   private isInitialRender = true;
 
-  private attachedIframeDocuments = new WeakSet<Document>();
-
   private mutationObserver: MutationObserver | null = null;
 
   private observedElement: HTMLElement;
-
-  private attachIframeListeners() {
-    const iframes = Array.from(
-      this.observedElement.querySelectorAll<HTMLIFrameElement>("iframe")
-    );
-
-    for (const iframe of iframes) {
-      try {
-        const doc = iframe.contentDocument;
-
-        if (!doc) continue;
-
-        const isDesignMode = doc.designMode === "on";
-        const isBodyEditable = doc.body?.isContentEditable === true;
-
-        if (
-          (isDesignMode || isBodyEditable) &&
-          !this.attachedIframeDocuments.has(doc)
-        ) {
-          doc.addEventListener("input", this.handleInputEvent);
-          this.attachedIframeDocuments.add(doc);
-        }
-      } catch {
-        // cross-origin iframes will throw; skip silently
-      }
-    }
-  }
-
-  private handleInputEvent = (event: Event) => {
-    const pref = this.renderCache.storage.value?.preferences?.inputReplacement;
-
-    if (!pref?.enabled || pref.mode !== "real-time") return;
-
-    const target = event.target as HTMLElement;
-    const matchers = this.renderCache.storage.value?.matchers ?? [];
-
-    if (
-      target instanceof HTMLInputElement ||
-      target instanceof HTMLTextAreaElement
-    ) {
-      replaceInputValue(target, matchers);
-    } else if (target.isContentEditable) {
-      const replacementStyle = this.renderCache.storage.value?.replacementStyle;
-
-      replaceEditableValue(target, () => {
-        replaceElement(target, matchers, replacementStyle);
-      });
-    }
-  };
 
   private renderCache: RenderCache = {
     storage: {
@@ -187,8 +128,6 @@ export class Renderer {
     });
 
     this.mutationObserver.observe(this.observedElement, this.OBSERVE_PARAMS);
-
-    document.addEventListener("input", this.handleInputEvent);
   }
 
   public replaceInputElements() {
@@ -299,7 +238,6 @@ export class Renderer {
 
     try {
       replaceAll(renderedMatchers, replacementStyle, this.observedElement);
-      this.attachIframeListeners();
     } finally {
       this.renderCount++;
       this.mutationObserver?.observe(this.observedElement, this.OBSERVE_PARAMS);
