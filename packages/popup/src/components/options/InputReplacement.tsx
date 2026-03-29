@@ -23,9 +23,10 @@ export default function InputReplacement() {
   return (
     <div className="input-replacement">
       <Indented data-testid="input-replacement-description">
-        <div className="fw-medium">Input replacement hotkey</div>
+        <div className="fw-medium">Replace text where you type</div>
         <div className="fs-sm">
-          Replace text in fields you type into using a keyboard shortcut.
+          Replacements don't run automatically in text fields or rich-text
+          editors. Use a keyboard shortcut to apply them on demand.
         </div>
         <div className="d-flex align-items-center gap-2 mt-2 fs-sm">
           <div className="d-flex align-items-center gap-1">
