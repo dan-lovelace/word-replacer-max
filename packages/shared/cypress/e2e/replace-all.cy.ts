@@ -356,7 +356,7 @@ describe("replaceAll", () => {
           expect(html).to.include("<!--]-->");
 
           // Check replacement happened once
-          expect($el.find("[data-is-replaced]")).to.have.length(1);
+          expect($el.find("[data-wrm-is-replaced]")).to.have.length(1);
 
           // Check text appears exactly once
           expect($el.text().match("Lorem")).to.have.length(1);
@@ -388,7 +388,7 @@ describe("replaceAll", () => {
           // Verify no duplication occurred
           cy.get('[data-testid="target"]').should(($el) => {
             // Should still only have one replacement
-            expect($el.find("[data-is-replaced]")).to.have.length(1);
+            expect($el.find("[data-wrm-is-replaced]")).to.have.length(1);
 
             // Text should only appear once
             expect($el.text().match("Lorem")).to.have.length(1);

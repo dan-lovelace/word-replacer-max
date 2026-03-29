@@ -1,13 +1,10 @@
-import { ReplacementStyle } from "@worm/types/src/replace";
 import { Matcher } from "@worm/types/src/rules";
 
-import { isReplacementEmpty, getSortedQueryPatterns } from "./lib";
+import { isReplacementEmpty, getSortedQueryPatterns, hashValue } from "./lib";
 import { getRegexFlags, patternRegex } from "./lib/regex";
 
-/**
- * Selectors for elements whose text content is replaced via their `.value`
- * property rather than inner HTML.
- */
+const LAST_VALUE_DATA_KEY = "wrmLastValue";
+
 const VALUE_INPUT_SELECTOR = [
   'input[type="email"]',
   'input[type="search"]',
@@ -18,16 +15,8 @@ const VALUE_INPUT_SELECTOR = [
   "textarea",
 ].join(", ");
 
-/**
- * Selectors for elements that accept rich text input via `innerHTML`.
- */
-const CONTENTEDITABLE_SELECTOR =
-  '[contenteditable="true"], [contenteditable=""]';
+const EDITABLE_HTML_SELECTOR = '[contenteditable="true"], [contenteditable=""]';
 
-/**
- * Applies a single matcher's queries to a plain string value and returns the
- * result. No HTML wrapping is applied, this is for `.value` replacements.
- */
 function applyQueryReplacement(
   value: string,
   query: string,
@@ -73,23 +62,14 @@ function applyQueryReplacement(
   return result;
 }
 
-/**
- * Replaces the `.value` of a text input or textarea with plain-text
- * replacements. Cursor position is preserved by adjusting for the length delta
- * of each replacement.
- */
-export function replaceInputValue(
-  element: HTMLInputElement | HTMLTextAreaElement,
-  matchers: Matcher[]
-) {
-  const lastReplaced = (element as HTMLElement).dataset["wormReplaced"];
+export function replaceHTMLValue(element: HTMLElement, matchers: Matcher[]) {
+  const valueProperty: keyof Pick<HTMLElement, "innerHTML"> = "innerHTML";
+  const lastReplaced = (element as HTMLElement).dataset[LAST_VALUE_DATA_KEY];
 
-  if (lastReplaced !== undefined && lastReplaced === element.value) return;
+  if (lastReplaced !== undefined && lastReplaced === hashValue(element[valueProperty]))
+    return;
 
-  const selectionStart = element.selectionStart ?? 0;
-  const selectionEnd = element.selectionEnd ?? 0;
-
-  let value = element.value;
+  let value = element[valueProperty];
 
   for (const matcher of matchers) {
     if (matcher.active !== true) continue;
@@ -99,42 +79,45 @@ export function replaceInputValue(
     }
   }
 
-  if (value === element.value) return;
+  if (value === element[valueProperty]) return;
 
-  const delta = value.length - element.value.length;
-
-  element.value = value;
-  element.setSelectionRange(selectionStart + delta, selectionEnd + delta);
-  (element as HTMLElement).dataset["wormReplaced"] = value;
+  element[valueProperty] = value;
+  element.dataset[LAST_VALUE_DATA_KEY] = hashValue(value);
 }
 
-/**
- * Applies replacements to all input-type elements within the given root:
- *
- * - Text `<input>` elements and `<textarea>` elements: replaced via `.value`
- *   (no HTML wrapping to avoid injecting spans into field values).
- * - `contenteditable` elements: replaced via the standard HTML mechanism using
- *   the provided `replaceElement` callback, which preserves the existing
- *   span-based deduplication.
- * - Editable `<iframe>` documents: replaced via the provided `replaceAll`
- *   callback on the iframe's document.
- */
+export function replaceInputValue(
+  element: HTMLInputElement | HTMLTextAreaElement,
+  matchers: Matcher[]
+) {
+  const valueProperty: keyof Pick<HTMLInputElement, "value"> = "value";
+  const lastReplaced = (element as HTMLElement).dataset[LAST_VALUE_DATA_KEY];
+
+  if (lastReplaced !== undefined && lastReplaced === hashValue(element[valueProperty]))
+    return;
+
+  let value = element[valueProperty];
+
+  for (const matcher of matchers) {
+    if (matcher.active !== true) continue;
+
+    for (const query of matcher.queries) {
+      value = applyQueryReplacement(value, query, matcher);
+    }
+  }
+
+  if (value === element[valueProperty]) return;
+
+  element[valueProperty] = value;
+  (element as HTMLElement).dataset[LAST_VALUE_DATA_KEY] = hashValue(value);
+}
+
 export function replaceInputElements(
   matchers: Matcher[],
-  replacementStyle: ReplacementStyle | undefined,
-  root: Document | HTMLElement = document,
-  callbacks: {
-    replaceElement: (
-      element: HTMLElement,
-      matchers: Matcher[],
-      replacementStyle: ReplacementStyle | undefined
-    ) => void;
-  }
+  root: Document | HTMLElement = document
 ) {
   const activeMatchers = matchers.filter((m) => m.active);
   if (activeMatchers.length < 1) return;
 
-  // value-based inputs (input, textarea)
   const valueInputs = Array.from(
     root.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(
       VALUE_INPUT_SELECTOR
@@ -145,16 +128,14 @@ export function replaceInputElements(
     replaceInputValue(el, activeMatchers);
   }
 
-  // contenteditable elements, use innerHTML / span-based mechanism
-  const editableElements = Array.from(
-    root.querySelectorAll<HTMLElement>(CONTENTEDITABLE_SELECTOR)
+  const editableHTMLElements = Array.from(
+    root.querySelectorAll<HTMLElement>(EDITABLE_HTML_SELECTOR)
   );
 
-  for (const el of editableElements) {
-    callbacks.replaceElement(el, activeMatchers, replacementStyle);
+  for (const el of editableHTMLElements) {
+    replaceHTMLValue(el, activeMatchers);
   }
 
-  // editable iframes
   const iframes = Array.from(
     root.querySelectorAll<HTMLIFrameElement>("iframe")
   );
@@ -169,7 +150,7 @@ export function replaceInputElements(
       const isBodyEditable = doc.body?.isContentEditable === true;
 
       if (isDesignMode || isBodyEditable) {
-        callbacks.replaceElement(doc.body, activeMatchers, replacementStyle);
+        replaceHTMLValue(doc.body, activeMatchers);
       }
     } catch {
       // cross-origin iframes will throw, skip silently

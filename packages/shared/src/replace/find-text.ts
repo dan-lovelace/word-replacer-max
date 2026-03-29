@@ -58,7 +58,7 @@ export function findText(
 
   if (
     element.nodeType === Node.TEXT_NODE &&
-    !element.parentElement?.dataset["isReplaced"] &&
+    !element.parentElement?.dataset["wrmIsReplaced"] &&
     !nodeNameBlocklist.has(
       String(element.parentNode?.nodeName.toLowerCase())
     ) &&

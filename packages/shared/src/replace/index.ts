@@ -4,7 +4,6 @@ import { Matcher } from "@worm/types/src/rules";
 import { logDebug } from "../logging";
 
 import { findText, FindTextOptions } from "./find-text";
-import { replaceInputElements } from "./replace-input";
 import { replaceText } from "./replace-text";
 
 function searchAndReplace(
@@ -22,22 +21,6 @@ function searchAndReplace(
     const textElement = searchResults[position];
 
     replaceText(textElement, query, matcher, replacementStyle, position);
-  }
-}
-
-export function replaceElement(
-  element: HTMLElement,
-  matchers: Matcher[],
-  replacementStyle: ReplacementStyle | undefined
-) {
-  for (const matcher of matchers) {
-    if (matcher.active !== true) continue;
-
-    for (const query of matcher.queries) {
-      searchAndReplace(element, query, matcher, replacementStyle, {
-        allowContentEditable: true,
-      });
-    }
   }
 }
 
@@ -71,16 +54,6 @@ export function replaceAll(
       }
     }
   }
-}
-
-export function replaceAllInputElements(
-  matchers: Matcher[],
-  replacementStyle: ReplacementStyle | undefined,
-  root: Document | HTMLElement = document
-) {
-  replaceInputElements(matchers, replacementStyle, root, {
-    replaceElement,
-  });
 }
 
 export * from "./find-text";
