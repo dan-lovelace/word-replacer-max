@@ -5,7 +5,7 @@ import { SyncStorage } from "@worm/types/src/storage";
 
 import { debounce } from "../debounce";
 import { isDomainAllowed } from "../domains";
-import { replaceAll, replaceInputElements } from "../replace";
+import { replaceAll, replaceAllInputElements } from "../replace";
 import {
   DEFAULT_RENDER_RATE,
   DEFAULT_RENDER_RATE_MS,
@@ -137,7 +137,7 @@ export class Renderer {
 
     const { matchers = [] } = storage;
 
-    replaceInputElements(matchers, this.observedElement);
+    replaceAllInputElements(matchers, this.observedElement);
   }
 
   public renderContent = async (message = "") => {

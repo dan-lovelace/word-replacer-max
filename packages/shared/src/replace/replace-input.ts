@@ -66,7 +66,10 @@ export function replaceHTMLValue(element: HTMLElement, matchers: Matcher[]) {
   const valueProperty: keyof Pick<HTMLElement, "innerHTML"> = "innerHTML";
   const lastReplaced = (element as HTMLElement).dataset[LAST_VALUE_DATA_KEY];
 
-  if (lastReplaced !== undefined && lastReplaced === hashValue(element[valueProperty]))
+  if (
+    lastReplaced !== undefined &&
+    lastReplaced === hashValue(element[valueProperty])
+  )
     return;
 
   let value = element[valueProperty];
@@ -92,7 +95,10 @@ export function replaceInputValue(
   const valueProperty: keyof Pick<HTMLInputElement, "value"> = "value";
   const lastReplaced = (element as HTMLElement).dataset[LAST_VALUE_DATA_KEY];
 
-  if (lastReplaced !== undefined && lastReplaced === hashValue(element[valueProperty]))
+  if (
+    lastReplaced !== undefined &&
+    lastReplaced === hashValue(element[valueProperty])
+  )
     return;
 
   let value = element[valueProperty];
@@ -111,7 +117,7 @@ export function replaceInputValue(
   (element as HTMLElement).dataset[LAST_VALUE_DATA_KEY] = hashValue(value);
 }
 
-export function replaceInputElements(
+export function replaceAllInputElements(
   matchers: Matcher[],
   root: Document | HTMLElement = document
 ) {

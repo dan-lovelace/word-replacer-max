@@ -3,19 +3,17 @@ import { Matcher } from "@worm/types/src/rules";
 
 import { logDebug } from "../logging";
 
-import { findText, FindTextOptions } from "./find-text";
+import { findText } from "./find-text";
 import { replaceText } from "./replace-text";
 
 function searchAndReplace(
   element: HTMLElement,
   query: string,
   matcher: Matcher,
-  replacementStyle: ReplacementStyle | undefined,
-  options: FindTextOptions = {}
+  replacementStyle: ReplacementStyle | undefined
 ) {
   const { queryPatterns } = matcher;
-  const searchResults =
-    findText(element, query, queryPatterns, [], options) || [];
+  const searchResults = findText(element, query, queryPatterns, []) || [];
 
   for (let position = 0; position < searchResults.length; position++) {
     const textElement = searchResults[position];
