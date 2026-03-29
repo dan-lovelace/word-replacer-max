@@ -14,6 +14,8 @@ import TextButton from "../button/TextButton";
 export default function InputReplacement() {
   const [shortcutKeys, setShortcutKeys] = useState<ShortcutKey[]>([]);
 
+  const shortcutExists = shortcutKeys.length > 0;
+
   useEffect(() => {
     getCommandShortcut("input-replacement").then((shortcut) => {
       setShortcutKeys(parseShortcutKeys(shortcut));
@@ -31,18 +33,18 @@ export default function InputReplacement() {
         <div className="d-flex align-items-center gap-2 mt-2 fs-sm">
           <div className="d-flex align-items-center gap-1">
             <span>Shortcut:</span>
-            {shortcutKeys.length > 0 ? (
+            {shortcutExists ? (
               <>
                 {shortcutKeys.map((key) => (
                   <kbd key={key}>{key}</kbd>
                 ))}
               </>
             ) : (
-              <span>No shortcut set</span>
+              <span className="text-muted fst-italic">None</span>
             )}
           </div>
           <TextButton onClick={openShortcutSettings}>
-            Change in shortcuts
+            {shortcutExists ? "Change" : "Set a shortcut"}
           </TextButton>
         </div>
       </Indented>

@@ -20,14 +20,14 @@ export default function Options() {
           <div className={COPY_CONTAINER_COL_CLASS}>
             <div className="fw-bold fs-5">General Settings</div>
             <ColumnContent>
-              <div className="d-flex flex-column gap-2">
+              <div className="d-flex flex-column gap-2 pt-2">
+                <InputReplacement />
+                <Divider />
                 <ReplacementStyles />
                 <Divider />
                 <RuleGroups />
                 <Divider />
                 <ColorMode />
-                <Divider />
-                <InputReplacement />
               </div>
             </ColumnContent>
           </div>
@@ -36,7 +36,7 @@ export default function Options() {
           <div className={COPY_CONTAINER_COL_CLASS}>
             <div className="fw-bold fs-5">Advanced Settings</div>
             <ColumnContent>
-              <div className="d-flex flex-column gap-2">
+              <div className="d-flex flex-column gap-2 pt-2">
                 <RuleSync />
                 <Divider />
                 <RenderRate />
