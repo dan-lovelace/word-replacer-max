@@ -47,10 +47,7 @@ export function App() {
         });
       }
 
-      if (colorMode) {
-        updateDocumentColorMode(getCurrentColorMode(colorMode));
-      }
-
+      updateDocumentColorMode(getCurrentColorMode(colorMode));
       setIsInitialized(true);
     }
 
