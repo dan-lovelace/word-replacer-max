@@ -1,5 +1,9 @@
 const queryPatterns = ["case", "default", "regex", "wholeWord"] as const;
 
+export type InputReplacement = {
+  active: boolean;
+};
+
 /**
  * PCRE case modes for use in regex replacements.
  */
