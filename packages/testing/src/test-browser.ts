@@ -1,3 +1,4 @@
+import { DEFAULT_INPUT_REPLACE } from "@worm/shared/src/replace/lib/input-replace";
 import { DEFAULT_RENDER_RATE } from "@worm/shared/src/replace/lib/render";
 import { DEFAULT_RULE_SYNC } from "@worm/shared/src/replace/lib/rule-sync";
 import { DEFAULT_REPLACEMENT_STYLE } from "@worm/shared/src/replace/lib/style";
@@ -35,10 +36,7 @@ const mockSyncStorage: Record<string, any> = {
       field: "replacement",
       matcher: "",
     },
-    inputReplacement: {
-      active: false,
-      mode: "on-demand",
-    },
+    inputReplacement: DEFAULT_INPUT_REPLACE,
   },
   renderRate: DEFAULT_RENDER_RATE,
   replacementStyle: DEFAULT_REPLACEMENT_STYLE,

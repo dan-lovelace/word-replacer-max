@@ -1,4 +1,3 @@
-import { ReplacementStyle } from "@worm/types/src/replace";
 import { MatcherReplaceProps } from "@worm/types/src/rules";
 import { SyncStorage } from "@worm/types/src/storage";
 
@@ -23,7 +22,7 @@ export function replaceText(
   options: ReplaceTextOptions = {},
   startPosition: number = 0
 ) {
-  const { queryPatterns, replacement, useGlobalReplacementStyle } = matcher;
+  const { queryPatterns, replacement } = matcher;
 
   if (!element || isReplacementEmpty(replacement)) return;
 
