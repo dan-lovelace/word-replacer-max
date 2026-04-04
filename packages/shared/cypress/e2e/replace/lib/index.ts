@@ -22,6 +22,6 @@ export function searchAndReplace(
       replacement,
       useGlobalReplacementStyle: DEFAULT_USE_GLOBAL_REPLACEMENT_STYLE,
     },
-    replacementStyle
+    { replacementStyle }
   );
 }
