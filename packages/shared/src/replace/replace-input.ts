@@ -103,6 +103,9 @@ function replaceInputValue(
 
   let value = element[valueProperty];
 
+  const selectionStart = element.selectionStart ?? 0;
+  const selectionEnd = element.selectionEnd ?? 0;
+
   for (const matcher of matchers) {
     if (matcher.active !== true) continue;
 
@@ -113,7 +116,10 @@ function replaceInputValue(
 
   if (value === element[valueProperty]) return;
 
+  const delta = value.length - element.value.length;
+
   element[valueProperty] = value;
+  element.setSelectionRange(selectionStart + delta, selectionEnd + delta);
   (element as HTMLElement).dataset[LAST_VALUE_DATA_KEY] = hashValue(value);
 }
 

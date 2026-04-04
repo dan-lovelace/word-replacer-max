@@ -61,6 +61,7 @@ export class Renderer {
     this.browser = browser;
     this.observedElement = element;
 
+    this.handleDocumentInputEvent.bind(this);
     this.init();
   }
 
@@ -72,6 +73,8 @@ export class Renderer {
     document.addEventListener("readystatechange", () => {
       this.renderContent("document ready state change");
     });
+
+    document.addEventListener("input", this.handleDocumentInputEvent);
 
     /**
      * Re-render whenever storage changes.
@@ -88,13 +91,20 @@ export class Renderer {
       this.renderContent();
     });
 
-    /**
-     * Configured custom render rate if one exists.
-     */
-    this.browser.storage.sync.get("renderRate").then((data) => {
-      if (data.renderRate !== undefined) {
+    this.refreshRenderCache().then(() => {
+      if (!this.renderCache.storage.value) {
+        // storage does not exist, unable to continue
+        return;
+      }
+
+      const { renderRate } = this.renderCache.storage.value;
+
+      /**
+       * Configured custom render rate if one exists.
+       */
+      if (renderRate !== undefined) {
         const storedFrequency = Number(
-          (data.renderRate as RenderRate).frequency
+          (this.renderCache.storage.value.renderRate as RenderRate).frequency
         );
 
         if (!isNaN(storedFrequency)) {
@@ -130,86 +140,15 @@ export class Renderer {
     this.mutationObserver.observe(this.observedElement, this.OBSERVE_PARAMS);
   }
 
-  private isReplaceAllowed(): boolean {
+  private getRenderedMatchers = (): Matcher[] | undefined => {
     if (!this.renderCache.storage.value) {
-      return false;
-    }
-
-    const {
-      storage: {
-        value: { domainList = [], preferences },
-      },
-    } = this.renderCache;
-
-    return (
-      preferences?.extensionEnabled === true &&
-      isDomainAllowed(domainList, preferences)
-    );
-  }
-
-  public replaceInputElements() {
-    if (!this.isReplaceAllowed()) {
-      return;
-    }
-
-    replaceAllInputElements(
-      this.renderCache.storage.value?.matchers ?? [],
-      this.observedElement
-    );
-  }
-
-  public renderContent = async (message = "") => {
-    const now = new Date().getTime();
-
-    if (now > this.renderCache.storage.expires) {
-      const syncStorage =
-        (await this.browser.storage.sync.get()) as SyncStorage;
-      const matcherStorage = syncStorage.ruleSync?.active
-        ? syncStorage
-        : await this.browser.storage.local.get();
-      const matchers = matchersFromStorage(matcherStorage) ?? [];
-      const storage: RenderStorage = {
-        ...syncStorage,
-        matchers,
-      };
-
-      this.renderCache.storage.expires =
-        now + this.RENDER_STORAGE_CACHE_LENGTH_MS;
-      this.renderCache.storage.value = storage;
-
-      if (now > this.renderCache.styleElement.expires) {
-        const renderCacheExpires = now + this.RENDER_STYLE_CACHE_LENGTH_MS;
-        const existingStyleElement = document.head.querySelector(
-          `#${STYLE_ELEMENT_ID}`
-        );
-
-        if (existingStyleElement) {
-          this.renderCache.styleElement = {
-            expires: renderCacheExpires,
-            value: existingStyleElement,
-          };
-        } else {
-          const newStyleElement = getStylesheet(storage.replacementStyle);
-
-          document.head.appendChild(newStyleElement);
-
-          this.renderCache.styleElement = {
-            expires: renderCacheExpires,
-            value: newStyleElement,
-          };
-        }
-      }
-    }
-
-    if (!this.renderCache.storage.value) {
-      // storage does not exist, unable to continue
       return;
     }
 
     const {
       storage: {
         value: syncStorage,
-        value: { matchers = [], replacementStyle, ruleGroups },
+        value: { matchers = [], ruleGroups },
       },
     } = this.renderCache;
 
@@ -240,10 +179,140 @@ export class Renderer {
 
     if (renderedMatchers.length < 1) return;
 
+    return renderedMatchers;
+  };
+
+  private handleDocumentInputEvent = (event: Event) => {
+    if (
+      !this.isInputReplaceAllowed() ||
+      this.renderCache.storage.value?.preferences?.inputReplacement.mode !==
+        "real-time"
+    ) {
+      return;
+    }
+
+    if (
+      !(
+        event.target instanceof HTMLInputElement ||
+        event.target instanceof HTMLTextAreaElement
+      )
+    ) {
+      return;
+    }
+
+    this.replaceInputElements();
+  };
+
+  private handleIFrameInputEvent = (event: Event) => {};
+
+  private isInputReplaceAllowed(): boolean {
+    return (
+      this.isReplaceAllowed() &&
+      this.renderCache.storage.value?.preferences?.inputReplacement?.active ===
+        true
+    );
+  }
+
+  private isReplaceAllowed(): boolean {
+    if (!this.renderCache.storage.value) {
+      return false;
+    }
+
+    const {
+      storage: {
+        value: { domainList = [], preferences },
+      },
+    } = this.renderCache;
+
+    return (
+      preferences?.extensionEnabled === true &&
+      isDomainAllowed(domainList, preferences)
+    );
+  }
+
+  private refreshRenderCache = async () => {
+    const now = new Date().getTime();
+    const syncStorage = (await this.browser.storage.sync.get()) as SyncStorage;
+    const matcherStorage = syncStorage.ruleSync?.active
+      ? syncStorage
+      : await this.browser.storage.local.get();
+    const matchers = matchersFromStorage(matcherStorage) ?? [];
+    const storage: RenderStorage = {
+      ...syncStorage,
+      matchers,
+    };
+
+    this.renderCache.storage.expires =
+      now + this.RENDER_STORAGE_CACHE_LENGTH_MS;
+    this.renderCache.storage.value = storage;
+
+    if (now > this.renderCache.styleElement.expires) {
+      const renderCacheExpires = now + this.RENDER_STYLE_CACHE_LENGTH_MS;
+      const existingStyleElement = document.head.querySelector(
+        `#${STYLE_ELEMENT_ID}`
+      );
+
+      if (existingStyleElement) {
+        this.renderCache.styleElement = {
+          expires: renderCacheExpires,
+          value: existingStyleElement,
+        };
+      } else {
+        const newStyleElement = getStylesheet(storage.replacementStyle);
+
+        document.head.appendChild(newStyleElement);
+
+        this.renderCache.styleElement = {
+          expires: renderCacheExpires,
+          value: newStyleElement,
+        };
+      }
+    }
+  };
+
+  public replaceInputElements() {
+    const renderedMatchers = this.getRenderedMatchers();
+
+    if (!this.isInputReplaceAllowed() || !renderedMatchers) {
+      return;
+    }
+
+    replaceAllInputElements(renderedMatchers, this.observedElement);
+  }
+
+  public renderContent = async (_message = "") => {
+    const now = new Date().getTime();
+
+    if (now > this.renderCache.storage.expires) {
+      await this.refreshRenderCache();
+    }
+
+    if (!this.renderCache.storage.value) {
+      // storage does not exist, unable to continue
+      return;
+    }
+
+    const renderedMatchers = this.getRenderedMatchers();
+
+    if (!this.isReplaceAllowed() || !renderedMatchers) {
+      return;
+    }
+
     this.mutationObserver?.disconnect();
 
     try {
-      replaceAll(renderedMatchers, replacementStyle, this.observedElement);
+      replaceAll(
+        renderedMatchers,
+        this.renderCache.storage.value.replacementStyle,
+        this.observedElement
+      );
+
+      if (
+        this.renderCache.storage.value.preferences?.inputReplacement.mode ===
+        "real-time"
+      ) {
+        this.replaceInputElements();
+      }
     } finally {
       this.renderCount++;
       this.mutationObserver?.observe(this.observedElement, this.OBSERVE_PARAMS);
