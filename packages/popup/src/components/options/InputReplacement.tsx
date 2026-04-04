@@ -280,17 +280,17 @@ export default function InputReplacement() {
                 <div className="form-check">
                   <label
                     className="user-select-none"
-                    htmlFor="confirmation-checkbox"
+                    htmlFor="input-replacement-confirmation-checkbox"
                   >
                     I understand and accept the risks
                   </label>
                   <input
                     checked={confirmStatus === "confirmed"}
                     className="form-check-input"
-                    id="confirmation-checkbox"
+                    id="input-replacement-confirmation-checkbox"
                     type="checkbox"
                     onChange={handleConfirmChange}
-                    data-testid="confirmation-checkbox"
+                    data-testid="input-replacement-confirmation-checkbox"
                   />
                 </div>
               </Alert>
