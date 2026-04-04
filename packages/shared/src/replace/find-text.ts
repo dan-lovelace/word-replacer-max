@@ -63,7 +63,7 @@ export function findText(
     ) &&
     (!element.parentElement?.isContentEditable ||
       !!(
-        options.preferences?.inputReplacement.active &&
+        options.preferences?.inputReplacement?.active &&
         options.preferences.inputReplacement.mode === "real-time"
       ))
   ) {

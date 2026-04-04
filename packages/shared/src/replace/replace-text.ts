@@ -11,10 +11,10 @@ import {
 import { getReplacementHTML, replaceTextNode } from "./lib/dom";
 import { getRegexFlags, patternRegex, regExpReplace } from "./lib/regex";
 
-export type ReplaceTextOptions = Pick<
-  SyncStorage,
-  "preferences" | "replacementStyle"
->;
+export type ReplaceTextOptions = {
+  preferences?: Partial<SyncStorage["preferences"]>;
+  replacementStyle?: SyncStorage["replacementStyle"];
+};
 
 export function replaceText(
   element: Text | undefined,
