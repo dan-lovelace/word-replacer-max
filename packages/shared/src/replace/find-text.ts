@@ -3,6 +3,7 @@ import { QueryPattern } from "@worm/types/src/replace";
 import { CONTENTS_PROPERTY } from "./lib";
 import { nodeNameBlocklist } from "./lib/dom";
 import { getRegexFlags, patternRegex } from "./lib/regex";
+import { ReplaceTextOptions } from "./replace-text";
 
 /**
  * Recursively crawls an element in search of a given query and returns a list
@@ -12,6 +13,7 @@ export function findText(
   element: HTMLElement,
   query: string,
   queryPatterns: QueryPattern[],
+  options: ReplaceTextOptions = {},
   found: Text[] = []
 ) {
   const elementContents = String(element[CONTENTS_PROPERTY]);
@@ -49,7 +51,7 @@ export function findText(
     const childElements = Array.from(element.childNodes) as HTMLElement[];
 
     for (const child of childElements) {
-      findText(child, query, queryPatterns, found);
+      findText(child, query, queryPatterns, options, found);
     }
   }
 
@@ -59,7 +61,11 @@ export function findText(
     !nodeNameBlocklist.has(
       String(element.parentNode?.nodeName.toLowerCase())
     ) &&
-    !element.parentElement?.isContentEditable
+    (!element.parentElement?.isContentEditable ||
+      !!(
+        options.preferences?.inputReplacement.active &&
+        options.preferences.inputReplacement.mode === "real-time"
+      ))
   ) {
     found.push(element as unknown as Text);
   }

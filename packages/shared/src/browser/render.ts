@@ -130,6 +130,56 @@ export class Renderer {
     this.mutationObserver.observe(this.observedElement, this.OBSERVE_PARAMS);
   }
 
+  private getRenderedMatchers = (): Matcher[] | undefined => {
+    if (!this.renderCache.storage.value) {
+      return;
+    }
+
+    const {
+      storage: {
+        value: syncStorage,
+        value: { matchers = [], ruleGroups },
+      },
+    } = this.renderCache;
+
+    if (!this.isReplaceAllowed()) {
+      return;
+    }
+
+    let renderedMatchers = [...matchers];
+
+    if (ruleGroups?.active) {
+      const matcherGroups = getMatcherGroups(syncStorage);
+
+      if (matcherGroups !== undefined) {
+        const activeGroups = Object.values(matcherGroups).filter(
+          (group) => group.active
+        );
+        const groupedMatchers = new Set(
+          activeGroups.map((group) => [...(group.matchers ?? [])]).flat()
+        );
+
+        if (groupedMatchers.size > 0 || activeGroups.length > 0) {
+          renderedMatchers = renderedMatchers.filter((matcher) =>
+            groupedMatchers.has(matcher.identifier)
+          );
+        }
+      }
+    }
+
+    if (renderedMatchers.length < 1) return;
+
+    return renderedMatchers;
+  };
+
+  private isInputReplaceAllowed(): boolean {
+    return (
+      this.isReplaceAllowed() &&
+      this.renderCache.storage.value?.preferences?.inputReplacement?.active ===
+        true
+    );
+  }
+
   private isReplaceAllowed(): boolean {
     if (!this.renderCache.storage.value) {
       return false;
@@ -148,17 +198,16 @@ export class Renderer {
   }
 
   public replaceInputElements() {
-    if (!this.isReplaceAllowed()) {
+    const renderedMatchers = this.getRenderedMatchers();
+
+    if (!this.isInputReplaceAllowed() || !renderedMatchers) {
       return;
     }
 
-    replaceAllInputElements(
-      this.renderCache.storage.value?.matchers ?? [],
-      this.observedElement
-    );
+    replaceAllInputElements(renderedMatchers, this.observedElement);
   }
 
-  public renderContent = async (message = "") => {
+  public renderContent = async (_message = "") => {
     const now = new Date().getTime();
 
     if (now > this.renderCache.storage.expires) {
@@ -208,8 +257,7 @@ export class Renderer {
 
     const {
       storage: {
-        value: syncStorage,
-        value: { matchers = [], replacementStyle, ruleGroups },
+        value: { preferences, replacementStyle },
       },
     } = this.renderCache;
 
@@ -217,33 +265,24 @@ export class Renderer {
       return;
     }
 
-    let renderedMatchers = [...matchers];
-
-    if (ruleGroups?.active) {
-      const matcherGroups = getMatcherGroups(syncStorage);
-
-      if (matcherGroups !== undefined) {
-        const activeGroups = Object.values(matcherGroups).filter(
-          (group) => group.active
-        );
-        const groupedMatchers = new Set(
-          activeGroups.map((group) => [...(group.matchers ?? [])]).flat()
-        );
-
-        if (groupedMatchers.size > 0 || activeGroups.length > 0) {
-          renderedMatchers = renderedMatchers.filter((matcher) =>
-            groupedMatchers.has(matcher.identifier)
-          );
-        }
-      }
-    }
-
-    if (renderedMatchers.length < 1) return;
+    const renderedMatchers = this.getRenderedMatchers();
+    if (!renderedMatchers) return;
 
     this.mutationObserver?.disconnect();
 
     try {
-      replaceAll(renderedMatchers, replacementStyle, this.observedElement);
+      replaceAll(
+        renderedMatchers,
+        { preferences, replacementStyle },
+        this.observedElement
+      );
+
+      if (
+        this.renderCache.storage.value.preferences?.inputReplacement.mode ===
+        "real-time"
+      ) {
+        this.replaceInputElements();
+      }
     } finally {
       this.renderCount++;
       this.mutationObserver?.observe(this.observedElement, this.OBSERVE_PARAMS);

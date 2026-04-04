@@ -272,8 +272,8 @@ export default function InputReplacement() {
                   unexpectedly.
                 </p>
                 <p>
-                  Additionally, it could also result in the submission of false
-                  or incorrect data in things like web forms, emails and
+                  Additionally, it could result in the submission of false or
+                  incorrect data in things like web forms, emails and
                   spreadsheets.
                 </p>
 

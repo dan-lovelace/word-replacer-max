@@ -1,5 +1,6 @@
 import { ReplacementStyle } from "@worm/types/src/replace";
 import { MatcherReplaceProps } from "@worm/types/src/rules";
+import { SyncStorage } from "@worm/types/src/storage";
 
 import {
   CONTENTS_PROPERTY,
@@ -10,11 +11,16 @@ import {
 import { getReplacementHTML, replaceTextNode } from "./lib/dom";
 import { getRegexFlags, patternRegex, regExpReplace } from "./lib/regex";
 
+export type ReplaceTextOptions = Pick<
+  SyncStorage,
+  "preferences" | "replacementStyle"
+>;
+
 export function replaceText(
   element: Text | undefined,
   query: string,
   matcher: MatcherReplaceProps,
-  replacementStyle: ReplacementStyle | undefined,
+  options: ReplaceTextOptions = {},
   startPosition: number = 0
 ) {
   const { queryPatterns, replacement, useGlobalReplacementStyle } = matcher;
@@ -58,7 +64,7 @@ export function replaceText(
   if (!queryPatterns || queryPatterns.length < 1) {
     // proceed with default
     const replaced = elementContents.replace(patternRegex.default(query), () =>
-      getReplacementHTML(element, query, matcher, replacementStyle)
+      getReplacementHTML(element, query, matcher, options.replacementStyle)
     );
 
     replaceTextNode(element, replaced);
@@ -74,7 +80,12 @@ export function replaceText(
           const searchValue = patternRegex[pattern](query);
 
           replaced = elementContents.replace(searchValue, () =>
-            getReplacementHTML(element, query, matcher, replacementStyle)
+            getReplacementHTML(
+              element,
+              query,
+              matcher,
+              options.replacementStyle
+            )
           );
           break;
         }
@@ -86,7 +97,7 @@ export function replaceText(
 
           replaced = elementContents.replace(
             searchValue,
-            regExpReplace(element, query, matcher, replacementStyle)
+            regExpReplace(element, query, matcher, options.replacementStyle)
           );
           break;
         }
@@ -98,7 +109,12 @@ export function replaceText(
 
           replaced = elementContents
             .replace(searchValue, () =>
-              getReplacementHTML(element, query, matcher, replacementStyle)
+              getReplacementHTML(
+                element,
+                query,
+                matcher,
+                options.replacementStyle
+              )
             )
             .replace(/\s\s+/g, "");
           break;
