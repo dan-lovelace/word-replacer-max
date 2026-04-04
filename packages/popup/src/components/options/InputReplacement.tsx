@@ -13,10 +13,8 @@ import { storageSetByKeys } from "@worm/shared/src/storage";
 import { InputReplacementMode } from "@worm/types/src/replace";
 
 import { Indented } from "../../containers/Indented";
-import { useLanguage } from "../../lib/language";
 import { useConfig } from "../../store/Config";
 
-import { useToast } from "../alert/useToast";
 import Alert from "../Alerts";
 import Button from "../button/Button";
 import TextButton from "../button/TextButton";
@@ -35,8 +33,6 @@ export default function InputReplacement() {
       sync: { preferences },
     },
   } = useConfig();
-  const language = useLanguage();
-  const { showToast } = useToast();
 
   const hideModalButtonRef = useRef<HTMLButtonElement>(null);
   const modalRef = useRef<Modal>();
@@ -86,11 +82,6 @@ export default function InputReplacement() {
     newPreferences.inputReplacement = newInputReplacement;
 
     storageSetByKeys({ preferences: newPreferences });
-
-    showToast({
-      message: language.rules.REFRESH_REQUIRED,
-      options: { showRefresh: true },
-    });
   };
 
   const handleConfirm = () => {
@@ -222,12 +213,11 @@ export default function InputReplacement() {
                   for="realTimeRadio"
                   data-testid="real-time-radio-button"
                 >
-                  All the time (not recommended)
+                  All the time <strong>(not recommended)</strong>
                 </label>
                 <div className="fs-sm">
                   Replacements run in real time on page load and every
-                  keystroke. This will modify things like forms and emails;
-                  double-check everything before submission.
+                  keystroke.
                 </div>
               </div>
             </div>
@@ -259,13 +249,13 @@ export default function InputReplacement() {
             <div className="modal-body">
               <Alert
                 severity="danger"
-                title="Important: review before enabling"
+                title="Important: Review before enabling"
                 data-testid="input-replacment-confirmation-alert"
               >
                 <p>
-                  Replacements apply instantly as you type, before you review
-                  what was typed. This could lead to submission of false or
-                  incorrect data in things like web forms and emails.
+                  Replacements apply instantly as you type. This could lead to
+                  submission of false or incorrect data in things like web
+                  forms, emails and spreadsheets.
                 </p>
 
                 <div className="form-check">
