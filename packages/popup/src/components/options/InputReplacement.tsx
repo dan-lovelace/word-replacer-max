@@ -9,12 +9,15 @@ import {
   parseShortcutKeys,
   ShortcutKey,
 } from "@worm/shared/src/browser";
+import { DEFAULT_INPUT_REPLACE } from "@worm/shared/src/replace/lib/input-replace";
 import { storageSetByKeys } from "@worm/shared/src/storage";
 import { InputReplacementMode } from "@worm/types/src/replace";
 
 import { Indented } from "../../containers/Indented";
+import { useLanguage } from "../../lib/language";
 import { useConfig } from "../../store/Config";
 
+import { useToast } from "../alert/useToast";
 import Alert from "../Alerts";
 import Button from "../button/Button";
 import TextButton from "../button/TextButton";
@@ -33,6 +36,7 @@ export default function InputReplacement() {
       sync: { preferences },
     },
   } = useConfig();
+  const { showRefreshToast } = useToast();
 
   const hideModalButtonRef = useRef<HTMLButtonElement>(null);
   const modalRef = useRef<Modal>();
@@ -77,16 +81,26 @@ export default function InputReplacement() {
       {},
       newPreferences.inputReplacement
     );
+    const newValue = event.currentTarget.checked;
 
-    newInputReplacement.active = event.currentTarget.checked;
+    newInputReplacement.active = newValue;
+
+    if (!newValue) {
+      // reset to default mode when disabling
+      newInputReplacement.mode = DEFAULT_INPUT_REPLACE.mode;
+    }
+
     newPreferences.inputReplacement = newInputReplacement;
 
     storageSetByKeys({ preferences: newPreferences });
+    showRefreshToast();
   };
 
   const handleConfirm = () => {
     updateMode("real-time");
     modalRef.current?.hide();
+
+    showRefreshToast();
   };
 
   const handleConfirmChange = (
@@ -213,7 +227,7 @@ export default function InputReplacement() {
                   for="realTimeRadio"
                   data-testid="real-time-radio-button"
                 >
-                  All the time <strong>(not recommended)</strong>
+                  All the time <strong>(unstable)</strong>
                 </label>
                 <div className="fs-sm">
                   Replacements run in real time on page load and every
@@ -253,9 +267,14 @@ export default function InputReplacement() {
                 data-testid="input-replacment-confirmation-alert"
               >
                 <p>
-                  Replacements apply instantly as you type. This could lead to
-                  submission of false or incorrect data in things like web
-                  forms, emails and spreadsheets.
+                  Replacements apply instantly as you type. This feature is not
+                  stable and may lead to the text cursor moving around
+                  unexpectedly.
+                </p>
+                <p>
+                  Additionally, it could also result in the submission of false
+                  or incorrect data in things like web forms, emails and
+                  spreadsheets.
                 </p>
 
                 <div className="form-check">
