@@ -4,28 +4,29 @@ import { Matcher } from "@worm/types/src/rules";
 import { logDebug } from "../logging";
 
 import { findText } from "./find-text";
-import { replaceText } from "./replace-text";
+import { replaceText, ReplaceTextOptions } from "./replace-text";
 
 function searchAndReplace(
   element: HTMLElement,
   query: string,
   matcher: Matcher,
-  replacementStyle: ReplacementStyle | undefined
+  replaceOptions: ReplaceTextOptions = {}
 ) {
   const { queryPatterns } = matcher;
-  const searchResults = findText(element, query, queryPatterns, []) || [];
+  const searchResults =
+    findText(element, query, queryPatterns, replaceOptions, []) || [];
 
   for (let position = 0; position < searchResults.length; position++) {
     const textElement = searchResults[position];
 
-    replaceText(textElement, query, matcher, replacementStyle, position);
+    replaceText(textElement, query, matcher, replaceOptions, position);
   }
 }
 
 export function replaceAll(
+  startDocument: Document | HTMLElement = document,
   matchers: Matcher[],
-  replacementStyle: ReplacementStyle | undefined,
-  startDocument: Document | HTMLElement = document
+  options: ReplaceTextOptions = {}
 ) {
   const body = startDocument.querySelector("body");
   if (!body) {
@@ -42,12 +43,12 @@ export function replaceAll(
 
     for (const query of matcher.queries) {
       if (body) {
-        searchAndReplace(body, query, matcher, replacementStyle);
+        searchAndReplace(body, query, matcher, options);
       }
 
       if (head) {
         for (const title of Array.from(head.querySelectorAll("title"))) {
-          searchAndReplace(title, query, matcher, replacementStyle);
+          searchAndReplace(title, query, matcher, options);
         }
       }
     }

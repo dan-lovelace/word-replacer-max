@@ -35,6 +35,10 @@ const mockSyncStorage: Record<string, any> = {
       field: "replacement",
       matcher: "",
     },
+    inputReplacement: {
+      active: false,
+      mode: "on-demand",
+    },
   },
   renderRate: DEFAULT_RENDER_RATE,
   replacementStyle: DEFAULT_REPLACEMENT_STYLE,

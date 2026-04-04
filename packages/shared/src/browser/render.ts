@@ -61,7 +61,6 @@ export class Renderer {
     this.browser = browser;
     this.observedElement = element;
 
-    this.handleDocumentInputEvent.bind(this);
     this.init();
   }
 
@@ -73,8 +72,6 @@ export class Renderer {
     document.addEventListener("readystatechange", () => {
       this.renderContent("document ready state change");
     });
-
-    document.addEventListener("input", this.handleDocumentInputEvent);
 
     /**
      * Re-render whenever storage changes.
@@ -97,7 +94,7 @@ export class Renderer {
         return;
       }
 
-      const { renderRate } = this.renderCache.storage.value;
+      const { preferences, renderRate } = this.renderCache.storage.value;
 
       /**
        * Configured custom render rate if one exists.
@@ -110,6 +107,21 @@ export class Renderer {
         if (!isNaN(storedFrequency)) {
           this.renderRate.frequency = storedFrequency;
         }
+      }
+
+      if (
+        this.isInputReplaceAllowed() &&
+        preferences?.inputReplacement.mode === "real-time"
+      ) {
+        this.observedElement.addEventListener("input", (event) => {
+          if (
+            event.target instanceof HTMLElement
+            //  &&
+            // event.target.isContentEditable
+          ) {
+            this.renderContent();
+          }
+        });
       }
 
       this.isInitialRender = false;
@@ -128,15 +140,16 @@ export class Renderer {
         : DEFAULT_RENDER_RATE_MS;
     });
 
+    const watchedMutations: Set<MutationRecordType> = new Set(["childList"]);
+
     this.mutationObserver = new MutationObserver((mutationList) => {
       for (const mutation of mutationList) {
-        if (mutation.type === "childList") {
+        if (watchedMutations.has(mutation.type)) {
           mutationRender("mutation");
           break;
         }
       }
     });
-
     this.mutationObserver.observe(this.observedElement, this.OBSERVE_PARAMS);
   }
 
@@ -181,29 +194,6 @@ export class Renderer {
 
     return renderedMatchers;
   };
-
-  private handleDocumentInputEvent = (event: Event) => {
-    if (
-      !this.isInputReplaceAllowed() ||
-      this.renderCache.storage.value?.preferences?.inputReplacement.mode !==
-        "real-time"
-    ) {
-      return;
-    }
-
-    if (
-      !(
-        event.target instanceof HTMLInputElement ||
-        event.target instanceof HTMLTextAreaElement
-      )
-    ) {
-      return;
-    }
-
-    this.replaceInputElements();
-  };
-
-  private handleIFrameInputEvent = (event: Event) => {};
 
   private isInputReplaceAllowed(): boolean {
     return (
@@ -301,11 +291,9 @@ export class Renderer {
     this.mutationObserver?.disconnect();
 
     try {
-      replaceAll(
-        renderedMatchers,
-        this.renderCache.storage.value.replacementStyle,
-        this.observedElement
-      );
+      replaceAll(this.observedElement, renderedMatchers, {
+        replacementStyle: this.renderCache.storage.value.replacementStyle,
+      });
 
       if (
         this.renderCache.storage.value.preferences?.inputReplacement.mode ===
