@@ -62,10 +62,9 @@ export function findText(
       String(element.parentNode?.nodeName.toLowerCase())
     ) &&
     (!element.parentElement?.isContentEditable ||
-      !!(
-        options.preferences?.inputReplacement?.active &&
-        options.preferences.inputReplacement.mode === "real-time"
-      ))
+      options.includeEditableContent ||
+      (options.preferences?.inputReplacement?.active &&
+        options.preferences.inputReplacement.mode === "real-time"))
   ) {
     found.push(element as unknown as Text);
   }

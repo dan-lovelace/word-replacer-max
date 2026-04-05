@@ -11,6 +11,7 @@ import { getReplacementHTML, replaceTextNode } from "./lib/dom";
 import { getRegexFlags, patternRegex, regExpReplace } from "./lib/regex";
 
 export type ReplaceTextOptions = {
+  includeEditableContent?: boolean;
   preferences?: Partial<SyncStorage["preferences"]>;
   replacementStyle?: SyncStorage["replacementStyle"];
 };

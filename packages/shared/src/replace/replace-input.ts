@@ -1,5 +1,6 @@
 import { Matcher } from "@worm/types/src/rules";
 
+import { replaceEditable, ReplaceTextOptions } from ".";
 import { isReplacementEmpty, getSortedQueryPatterns, hashValue } from "./lib";
 import { getRegexFlags, patternRegex } from "./lib/regex";
 
@@ -62,32 +63,6 @@ function applyQueryReplacement(
   return result;
 }
 
-function replaceHTMLValue(element: HTMLElement, matchers: Matcher[]) {
-  const valueProperty: keyof Pick<HTMLElement, "innerHTML"> = "innerHTML";
-  const lastReplaced = (element as HTMLElement).dataset[LAST_VALUE_DATA_KEY];
-
-  if (
-    lastReplaced !== undefined &&
-    lastReplaced === hashValue(element[valueProperty])
-  )
-    return;
-
-  let value = element[valueProperty];
-
-  for (const matcher of matchers) {
-    if (matcher.active !== true) continue;
-
-    for (const query of matcher.queries) {
-      value = applyQueryReplacement(value, query, matcher);
-    }
-  }
-
-  if (value === element[valueProperty]) return;
-
-  element[valueProperty] = value;
-  element.dataset[LAST_VALUE_DATA_KEY] = hashValue(value);
-}
-
 function replaceInputValue(
   element: HTMLInputElement | HTMLTextAreaElement,
   matchers: Matcher[]
@@ -119,7 +94,8 @@ function replaceInputValue(
 
 export function replaceAllInputElements(
   matchers: Matcher[],
-  root: Document | HTMLElement = document
+  root: Document | HTMLElement = document,
+  options: ReplaceTextOptions = {}
 ) {
   const activeMatchers = matchers.filter((m) => m.active);
   if (activeMatchers.length < 1) return;
@@ -139,7 +115,7 @@ export function replaceAllInputElements(
   );
 
   for (const el of editableHTMLElements) {
-    replaceHTMLValue(el, activeMatchers);
+    replaceEditable(matchers, options, el);
   }
 
   const iframes = Array.from(
@@ -156,7 +132,7 @@ export function replaceAllInputElements(
       const isBodyEditable = doc.body?.isContentEditable === true;
 
       if (isDesignMode || isBodyEditable) {
-        replaceHTMLValue(doc.body, activeMatchers);
+        replaceEditable(matchers, options, doc.body);
       }
     } catch {
       // cross-origin iframes will throw, skip silently

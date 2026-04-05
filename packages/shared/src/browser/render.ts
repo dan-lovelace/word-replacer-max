@@ -5,7 +5,11 @@ import { SyncStorage } from "@worm/types/src/storage";
 
 import { debounce } from "../debounce";
 import { isDomainAllowed } from "../domains";
-import { replaceAll, replaceAllInputElements } from "../replace";
+import {
+  replaceAll,
+  replaceAllInputElements,
+  ReplaceTextOptions,
+} from "../replace";
 import {
   DEFAULT_RENDER_RATE,
   DEFAULT_RENDER_RATE_MS,
@@ -204,7 +208,16 @@ export class Renderer {
       return;
     }
 
-    replaceAllInputElements(renderedMatchers, this.observedElement);
+    const replaceOptions: ReplaceTextOptions = {
+      preferences: this.renderCache.storage.value?.preferences,
+      replacementStyle: this.renderCache.storage.value?.replacementStyle,
+    };
+
+    replaceAllInputElements(
+      renderedMatchers,
+      this.observedElement,
+      replaceOptions
+    );
   }
 
   public renderContent = async (_message = "") => {
@@ -246,6 +259,21 @@ export class Renderer {
             expires: renderCacheExpires,
             value: newStyleElement,
           };
+        }
+
+        const iframes = document.querySelectorAll("iframe");
+        for (const iframe of iframes) {
+          const iframeDocument =
+            iframe.contentDocument ?? iframe.contentWindow?.document;
+          if (
+            !iframeDocument?.head ||
+            iframeDocument.head.querySelector(`#${STYLE_ELEMENT_ID}`)
+          ) {
+            continue;
+          }
+
+          const iframeStyleElement = getStylesheet(storage.replacementStyle);
+          iframeDocument.head.appendChild(iframeStyleElement);
         }
       }
     }

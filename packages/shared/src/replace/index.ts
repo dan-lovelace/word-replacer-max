@@ -54,6 +54,23 @@ export function replaceAll(
   }
 }
 
+export function replaceEditable(
+  matchers: Matcher[],
+  options: ReplaceTextOptions = {},
+  element: HTMLElement
+) {
+  for (const matcher of matchers) {
+    if (matcher.active !== true) continue;
+
+    for (const query of matcher.queries) {
+      searchAndReplace(element, query, matcher, {
+        ...options,
+        includeEditableContent: true,
+      });
+    }
+  }
+}
+
 export * from "./find-text";
 export * from "./lib";
 export * from "./replace-input";
