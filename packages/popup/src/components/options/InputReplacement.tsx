@@ -227,11 +227,11 @@ export default function InputReplacement() {
                   for="realTimeRadio"
                   data-testid="real-time-radio-button"
                 >
-                  All the time <strong>(unstable)</strong>
+                  Automatically <strong>(unstable)</strong>
                 </label>
                 <div className="fs-sm">
-                  Replacements run in real time on page load and every
-                  keystroke.
+                  Replacements run immediately on page load and periodically
+                  afterward.
                 </div>
               </div>
             </div>
@@ -250,7 +250,7 @@ export default function InputReplacement() {
           <div className="modal-content">
             <div className="modal-header">
               <h1 className="modal-title fs-5" id="real-time-confirm-label">
-                Confirmation
+                Are you sure?
               </h1>
               <button
                 aria-label="Close"
@@ -261,20 +261,22 @@ export default function InputReplacement() {
               />
             </div>
             <div className="modal-body">
+              <p>
+                Automatic replacement in text inputs is experimental and not
+                recommended. Acknowledge the risks below to continue.
+              </p>
               <Alert
                 severity="danger"
-                title="Important: Review before enabling"
                 data-testid="input-replacment-confirmation-alert"
               >
                 <p>
-                  Replacements apply instantly as you type. This feature is not
-                  stable and may lead to the text cursor moving around
-                  unexpectedly.
+                  This feature is not stable and, depending on your rules, may
+                  lead to the text cursor moving around unexpectedly as you
+                  type.
                 </p>
                 <p>
-                  Additionally, it could result in the submission of false or
-                  incorrect data in things like web forms, emails and
-                  spreadsheets.
+                  Additionally, it could result in the submission of incorrect
+                  data in web forms, emails, and spreadsheets.
                 </p>
 
                 <div className="form-check">
