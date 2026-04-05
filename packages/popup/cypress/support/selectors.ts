@@ -110,7 +110,8 @@ export const selectors = {
         closeButton: () => cy.findByTestId("sync-confirm-modal-close-button"),
         confirmationAlert: () =>
           cy.findByTestId("rule-sync-confirmation-alert"),
-        confirmationCheckbox: () => cy.findByTestId("confirmation-checkbox"),
+        confirmationCheckbox: () =>
+          cy.findByTestId("rule-sync-confirmation-checkbox"),
         proceedButton: () => cy.findByRole("button", { name: /proceed/i }),
         root: () => cy.findByTestId("sync-confirm-modal"),
         sharingTabButton: () => cy.findByTestId("sharing-tab-button"),

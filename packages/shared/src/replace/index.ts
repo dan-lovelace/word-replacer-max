@@ -1,30 +1,30 @@
-import { ReplacementStyle } from "@worm/types/src/replace";
 import { Matcher } from "@worm/types/src/rules";
 
 import { logDebug } from "../logging";
 
 import { findText } from "./find-text";
-import { replaceText } from "./replace-text";
+import { replaceText, ReplaceTextOptions } from "./replace-text";
 
 function searchAndReplace(
   element: HTMLElement,
   query: string,
   matcher: Matcher,
-  replacementStyle: ReplacementStyle | undefined
+  options: ReplaceTextOptions = {}
 ) {
   const { queryPatterns } = matcher;
-  const searchResults = findText(element, query, queryPatterns, []) || [];
+  const searchResults =
+    findText(element, query, queryPatterns, options, []) || [];
 
   for (let position = 0; position < searchResults.length; position++) {
     const textElement = searchResults[position];
 
-    replaceText(textElement, query, matcher, replacementStyle, position);
+    replaceText(textElement, query, matcher, options, position);
   }
 }
 
 export function replaceAll(
   matchers: Matcher[],
-  replacementStyle: ReplacementStyle | undefined,
+  options: ReplaceTextOptions = {},
   startDocument: Document | HTMLElement = document
 ) {
   const body = startDocument.querySelector("body");
@@ -42,14 +42,31 @@ export function replaceAll(
 
     for (const query of matcher.queries) {
       if (body) {
-        searchAndReplace(body, query, matcher, replacementStyle);
+        searchAndReplace(body, query, matcher, options);
       }
 
       if (head) {
         for (const title of Array.from(head.querySelectorAll("title"))) {
-          searchAndReplace(title, query, matcher, replacementStyle);
+          searchAndReplace(title, query, matcher, options);
         }
       }
+    }
+  }
+}
+
+export function replaceEditable(
+  matchers: Matcher[],
+  options: ReplaceTextOptions = {},
+  element: HTMLElement
+) {
+  for (const matcher of matchers) {
+    if (matcher.active !== true) continue;
+
+    for (const query of matcher.queries) {
+      searchAndReplace(element, query, matcher, {
+        ...options,
+        includeEditableContent: true,
+      });
     }
   }
 }

@@ -15,6 +15,7 @@ import {
 import { STORAGE_MATCHER_PREFIX } from "../../browser";
 import { DEFAULT_COLOR_MODE } from "../../color";
 import { logDebug } from "../../logging";
+import { DEFAULT_INPUT_REPLACE } from "../../replace/lib/input-replace";
 import { DEFAULT_RULE_GROUPS } from "../../replace/lib/groups";
 import { DEFAULT_RENDER_RATE } from "../../replace/lib/render";
 import { DEFAULT_RULE_SYNC } from "../../replace/lib/rule-sync";
@@ -170,6 +171,21 @@ export const MIGRATIONS: StrictMigrations = {
         await localStorageProvider.set(localUpdate);
 
         return storage;
+      },
+    },
+    6: {
+      /**
+       * **1.6.0** - Input replacement options
+       *
+       * Options to control how input replacements are applied.
+       */
+      0: async (storage) => {
+        const newPreferences = Object.assign({}, storage.preferences);
+        newPreferences.inputReplacement = DEFAULT_INPUT_REPLACE;
+
+        const merged = merge(storage, { preferences: newPreferences });
+
+        return merged;
       },
     },
   },

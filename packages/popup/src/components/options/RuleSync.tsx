@@ -291,17 +291,17 @@ export default function RuleSync({}: RuleSyncProps) {
                 <div className="form-check">
                   <label
                     className="user-select-none"
-                    for="confirmation-checkbox"
+                    htmlFor="rule-sync-confirmation-checkbox"
                   >
                     {language.ruleSync.warningModal.CONFIRM_CHECKBOX_LABEL}
                   </label>
                   <input
                     checked={isConfirmed}
                     className="form-check-input"
-                    id="confirmation-checkbox"
+                    id="rule-sync-confirmation-checkbox"
                     type="checkbox"
                     onChange={handleIsConfirmedChange}
-                    data-testid="confirmation-checkbox"
+                    data-testid="rule-sync-confirmation-checkbox"
                   />
                 </div>
               </Alert>

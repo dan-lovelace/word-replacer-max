@@ -23,17 +23,17 @@ function generateReplacementStyle(
 
 describe("replacement style", () => {
   it("does not apply styles when feature is disabled", () => {
-    const testStyle = generateReplacementStyle({ active: false });
+    const replacementStyle = generateReplacementStyle({ active: false });
 
     cy.visitMock({
-      styleContents: getStylesheet(testStyle).textContent?.toString(),
+      styleContents: getStylesheet(replacementStyle).textContent?.toString(),
       targetContents: "Lorem ipsum dolor",
     });
 
     s.target().then(($element) => {
       const target = $element.get(0);
 
-      searchAndReplace(target, "ipsum", [], "sit", testStyle);
+      searchAndReplace(target, "ipsum", [], "sit", { replacementStyle });
       cy.wrap(target).within(() => {
         s.replacedText()
           .invoke("css", "background-color")
@@ -52,17 +52,17 @@ describe("replacement style", () => {
   });
 
   it("applies styles when feature is enabled with default values", () => {
-    const testStyle = generateReplacementStyle();
+    const replacementStyle = generateReplacementStyle();
 
     cy.visitMock({
-      styleContents: getStylesheet(testStyle).textContent?.toString(),
+      styleContents: getStylesheet(replacementStyle).textContent?.toString(),
       targetContents: "Lorem ipsum dolor",
     });
 
     s.target().then(($element) => {
       const target = $element.get(0);
 
-      searchAndReplace(target, "ipsum", [], "sit", testStyle);
+      searchAndReplace(target, "ipsum", [], "sit", { replacementStyle });
       cy.wrap(target).within(() => {
         s.replacedText()
           .invoke("css", "background-color")
@@ -81,7 +81,7 @@ describe("replacement style", () => {
   });
 
   it("applies styles when feature is enabled with custom values", () => {
-    const testStyle = generateReplacementStyle({
+    const replacementStyle = generateReplacementStyle({
       backgroundColor: "red",
       color: "blue",
       options: [
@@ -95,14 +95,14 @@ describe("replacement style", () => {
     });
 
     cy.visitMock({
-      styleContents: getStylesheet(testStyle).textContent?.toString(),
+      styleContents: getStylesheet(replacementStyle).textContent?.toString(),
       targetContents: "Lorem ipsum dolor",
     });
 
     s.target().then(($element) => {
       const target = $element.get(0);
 
-      searchAndReplace(target, "ipsum", [], "sit", testStyle);
+      searchAndReplace(target, "ipsum", [], "sit", { replacementStyle });
       cy.wrap(target).within(() => {
         s.replacedText()
           .invoke("css", "background-color")
