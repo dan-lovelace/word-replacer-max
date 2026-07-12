@@ -151,7 +151,87 @@ const userReviews: UserReview[] = [
     rating: 5,
     text: "May 22, 2025",
   },
-];
+  {
+    author: "Chrome user",
+    rating: 5,
+    text: "Jun 18, 2025",
+  },
+  {
+    author: "Firefox user",
+    rating: 5,
+    text: "Jun 28, 2025",
+  },
+  {
+    author: "Chrome user",
+    rating: 5,
+    text: "Jul 20, 2025",
+  },
+  {
+    author: "Chrome user",
+    rating: 5,
+    text: "Aug 19, 2025",
+  },
+  {
+    author: "Firefox user",
+    rating: 5,
+    text: "Sep 10, 2025",
+  },
+  {
+    author: "Firefox user",
+    rating: 5,
+    text: "Oct 5, 2025",
+  },
+  {
+    author: "Firefox user",
+    rating: 5,
+    text: "Nov 27, 2025",
+  },
+  {
+    author: "Firefox user",
+    rating: 5,
+    text: "Dec 16, 2025",
+  },
+  {
+    author: "Firefox user",
+    rating: 5,
+    text: "Mar 19, 2026",
+  },
+  {
+    author: "Chrome user",
+    rating: 5,
+    text: "Apr 18, 2026",
+  },
+  {
+    author: "Firefox user",
+    rating: 5,
+    text: "Apr 22, 2026",
+  },
+  {
+    author: "Chrome user",
+    rating: 5,
+    text: "May 15, 2026",
+  },
+  {
+    author: "Firefox user",
+    rating: 5,
+    text: "May 27, 2026",
+  },
+  {
+    author: "Chrome user",
+    rating: 5,
+    text: "Jun 7, 2026",
+  },
+  {
+    author: "Chrome user",
+    rating: 5,
+    text: "Jun 24, 2026",
+  },
+  {
+    author: "Chrome user",
+    rating: 5,
+    text: "Jul 1, 2026",
+  },
+].reverse();
 
 export default function UserReviews() {
   const { breakpoints, palette } = useTheme();
