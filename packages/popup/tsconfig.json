@@ -6,6 +6,7 @@
     "jsxImportSource": "preact",
     "skipLibCheck": true,
     "paths": {
+      "preact/src/jsx": ["../../node_modules/preact/src/jsx"],
       "react": ["../../node_modules/preact/compat/"],
       "react-dom": ["../../node_modules/preact/compat/"]
     }

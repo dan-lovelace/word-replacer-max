@@ -4,8 +4,10 @@ import { UserTokens } from "./permission";
 import { PopupAlertSeverity } from "./popup";
 import { WebAppPingResponse } from "./web-app";
 
-export interface BaseMessage<T extends string, K extends Record<T, unknown>>
-  extends MessageEvent {
+export interface BaseMessage<
+  T extends string,
+  K extends Record<T, unknown>,
+> extends MessageEvent {
   data: {
     details?: K[T];
     kind: T;
@@ -22,27 +24,6 @@ export type ErrorableMessage<T> = {
     name: string;
     message: string;
   };
-};
-
-export type RuntimeMessage<T extends RuntimeMessageKind> = BaseMessage<
-  T,
-  RuntimeMessageKindMap
->;
-
-export type RuntimeMessageData<T extends RuntimeMessageKind> =
-  RuntimeMessage<T>["data"];
-
-export type RuntimeMessageKind = keyof RuntimeMessageKindMap;
-
-export type RuntimeMessageKindMap = {
-  authTokensRequest: undefined;
-  authTokensResponse: ErrorableMessage<UserTokens>;
-  currentUserRequest: undefined;
-  currentUserResponse: ErrorableMessage<AppUser>;
-  forceRefreshTokensRequest: undefined;
-  forceRefreshTokensResponse: ErrorableMessage<ISuccessful>;
-  signOutRequest: undefined;
-  signOutResponse: ErrorableMessage<undefined>;
 };
 
 export type ShowToastMessageOptions = {
@@ -65,15 +46,6 @@ export type WebAppMessageData<T extends WebAppMessageKind> =
 export type WebAppMessageKind = keyof WebAppMessageKindMap;
 
 export type WebAppMessageKindMap = {
-  authSignOutRequest: undefined;
-  authSignOutResponse: ErrorableMessage<boolean>;
-  authUpdateTokensRequest: ApiAuthTokens;
-  authUpdateTokensResponse: ErrorableMessage<UserTokens>;
-  authUserRequest: undefined;
-  authUserResponse: ErrorableMessage<AppUser>;
-  contentInitialize: undefined;
   inputReplacementRequest: undefined;
-  pingRequest: undefined;
-  pingResponse: WebAppPingResponse;
   showToastMessage: ShowToastMessageOptions;
 };
