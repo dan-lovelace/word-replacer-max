@@ -263,8 +263,15 @@ export class Renderer {
 
         const iframes = document.querySelectorAll("iframe");
         for (const iframe of iframes) {
-          const iframeDocument =
-            iframe.contentDocument ?? iframe.contentWindow?.document;
+          let iframeDocument: Document | undefined;
+          try {
+            iframeDocument =
+              iframe.contentDocument ?? iframe.contentWindow?.document;
+          } catch {
+            // cross-origin access to `window.document` can throw
+            continue;
+          }
+
           if (
             !iframeDocument?.head ||
             iframeDocument.head.querySelector(`#${STYLE_ELEMENT_ID}`)
