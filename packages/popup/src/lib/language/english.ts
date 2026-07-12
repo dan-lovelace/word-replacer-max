@@ -25,8 +25,7 @@ export default {
     DANGER_ZONE_DELETE_RULES_CONFIRMATION_INPUT_LABEL:
       "I understand that this action cannot be undone",
     DANGER_ZONE_DELETE_RULES_HEADING: "Delete All Rules",
-    DANGER_ZONE_DELETE_RULES_SUBHEADING:
-      "Remove all your replacement rules while keeping your account intact.",
+    DANGER_ZONE_DELETE_RULES_SUBHEADING: "Remove all your replacement rules.",
     DANGER_ZONE_DELETE_RULES_SUCCESS_MESSAGE: "Your rules have been deleted.",
     DIRECT_UPLOAD_DISALLOWED:
       "We opened this tab for you because Firefox can't upload files directly into the extension's popup window. Feel free to import your files here and close this window when you're done.",
