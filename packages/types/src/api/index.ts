@@ -7,12 +7,7 @@ import {
 
 export const API_ROUTES = {
   "GET:accountUsage": "/account/usage",
-  "GET:authWhoAmI": "/auth/whoami",
   "GET:healthCheck": "/",
-  "POST:authAcceptTerms": "/auth/accept-terms",
-  "POST:authDeleteAccount": "/auth/delete-account",
-  "POST:authTestTokens": "/auth/test-tokens",
-  "POST:authTokens": "/auth/tokens",
   "POST:contactSupport": "/contact/support",
   "POST:marketingSignup": "/marketing/signup",
   "POST:share": "/share",
