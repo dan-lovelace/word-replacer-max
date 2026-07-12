@@ -6,20 +6,11 @@ import Toolbar from "@mui/material/Toolbar/Toolbar";
 import Typography from "@mui/material/Typography/Typography";
 
 import logo from "../../assets/wrm-logo.png";
-import { useAuthProvider } from "../../lib/auth/AuthProvider";
-import { useConnectionProvider } from "../../lib/connection/ConnectionProvider";
 import { ROUTES } from "../../lib/routes";
 
-import CurrentUser from "../auth/CurrentUser";
-import LoginButton from "../button/LoginButton";
-import SignupButton from "../button/SignupButton";
-import ConnectionStatus from "../connection/ConnectionStatus";
 import Link from "../link/Link";
 
 export default function LayoutHeader() {
-  const { signInStatus } = useAuthProvider();
-  const { connectionStatus } = useConnectionProvider();
-
   return (
     <AppBar component="header" elevation={1} position="sticky">
       <Toolbar disableGutters>
@@ -66,29 +57,6 @@ export default function LayoutHeader() {
                 Word Replacer Max
               </Typography>
             </Link>
-          </Stack>
-          <Stack
-            direction="row"
-            sx={{
-              alignItems: "center",
-              gap: 1,
-              opacity: signInStatus !== "unknown" ? 1 : 0,
-              transition: "opacity 90ms ease-out",
-            }}
-          >
-            <ConnectionStatus />
-            {connectionStatus === "connected" && (
-              <>
-                {signInStatus === "signedIn" ? (
-                  <CurrentUser />
-                ) : (
-                  <>
-                    <LoginButton />
-                    <SignupButton />
-                  </>
-                )}
-              </>
-            )}
           </Stack>
         </Container>
       </Toolbar>

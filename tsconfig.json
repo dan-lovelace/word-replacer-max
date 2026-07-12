@@ -2,7 +2,6 @@
   "compilerOptions": {
     "allowJs": false,
     "allowSyntheticDefaultImports": true,
-    "esModuleInterop": false,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
@@ -10,7 +9,6 @@
     "moduleResolution": "Node",
     "noEmit": true,
     "paths": {
-      "@worm/auth": ["./packages/auth"],
       "@worm/background": ["./packages/background"],
       "@worm/content": ["./packages/content"],
       "@worm/plugins": ["./packages/plugins"],

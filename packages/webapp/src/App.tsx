@@ -10,12 +10,8 @@ import Layout from "./containers/Layout";
 import { ROUTES } from "./lib/routes";
 import HomePage from "./pages/HomePage";
 import ImportMigratorPage from "./pages/ImportMigratorPage";
-import LoginCallbackPage from "./pages/LoginCallbackPage";
-import LoginPage from "./pages/LoginPage";
-import LoginSuccessPage from "./pages/LoginSuccessPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import PrivacyPage from "./pages/PrivacyPage";
-import SignUpPage from "./pages/SignUpPage";
 import TermsPage from "./pages/TermsPage";
 import { muiTheme } from "./style/mui-theme";
 
@@ -33,11 +29,7 @@ function AppRoutes() {
     <Routes>
       <Route path={ROUTES.HOME} element={<HomePage />} />
       <Route path={ROUTES.IMPORT_MIGRATOR} element={<ImportMigratorPage />} />
-      <Route path={ROUTES.LOGIN} element={<LoginPage />} />
-      <Route path={ROUTES.LOGIN_CALLBACK} element={<LoginCallbackPage />} />
-      <Route path={ROUTES.LOGIN_SUCCESS} element={<LoginSuccessPage />} />
       <Route path={ROUTES.PRIVACY} element={<PrivacyPage />} />
-      <Route path={ROUTES.SIGNUP} element={<SignUpPage />} />
       <Route path={ROUTES.TERMS} element={<TermsPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
