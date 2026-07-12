@@ -41,6 +41,15 @@ export default function Options() {
                 <RuleSync />
                 <Divider />
                 <RenderRate />
+              </div>
+            </ColumnContent>
+          </div>
+        </div>
+        <div className="row">
+          <div className={COPY_CONTAINER_COL_CLASS}>
+            <div className="fw-bold fs-5">Danger Zone</div>
+            <ColumnContent>
+              <div className="d-flex flex-column gap-2 pt-2">
                 <DangerZone />
               </div>
             </ColumnContent>

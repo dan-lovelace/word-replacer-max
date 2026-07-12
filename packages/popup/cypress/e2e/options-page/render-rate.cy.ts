@@ -17,7 +17,6 @@ describe("options page render rate", () => {
         },
       });
 
-      cy.appUserLogin();
       selectors.options.renderRate.toggleButton().should("be.checked");
     });
 
@@ -29,8 +28,6 @@ describe("options page render rate", () => {
           },
         },
       });
-
-      cy.appUserLogin();
 
       selectors.options.renderRate.toggleButton().click();
 
@@ -54,8 +51,6 @@ describe("options page render rate", () => {
           },
         },
       });
-
-      cy.appUserLogin();
 
       selectors.options.renderRate.toggleButton().click();
 
