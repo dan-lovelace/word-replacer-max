@@ -19,7 +19,7 @@ export default function DeleteAllRules({
   const [hasConfirmedDelete, setHasConfirmedDelete] = useState(false);
 
   const { updateMatchers } = useConfig();
-  const { account: lang } = useLanguage();
+  const { options: lang } = useLanguage();
   const { showToast } = useToast();
 
   const handleConfirmClick = () => {

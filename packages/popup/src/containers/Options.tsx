@@ -1,5 +1,6 @@
 import ColorMode from "../components/color-mode/ColorMode";
 import Divider from "../components/divider/Divider";
+import DangerZone from "../components/options/DangerZone";
 import InputReplacement from "../components/options/InputReplacement";
 import RenderRate from "../components/options/RenderRate";
 import ReplacementStyles from "../components/options/ReplacementStyles";
@@ -40,6 +41,7 @@ export default function Options() {
                 <RuleSync />
                 <Divider />
                 <RenderRate />
+                <DangerZone />
               </div>
             </ColumnContent>
           </div>
