@@ -188,6 +188,24 @@ export const MIGRATIONS: StrictMigrations = {
         return merged;
       },
     },
+    7: {
+      /**
+       * **1.7.0** - Remove user sign in
+       *
+       * Authentication is being removed from this version.
+       */
+      0: async (storage) => {
+        await localStorageProvider.remove([
+          "authAccessToken",
+          "authClockDrift",
+          "authIdToken",
+          "authLastAuthUser",
+          "authRefreshToken",
+        ]);
+
+        return storage;
+      },
+    },
   },
 };
 

@@ -14,12 +14,6 @@ describe("options page rule groups", () => {
 
     it("should display when logged out", () => {
       selectors.options.ruleGroups.inputWrapper().should("be.visible");
-    });
-
-    it("should display when logged in", () => {
-      cy.appUserLogin();
-
-      selectors.options.ruleGroups.inputWrapper().should("be.visible");
       selectors.options.ruleGroups.toggleButton().should("not.be.checked");
     });
   });
@@ -37,7 +31,6 @@ describe("options page rule groups", () => {
         },
       });
 
-      cy.appUserLogin();
       selectors.options.ruleGroups.toggleButton().should("be.checked");
     });
 
@@ -49,8 +42,6 @@ describe("options page rule groups", () => {
           },
         },
       });
-
-      cy.appUserLogin();
 
       selectors.options.ruleGroups.toggleButton().click();
 
@@ -73,8 +64,6 @@ describe("options page rule groups", () => {
           },
         },
       });
-
-      cy.appUserLogin();
 
       selectors.options.ruleGroups.toggleButton().click();
 

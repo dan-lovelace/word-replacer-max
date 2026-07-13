@@ -48,7 +48,7 @@ describe("home page rule groups", () => {
         selectors.ruleGroups.toolbar.root().should("not.exist");
       });
 
-      it("should display when logged out and feature is enabled", () => {
+      it("should display when feature is enabled", () => {
         cy.visitWithStorage({
           sync: {
             ...defaultTestMatcherGroups,
@@ -57,34 +57,6 @@ describe("home page rule groups", () => {
             },
           },
         });
-
-        selectors.ruleGroups.toolbar.root().should("be.visible");
-      });
-
-      it("should not display when logged in and feature is disabled", () => {
-        cy.visitWithStorage({
-          sync: {
-            ...defaultTestMatcherGroups,
-            ruleGroups: {
-              active: false,
-            },
-          },
-        });
-        cy.appUserLogin();
-
-        selectors.ruleGroups.toolbar.root().should("not.exist");
-      });
-
-      it("should display when logged in and feature is enabled", () => {
-        cy.visitWithStorage({
-          sync: {
-            ...defaultTestMatcherGroups,
-            ruleGroups: {
-              active: true,
-            },
-          },
-        });
-        cy.appUserLogin();
 
         selectors.ruleGroups.toolbar.root().should("be.visible");
       });
@@ -100,7 +72,6 @@ describe("home page rule groups", () => {
             },
           },
         });
-        cy.appUserLogin();
       });
 
       it("should open the groups management modal", () => {
@@ -264,7 +235,6 @@ describe("home page rule groups", () => {
             },
           },
         });
-        cy.appUserLogin();
 
         selectors.ruleRows().should("have.length", 4);
       });
@@ -287,7 +257,6 @@ describe("home page rule groups", () => {
             },
           },
         });
-        cy.appUserLogin();
 
         selectors.ruleRows().should("have.length", 2);
       });
@@ -317,7 +286,6 @@ describe("home page rule groups", () => {
             },
           },
         });
-        cy.appUserLogin();
 
         selectors.ruleGroups.toolbar.groupToggles().eq(0).click();
         selectors.ruleRows().should("have.length", 2);
@@ -344,7 +312,6 @@ describe("home page rule groups", () => {
             },
           },
         });
-        cy.appUserLogin();
 
         selectors.ruleRows().should("have.length", 1);
 
@@ -377,7 +344,6 @@ describe("home page rule groups", () => {
             },
           },
         });
-        cy.appUserLogin();
 
         selectors.ruleRows().should("have.length", 4);
 
@@ -428,7 +394,6 @@ describe("home page rule groups", () => {
             },
           },
         });
-        cy.appUserLogin();
 
         selectors.rules.ruleGroups.includedGroupsList().should("not.exist");
       });
@@ -442,7 +407,6 @@ describe("home page rule groups", () => {
             },
           },
         });
-        cy.appUserLogin();
 
         selectors.ruleRowsFirst().within(() => {
           selectors.rules.ruleGroups.includedGroupsList().should("be.visible");
@@ -477,7 +441,6 @@ describe("home page rule groups", () => {
             },
           },
         });
-        cy.appUserLogin();
       });
 
       it("should display each included group", () => {

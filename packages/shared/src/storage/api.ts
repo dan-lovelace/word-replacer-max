@@ -18,7 +18,6 @@ const {
   storage: { sync },
 } = browser;
 
-export const authStorageProvider = getStorageProvider("local");
 export const localStorageProvider = getStorageProvider("local");
 export const syncStorageProvider = getStorageProvider("sync");
 

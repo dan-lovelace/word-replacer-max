@@ -1,5 +1,6 @@
 import ColorMode from "../components/color-mode/ColorMode";
 import Divider from "../components/divider/Divider";
+import DangerZone from "../components/options/DangerZone";
 import InputReplacement from "../components/options/InputReplacement";
 import RenderRate from "../components/options/RenderRate";
 import ReplacementStyles from "../components/options/ReplacementStyles";
@@ -40,6 +41,16 @@ export default function Options() {
                 <RuleSync />
                 <Divider />
                 <RenderRate />
+              </div>
+            </ColumnContent>
+          </div>
+        </div>
+        <div className="row">
+          <div className={COPY_CONTAINER_COL_CLASS}>
+            <div className="fw-bold fs-5">Danger Zone</div>
+            <ColumnContent>
+              <div className="d-flex flex-column gap-2 pt-2">
+                <DangerZone />
               </div>
             </ColumnContent>
           </div>

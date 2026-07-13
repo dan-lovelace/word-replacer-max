@@ -1,50 +1,4 @@
 export default {
-  account: {
-    DANGER_ZONE_HEADING: "Danger Zone",
-    DANGER_ZONE_DELETE_ACCOUNT_BUTTON_TEXT: "Delete account",
-    DANGER_ZONE_DELETE_ACCOUNT_CONFIRMATION_TITLE: "DELETE ACCOUNT",
-    DANGER_ZONE_DELETE_ACCOUNT_CONFIRMATION_BODY:
-      "Are you sure you want to delete your account? This action cannot be undone and you will lose all your data. We recommend first backing up your rules using the export feature.",
-    DANGER_ZONE_DELETE_ACCOUNT_CONFIRMATION_CANCEL_BUTTON_TEXT:
-      "Never mind, keep my account",
-    DANGER_ZONE_DELETE_ACCOUNT_CONFIRMATION_INPUT_LABEL:
-      "I understand that this action cannot be undone",
-    DANGER_ZONE_DELETE_ACCOUNT_CONFIRMATION_PROCEED_BUTTON_TEXT:
-      "Delete my account forever",
-    DANGER_ZONE_DELETE_ACCOUNT_HEADING: "Delete Account",
-    DANGER_ZONE_DELETE_ACCOUNT_SUBHEADING:
-      "Delete your account and all associated data. This action cannot be undone.",
-    DANGER_ZONE_DELETE_RULES_BUTTON_TEXT: "Delete all rules",
-    DANGER_ZONE_DELETE_RULES_CONFIRMATION_TITLE: "DELETE ALL RULES",
-    DANGER_ZONE_DELETE_RULES_CONFIRMATION_BODY:
-      "Are you sure you want to delete all your rules? This action cannot be undone. We recommend first backing up your rules using the export feature.",
-    DANGER_ZONE_DELETE_RULES_CONFIRMATION_CANCEL_BUTTON_TEXT:
-      "Never mind, keep my rules",
-    DANGER_ZONE_DELETE_RULES_CONFIRMATION_INPUT_LABEL:
-      "I understand that this action cannot be undone",
-    DANGER_ZONE_DELETE_RULES_HEADING: "Delete All Rules",
-    DANGER_ZONE_DELETE_RULES_SUBHEADING:
-      "Remove all your replacement rules while keeping your account intact.",
-    DANGER_ZONE_DELETE_RULES_SUCCESS_MESSAGE: "Your rules have been deleted.",
-    ACCOUNT_DETAILS_HEADING: "Account Details",
-    ACCOUNT_DETAILS_EMAIL_LABEL: "Email",
-    DELETE_ACCOUNT_API_RESPONSE_GENERAL_ERROR:
-      "Something went wrong deleting your account.",
-  },
-  api: {
-    account: {
-      usage: {
-        GENERAL_ERROR: "Something went wrong getting your usage",
-      },
-    },
-  },
-  auth: {
-    TERMS_ACCEPTANCE_REQUIRED_MESSAGE: "Please review and accept our latest",
-    TERMS_ACCEPTANCE_REQUIRED_LINK_TEXT: "Terms and Conditions",
-    TERMS_ACCEPTANCE_ACCEPT_BUTTON_TEXT: "Accept",
-    TERMS_ACCEPTANCE_GENERAL_ERROR_MESSAGE:
-      "Something went wrong accepting terms",
-  },
   domains: {
     ADD_DOMAIN_FORM_INPUT_PLACEHOLDER: "Enter a domain (e.g., example.com)",
     ADD_DOMAIN_FORM_SUBMIT_BUTTON_TEXT: "Add",
@@ -61,6 +15,18 @@ export default {
   },
   options: {
     CORRUPTED_IMPORT_CONTENT: "It looks like your export file is corrupted.",
+    DANGER_ZONE_HEADING: "Danger Zone",
+    DANGER_ZONE_DELETE_RULES_BUTTON_TEXT: "Delete all rules",
+    DANGER_ZONE_DELETE_RULES_CONFIRMATION_TITLE: "DELETE ALL RULES",
+    DANGER_ZONE_DELETE_RULES_CONFIRMATION_BODY:
+      "Are you sure you want to delete all your rules? This action cannot be undone. We recommend first backing up your rules using the export feature.",
+    DANGER_ZONE_DELETE_RULES_CONFIRMATION_CANCEL_BUTTON_TEXT:
+      "Never mind, keep my rules",
+    DANGER_ZONE_DELETE_RULES_CONFIRMATION_INPUT_LABEL:
+      "I understand that this action cannot be undone",
+    DANGER_ZONE_DELETE_RULES_HEADING: "Delete All Rules",
+    DANGER_ZONE_DELETE_RULES_SUBHEADING: "Remove all your replacement rules.",
+    DANGER_ZONE_DELETE_RULES_SUCCESS_MESSAGE: "Your rules have been deleted.",
     DIRECT_UPLOAD_DISALLOWED:
       "We opened this tab for you because Firefox can't upload files directly into the extension's popup window. Feel free to import your files here and close this window when you're done.",
     FILE_IMPORT_SUCCESS: "Rules from file imported successfully.",

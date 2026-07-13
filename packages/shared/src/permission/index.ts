@@ -24,10 +24,7 @@ export const CustomAttributesSchema = z
 export type CustomAttributes = z.infer<typeof CustomAttributesSchema>;
 
 const rolePolicies: UserRolePolicy = {
-  systemAdmin__2024_11_03: [
-    "api:post:AuthAcceptTerms",
-    "api:get:WhoAmI",
-  ],
+  systemAdmin__2024_11_03: ["api:post:AuthAcceptTerms", "api:get:WhoAmI"],
   testMember__2024_11_10: [
     "api:post:AuthAcceptTerms",
     "api:post:AuthDeleteAccount",

@@ -1,33 +1,4 @@
 export const selectors = {
-  account: {
-    container: () => cy.findByTestId("account-container"),
-    dangerZone: {
-      deleteAccountButton: () => cy.findByTestId("delete-account-button"),
-      deleteAccountConfirmationAlert: () =>
-        cy.findByTestId("delete-account-confirmation-alert"),
-      deleteAccountConfirmationCancelButton: () =>
-        cy.findByTestId("delete-account-confirmation-cancel-button"),
-      deleteAccountConfirmationCheckbox: () =>
-        cy.findByTestId("delete-account-confirmation-checkbox"),
-      deleteAccountConfirmationContainer: () =>
-        cy.findByTestId("delete-account-confirmation-container"),
-      deleteAccountContainer: () => cy.findByTestId("delete-account-container"),
-      deleteAllRulesButton: () => cy.findByTestId("delete-all-rules-button"),
-      deleteAllRulesConfirmationAlert: () =>
-        cy.findByTestId("delete-all-rules-confirmation-alert"),
-      deleteAllRulesConfirmationCancelButton: () =>
-        cy.findByTestId("delete-all-rules-confirmation-cancel-button"),
-      deleteAllRulesConfirmationCheckbox: () =>
-        cy.findByTestId("delete-all-rules-confirmation-checkbox"),
-      deleteAllRulesConfirmationContainer: () =>
-        cy.findByTestId("delete-all-rules-confirmation-container"),
-      deleteAllRulesConfirmationSubmitButton: () =>
-        cy.findByTestId("delete-all-rules-confirmation-submit-button"),
-      deleteAllRulesContainer: () =>
-        cy.findByTestId("delete-all-rules-container"),
-      root: () => cy.findByTestId("danger-zone"),
-    },
-  },
   addNewRuleButton: () => cy.findByTestId("add-new-rule-button"),
   colorSelect: {
     dropdownButton: () => cy.findByTestId("color-select-dropdown-button"),
@@ -57,21 +28,6 @@ export const selectors = {
   },
   homePage: () => cy.findByTestId("home-page"),
   layout: {
-    accountDropdownAccountButton: () =>
-      cy.findByTestId("account-dropdown-account-button"),
-    accountDropdownButton: () => cy.findByTestId("account-dropdown-button"),
-    accountDropdownSignedInEmail: () =>
-      cy.findByTestId("account-dropdown-signed-in-email"),
-    accountDropdownSignedInMenuContainer: () =>
-      cy.findByTestId("account-dropdown-signed-in-menu-container"),
-    accountDropdownSignedInMenuHeading: () =>
-      cy.findByTestId("account-dropdown-signed-in-menu-heading"),
-    accountDropdownSignedOutContainer: () =>
-      cy.findByTestId("account-dropdown-signed-out-container"),
-    accountDropdownSignedOutMenuContainer: () =>
-      cy.findByTestId("account-dropdown-signed-out-menu-container"),
-    accountDropdownSignOutButton: () =>
-      cy.findByTestId("account-dropdown-sign-out-button"),
     disabledBanner: {
       enableButton: () => cy.findByTestId("enable-button"),
       root: () => cy.findByTestId("disabled-banner"),
@@ -87,6 +43,22 @@ export const selectors = {
     },
   },
   options: {
+    dangerZone: {
+      deleteAllRulesButton: () => cy.findByTestId("delete-all-rules-button"),
+      deleteAllRulesConfirmationAlert: () =>
+        cy.findByTestId("delete-all-rules-confirmation-alert"),
+      deleteAllRulesConfirmationCancelButton: () =>
+        cy.findByTestId("delete-all-rules-confirmation-cancel-button"),
+      deleteAllRulesConfirmationCheckbox: () =>
+        cy.findByTestId("delete-all-rules-confirmation-checkbox"),
+      deleteAllRulesConfirmationContainer: () =>
+        cy.findByTestId("delete-all-rules-confirmation-container"),
+      deleteAllRulesConfirmationSubmitButton: () =>
+        cy.findByTestId("delete-all-rules-confirmation-submit-button"),
+      deleteAllRulesContainer: () =>
+        cy.findByTestId("delete-all-rules-container"),
+      root: () => cy.findByTestId("danger-zone"),
+    },
     renderRate: {
       inputWrapper: () => cy.findByTestId("render-rate-input-wrapper"),
       toggleButton: () => cy.findByTestId("render-rate-toggle-button"),

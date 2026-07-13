@@ -101,18 +101,9 @@ export async function getManifest(version: number): Promise<Manifest> {
     "VITE_SSM_WEBAPP_ORIGIN is required"
   );
 
-  const { hostname: webappHostname, protocol: webappProtocol } = new URL(
-    process.env.VITE_SSM_WEBAPP_ORIGIN
-  );
-  const authMatches = [`${webappProtocol}//${webappHostname}/*`];
   const contentScripts: Manifest["content_scripts"] = [
     {
-      matches: authMatches,
-      js: ["auth.js"],
-    },
-    {
       matches: ["<all_urls>"],
-      exclude_matches: authMatches,
       js: ["content.js"],
       all_frames: true,
     },

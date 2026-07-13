@@ -1,7 +1,5 @@
 import {
   BaseMessage,
-  RuntimeMessageKind,
-  RuntimeMessageKindMap,
   WebAppMessageKind,
   WebAppMessageKindMap,
 } from "@worm/types/src/message";
@@ -16,13 +14,6 @@ function createBaseMessage<T extends string, K extends Record<T, unknown>>(
   details?: K[T]
 ): BaseMessage<T, K>["data"] {
   return { kind, details };
-}
-
-export function createRuntimeMessage<T extends RuntimeMessageKind>(
-  kind: T,
-  details?: RuntimeMessageKindMap[T]
-): BaseMessage<T, RuntimeMessageKindMap>["data"] {
-  return createBaseMessage<T, RuntimeMessageKindMap>(kind, details);
 }
 
 export function createWebAppMessage<T extends WebAppMessageKind>(
